@@ -1,0 +1,15 @@
+# general
+.env
+.env.*
+
+# frontend
+client/node_modules
+client/dist
+client/build
+
+# backend
+server/node_modules
+server/dist
+
+# misc
+.DS_Store
