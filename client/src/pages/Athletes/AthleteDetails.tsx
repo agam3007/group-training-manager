@@ -36,6 +36,38 @@ const sportIcon = (sport:string)=>{
   return ""
 }
 
+/* -------- FIELD -------- */
+
+function Field({label,value,editMode,onChange}:any){
+
+  const [val,setVal] = useState(value)
+
+  useEffect(()=>{
+    setVal(value)
+  },[value])
+
+  const handleChange = (newVal:any)=>{
+    setVal(newVal)
+    onChange && onChange(newVal) // 🔥 זה מה שהיה חסר
+  }
+
+  return(
+    <div className="field">
+      <span>{label}:</span>
+
+      {editMode ? (
+        <input
+          value={val || ""}
+          onChange={e=>handleChange(e.target.value)}
+          className="input"
+        />
+      ) : (
+        <span>{value || "-"}</span>
+      )}
+    </div>
+  )
+}
+
 /* -------- COMPONENT -------- */
 
 export default function AthleteDetails(){
@@ -49,9 +81,6 @@ export default function AthleteDetails(){
   const [events,setEvents] =
     useState<DayEvent[]>([])
 
-  const [openSections,setOpenSections] =
-    useState<string[]>([])
-
   const [sport,setSport] =
     useState<SportType>("run")
 
@@ -64,6 +93,14 @@ export default function AthleteDetails(){
   const [selectedPB,setSelectedPB] =
     useState<string | null>(null)
 
+  const [activeTab,setActiveTab] =
+    useState<"overview"|"contacts"|"health"|"groups">("overview")
+
+  const [editMode,setEditMode] = useState(false)
+
+    const [editData,setEditData] = useState<any>(null)
+
+
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(()=>{
@@ -73,14 +110,12 @@ export default function AthleteDetails(){
   useEffect(()=>{
 
     const handleClickOutside = (e:any)=>{
-
       if(
         dropdownRef.current &&
         !dropdownRef.current.contains(e.target)
       ){
         setOpenDropdown(false)
       }
-
     }
 
     document.addEventListener("click",handleClickOutside)
@@ -92,7 +127,6 @@ export default function AthleteDetails(){
   },[])
 
   const load = async()=>{
-
     const data = await getAthlete(id!)
     setAthlete(data)
 
@@ -102,31 +136,25 @@ export default function AthleteDetails(){
       {type:"training",groupId:"g1",done:true}
     ])
 
+    setEditData(data)
   }
 
-  const toggleSection = (name:string)=>{
-
-    setOpenSections(prev =>
-      prev.includes(name)
-        ? prev.filter(s=>s!==name)
-        : [...prev,name]
-    )
-
+    const saveEdit = ()=>{
+    setAthlete(editData)
+    setEditMode(false)
   }
 
-  if(!athlete) return <div>Loading...</div>
+if(!athlete || !editData) return <div>Loading...</div>
 
+const isDirty = JSON.stringify(editData) !== JSON.stringify(athlete)
   /* -------- ATTENDANCE -------- */
 
   const athleteTrainings = events.filter(e=>
-
     e.type==="training" &&
-
     (
       e.athleteId === athlete.id ||
       athlete.groups.includes(e.groupId!)
     )
-
   )
 
   const total = athleteTrainings.length
@@ -137,30 +165,21 @@ export default function AthleteDetails(){
   /* -------- ADD TEST -------- */
 
   const addTest = (test:any)=>{
-
     setAthlete(prev=>({
-
       ...prev!,
-
       tests:[...(prev?.tests||[]),test],
-
       zones:{
-  ...prev?.zones,
-  [test.sport]: test.zones
-}
-
+        ...prev?.zones,
+        [test.sport]: test.zones
+      }
     }))
-
   }
 
   /* -------- GOALS -------- */
 
   const addGoal = ()=>{
-
     setAthlete(prev=>({
-
       ...prev!,
-
       goals:[
         ...(prev?.goals||[]),
         {
@@ -169,65 +188,194 @@ export default function AthleteDetails(){
           done:false
         }
       ]
-
     }))
-
   }
 
   return(
 
     <div className="dashboard">
 
-      {/* LEFT */}
+  {/* LEFT */}
 
       <div className="left">
 
-        <div className="profile">
+        <div className={`profile ${athlete.injuries ? "injured" : ""}`}>
           <div className="avatar"/>
           <h1>{athlete.name}</h1>
           <p>{athlete.level}</p>
         </div>
 
         <div className="card">
-          <div className="section-header" onClick={()=>toggleSection("info")}>
-            <h3>Personal Info</h3>
-            <span>✏️</span>
+
+          {/* TABS */}
+          <div className="tabs">
+
+            {["overview","contacts","health","groups"].map(tab=>{
+
+  const isHealth = tab === "health"
+  const hasInjury = !!editData.injuries
+
+  return(
+    <div
+      key={tab}
+      className={`tab ${activeTab===tab?"active":""} ${isHealth && hasInjury ? "alert" : ""}`}
+      onClick={()=>setActiveTab(tab as any)}
+    >
+      {tab.toUpperCase()}
+
+      {/* 🔥 אינדיקציה */}
+      {isHealth && hasInjury && (
+  <span className="tab-alert-icon">⚠️</span>
+      )}
+
+    </div>
+  )
+
+})}
+
+            {!editMode ? (
+              <button
+                className="icon-btn"
+                onClick={()=>{
+  setEditData({...athlete})
+  setEditMode(true)
+}}
+              >
+                ✏️
+              </button>
+            ) : (
+              <button
+  className="icon-btn save"
+  onClick={saveEdit}
+  disabled={!isDirty}
+>
+  💾
+</button>
+            )}
+
           </div>
 
-          {openSections.includes("info") && (
-            <div className="section-content">
-              <p>Age: {athlete.age}</p>
-              <p>Phone: {athlete.phone}</p>
-              <p>Email: {athlete.email}</p>
-              <p>Parent: {athlete.parentPhone}</p>
-            </div>
-          )}
-        </div>
+          <div className="tab-content">
 
-        <div className="card">
-          <div className="section-header" onClick={()=>toggleSection("physical")}>
-            <h3>Physical</h3>
-            <span>✏️</span>
+            {/* OVERVIEW */}
+            {activeTab==="overview" && (
+              <>
+                <Field label="Age" value={editData.age} editMode={editMode}
+                  onChange={(v:any)=>setEditData({...editData,age:v})}/>
+                <Field label="Height" value={editData.height} editMode={editMode}
+                  onChange={(v:any)=>setEditData({...editData,height:v})}/>
+                <Field label="Weight" value={editData.weight} editMode={editMode}
+                  onChange={(v:any)=>setEditData({...editData,weight:v})}/>
+                <Field label="Rest HR" value={editData.restingHR} editMode={editMode}
+                  onChange={(v:any)=>setEditData({...editData,restingHR:v})}/>
+                <Field label="Max HR" value={editData.maxHR} editMode={editMode}
+                  onChange={(v:any)=>setEditData({...editData,maxHR:v})}/>
+                <Field label="Experience" value={editData.experience} editMode={editMode}
+                  onChange={(v:any)=>setEditData({...editData,experience:v})}/>
+              </>
+            )}
+
+            {/* CONTACTS */}
+            {activeTab==="contacts" && (
+              <>
+                <Field label="Phone" value={editData.phone} editMode={editMode}
+                  onChange={(v:any)=>setEditData({...editData,phone:v})}/>
+                <Field label="Email" value={editData.email} editMode={editMode}
+                  onChange={(v:any)=>setEditData({...editData,email:v})}/>
+<Field
+  label="Emergency Name"
+  value={editData.emergencyName}
+  editMode={editMode}
+  onChange={(v:any)=>setEditData({...editData,emergencyName:v})}
+/>
+
+<Field
+  label="Emergency Phone"
+  value={editData.emergencyPhone}
+  editMode={editMode}
+  onChange={(v:any)=>setEditData({...editData,emergencyPhone:v})}
+/>
+
+<Field
+  label="Emergency Email"
+  value={editData.emergencyEmail}
+  editMode={editMode}
+  onChange={(v:any)=>setEditData({...editData,emergencyEmail:v})}
+/>
+              </>
+            )}
+
+            {/* HEALTH */}
+            {activeTab==="health" && (
+              <>
+
+                <div className="field">
+  <span>Injury:</span>
+
+  {editMode ? (
+    <label className="switch">
+      <input
+        type="checkbox"
+        checked={!!editData.injuries}
+        onChange={(e)=>{
+          const val = e.target.checked
+
+          setEditData({
+            ...editData,
+            injuries: val ? "" : null,
+            injuryDate: val
+              ? new Date().toISOString().slice(0,10)
+              : null
+          })
+        }}
+      />
+      <span className="slider"/>
+    </label>
+  ) : (
+    <span>{editData.injuries ? "Yes" : "No"}</span>
+  )}
+</div>
+
+                {editData.injuries && (
+                  <div className="alert-box">
+                    ⚠️ {editData.injuries || "Injury"}
+                  </div>
+                )}
+
+                {editData.injuries !== null && (
+                  <>
+                    <Field label="Injury Type" value={editData.injuries} editMode={editMode}
+                      onChange={(v:any)=>setEditData({...editData,injuries:v})}/>
+                    <Field label="Limitations" value={editData.limitations} editMode={editMode}
+                      onChange={(v:any)=>setEditData({...editData,limitations:v})}/>
+                    <Field label="Focus" value={editData.focus} editMode={editMode}
+                      onChange={(v:any)=>setEditData({...editData,focus:v})}/>
+                        <Field
+    label="Injury Date"
+    value={editData.injuryDate}
+    editMode={editMode}
+    onChange={(v:any)=>setEditData({...editData,injuryDate:v})}
+  />
+                  </>
+                )}
+
+                <Field label="Allergies" value={editData.allergies} editMode={editMode}
+                  onChange={(v:any)=>setEditData({...editData,allergies:v})}/>
+
+              </>
+            )}
+
+            {/* GROUPS */}
+            {activeTab==="groups" && (
+              <>
+                {(athlete.groups || []).map(g=>(
+                  <div key={g}>{g}</div>
+                ))}
+              </>
+            )}
+
           </div>
 
-          {openSections.includes("physical") && (
-            <div className="section-content">
-              <p>Height: {athlete.height}</p>
-              <p>Weight: {athlete.weight}</p>
-              <p>Rest HR: {athlete.restingHR}</p>
-              <p>Max HR: {athlete.maxHR}</p>
-            </div>
-          )}
-        </div>
-
-        <div className="card injury-card">
-          <h3>Injuries ⚠️</h3>
-          <p>{athlete.injuries || "None"}</p>
-        </div>
-
-        <div className="card">
-          <h3>Coach Notes</h3>
-          <p>{athlete.notes}</p>
         </div>
 
       </div>
@@ -255,8 +403,6 @@ export default function AthleteDetails(){
 
           <StatsChart data={[3,5,2,6,8,4,7]} />
         </div>
-
-        {/* ZONES */}
 
         <div className="card">
 
@@ -298,7 +444,7 @@ export default function AthleteDetails(){
 
       </div>
 
-      {/* RIGHT */}
+      {/* RIGHT נשאר ללא שינוי */}
 
       <div className="right">
 

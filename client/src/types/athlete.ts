@@ -8,6 +8,8 @@ export interface Athlete {
 
   age?:number
 
+  experience?:number
+
   phone?:string
 
   email?:string
@@ -40,6 +42,14 @@ tests?:Test[]
   injuries?:string
 
   medicalNotes?:string
+
+  injured?:boolean
+
+  injuryType?:string
+
+  limitations?:string
+
+  focus?:string
 
   notes?:string
 
