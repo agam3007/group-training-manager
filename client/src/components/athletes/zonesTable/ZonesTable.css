@@ -1,0 +1,29 @@
+.zones-table{
+
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+
+}
+
+.zones-table th{
+
+text-align:left;
+padding:8px;
+font-size:14px;
+color:#64748b;
+
+}
+
+.zones-table td{
+
+padding:8px;
+border-top:1px solid #e5e7eb;
+
+}
+
+.zones-table tr:hover{
+
+background:#f1f5f9;
+
+}

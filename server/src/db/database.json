@@ -1,0 +1,99 @@
+{
+  "groups": [
+    {
+      "id": "1773070277512",
+      "name": "דגיגונים",
+      "type": "general",
+      "athletes": [
+        "דילן",
+        "רם",
+        "1773161190813",
+        "1773161225739"
+      ],
+      "schedule": [
+        {
+          "day": 0,
+          "hour": 18
+        }
+      ]
+    },
+    {
+      "id": "1773070310309",
+      "name": "ראשנים",
+      "type": "general",
+      "athletes": [
+        "ליסה",
+        "רומי"
+      ],
+      "schedule": [
+        {
+          "day": 1,
+          "hour": 18
+        }
+      ]
+    }
+  ],
+  "athletes": [
+    {
+      "id": "1773161190813",
+      "name": "agam",
+      "level": "pro",
+      "age": 22,
+      "phone": "054",
+      "parentPhone": "054",
+      "groups": [],
+      "notes": "hiiiiiiiiii",
+      "height": 158,
+      "weight": 58
+    },
+    {
+      "id": "1773161225739",
+      "name": "mike",
+      "level": "beginner",
+      "age": 8,
+      "phone": "",
+      "parentPhone": "",
+      "groups": [],
+      "notes": ""
+    }
+  ],
+  "trainings": [],
+  "events": [
+    {
+      "id": "1773485809598",
+      "title": "call",
+      "time": "15:00",
+      "type": "call",
+      "date": "2026-03-14"
+    },
+    {
+      "id": "1773485828189",
+      "title": "wake up",
+      "time": "08:00",
+      "type": "training",
+      "date": "2026-03-14",
+      "done": false
+    },
+    {
+      "id": "1773486107343",
+      "title": "להכין אוכל",
+      "time": "14:00",
+      "type": "task",
+      "date": "2026-03-14"
+    },
+    {
+      "id": "1773499235036",
+      "title": "חכלגדך",
+      "time": "17:00",
+      "type": "task",
+      "date": "2026-03-14"
+    },
+    {
+      "id": "1773499247116",
+      "title": "שיר",
+      "time": "18:00",
+      "type": "call",
+      "date": "2026-03-14"
+    }
+  ]
+}

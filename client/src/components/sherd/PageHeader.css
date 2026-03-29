@@ -1,0 +1,65 @@
+.page-header{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  margin-bottom:20px;
+
+}
+
+.search-input{
+
+  width:260px;
+
+  padding:8px 12px;
+
+  border-radius:8px;
+
+  border:1px solid #e2e8f0;
+
+}
+
+.header-actions{
+
+  display:flex;
+
+  gap:10px;
+
+}
+
+.filter-btn{
+
+  background:#e2e8f0;
+
+  border:none;
+
+  width:36px;
+  height:36px;
+
+  border-radius:8px;
+
+  cursor:pointer;
+
+}
+
+.add-btn{
+
+  background:#2563eb;
+
+  border:none;
+
+  width:36px;
+  height:36px;
+
+  border-radius:50%;
+
+  color:white;
+
+  font-size:20px;
+
+  cursor:pointer;
+
+}

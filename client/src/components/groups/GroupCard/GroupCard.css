@@ -1,0 +1,50 @@
+.group-card{
+
+  border:1px solid #e6e6e6;
+  border-radius:14px;
+
+  padding:18px;
+  margin-bottom:16px;
+
+  background:white;
+
+  width:360px;
+
+  cursor:pointer;
+
+  transition:all 0.2s ease;
+
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+
+}
+
+.group-card:hover{
+
+  transform:translateY(-3px);
+
+  box-shadow:0 8px 18px rgba(0,0,0,0.08);
+
+}
+
+.group-schedule{
+
+  margin-top:10px;
+
+  font-size:14px;
+
+  color:#666;
+
+  display:flex;
+  gap:10px;
+
+}
+
+.group-participants{
+
+  margin-top:10px;
+
+  font-size:13px;
+
+  color:#888;
+
+}

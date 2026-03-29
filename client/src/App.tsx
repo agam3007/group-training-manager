@@ -1,35 +1,64 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom"
 
-function App() {
-  const [count, setCount] = useState(0)
+import Dashboard from "./pages/Dashboard/Dashboard"
+import Schedule from "./pages/Schedule/Schedule"
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+import { useState } from "react"
+import type { Training } from "./types/training"
+import AppLayout from "./components/layout/AppLayout"
+import AthletesPage from "./pages/Athletes/Athlete"
+import GroupsPage from "./pages/Groups/Group"
+import AthleteDetails from "./pages/Athletes/AthleteDetails"
+import AthleteFormPage from "./pages/Athletes/AthleteFormPage"
+
+function App(){
+
+  const [trainings,setTrainings] =
+    useState<Training[]>([])
+
+  return(
+
+    <BrowserRouter>
+
+      <Routes>
+        <Route element={<AppLayout />}>
+
+        <Route
+          path="/"
+          element={
+            <Dashboard
+              setTrainings={setTrainings}
+            />
+          }
+        />
+
+        <Route
+          path="/schedule"
+          element={
+            <Schedule
+              trainings={trainings}
+              setTrainings={setTrainings}
+            />
+          }
+        />
+        <Route path="/groups" element={<GroupsPage/>} />
+<Route path="/athletes" element={<AthletesPage/>} />
+{/* <Route path="/athletes/:id" element={<AthleteDetails/>} /> */}
+<Route path="/athletes/new" element={<AthleteFormPage />} />
+
+<Route path="/athletes/:id" element={<AthleteDetails />} />
+</Route>
+<Route path="/athletes" element={<AthletesPage/>} />
+
+<Route path="/groups" element={<GroupsPage/>} />
+
+{/* <Route path="/groups/:id" element={<GroupDetails/>} /> */}
+      </Routes>
+
+    </BrowserRouter>
+
   )
+
 }
 
 export default App

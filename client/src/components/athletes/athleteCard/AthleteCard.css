@@ -1,0 +1,48 @@
+.athlete-card{
+
+  padding:16px;
+
+  border-radius:12px;
+
+  background:white;
+
+  box-shadow:0 3px 10px rgba(0,0,0,0.08);
+
+  cursor:pointer;
+
+  transition:0.2s;
+
+}
+
+.athlete-card:hover{
+
+  transform:translateY(-3px);
+
+}
+
+.athlete-header{
+
+  display:flex;
+  align-items:center;
+  gap:12px;
+
+}
+
+.athlete-avatar{
+
+  width:40px;
+  height:40px;
+
+  border-radius:50%;
+
+  background:#4CAF50;
+
+  color:white;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-weight:bold;
+
+}

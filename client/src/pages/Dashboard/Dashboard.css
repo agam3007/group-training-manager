@@ -1,0 +1,61 @@
+.dashboard-grid{
+
+  display:grid;
+
+  grid-template-columns:2fr 1fr;
+
+  gap:20px;
+
+}
+
+.dashboard-card{
+
+  background:white;
+
+  padding:20px;
+
+  border-radius:12px;
+
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+
+}
+
+.timeline-row{
+
+  display:flex;
+
+  gap:12px;
+
+  margin-bottom:8px;
+
+}
+
+.timeline-time{
+
+  width:60px;
+
+  font-weight:bold;
+
+}
+
+.quick-buttons{
+
+  display:flex;
+
+  gap:10px;
+
+  margin-bottom:12px;
+
+}
+
+.quick-buttons button{
+
+  padding:6px 10px;
+
+  border:none;
+
+  border-radius:6px;
+
+  cursor:pointer;
+
+}
