@@ -39,22 +39,172 @@
       "name": "agam",
       "level": "pro",
       "age": 22,
-      "phone": "054",
+      "phone": "0542405393",
       "parentPhone": "054",
       "groups": [],
       "notes": "hiiiiiiiiii",
       "height": 158,
-      "weight": 58
+      "weight": "60",
+      "tests": [
+        {
+          "id": "1774887292961",
+          "sport": "run",
+          "type": "5k",
+          "method": "threshold",
+          "value": 1320,
+          "date": "2026-03-30T16:14:52.961Z",
+          "zones": {
+            "pace": [
+              352,
+              310.5882352941177,
+              277.89473684210526,
+              251.42857142857142,
+              229.56521739130437
+            ]
+          }
+        },
+        {
+          "id": "1774887643143",
+          "sport": "run",
+          "type": "5k",
+          "method": "threshold",
+          "value": 1458,
+          "date": "2026-03-30T16:20:43.143Z",
+          "zones": {
+            "pace": [
+              388.8,
+              343.0588235294118,
+              306.94736842105266,
+              277.7142857142857,
+              253.5652173913044
+            ],
+            "hr": [
+              129.5,
+              148,
+              166.5,
+              175.75,
+              185
+            ]
+          }
+        },
+        {
+          "id": "1774887661873",
+          "sport": "bike",
+          "type": "ftp",
+          "method": "threshold",
+          "value": 200,
+          "date": "2026-03-30T16:21:01.873Z",
+          "zones": {
+            "hr": [
+              133,
+              152,
+              171,
+              180.5,
+              190
+            ],
+            "power": [
+              110.00000000000001,
+              150,
+              180,
+              210,
+              240
+            ]
+          }
+        }
+      ],
+      "zones": {
+        "run": {
+          "pace": [
+            388.8,
+            343.0588235294118,
+            306.94736842105266,
+            277.7142857142857,
+            253.5652173913044
+          ],
+          "hr": [
+            129.5,
+            148,
+            166.5,
+            175.75,
+            185
+          ]
+        },
+        "bike": {
+          "hr": [
+            133,
+            152,
+            171,
+            180.5,
+            190
+          ],
+          "power": [
+            110.00000000000001,
+            150,
+            180,
+            210,
+            240
+          ]
+        }
+      },
+      "restingHR": "60",
+      "maxHR": "200",
+      "experience": "2",
+      "email": "agam3007@gmail.com",
+      "injuries": "pfps",
+      "limitations": "running",
+      "focus": "strength, cycling",
+      "allergies": "celiac",
+      "goals": [
+        {
+          "id": "1774887699946",
+          "title": "back to proper training",
+          "type": "general",
+          "raceName": null,
+          "location": null,
+          "date": null,
+          "target": "",
+          "createdAt": "2026-03-30T16:21:39.946Z",
+          "done": false
+        }
+      ]
     },
     {
-      "id": "1773161225739",
-      "name": "mike",
-      "level": "beginner",
-      "age": 8,
-      "phone": "",
-      "parentPhone": "",
+      "id": "1774889754592",
+      "name": "agam lubinski",
+      "level": "",
       "groups": [],
-      "notes": ""
+      "tests": [],
+      "goals": [],
+      "zones": {}
+    },
+    {
+      "id": "1774890625391",
+      "name": "מיקה",
+      "level": "",
+      "groups": [],
+      "tests": [],
+      "goals": [],
+      "zones": {}
+    },
+    {
+      "id": "1774890693243",
+      "name": "ליסה",
+      "level": "",
+      "groups": [],
+      "tests": [],
+      "goals": [],
+      "zones": {}
+    },
+    {
+      "id": "1774890711051",
+      "name": "צייסי",
+      "level": "",
+      "groups": [],
+      "tests": [],
+      "goals": [],
+      "zones": {},
+      "age": "6",
+      "height": "100"
     }
   ],
   "trainings": [],

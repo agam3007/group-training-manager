@@ -8,6 +8,8 @@ export interface Athlete {
 
   age?:number
 
+  experience?:number
+
   phone?:string
 
   email?:string
@@ -41,6 +43,14 @@ tests?:Test[]
 
   medicalNotes?:string
 
+  injured?:boolean
+
+  injuryType?:string
+
+  limitations?:string
+
+  focus?:string
+
   notes?:string
 
 }
@@ -51,9 +61,35 @@ export type Goal = {
 
   title:string
 
+  type:"general" | "race"
+
+  raceName?:string
+
+  location?:string
+
   target?:string
 
-  date?:string
+  date:string
+
+  createdAt:string
+
+  plan?: {
+  pacing?:string
+  nutritionPre?:string
+  nutritionDuring?:string
+  hydration?:string
+  gear?:string
+  schedule?:string
+  notes?:string
+}
+
+review?: {
+  actualPacing?:string
+  actualNutrition?:string
+  whatWorked?:string
+  whatNot?:string
+  notes?:string
+}
 
   done?:boolean
 
