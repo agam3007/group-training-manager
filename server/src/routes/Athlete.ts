@@ -80,7 +80,11 @@ router.post('/', (req,res)=>{
 
     groups: req.body.groups || [],
 
-    notes: req.body.notes
+    notes: req.body.notes,
+
+      tests: [],
+  goals: [],
+  zones: {},
 
   }
 
@@ -118,12 +122,13 @@ router.put('/:id',(req,res)=>{
   }
 
   const updatedAthlete:Athlete = {
+  ...db.athletes[index],
+  ...req.body,
 
-    ...db.athletes[index],
-
-    ...req.body
-
-  }
+  goals: req.body.goals ?? db.athletes[index].goals,
+  tests: req.body.tests ?? db.athletes[index].tests,
+  zones: req.body.zones ?? db.athletes[index].zones,
+}
 
   db.athletes[index] = updatedAthlete
 

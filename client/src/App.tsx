@@ -43,8 +43,6 @@ function App(){
         />
         <Route path="/groups" element={<GroupsPage/>} />
 <Route path="/athletes" element={<AthletesPage/>} />
-{/* <Route path="/athletes/:id" element={<AthleteDetails/>} /> */}
-<Route path="/athletes/new" element={<AthleteFormPage />} />
 
 <Route path="/athletes/:id" element={<AthleteDetails />} />
 </Route>

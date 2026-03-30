@@ -1,14 +1,16 @@
 import { useEffect,useState,useRef } from "react"
 import { useParams,useNavigate } from "react-router-dom"
 
-import type { Athlete } from "../../types/athlete"
-import { getAthlete } from "../../api/athlete"
+import type { Athlete, Test } from "../../types/athlete"
+import { createAthlete, deleteAthlete, getAthlete, updateAthlete } from "../../api/athlete"
 
 import "./AthleteDetails.css"
 import AddTestModal from "../../components/athletes/addTestModal/AddTestModal"
 import StatsChart from "../../components/athletes/statsChart/StatsChart"
 import ZonesTable from "../../components/athletes/zonesTable/ZonesTable"
 import ProgressChart from "../../components/athletes/progressChart/ProgressChart"
+import AddGoalModal from "../../components/athletes/goalModal/AddGoalModal"
+import GoalActionModal from "../../components/athletes/goalModal/GoalActionModal"
 
 /* -------- TYPES -------- */
 
@@ -68,11 +70,37 @@ function Field({label,value,editMode,onChange}:any){
   )
 }
 
+/* -------- LOAD HELPERS -------- */
+
+const ZONE_WEIGHTS:any = {
+  z1:1,
+  z2:2,
+  z3:3,
+  z4:4,
+  z5:5
+}
+
+const calcLoad = (zones:any)=>{
+  if(!zones) return 0
+
+  return Object.keys(ZONE_WEIGHTS).reduce((sum,z)=>{
+    return sum + (zones[z] || 0) * ZONE_WEIGHTS[z]
+  },0)
+}
+
+const getLast7Days = (arr:any[])=>{
+  return arr.slice(-7)
+}
+
+const getLast28Days = (arr:any[])=>{
+  return arr.slice(-28)
+}
 /* -------- COMPONENT -------- */
 
 export default function AthleteDetails(){
 
   const { id } = useParams()
+
   const navigate = useNavigate()
 
   const [athlete,setAthlete] =
@@ -99,6 +127,11 @@ export default function AthleteDetails(){
   const [editMode,setEditMode] = useState(false)
 
     const [editData,setEditData] = useState<any>(null)
+
+    const [showGoalModal,setShowGoalModal] = useState(false)
+
+    const [activeGoal,setActiveGoal] = useState<any>(null)
+const [goalMode,setGoalMode] = useState<"plan"|"review"|null>(null)
 
 
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -139,10 +172,14 @@ export default function AthleteDetails(){
     setEditData(data)
   }
 
-    const saveEdit = ()=>{
-    setAthlete(editData)
-    setEditMode(false)
-  }
+    const saveEdit = async()=>{
+    const updated = await updateAthlete(id!, editData)
+
+    setAthlete(updated)
+    setEditData(updated)
+
+  setEditMode(false)
+}
 
 if(!athlete || !editData) return <div>Loading...</div>
 
@@ -162,34 +199,246 @@ const isDirty = JSON.stringify(editData) !== JSON.stringify(athlete)
   const attendance =
     total ? Math.round(done/total*100) : 0
 
+  /* -------- LOAD + ANALYTICS -------- */
+
+// כרגע אין לך trainings אמיתיים → נשתמש ב-events כבסיס
+// (בהמשך תחליפי ל-trainings אמיתיים)
+
+const weeklyTrainings = athleteTrainings.slice(-7)
+
+const weeklyLoad = weeklyTrainings.length * 50 // זמני (עד שיהיה zones אמיתי)
+
+const lastWeekLoad = athleteTrainings.slice(-14,-7).length * 50
+
+const loadChange = lastWeekLoad
+  ? Math.round((weeklyLoad - lastWeekLoad)/lastWeekLoad * 100)
+  : 0
+
+const last7Days = Array.from({length:7}, (_,i)=>{
+  const dayTrainings = athleteTrainings.filter((t,idx)=>
+    idx === athleteTrainings.length - 7 + i
+  )
+
+  if(!dayTrainings.length) return 0
+
+  return dayTrainings.reduce((sum,t)=>
+    sum + (t.done ? 50 : 10)
+  ,0)
+})
+
+// ACUTE / CHRONIC (PRO)
+const acuteLoad = weeklyLoad
+const chronicLoad = athleteTrainings.slice(-28).length * 50 / 4
+
+const acwr = chronicLoad
+  ? (acuteLoad / chronicLoad).toFixed(2)
+  : "0"
+
+// STREAK
+let streak = 0
+for(let i=athleteTrainings.length-1;i>=0;i--){
+  if(athleteTrainings[i].done) streak++
+  else break
+}
+
+// MISSED
+const missed = athleteTrainings.filter(t=>!t.done).length
+
+// LAST TRAINING
+const lastDoneIndex = [...athleteTrainings].reverse().findIndex(t=>t.done)
+const lastTrainingDaysAgo =
+  lastDoneIndex === -1 ? null : lastDoneIndex
+
+const insights = []
+
+if(loadChange > 20){
+  insights.push("⚠️ Load increased sharply")
+}
+
+if(Number(acwr) > 1.3){
+  insights.push("⚠️ Injury risk (high ACWR)")
+}
+
+if(streak >= 5){
+  insights.push("🔥 Great consistency")
+}
+
+if(missed >= 2){
+  insights.push("⚠️ Missed trainings")
+}
+
+if(!insights.length){
+  insights.push("✅ Balanced training")
+}
+
   /* -------- ADD TEST -------- */
 
-  const addTest = (test:any)=>{
-    setAthlete(prev=>({
-      ...prev!,
-      tests:[...(prev?.tests||[]),test],
-      zones:{
-        ...prev?.zones,
-        [test.sport]: test.zones
-      }
-    }))
+  const addTest = async (test:any)=>{
+  if(!athlete) return
+
+  const updatedAthlete = {
+    ...athlete,
+    tests:[...(athlete.tests||[]),test],
+    zones:{
+      ...athlete.zones,
+      [test.sport]: test.zones
+    }
   }
+
+  const saved = await updateAthlete(athlete.id,updatedAthlete)
+
+  setAthlete(saved)
+}
 
   /* -------- GOALS -------- */
 
-  const addGoal = ()=>{
-    setAthlete(prev=>({
-      ...prev!,
-      goals:[
-        ...(prev?.goals||[]),
-        {
-          id:Date.now().toString(),
-          title:"New Goal",
-          done:false
-        }
-      ]
-    }))
+  const addGoal = async (goal:any)=>{
+  if(!athlete) return
+
+  const updatedAthlete = {
+    ...athlete,
+    goals:[...(athlete.goals || []),goal]
   }
+
+  const saved = await updateAthlete(athlete.id,updatedAthlete)
+
+  setAthlete(saved)
+}
+
+const getDaysLeft = (date:string)=>{
+  if(!date) return null
+
+  const diff =
+    new Date(date).getTime() - new Date().getTime()
+
+  return Math.ceil(diff / (1000*60*60*24))
+}
+
+const getGoalStatus = (g:any)=>{
+  if(g.done) return "done"
+
+  if(g.date){
+    const days = getDaysLeft(g.date)
+
+    if(days !== null){
+      if(days < 0) return "missed"
+      if(days < 7) return "soon"
+      return "on-track"
+    }
+  }
+
+  return "active"
+}
+
+const getPBProgress = (g:any,tests:Test[] | undefined)=>{
+  if(!g.target || !tests?.length) return 0
+
+  const relevantTests = tests.filter(t=>t.type === g.raceName)
+
+  if(!relevantTests.length) return 0
+
+  const sport = relevantTests[0].sport
+
+  const pb =
+    sport==="bike"
+      ? Math.max(...relevantTests.map(t=>t.value))
+      : Math.min(...relevantTests.map(t=>t.value))
+
+  const target = Number(g.target)
+
+  if(!target) return 0
+
+  // ריצה/שחייה → נמוך יותר טוב
+  if(sport!=="bike"){
+    return Math.min(100, Math.round((pb / target) * 100))
+  }
+
+  // אופניים → גבוה יותר טוב
+  return Math.min(100, Math.round((pb / target) * 100))
+}
+
+const isPast = (date:string)=>{
+  return new Date(date).getTime() < Date.now()
+}
+
+const openGoalModal = (goal:any)=>{
+  setActiveGoal(goal)
+
+  if(goal.date && isPast(goal.date)){
+    setGoalMode("review")
+  }else{
+    setGoalMode("plan")
+  }
+}
+
+const isOneWeekAway = (date:string)=>{
+  const diff =
+    new Date(date).getTime() - Date.now()
+
+  const days = diff / (1000*60*60*24)
+
+  return days <= 7 && days > 0
+}
+
+const saveGoalAction = async (goalId:string,data:any)=>{
+  if(!athlete) return
+
+  const updatedGoals = athlete.goals?.map(g=>
+    g.id===goalId
+      ? {
+          ...g,
+          plan: goalMode==="plan" ? data : g.plan,
+          review: goalMode==="review" ? data : g.review
+        }
+      : g
+  )
+
+  const updatedAthlete = {
+    ...athlete,
+    goals: updatedGoals
+  }
+
+  const saved = await updateAthlete(athlete.id,updatedAthlete)
+
+  setAthlete(saved)
+
+  setActiveGoal(null)
+  setGoalMode(null)
+}
+
+const getGoalBtnType = (g:any)=>{
+  if(!g.date) return "update"
+  return isPast(g.date) ? "review" : "plan"
+}
+
+const saveName = async ()=>{
+  if(!athlete?.id) return
+  if(!editData.name?.trim()) return
+
+  const updated = await updateAthlete(athlete.id, {
+    ...athlete,
+    name: editData.name
+  })
+
+  setAthlete(updated)
+}
+
+const handleDelete = async () => {
+  if (!athlete) return
+
+  const confirmDelete = window.confirm("Are you sure you want to delete this athlete?")
+
+  if (!confirmDelete) return
+
+  try {
+    await deleteAthlete(athlete.id)
+
+    navigate("/athletes") // חוזר לרשימה
+  } catch (err) {
+    alert("Failed to delete athlete")
+  }
+}
+
 
   return(
 
@@ -201,7 +450,27 @@ const isDirty = JSON.stringify(editData) !== JSON.stringify(athlete)
 
         <div className={`profile ${athlete.injuries ? "injured" : ""}`}>
           <div className="avatar"/>
-          <h1>{athlete.name}</h1>
+          {athlete.name ? (
+            <h2>{athlete.name}</h2>
+          ) : (<input
+  className="name-input"
+  value={editData.name || ""}
+  onChange={(e)=>
+    setEditData({...editData, name: e.target.value})
+  }
+  placeholder="Athlete name"
+  onKeyDown={(e)=>{
+    if(e.key === "Enter"){
+      saveName()
+    }
+  }}
+  onBlur={()=>{
+    if(editData.name?.trim()){
+      saveName()
+    }
+  }}
+/>)}
+          
           <p>{athlete.level}</p>
         </div>
 
@@ -387,7 +656,7 @@ const isDirty = JSON.stringify(editData) !== JSON.stringify(athlete)
         <div className="card">
           <h3>Stats</h3>
 
-          <div className="stats-grid">
+          {/* <div className="stats-grid">
             <div>Attendance</div>
             <div style={{
               color:
@@ -399,10 +668,64 @@ const isDirty = JSON.stringify(editData) !== JSON.stringify(athlete)
 
             <div>Trainings</div>
             <div>{total}</div>
-          </div>
+          </div> */}
 
-          <StatsChart data={[3,5,2,6,8,4,7]} />
-        </div>
+<div className="stats-compact">
+
+  {/* KPI */}
+  <div className="stats-kpis">
+    <div className="kpi">
+      <span>Load</span>
+      <b>{weeklyLoad}</b>
+    </div>
+
+    <div className="kpi">
+      <span>ACWR</span>
+      <b>{acwr}</b>
+    </div>
+
+    <div className="kpi">
+      <span>Streak</span>
+      <b>{streak}</b>
+    </div>
+
+    <div className="kpi">
+      <span>Missed</span>
+      <b>{missed}</b>
+    </div>
+  </div>
+
+  {/* MINI GRAPH + TREND */}
+  <div className="stats-bottom">
+
+    <div className="mini-chart">
+      <StatsChart data={[
+  20, 45, 60, 30, 80, 0, 50
+]} />
+    </div>
+
+    <div className="stats-side">
+
+      <div className="trend">
+        {loadChange > 0 ? `↑ ${loadChange}%` : `${loadChange}%`}
+      </div>
+
+      <div className="last">
+        {lastTrainingDaysAgo === null
+          ? "-"
+          : `${lastTrainingDaysAgo}d`}
+      </div>
+
+    </div>
+
+  </div>
+
+  {/* 🔥 INSIGHT אחד בלבד */}
+  <div className="insight-line">
+    {insights[0]}
+  </div>
+
+</div>    </div>
 
         <div className="card">
 
@@ -515,24 +838,112 @@ const isDirty = JSON.stringify(editData) !== JSON.stringify(athlete)
 
         </div>
 
-        <div className="card">
+        <div className="card goals">
 
           <div className="header-row">
             <h3>Goals</h3>
-            <button onClick={addGoal}>+</button>
+            <button onClick={()=>setShowGoalModal(true)}>+</button>
           </div>
+{showGoalModal && (
+  <AddGoalModal
+    onClose={()=>setShowGoalModal(false)}
+    onAdd={(goal)=>{
+      addGoal(goal)
+      setShowGoalModal(false)
+    }}
+  />
+)}
 
-          {(athlete.goals || []).map(g=>(
+{(athlete.goals || []).length === 0 && (
+  <div>No goals yet</div>
+)}
 
-            <div key={g.id} className="goal-row">
-              <span>{g.title}</span>
-              <input type="checkbox" checked={g.done} readOnly />
-            </div>
+ {(athlete.goals || []).map(g=>{
 
-          ))}
+  const daysLeft = getDaysLeft(g.date)
+  const status = getGoalStatus(g)
+  const progress = getPBProgress(g, athlete.tests)
+const type = getGoalBtnType(g)
+  return(
 
+    <div key={g.id} className={`goal-row ${status}`}>
+
+      <div className="goal-main">
+
+        <div className="goal-title">
+          {g.title}
         </div>
 
+        {g.type==="race" && (
+          <div className="goal-sub">
+            {g.raceName} • {g.location}
+          </div>
+        )}
+
+        {/* 🎯 יעד */}
+        {g.target && (
+          <div className="goal-target">
+            🎯 {g.target}
+          </div>
+        )}
+
+        {/* ⏳ countdown */}
+        {daysLeft !== null && (
+          <div className="goal-countdown">
+            ⏳ {daysLeft > 0 ? `${daysLeft} days` : "Race passed"}
+          </div>
+        )}
+
+        {/* 📊 progress */}
+        {g.date && (
+          <div className="progress-bar">
+            <div
+              className="progress-fill"
+              style={{width:`${progress}%`}}
+            />
+          </div>
+        )}
+
+        {g.date && isOneWeekAway(g.date) && (
+  <div className="goal-alert">
+    🔔 Race in less than a week!
+  </div>
+
+  
+)}
+
+{g.plan && <span className="tag">📝 Plan</span>}
+{g.review && <span className="tag">📊 Review</span>}
+
+      </div>
+
+  
+   {g.date && (<button
+  className={`goal-action-btn ${type}`}
+  onClick={()=>openGoalModal(g)}
+>
+  
+  {type==="plan" && "🧠 Plan"}
+  {type==="review" && "📊 Review"}
+</button>)}
+
+    </div>
+
+  )
+})}
+
+{activeGoal && goalMode && (
+  <GoalActionModal
+    goal={activeGoal}
+    mode={goalMode}
+    onClose={()=>{
+      setActiveGoal(null)
+      setGoalMode(null)
+    }}
+    onSave={saveGoalAction}
+  />
+)}
+</div>
         <button
           className="calendar-btn"
           onClick={()=>navigate(`/calendar/${athlete.id}`)}
@@ -540,6 +951,12 @@ const isDirty = JSON.stringify(editData) !== JSON.stringify(athlete)
           Open Calendar
         </button>
 
+        <button
+  className="icon-btn danger"
+  onClick={handleDelete}
+>
+  🗑️
+</button>
       </div>
 
       {showTestModal && (
