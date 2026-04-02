@@ -11,8 +11,6 @@ export interface Athlete {
   email?: string
   parentPhone?: string
 
-  groups: string[]
-
   height?: number
   weight?: number
 

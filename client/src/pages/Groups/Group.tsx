@@ -5,6 +5,7 @@ import { getGroups } from "../../api/group"
 
 import PageHeader from "../../components/sherd/PageHeader"
 import GroupCard from "../../components/groups/GroupCard/GroupCard"
+import { useNavigate } from "react-router-dom"
 
 
 export default function GroupsPage(){
@@ -14,6 +15,9 @@ export default function GroupsPage(){
 
   const [search,setSearch] =
     useState("")
+
+  const navigate = useNavigate()
+
 
   useEffect(()=>{
 
@@ -53,7 +57,7 @@ export default function GroupsPage(){
           <GroupCard
             key={g.id}
             group={g}
-            onClick={()=>{}}
+            onClick={()=>{navigate(`/groups/${g.id}`)}}
           />
 
         ))}

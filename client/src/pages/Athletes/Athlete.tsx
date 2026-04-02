@@ -50,9 +50,7 @@ export default function AthletesPage(){
               const emptyAthlete:Athlete = {
                 id:"",
                 name:"",
-                level:"",
-                groups:[],
-          
+                level:"",          
                 tests:[],
                 goals:[],
                 zones:{},

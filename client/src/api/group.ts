@@ -2,6 +2,18 @@ import type { Group } from "../types/group"
 
 const API = "http://localhost:3001/groups"
 
+export async function getGroup(id: string): Promise<Group> {
+
+  const res = await fetch(`${API}/${id}`)
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch group")
+  }
+
+  return res.json()
+
+}
+
 export async function getGroups(){
 
 const res = await fetch(API)

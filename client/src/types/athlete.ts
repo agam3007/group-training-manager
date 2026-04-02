@@ -16,8 +16,6 @@ export interface Athlete {
 
   parentPhone?:string
 
-  groups:string[]
-
   height?:number
 
   weight?:number
@@ -36,7 +34,7 @@ export interface Athlete {
 
   }
 
-tests?:Test[]
+  tests?:Test[]
   goals?:Goal[]
 
   injuries?:string

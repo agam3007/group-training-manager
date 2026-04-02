@@ -40,24 +40,6 @@ router.get('/:id',(req,res)=>{
 
 })
 
-// GET athletes by group
-router.get('/group/:groupId', (req,res)=>{
-
-  const { groupId } = req.params
-
-  logger.info(`GET athletes for group ${groupId}`)
-
-  const db = readDb()
-
-  const athletes =
-    db.athletes.filter(
-      (a:Athlete)=>a.groups.includes(groupId)
-    )
-
-  res.json(athletes)
-
-})
-
 
 // CREATE athlete
 router.post('/', (req,res)=>{
@@ -77,8 +59,6 @@ router.post('/', (req,res)=>{
     phone: req.body.phone,
 
     parentPhone: req.body.parentPhone,
-
-    groups: req.body.groups || [],
 
     notes: req.body.notes,
 

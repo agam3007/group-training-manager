@@ -10,6 +10,7 @@ import AthletesPage from "./pages/Athletes/Athlete"
 import GroupsPage from "./pages/Groups/Group"
 import AthleteDetails from "./pages/Athletes/AthleteDetails"
 import AthleteFormPage from "./pages/Athletes/AthleteFormPage"
+import GroupDetails from "./pages/Groups/GroupDetails"
 
 function App(){
 
@@ -45,13 +46,13 @@ function App(){
 <Route path="/athletes" element={<AthletesPage/>} />
 
 <Route path="/athletes/:id" element={<AthleteDetails />} />
-</Route>
+
 <Route path="/athletes" element={<AthletesPage/>} />
 
 <Route path="/groups" element={<GroupsPage/>} />
 
-{/* <Route path="/groups/:id" element={<GroupDetails/>} /> */}
-      </Routes>
+<Route path="/groups/:id" element={<GroupDetails/>} />
+  </Route>    </Routes>
 
     </BrowserRouter>
 

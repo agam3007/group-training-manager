@@ -5,6 +5,32 @@ import { Group } from '../models/Group'
 
 const router = Router()
 
+router.get('/:id', (req, res) => {
+
+  const db = readDb()
+
+  const { id } = req.params
+
+  const group = db.groups.find(
+    (g: Group) => g.id === id
+  )
+
+  if (!group) {
+
+    logger.error(`Group not found: ${id}`)
+
+    return res.status(404).json({
+      message: "Group not found"
+    })
+
+  }
+
+  logger.info(`GET /groups/${id}`)
+
+  res.json(group)
+
+})
+
 // GET all groups
 router.get('/', (req,res)=>{
 
@@ -26,7 +52,6 @@ router.post('/', (req,res)=>{
     id: Date.now().toString(),
     name: req.body.name,
     type: req.body.type,
-    athletes: req.body.athletes || [],
     schedule: req.body.schedule || []
 
   }

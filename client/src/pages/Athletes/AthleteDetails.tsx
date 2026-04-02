@@ -11,6 +11,8 @@ import ZonesTable from "../../components/athletes/zonesTable/ZonesTable"
 import ProgressChart from "../../components/athletes/progressChart/ProgressChart"
 import AddGoalModal from "../../components/athletes/goalModal/AddGoalModal"
 import GoalActionModal from "../../components/athletes/goalModal/GoalActionModal"
+import { deleteAthleteGroup, getAthleteGroupsByAthleteId } from "../../api/athleteGroup"
+import { getGroup } from "../../api/group"
 
 /* -------- TYPES -------- */
 
@@ -133,6 +135,8 @@ export default function AthleteDetails(){
     const [activeGoal,setActiveGoal] = useState<any>(null)
 const [goalMode,setGoalMode] = useState<"plan"|"review"|null>(null)
 
+const [groups, setGroups] = useState<any[]>([])
+
 
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -163,13 +167,14 @@ const [goalMode,setGoalMode] = useState<"plan"|"review"|null>(null)
     const data = await getAthlete(id!)
     setAthlete(data)
 
-    setEvents([
-      {type:"training",athleteId:id,done:true},
-      {type:"training",athleteId:id,done:false},
-      {type:"training",groupId:"g1",done:true}
-    ])
-
     setEditData(data)
+
+      const relations = await getAthleteGroupsByAthleteId(id!)
+const groupsData = await Promise.all(
+    relations.map((r: any) => getGroup(r.groupId))
+  )
+
+  setGroups(groupsData)
   }
 
     const saveEdit = async()=>{
@@ -190,7 +195,7 @@ const isDirty = JSON.stringify(editData) !== JSON.stringify(athlete)
     e.type==="training" &&
     (
       e.athleteId === athlete.id ||
-      athlete.groups.includes(e.groupId!)
+      groups.some(g => g.id === e.groupId)
     )
   )
 
@@ -439,6 +444,19 @@ const handleDelete = async () => {
   }
 }
 
+const handleRemoveFromGroup = async (groupId: string) => {
+  const relations = await getAthleteGroupsByAthleteId(athlete.id)
+
+  const relation = relations.find(
+    (r: any) => r.groupId === groupId
+  )
+
+  if (relation) {
+    await deleteAthleteGroup(relation.id)
+    await load()
+  }
+}
+
 
   return(
 
@@ -637,9 +655,15 @@ const handleDelete = async () => {
             {/* GROUPS */}
             {activeTab==="groups" && (
               <>
-                {(athlete.groups || []).map(g=>(
-                  <div key={g}>{g}</div>
-                ))}
+              {groups.map(g => (
+  <div key={g.id} className="group-row">
+    <span>{g.name}</span>
+
+    <button onClick={() => handleRemoveFromGroup(g.id)}>
+      ✕
+    </button>
+  </div>
+))}
               </>
             )}
 
