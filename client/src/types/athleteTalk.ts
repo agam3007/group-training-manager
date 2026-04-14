@@ -1,13 +1,11 @@
 export type AthleteTalk = {
+  id: string;
 
-  id:string
+  athleteId: string;
 
-  athleteId:string
+  date: string;
 
-  date:string
+  summary: string;
 
-  summary:string
-
-  important?:boolean
-
-}
+  important?: boolean;
+};

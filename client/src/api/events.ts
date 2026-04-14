@@ -1,48 +1,37 @@
-import type { DayEvent } from "../types/dayEvent"
+import { env } from "@/env/env";
+import type { DayEvent } from "@/shared/types/dayEvent";
 
-const API = "http://localhost:3001"
+const API = `${env.apiUrl}/events`;
 
-export async function getEvents():Promise<DayEvent[]>{
-
-  const res = await fetch(`${API}/events`)
-  return res.json()
-
+export async function getEvents(): Promise<DayEvent[]> {
+  const res = await fetch(`${API}/events`);
+  return res.json();
 }
 
-export async function addEvent(event:DayEvent){
+export async function addEvent(event: DayEvent) {
+  await fetch(`${API}/events`, {
+    method: "POST",
 
-  await fetch(`${API}/events`,{
-
-    method:"POST",
-
-    headers:{
-      "Content-Type":"application/json"
+    headers: {
+      "Content-Type": "application/json",
     },
 
-    body:JSON.stringify(event)
-
-  })
-
+    body: JSON.stringify(event),
+  });
 }
 
-export async function updateEvent(event:DayEvent){
-
-  await fetch(
-    `http://localhost:3001/events/${event.id}`,
-    {
-      method:"PUT",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify(event)
-    }
-  )
-
+export async function updateEvent(event: DayEvent) {
+  await fetch(`http://localhost:3001/events/${event.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(event),
+  });
 }
 
-export async function deleteEvent(id:string){
-
-      await fetch(`http://localhost:3001/events/${id}`,{
-    method:"DELETE"
-  })
+export async function deleteEvent(id: string) {
+  await fetch(`http://localhost:3001/events/${id}`, {
+    method: "DELETE",
+  });
 }

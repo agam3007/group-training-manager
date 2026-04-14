@@ -1,0 +1,17 @@
+/* ================= LAYOUT ================= */
+
+.app-layout {
+  display: flex;
+}
+
+/* ================= CONTENT ================= */
+
+.app-content {
+  flex: 1;
+  padding: 40px;
+}
+
+/* page בלי padding (כמו schedule) */
+.app-content.no-padding {
+  padding: 0;
+}

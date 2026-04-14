@@ -1,26 +1,21 @@
-interface Props{
+interface Props {
+  athletes: number;
 
-  athletes:number
+  groups: number;
 
-  groups:number
+  trainingsToday: number;
 
-  trainingsToday:number
-
-  callsPending:number
-
+  callsPending: number;
 }
 
 export default function Stats({
   athletes,
   groups,
   trainingsToday,
-  callsPending
-}:Props){
-
-  return(
-
+  callsPending,
+}: Props) {
+  return (
     <div className="dashboard-card">
-
       <h3>Stats</h3>
 
       <div>Athletes: {athletes}</div>
@@ -30,9 +25,6 @@ export default function Stats({
       <div>Trainings today: {trainingsToday}</div>
 
       <div>Calls pending: {callsPending}</div>
-
     </div>
-
-  )
-
+  );
 }

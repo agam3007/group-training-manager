@@ -1,0 +1,13 @@
+/* ================= DAY SUMMARY ================= */
+
+.day-summary-row {
+  display: grid;
+  grid-template-columns: 80px repeat(7, 1fr);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.summary-cell {
+  min-height: 70px;
+  padding: 8px;
+  border-right: 1px solid #f0f0f0;
+}

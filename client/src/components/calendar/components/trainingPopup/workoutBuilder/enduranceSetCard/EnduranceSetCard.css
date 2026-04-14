@@ -1,0 +1,128 @@
+.set-summary {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.set-notes {
+  font-size: 12px;
+  color: #666;
+}
+
+.set-extra {
+  font-size: 12px;
+  color: #888;
+}
+
+/* ===== EDIT MODE ===== */
+
+.set-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  flex: 1;
+  align-self: stretch;
+}
+
+/* GRID */
+.set-edit-grid {
+  display: flex;
+  flex-wrap: wrap; /* 🔥 זה הכי חשוב */
+  gap: 8px;
+}
+
+.set-edit-grid > * {
+  min-width: 0;
+}
+
+/* FIELD */
+.field {
+  display: flex;
+  flex-direction: column;
+  font-size: 11px;
+  color: #666;
+
+  flex: 1 1 100px; /* 🔥 שומר שלא יחרוג */
+  min-width: 80px;
+}
+
+.field input,
+.field select {
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 13px;
+
+  width: 100%; /* 🔥 חשוב */
+  box-sizing: border-box;
+}
+
+/* NOTES */
+.set-notes-input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  min-height: 60px;
+  font-size: 13px;
+}
+
+/* ACTIONS */
+.set-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* BUTTONS */
+.btn-primary {
+  background: #2f80ed;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background: #eee;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-danger {
+  background: #eb5757;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.set-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  font-size: 11px;
+  color: #666;
+  flex: 1;
+  min-width: 100px;
+}
+
+.field.small {
+  max-width: 90px;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  box-sizing: border-box;
+}

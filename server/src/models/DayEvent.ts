@@ -1,19 +1,17 @@
 export interface DayEvent {
+  id: string;
 
-  id:string
+  type: "training" | "task" | "call";
 
-  type:"training" | "task" | "call"
+  time: string;
 
-  time:string
+  title: string;
 
-  title:string
+  date: string;
 
-  date:string
+  athleteId?: string;
 
-  athleteId?:string
+  groupId?: string;
 
-  groupId?:string
-
-  done?:boolean
-
+  done?: boolean;
 }

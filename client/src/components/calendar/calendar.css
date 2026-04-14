@@ -1,522 +1,102 @@
-.calendar {
+/* ================= MAIN LAYOUT ================= */
 
+.calendar {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 
   width: 100%;
-  height: calc(100vh - 40px);
+  height: 100vh;
 
   font-family: sans-serif;
+  margin-left: 0;
 
+  overflow: hidden;
 }
 
-/* ================= HEADER ================= */
+/* ================= NAV ================= */
 
-.week-header{
-  display:grid;
-  grid-template-columns:80px repeat(7,1fr);
-  border-bottom:1px solid #e5e7eb;
-  background:#fafafa;
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px;
+
+  border-bottom: 1px solid #eee;
+}
+
+.calendar-nav button {
+  padding: 6px 10px;
+
+  border: 1px solid #ddd;
+  background: white;
+
+  cursor: pointer;
+
+  border-radius: 6px;
+}
+
+.week-range {
+  margin-left: 10px;
+  font-weight: 600;
+}
+
+/* ================= WEEK HEADER ================= */
+
+.week-header {
+  display: grid;
+  grid-template-columns: 80px repeat(7, 1fr);
+
+  border-bottom: 1px solid #e5e7eb;
+  background: #fafafa;
 }
 
 .day-header {
+  display: flex;
+  flex-direction: column;
 
-  display:flex;
-  flex-direction:column;
+  align-items: center;
+  justify-content: center;
 
-  align-items:center;
-  justify-content:center;
-
-  padding:12px 6px;
-
+  padding: 12px 6px;
 }
 
-/* ================= DAY SUMMARY ================= */
-
-.day-summary-row{
-  display:grid;
-  grid-template-columns:80px repeat(7,1fr);
-  border-bottom:1px solid #e5e7eb;
+.day-name {
+  font-size: 15px;
+  font-weight: 600;
 }
 
-.summary-cell{
-  min-height:70px;
-  padding:8px;
-  border-right:1px solid #f0f0f0;
+.day-date {
+  font-size: 15px;
+  color: #6b7280;
+
+  margin-top: 4px;
 }
 
-/* ================= BODY ================= */
+/* ================= TODAY ================= */
+
+.today-name {
+  color: #2f80ed;
+  font-weight: 700;
+}
+
+.today-date {
+  background: #2f80ed;
+  color: white;
+
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+}
+
+/* ================= CALENDAR BODY ================= */
 
 .calendar-body {
-
-  display: grid;
-
-  grid-template-columns: 70px repeat(7, 1fr);
-
+  overflow: auto;
   flex: 1;
-
-  overflow-y: auto;
-
-}
-
-/* ================= TIME COLUMN ================= */
-
-.time-column{
-  border-right:1px solid #e5e7eb;
-  background:#fafafa;
-}
-
-.time-cell{
-  height:60px;
-  font-size:12px;
-  color:#6b7280;
-  padding-top:4px;
-  text-align:right;
-  padding-right:8px;
-}
-
-/* ================= DAY COLUMN ================= */
-
-.day-column{
-  position:relative;
-  border-right:1px solid #f0f0f0;
-}
-
-.hour-cell {
-
-  height: 60px;
-
-  border-bottom: 1px solid #eee;
-
-  position: relative;
-
-}
-
-.hour-cell::after{
-
-  content:"";
-
-  position:absolute;
-
-  top:50%;
-  left:0;
-  right:0;
-
-  border-top:1px solid #f3f4f6;
-
-}
-
-/* ================= TRAINING EVENT ================= */
-
-.training-event{
-
-  position:absolute;
-
-  left:6px;
-  right:6px;
-
-  border-radius:8px;
-
-  padding:6px 8px;
-
-  font-size:12px;
-
-  color:white;
-
-  cursor:grab;
-
-  box-shadow:0 1px 2px rgba(0,0,0,0.15);
-
-  box-sizing:border-box;
-
-}
-
-.training-event:active{
-  cursor:grabbing;
-}
-
-.training-title{
-  font-weight:600;
-  pointer-events:none;
-}
-
-.training-description{
-  font-size:11px;
-  opacity:0.9;
-}
-
-/* צבעים לפי סוג */
-
-.training-swim{
-  background:#2F80ED;
-}
-
-.training-bike{
-  background:#27AE60;
-}
-
-.training-run{
-  background:#EB5757;
-}
-
-.training-strength{
-  background:#9B51E0;
-}
-
-/* ================= RESIZE HANDLE ================= */
-
-.resize-handle{
-
-  position:absolute;
-
-  bottom:0;
-  left:0;
-  right:0;
-
-  height:6px;
-
-  cursor:ns-resize;
-
-  background:rgba(0,0,0,0.2);
-
-  border-bottom-left-radius:8px;
-  border-bottom-right-radius:8px;
-
-}
-
-/* ================= POPUP ================= */
-
-.popup{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.4);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.popup-content{
-  background:white;
-  padding:20px;
-  border-radius:10px;
-  width:340px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-.current-time-line{
-
-  position:absolute;
-
-  left:0;
-  right:0;
-
-  height:2px;
-
-  background:red;
-
-  z-index:50;
-
-}
-
-.day-name{
-
-  font-size:15px;
-
-  font-weight:600;
-
-}
-
-.day-date{
-
-  font-size:15px;
-
-  color:#6b7280;
-
-  margin-top:4px;
-
-}
-
-.calendar-nav{
-
-  display:flex;
-
-  align-items:center;
-
-  gap:10px;
-
-  padding:10px;
-
-  border-bottom:1px solid #eee;
-
-}
-
-.calendar-nav button{
-
-  padding:6px 10px;
-
-  border:1px solid #ddd;
-
-  background:white;
-
-  cursor:pointer;
-
-  border-radius:6px;
-
-}
-
-.week-range{
-
-  margin-left:10px;
-
-  font-weight:600;
-
-}
-
-.today-name{
-
-  color:#2F80ED;
-
-  font-weight:700;
-
-}
-
-.today-date{
-
-  background:#2F80ED;
-
-  color:white;
-
-  width:32px;
-  height:32px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  border-radius:50%;
-
-}
-.today-column{
-
-  background:rgba(47,128,237,0.05);
-
-}
-
-.popup{
-
-position:fixed;
-top:0;
-left:0;
-right:0;
-bottom:0;
-
-background:rgba(0,0,0,0.4);
-
-display:flex;
-align-items:center;
-justify-content:center;
-
-z-index:1000;
-
-}
-
-.training-popup{
-
-background:white;
-
-width:1000px;
-max-height:90vh;
-
-border-radius:10px;
-
-display:flex;
-flex-direction:column;
-
-padding:24px;
-
-}
-
-.training-header{
-
-display:flex;
-justify-content:space-between;
-align-items:center;
-
-margin-bottom:20px;
-
-}
-
-.training-header h2{
-
-font-size:22px;
-font-weight:600;
-
-}
-
-.close-btn{
-
-border:none;
-background:none;
-font-size:18px;
-cursor:pointer;
-
-}
-
-.training-body{
-
-display:grid;
-
-grid-template-columns:2fr 1fr;
-
-gap:24px;
-
-overflow:auto;
-
-}
-
-.training-left{
-
-display:flex;
-flex-direction:column;
-gap:12px;
-
-}
-
-.training-right{
-
-background:#f7f7f7;
-
-padding:16px;
-
-border-radius:8px;
-
-display:flex;
-flex-direction:column;
-gap:10px;
-
-}
-
-.input{
-
-padding:10px;
-
-border:1px solid #ddd;
-
-border-radius:6px;
-
-}
-
-.textarea{
-
-padding:10px;
-
-border:1px solid #ddd;
-
-border-radius:6px;
-
-min-height:100px;
-
-}
-
-.select{
-
-padding:10px;
-
-border:1px solid #ddd;
-
-border-radius:6px;
-
-}
-
-.training-footer{
-
-display:flex;
-
-justify-content:flex-end;
-
-gap:12px;
-
-margin-top:20px;
-
-}
-
-.save-btn{
-
-background:#2F80ED;
-
-color:white;
-
-border:none;
-
-padding:10px 18px;
-
-border-radius:6px;
-
-cursor:pointer;
-
-}
-
-.cancel-btn{
-
-background:#eee;
-
-border:none;
-
-padding:10px 18px;
-
-border-radius:6px;
-
-cursor:pointer;
-
-}
-
-.set-card{
-
-display:grid;
-
-grid-template-columns:1fr 1fr 1fr 1fr auto;
-
-gap:8px;
-
-padding:10px;
-
-border-radius:6px;
-
-border:1px solid #eee;
-
-margin-bottom:8px;
-
-background:#fafafa;
-
-}
-
-.set-card.drill{
-border-left:4px solid #F2994A;
-}
-
-.set-card.warmup{
-border-left:5px solid #EB5757;
-}
-
-.set-card.main{
-border-left:5px solid #2F80ED;
-}
-
-.set-card.cooldown{
-border-left:5px solid #27AE60;
-}
-.training-stats{
-
-display:flex;
-
-gap:16px;
-
-font-size:14px;
-
-color:#555;
-
-margin-bottom:10px;
-
 }

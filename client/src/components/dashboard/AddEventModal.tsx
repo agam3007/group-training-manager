@@ -1,52 +1,40 @@
-import { useState,useEffect } from "react"
-import type { DayEvent } from "../../types/dayEvent"
-import "./AddEventModal.css"
+import { useState, useEffect } from "react";
+import type { DayEvent } from "../../../../shared/types/dayEvent";
+import "./AddEventModal.css";
 
-interface Props{
+interface Props {
+  onAdd: (event: DayEvent) => void;
 
-  onAdd:(event:DayEvent)=>void
+  onUpdate?: (event: DayEvent) => void;
 
-  onUpdate?:(event:DayEvent)=>void
+  onClose: () => void;
 
-  onClose:()=>void
-
-  event?:DayEvent
-
+  event?: DayEvent;
 }
 
 export default function AddEventModal({
-
   onAdd,
   onUpdate,
   onClose,
-  event
+  event,
+}: Props) {
+  const [title, setTitle] = useState("");
+  const [time, setTime] = useState("");
+  const [type, setType] = useState<"task" | "call" | "training">("task");
 
-}:Props){
-
-  const [title,setTitle] = useState("")
-  const [time,setTime] = useState("")
-  const [type,setType] =
-    useState<"task"|"call"|"training">("task")
-
-  useEffect(()=>{
-
-    if(event){
-
-      setTitle(event.title)
-      setTime(event.time)
-      setType(event.type)
-
+  useEffect(() => {
+    if (event) {
+      setTitle(event.title);
+      setTime(event.time);
+      setType(event.type);
     }
+  }, [event]);
 
-  },[event])
+  const submit = () => {
+    if (!title || !time) return;
 
-  const submit = ()=>{
-
-    if(!title || !time) return
-
-    const newEvent:DayEvent={
-
-      id:event?.id || Date.now().toString(),
+    const newEvent: DayEvent = {
+      id: event?.id || Date.now().toString(),
 
       title,
 
@@ -54,76 +42,51 @@ export default function AddEventModal({
 
       type,
 
-      date:event?.date ||
-        new Date().toISOString().slice(0,10),
+      date: event?.date || new Date().toISOString().slice(0, 10),
 
-      done:event?.done || false
+      done: event?.done || false,
+    };
 
+    if (event) {
+      onUpdate?.(newEvent);
+    } else {
+      onAdd(newEvent);
     }
 
-    if(event){
+    onClose();
+  };
 
-      onUpdate?.(newEvent)
-
-    }else{
-
-      onAdd(newEvent)
-
-    }
-
-    onClose()
-
-  }
-
-  return(
-
+  return (
     <div className="modal-overlay">
-
       <div className="modal">
-
         <h3>{event ? "Edit Event" : "Add Event"}</h3>
 
         <input
           placeholder="Title"
           value={title}
-          onChange={e=>setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value)}
         />
 
         <input
           type="time"
           value={time}
-          onChange={e=>setTime(e.target.value)}
+          onChange={(e) => setTime(e.target.value)}
         />
 
-        <select
-          value={type}
-          onChange={e=>setType(e.target.value as any)}
-        >
-
+        <select value={type} onChange={(e) => setType(e.target.value as any)}>
           <option value="task">Task</option>
 
           <option value="call">Call</option>
 
           <option value="training">Training</option>
-
         </select>
 
         <div className="modal-buttons">
+          <button onClick={submit}>Save</button>
 
-          <button onClick={submit}>
-            Save
-          </button>
-
-          <button onClick={onClose}>
-            Cancel
-          </button>
-
+          <button onClick={onClose}>Cancel</button>
         </div>
-
       </div>
-
     </div>
-
-  )
-
+  );
 }

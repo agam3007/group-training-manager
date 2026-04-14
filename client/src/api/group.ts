@@ -1,61 +1,50 @@
-import type { Group } from "../types/group"
+import { env } from "@/env/env";
+import type { Group } from "@/shared/types/group";
 
-const API = "http://localhost:3001/groups"
+const API = `${env.apiUrl}/groups`;
 
 export async function getGroup(id: string): Promise<Group> {
-
-  const res = await fetch(`${API}/${id}`)
+  const res = await fetch(`${API}/${id}`);
 
   if (!res.ok) {
-    throw new Error("Failed to fetch group")
+    throw new Error("Failed to fetch group");
   }
 
-  return res.json()
-
+  return res.json();
 }
 
-export async function getGroups(){
+export async function getGroups() {
+  const res = await fetch(API);
 
-const res = await fetch(API)
-
-return res.json()
-
+  return res.json();
 }
 
-export async function createGroup(group:any){
+export async function createGroup(group: any) {
+  const res = await fetch(API, {
+    method: "POST",
 
-const res = await fetch(API,{
+    headers: {
+      "Content-Type": "application/json",
+    },
 
-method:"POST",
+    body: JSON.stringify(group),
+  });
 
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify(group)
-
-})
-
-return res.json()
-
+  return res.json();
 }
 
-export async function updateGroup(id:string,data:Partial<Group>){
+export async function updateGroup(id: string, data: Partial<Group>) {
+  const res = await fetch(`${API}/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
 
-  const res = await fetch(`${API}/${id}`,{
-    method:"PUT",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify(data)
-  })
-
-  return res.json()
-
+  return res.json();
 }
 
-export async function deleteGroup(id:string){
-
-  await fetch(`${API}/${id}`,{
-    method:"DELETE"
-  })
-
+export async function deleteGroup(id: string) {
+  await fetch(`${API}/${id}`, {
+    method: "DELETE",
+  });
 }

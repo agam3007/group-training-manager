@@ -1,0 +1,65 @@
+/* ================= BODY ================= */
+
+.calendar-body {
+  display: grid;
+  grid-template-columns: 70px repeat(7, 1fr);
+  flex: 1;
+  /* overflow-y: auto; */
+}
+
+/* ================= TIME COLUMN ================= */
+
+.time-column {
+  border-right: 1px solid #e5e7eb;
+  background: #fafafa;
+}
+
+.time-cell {
+  height: 60px;
+  font-size: 12px;
+  color: #6b7280;
+  padding-top: 4px;
+  text-align: right;
+  padding-right: 8px;
+  border-bottom: 1px solid #eee;
+  box-sizing: border-box;
+}
+
+/* ================= DAY COLUMN ================= */
+
+.day-column {
+  position: relative;
+  border-right: 1px solid #f0f0f0;
+}
+
+.today-column {
+  background: rgba(47, 128, 237, 0.05);
+}
+
+/* ================= HOUR CELL ================= */
+
+.hour-cell {
+  height: 60px;
+  border-bottom: 1px solid #eee;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.hour-cell::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  border-top: 1px solid #f3f4f6;
+}
+
+/* ================= CURRENT TIME LINE ================= */
+
+.current-time-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: red;
+}

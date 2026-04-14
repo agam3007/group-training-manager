@@ -1,43 +1,95 @@
-const API = "http://localhost:3001/trainings"
+import { env } from "@/env/env";
 
-export async function getTrainings(){
+const API = `${env.apiUrl}/trainings`;
 
-const res = await fetch(API)
+// ==========================
+// 📥 GET ALL
+// ==========================
+export async function getTrainings() {
+  const res = await fetch(API);
 
-return res.json()
+  if (!res.ok) {
+    throw new Error("Failed to fetch trainings");
+  }
 
+  return res.json();
 }
 
-export async function getTrainingsByGroup(groupId:string){
+// ==========================
+// 👥 BY GROUP
+// ==========================
+export async function getTrainingsByGroup(groupId: string) {
+  const res = await fetch(`${API}/group/${groupId}`);
 
-const res = await fetch(`${API}/group/${groupId}`)
+  if (!res.ok) {
+    throw new Error("Failed to fetch group trainings");
+  }
 
-return res.json()
-
+  return res.json();
 }
 
-export async function getTrainingsByAthlete(athleteId:string){
+// ==========================
+// 🧍 BY ATHLETE
+// ==========================
+export async function getTrainingsByAthlete(athleteId: string) {
+  const res = await fetch(`${API}/athlete/${athleteId}`);
 
-const res = await fetch(`${API}/athlete/${athleteId}`)
+  if (!res.ok) {
+    throw new Error("Failed to fetch athlete trainings");
+  }
 
-return res.json()
-
+  return res.json();
 }
 
-export async function createTraining(training:any){
+// ==========================
+// ➕ CREATE
+// ==========================
+export async function createTraining(training: any) {
+  const res = await fetch(API, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(training),
+  });
 
-const res = await fetch(API,{
+  if (!res.ok) {
+    throw new Error("Failed to create training");
+  }
 
-method:"POST",
+  return res.json();
+}
 
-headers:{
-"Content-Type":"application/json"
-},
+// ==========================
+// ✏️ UPDATE
+// ==========================
+export async function updateTraining(id: string, training: any) {
+  const res = await fetch(`${API}/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(training),
+  });
 
-body:JSON.stringify(training)
+  if (!res.ok) {
+    throw new Error("Failed to update training");
+  }
 
-})
+  return res.json();
+}
 
-return res.json()
+// ==========================
+// 🗑 DELETE
+// ==========================
+export async function deleteTraining(id: string) {
+  const res = await fetch(`${API}/${id}`, {
+    method: "DELETE",
+  });
 
+  if (!res.ok) {
+    throw new Error("Failed to delete training");
+  }
+
+  return res.json();
 }

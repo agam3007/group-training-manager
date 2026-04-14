@@ -1,48 +1,37 @@
-import { Router } from "express"
-import { readDb, writeDb } from "../utils/fileDb"
-import { logger } from "../utils/logger"
-import { DayEvent } from "../models/DayEvent"
+import { Router } from "express";
+import { readDb, writeDb } from "../utils/fileDb";
+import { logger } from "../utils/logger";
+import { DayEvent } from "../models/DayEvent";
 
-const router = Router()
+const router = Router();
 
 // GET all events
-router.get("/",(req,res)=>{
+router.get("/", (req, res) => {
+  logger.info("GET /events");
 
-  logger.info("GET /events")
+  const db = readDb();
 
-  const db = readDb()
-
-  res.json(db.events || [])
-
-})
-
+  res.json(db.events || []);
+});
 
 // GET events by date
-router.get("/date/:date",(req,res)=>{
+router.get("/date/:date", (req, res) => {
+  const { date } = req.params;
 
-  const { date } = req.params
+  logger.info(`GET events for date ${date}`);
 
-  logger.info(`GET events for date ${date}`)
+  const db = readDb();
 
-  const db = readDb()
+  const events = (db.events || []).filter((e: DayEvent) => e.date === date);
 
-  const events =
-    (db.events || []).filter(
-      (e:DayEvent)=>e.date === date
-    )
-
-  res.json(events)
-
-})
-
+  res.json(events);
+});
 
 // CREATE event
-router.post("/",(req,res)=>{
+router.post("/", (req, res) => {
+  const db = readDb();
 
-  const db = readDb()
-
-  const newEvent:DayEvent = {
-
+  const newEvent: DayEvent = {
     id: Date.now().toString(),
 
     title: req.body.title,
@@ -51,84 +40,64 @@ router.post("/",(req,res)=>{
 
     type: req.body.type,
 
-    date: req.body.date
+    date: req.body.date,
+  };
 
+  if (!db.events) {
+    db.events = [];
   }
 
-  if(!db.events){
+  db.events.push(newEvent);
 
-    db.events = []
+  writeDb(db);
 
-  }
+  logger.info(`Event created: ${newEvent.title}`);
 
-  db.events.push(newEvent)
-
-  writeDb(db)
-
-  logger.info(`Event created: ${newEvent.title}`)
-
-  res.status(201).json(newEvent)
-
-})
-
+  res.status(201).json(newEvent);
+});
 
 // UPDATE event
-router.put("/:id",(req,res)=>{
+router.put("/:id", (req, res) => {
+  const { id } = req.params;
 
-  const { id } = req.params
+  logger.info(`UPDATE event ${id}`);
 
-  logger.info(`UPDATE event ${id}`)
+  const db = readDb();
 
-  const db = readDb()
+  const index = db.events.findIndex((e: DayEvent) => e.id === id);
 
-  const index =
-    db.events.findIndex(
-      (e:DayEvent)=>e.id === id
-    )
-
-  if(index === -1){
-
+  if (index === -1) {
     return res.status(404).json({
-      message:"Event not found"
-    })
-
+      message: "Event not found",
+    });
   }
 
-  const updatedEvent:DayEvent = {
-
+  const updatedEvent: DayEvent = {
     ...db.events[index],
 
-    ...req.body
+    ...req.body,
+  };
 
-  }
+  db.events[index] = updatedEvent;
 
-  db.events[index] = updatedEvent
+  writeDb(db);
 
-  writeDb(db)
-
-  res.json(updatedEvent)
-
-})
-
+  res.json(updatedEvent);
+});
 
 // DELETE event
-router.delete("/:id",(req,res)=>{
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
 
-  const { id } = req.params
+  logger.info(`DELETE event ${id}`);
 
-  logger.info(`DELETE event ${id}`)
+  const db = readDb();
 
-  const db = readDb()
+  db.events = db.events.filter((e: DayEvent) => e.id !== id);
 
-  db.events =
-    db.events.filter(
-      (e:DayEvent)=>e.id !== id
-    )
+  writeDb(db);
 
-  writeDb(db)
+  res.json({ message: "Event deleted" });
+});
 
-  res.json({ message:"Event deleted" })
-
-})
-
-export default router
+export default router;

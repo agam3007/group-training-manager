@@ -1,0 +1,1 @@
+export { default as WeeklyHeader } from "./WeeklyHeader";

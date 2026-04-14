@@ -1,35 +1,35 @@
-.chart-container{
-  position:relative;
-  width:100%;
-  overflow:hidden; /* 👈 מונע יציאה מהכרטיס */
+.chart-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden; /* 👈 מונע יציאה מהכרטיס */
 }
 
-.chart-container svg{
-  width:100%;
-  height:160px;
+.chart-container svg {
+  width: 100%;
+  height: 160px;
 }
 
-.chart-labels{
-  position:relative;
-  height:20px;
+.chart-labels {
+  position: relative;
+  height: 20px;
 }
 
-.chart-label{
-  position:absolute;
-  transform:translateX(-50%);
-  font-size:10px;
-  color:#64748b;
-  white-space:nowrap;
+.chart-label {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: #64748b;
+  white-space: nowrap;
 }
 
-.chart-tooltip{
-  position:absolute;
-  top:10px;
-  right:10px;
-  background:white;
-  border:1px solid #e5e7eb;
-  padding:6px 10px;
-  border-radius:8px;
-  font-size:12px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+.chart-tooltip {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }

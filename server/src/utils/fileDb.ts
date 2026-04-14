@@ -1,21 +1,14 @@
-import fs from "fs"
-import path from "path"
+import fs from "fs";
+import path from "path";
 
-const dbPath = path.join(__dirname, "../db/database.json")
+const dbPath = path.join(__dirname, "../db/database.json");
 
-export function readDb(){
+export function readDb() {
+  const data = fs.readFileSync(dbPath, "utf-8");
 
-  const data = fs.readFileSync(dbPath,"utf-8")
-
-  return JSON.parse(data)
-
+  return JSON.parse(data);
 }
 
-export function writeDb(data:any){
-
-  fs.writeFileSync(
-    dbPath,
-    JSON.stringify(data,null,2)
-  )
-
+export function writeDb(data: any) {
+  fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
 }

@@ -1,19 +1,19 @@
-.zones-preview table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:10px;
+.zones-preview table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
 }
 
 .zones-preview th,
-.zones-preview td{
-  padding:6px;
-  border-bottom:1px solid #eee;
-  text-align:center;
+.zones-preview td {
+  padding: 6px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
 }
 
-.zones-preview input{
-  width:60px;
-  text-align:center;
+.zones-preview input {
+  width: 60px;
+  text-align: center;
 }
 
 .modal.large {

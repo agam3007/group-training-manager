@@ -1,35 +1,21 @@
-interface Alert{
+interface Alert {
+  id: string;
 
-  id:string
-
-  message:string
-
+  message: string;
 }
 
-interface Props{
-  alerts:Alert[]
+interface Props {
+  alerts: Alert[];
 }
 
-export default function Alerts({
-  alerts
-}:Props){
-
-  return(
-
+export default function Alerts({ alerts }: Props) {
+  return (
     <div className="dashboard-card">
-
       <h3>Alerts</h3>
 
-      {alerts.map(a=>(
-
-        <div key={a.id}>
-          ⚠ {a.message}
-        </div>
-
+      {alerts.map((a) => (
+        <div key={a.id}>⚠ {a.message}</div>
       ))}
-
     </div>
-
-  )
-
+  );
 }

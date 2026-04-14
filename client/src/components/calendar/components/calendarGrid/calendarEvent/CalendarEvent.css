@@ -1,0 +1,131 @@
+.training-event {
+  position: absolute;
+
+  left: 6px;
+  right: 6px;
+
+  border-radius: 10px;
+
+  padding: 6px 8px;
+
+  font-size: 12px;
+
+  color: white;
+
+  cursor: grab;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  overflow: hidden;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+/* 🖱️ Hover */
+.training-event:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* 🖐️ Dragging */
+.training-event:active {
+  cursor: grabbing;
+  transform: scale(1.01);
+}
+
+/* 🧠 Title */
+.training-title {
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1.2;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 📄 Description */
+.training-description {
+  font-size: 11px;
+  opacity: 0.9;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* מגביל ל-2 שורות */
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
+
+/* ⏱️ Optional time label (אם תרצי להוסיף בעתיד) */
+.training-time {
+  font-size: 10px;
+  opacity: 0.8;
+}
+
+/* 🎯 Resize handle משופר */
+.resize-handle {
+  position: absolute;
+
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  height: 6px;
+
+  cursor: ns-resize;
+
+  background: rgba(255, 255, 255, 0.4);
+
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* מופיע רק בהובר */
+.training-event:hover .resize-handle {
+  opacity: 1;
+}
+
+.training-swim {
+  background: linear-gradient(135deg, #2f80ed, #56ccf2);
+}
+
+.training-bike {
+  background: linear-gradient(135deg, #27ae60, #6fcf97);
+}
+
+.training-run {
+  background: linear-gradient(135deg, #eb5757, #ff7b7b);
+}
+
+.training-strength {
+  background: linear-gradient(135deg, #9b51e0, #bb6bd9);
+}
+
+.training-group {
+  background: linear-gradient(135deg, #f2994a, #f2c94c);
+}
+
+.training-event::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+
+  width: 4px;
+  background: rgba(255, 255, 255, 0.7);
+
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}

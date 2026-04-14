@@ -1,145 +1,118 @@
-import { Router } from 'express'
-import { readDb, writeDb } from '../utils/fileDb'
-import { logger } from '../utils/logger'
-import { Group } from '../models/Group'
+import { Router } from "express";
+import { readDb, writeDb } from "../utils/fileDb";
+import { logger } from "../utils/logger";
+import { Group } from "@shared/types/group";
 
-const router = Router()
+const router = Router();
 
-router.get('/:id', (req, res) => {
+router.get("/:id", (req, res) => {
+  const db = readDb();
 
-  const db = readDb()
+  const { id } = req.params;
 
-  const { id } = req.params
-
-  const group = db.groups.find(
-    (g: Group) => g.id === id
-  )
+  const group = db.groups.find((g: Group) => g.id === id);
 
   if (!group) {
-
-    logger.error(`Group not found: ${id}`)
+    logger.error(`Group not found: ${id}`);
 
     return res.status(404).json({
-      message: "Group not found"
-    })
-
+      message: "Group not found",
+    });
   }
 
-  logger.info(`GET /groups/${id}`)
+  logger.info(`GET /groups/${id}`);
 
-  res.json(group)
-
-})
+  res.json(group);
+});
 
 // GET all groups
-router.get('/', (req,res)=>{
+router.get("/", (req, res) => {
+  logger.info("GET /groups");
 
-  logger.info("GET /groups")
+  const db = readDb();
 
-  const db = readDb()
-
-  res.json(db.groups)
-
-})
+  res.json(db.groups);
+});
 
 // CREATE group
-router.post('/', (req,res)=>{
-
-  const db = readDb()
+router.post("/", (req, res) => {
+  const db = readDb();
 
   const newGroup: Group = {
-
     id: Date.now().toString(),
     name: req.body.name,
-    type: req.body.type,
-    schedule: req.body.schedule || []
+    coach: req.body.coach,
+    level: req.body.level,
+    sport: req.body.sport,
+    schedule: req.body.schedule || [],
+  };
 
-  }
+  db.groups.push(newGroup);
 
-  db.groups.push(newGroup)
+  writeDb(db);
 
-  writeDb(db)
+  logger.info(`Group created: ${newGroup.name}`);
 
-  logger.info(`Group created: ${newGroup.name}`)
-
-  res.status(201).json(newGroup)
-
-})
+  res.status(201).json(newGroup);
+});
 
 // UPDATE group
-router.put('/:id',(req,res)=>{
+router.put("/:id", (req, res) => {
+  const db = readDb();
 
-  const db = readDb()
+  const { id } = req.params;
 
-  const { id } = req.params
+  const index = db.groups.findIndex((g: Group) => g.id === id);
 
-  const index =
-    db.groups.findIndex(
-      (g:Group)=>g.id === id
-    )
-
-  if(index === -1){
-
-    logger.error(`Group not found: ${id}`)
+  if (index === -1) {
+    logger.error(`Group not found: ${id}`);
 
     return res.status(404).json({
-      message:"Group not found"
-    })
-
+      message: "Group not found",
+    });
   }
 
-  const updatedGroup:Group = {
-
+  const updatedGroup: Group = {
     ...db.groups[index],
     ...req.body,
-    id
+    id,
+  };
 
-  }
+  db.groups[index] = updatedGroup;
 
-  db.groups[index] = updatedGroup
+  writeDb(db);
 
-  writeDb(db)
+  logger.info(`Group updated: ${updatedGroup.name}`);
 
-  logger.info(`Group updated: ${updatedGroup.name}`)
-
-  res.json(updatedGroup)
-
-})
+  res.json(updatedGroup);
+});
 
 // DELETE group
-router.delete('/:id',(req,res)=>{
+router.delete("/:id", (req, res) => {
+  const db = readDb();
 
-  const db = readDb()
+  const { id } = req.params;
 
-  const { id } = req.params
+  const index = db.groups.findIndex((g: Group) => g.id === id);
 
-  const index =
-    db.groups.findIndex(
-      (g:Group)=>g.id === id
-    )
-
-  if(index === -1){
-
-    logger.error(`Group not found for delete: ${id}`)
+  if (index === -1) {
+    logger.error(`Group not found for delete: ${id}`);
 
     return res.status(404).json({
-      message:"Group not found"
-    })
-
+      message: "Group not found",
+    });
   }
 
-  const removed =
-    db.groups.splice(index,1)[0]
+  const removed = db.groups.splice(index, 1)[0];
 
-  writeDb(db)
+  writeDb(db);
 
-  logger.info(`Group deleted: ${removed.name}`)
+  logger.info(`Group deleted: ${removed.name}`);
 
   res.json({
-    message:"Group deleted",
-    group:removed
-  })
+    message: "Group deleted",
+    group: removed,
+  });
+});
 
-})
-
-export default router
+export default router;

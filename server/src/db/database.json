@@ -2,20 +2,15 @@
   "groups": [
     {
       "id": "1773070277512",
-      "name": "דגיגונים",
+      "name": "רמה א",
       "type": "general",
       "athletes": [
         "1773161190813",
         "1774889754592",
         "1775042095687"
       ],
-      "schedule": [
-        {
-          "day": 0,
-          "hour": 18
-        }
-      ],
-      "coach": "אגם",
+      "schedule": [],
+      "coach": "אגם=",
       "sport": "bike",
       "level": "beginner",
       "maxAthletes": 5,
@@ -56,19 +51,77 @@
       ]
     },
     {
-      "id": "1773070310309",
-      "name": "ראשנים",
-      "type": "general",
-      "athletes": [
-        "ליסה",
-        "רומי"
-      ],
+      "id": "1775649005920",
+      "name": "ילדים מעוז",
       "schedule": [
         {
-          "day": 1,
-          "hour": 18
+          "day": 0,
+          "start": {
+            "hour": 18,
+            "min": 0
+          },
+          "end": {
+            "hour": 19,
+            "min": 0
+          }
+        },
+        {
+          "day": 0,
+          "start": {
+            "hour": 19,
+            "min": 0
+          },
+          "end": {
+            "hour": 20,
+            "min": 0
+          }
+        },
+        {
+          "day": 3,
+          "start": {
+            "hour": 18,
+            "min": 0
+          },
+          "end": {
+            "hour": 19,
+            "min": 0
+          }
+        },
+        {
+          "day": 3,
+          "start": {
+            "hour": 19,
+            "min": 0
+          },
+          "end": {
+            "hour": 20,
+            "min": 0
+          }
         }
-      ]
+      ],
+      "coach": "אגם",
+      "sport": "triathlon",
+      "level": "beginner",
+      "maxAthletes": 15,
+      "color": "#392ca0",
+      "groupId": "1775649005920",
+      "scheduleIndex": 2,
+      "start": {
+        "hour": 18,
+        "min": 0
+      },
+      "end": {
+        "hour": 19,
+        "min": 0
+      }
+    },
+    {
+      "id": "1776085058810",
+      "name": "",
+      "coach": "",
+      "level": "",
+      "sport": "",
+      "schedule": []
     }
   ],
   "athletes": [
@@ -207,43 +260,6 @@
       ]
     },
     {
-      "id": "1774889754592",
-      "name": "agam lubinski",
-      "level": "",
-      "groups": [],
-      "tests": [
-        {
-          "id": "1775123949240",
-          "sport": "bike",
-          "type": "ftp",
-          "method": "threshold",
-          "value": 210,
-          "date": "2026-04-02T09:59:09.240Z",
-          "zones": {
-            "power": [
-              115.50000000000001,
-              157.5,
-              189,
-              220.5,
-              252
-            ]
-          }
-        }
-      ],
-      "goals": [],
-      "zones": {
-        "bike": {
-          "power": [
-            115.50000000000001,
-            157.5,
-            189,
-            220.5,
-            252
-          ]
-        }
-      }
-    },
-    {
       "id": "1774890625391",
       "name": "מיקה",
       "level": "",
@@ -313,42 +329,178 @@
       "age": "8"
     }
   ],
-  "trainings": [],
-  "events": [
+  "trainings": [
     {
-      "id": "1773485828189",
-      "title": "wake up",
-      "time": "08:00",
-      "type": "task",
-      "date": "2026-03-14",
-      "done": false
+      "id": "1775391922525",
+      "date": "2026-04-05",
+      "type": "bike",
+      "title": "רכיבה נפח",
+      "description": "אירובי",
+      "day": 0,
+      "startHour": 8,
+      "equipment": [],
+      "steps": [
+        {
+          "id": "4815bdb2-b601-4c12-8218-2aa5623dcbcc",
+          "setType": "warmup",
+          "reps": 1,
+          "distance": 1,
+          "unit": "km",
+          "mode": "time",
+          "duration": 10800,
+          "intensity": "Z2"
+        }
+      ],
+      "notes": "להקפיד לשתות",
+      "groupId": "",
+      "startMinute": 0
     },
+    {
+      "id": "1775392166455",
+      "date": "2026-04-05",
+      "type": "bike",
+      "title": "אינטרוולים Z3",
+      "description": "בניית בסיס אירובי",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "633339a7-7a9c-4041-8a20-cde124c56a1d",
+          "setType": "warmup",
+          "reps": 1,
+          "distance": 1,
+          "unit": "km",
+          "mode": "time",
+          "duration": 1198,
+          "intensity": "Z1"
+        },
+        {
+          "id": "70f80c4c-0029-4a6d-a169-f2dd73ecf351",
+          "setType": "main",
+          "reps": 4,
+          "distance": 1,
+          "unit": "km",
+          "mode": "time",
+          "duration": 240,
+          "intensity": "Z3",
+          "rest": 180
+        },
+        {
+          "id": "6b1d24c5-6de6-4d13-9585-af79e9ba6d70",
+          "setType": "cooldown",
+          "reps": 1,
+          "distance": 1,
+          "unit": "km",
+          "mode": "time",
+          "duration": 1200,
+          "intensity": "Z1"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "1776085641609",
+      "date": "2026-04-13",
+      "type": "swim",
+      "title": "טכניקה ואירובי",
+      "description": "פיתוח אירובי וטכניקה",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "645ac8ff-2f0e-4baa-8959-0c6daf490b89",
+          "setType": "warmup",
+          "reps": 8,
+          "distance": 50,
+          "unit": "m",
+          "mode": "distance",
+          "rest": 10,
+          "intensity": "Long",
+          "notes": "each 4th L1"
+        },
+        {
+          "id": "3c94117a-831e-4691-b4db-bd71cccac298",
+          "setType": "drill",
+          "reps": 4,
+          "distance": 100,
+          "unit": "m",
+          "mode": "distance",
+          "rest": 10,
+          "intensity": "L1",
+          "notes": "25 (שורטות, תחנת רוח, אגרופים, חתירה) עם סנפירים"
+        },
+        {
+          "id": "f7572db2-ad40-4553-b289-8a5e3cefe3a9",
+          "setType": "main",
+          "reps": 8,
+          "distance": 25,
+          "unit": "m",
+          "mode": "distance",
+          "rest": 10,
+          "intensity": "L1",
+          "notes": "15 תנועות"
+        },
+        {
+          "id": "1eb57cc2-400e-471f-92b2-d237f6f5f16e",
+          "setType": "main",
+          "reps": 8,
+          "distance": 50,
+          "unit": "m",
+          "mode": "distance",
+          "rest": 10,
+          "intensity": "L1",
+          "notes": "פירמידה תנועות מינימום + 1"
+        },
+        {
+          "id": "5f72a602-2e0c-4b07-9f17-177959e287d3",
+          "setType": "main",
+          "reps": 1,
+          "distance": 100,
+          "unit": "m",
+          "mode": "distance",
+          "notes": "גב",
+          "intensity": "L1"
+        },
+        {
+          "id": "21f92086-ae21-4c96-8bd0-c8b664f43f62",
+          "setType": "cooldown",
+          "reps": 6,
+          "distance": 50,
+          "unit": "m",
+          "mode": "distance",
+          "rest": 10,
+          "notes": "3/5",
+          "intensity": "Long"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "1776085785292",
+      "date": "2026-04-13",
+      "type": "bike",
+      "title": "רכיבה אירובית 60 דק",
+      "description": "",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "1c247193-a575-4175-83bd-95c89fc2b926",
+          "setType": "main",
+          "reps": 1,
+          "distance": 1,
+          "unit": "km",
+          "mode": "time",
+          "duration": 3600,
+          "intensity": "L1"
+        }
+      ],
+      "notes": ""
+    }
+  ],
+  "events": [
     {
       "id": "1774978203901",
       "title": "cycling",
       "time": "09:30",
       "type": "training",
-      "date": "2026-03-31"
-    },
-    {
-      "id": "1774978253110",
-      "title": "לערוך את החוזה של שרון",
-      "time": "11:00",
-      "type": "task",
-      "date": "2026-03-31"
-    },
-    {
-      "id": "1774978319991",
-      "title": "להכין תוכנית אימונים לשבוע הבא",
-      "time": "12:00",
-      "type": "task",
-      "date": "2026-03-31"
-    },
-    {
-      "id": "1774978435736",
-      "title": "לסיים פיתוח של קבוצות וחיבור לספורטאי",
-      "time": "13:00",
-      "type": "task",
       "date": "2026-03-31"
     },
     {
@@ -379,6 +531,101 @@
       "id": "1775124910988",
       "athleteId": "1774890625391",
       "groupId": "1773070277512"
+    },
+    {
+      "id": "1775209229300",
+      "athleteId": "1774890625391",
+      "groupId": "1775209197824"
+    }
+  ],
+  "trainingAssignments": [
+    {
+      "id": "1775738132966",
+      "trainingId": "1775391922525",
+      "athleteId": null,
+      "groupId": "1775649005920",
+      "startTime": "2026-04-06T02:30:00.000Z",
+      "endTime": "2026-04-06T03:30:00.000Z",
+      "notes": "",
+      "createdAt": "2026-04-09T12:35:32.966Z",
+      "updatedAt": "2026-04-09T12:35:32.966Z"
+    },
+    {
+      "id": "1775738162710",
+      "trainingId": "1775392166455",
+      "athleteId": null,
+      "groupId": "1775649005920",
+      "startTime": "2026-04-08T02:30:00.000Z",
+      "endTime": "2026-04-08T03:30:00.000Z",
+      "notes": "",
+      "createdAt": "2026-04-09T12:36:02.710Z",
+      "updatedAt": "2026-04-09T12:36:02.710Z"
+    },
+    {
+      "id": "1775738246130",
+      "trainingId": "1775391922525",
+      "athleteId": null,
+      "groupId": "1775649005920",
+      "startTime": "2026-04-06T04:45:00.000Z",
+      "endTime": "2026-04-06T05:45:00.000Z",
+      "notes": "",
+      "createdAt": "2026-04-09T12:37:26.130Z",
+      "updatedAt": "2026-04-09T12:37:26.130Z"
+    },
+    {
+      "id": "1775738736757",
+      "trainingId": "1775392166455",
+      "athleteId": null,
+      "groupId": "1775649005920",
+      "startTime": "2026-04-06T14:15:00.000Z",
+      "endTime": "2026-04-06T15:15:00.000Z",
+      "notes": "",
+      "createdAt": "2026-04-09T12:45:36.757Z",
+      "updatedAt": "2026-04-09T12:45:36.757Z"
+    },
+    {
+      "id": "1775833797556",
+      "trainingId": "1775391922525",
+      "athleteId": null,
+      "groupId": "1775649005920",
+      "startTime": "2026-04-10T12:30:00.000Z",
+      "endTime": "2026-04-10T13:30:00.000Z",
+      "notes": "",
+      "createdAt": "2026-04-10T15:09:57.557Z",
+      "updatedAt": "2026-04-10T15:09:57.557Z"
+    },
+    {
+      "id": "1776085124304",
+      "trainingId": "1775392166455",
+      "athleteId": "1773161190813",
+      "groupId": null,
+      "startTime": "2026-04-13T08:30:00.000Z",
+      "endTime": "2026-04-13T09:30:00.000Z",
+      "notes": "",
+      "createdAt": "2026-04-13T12:58:44.304Z",
+      "updatedAt": "2026-04-13T12:58:44.304Z"
+    },
+    {
+      "id": "1776085647032",
+      "trainingId": "1776085641609",
+      "athleteId": "1773161190813",
+      "groupId": null,
+      "startTime": "2026-04-16T10:30:00.000Z",
+      "endTime": "2026-04-16T11:30:00.000Z",
+      "notes": "",
+      "createdAt": "2026-04-13T13:07:27.032Z",
+      "updatedAt": "2026-04-13T13:07:27.032Z"
+    },
+    {
+      "id": "1776085800275",
+      "trainingId": "1776085785292",
+      "athleteId": "1773161190813",
+      "groupId": null,
+      "startTime": "2026-04-15T08:00:00.000Z",
+      "endTime": "2026-04-15T09:00:00.000Z",
+      "notes": "",
+      "createdAt": "2026-04-13T13:10:00.275Z",
+      "updatedAt": "2026-04-13T13:10:00.275Z"
     }
   ]
 }

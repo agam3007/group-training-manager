@@ -1,0 +1,54 @@
+/* ================= WEEK HEADER ================= */
+
+.week-header {
+  display: grid;
+  grid-template-columns: 80px repeat(7, 1fr);
+
+  border-bottom: 1px solid #e5e7eb;
+  background: #fafafa;
+}
+
+/* ================= DAY HEADER ================= */
+
+.day-header {
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 12px 6px;
+}
+
+.day-name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.day-date {
+  font-size: 15px;
+  color: #6b7280;
+
+  margin-top: 4px;
+}
+
+/* ================= TODAY ================= */
+
+.today-name {
+  color: #2f80ed;
+  font-weight: 700;
+}
+
+.today-date {
+  background: #2f80ed;
+  color: white;
+
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+}

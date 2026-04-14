@@ -1,48 +1,40 @@
-.athlete-card{
+.athlete-card {
+  padding: 16px;
 
-  padding:16px;
+  border-radius: 12px;
 
-  border-radius:12px;
+  background: white;
 
-  background:white;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
 
-  box-shadow:0 3px 10px rgba(0,0,0,0.08);
+  cursor: pointer;
 
-  cursor:pointer;
-
-  transition:0.2s;
-
+  transition: 0.2s;
 }
 
-.athlete-card:hover{
-
-  transform:translateY(-3px);
-
+.athlete-card:hover {
+  transform: translateY(-3px);
 }
 
-.athlete-header{
-
-  display:flex;
-  align-items:center;
-  gap:12px;
-
+.athlete-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.athlete-avatar{
+.athlete-avatar {
+  width: 40px;
+  height: 40px;
 
-  width:40px;
-  height:40px;
+  border-radius: 50%;
 
-  border-radius:50%;
+  background: #4caf50;
 
-  background:#4CAF50;
+  color: white;
 
-  color:white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-weight:bold;
-
+  font-weight: bold;
 }
