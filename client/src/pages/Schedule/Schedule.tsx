@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import type { Training, TrainingAssignment } from "@/shared/types";
+import type { Training, CalendarEvent } from "@/shared/types";
 import { useParams } from "react-router-dom";
-import { getAssignments } from "@/api/trainingAssignment";
-import { getGroups } from "@/api/group";
-import type { Group } from "@/shared/types";
+import { getTrainings } from "@/api/training";
+import { getEventsByRange } from "@/api/events";
 import { Calendar } from "@/components/calendar";
 
 interface Props {
@@ -12,45 +11,86 @@ interface Props {
 }
 
 export default function Schedule({ trainings, setTrainings }: Props) {
-  const { groupId, athleteId } = useParams();
+  const { athleteId } = useParams();
 
-  const [assignments, setAssignments] = useState<TrainingAssignment[]>([]);
+  const [allEvents, setAllEvents] = useState<CalendarEvent[]>([]);
+  const [filteredEvents, setFilteredEvents] = useState<CalendarEvent[]>([]);
+  const [selectedGroupId, setSelectedGroupId] = useState<string>("");
+  const [loading, setLoading] = useState(true);
 
-  const [groups, setGroups] = useState<Group[]>([]);
-
+  // Fetch all trainings for the library
   useEffect(() => {
     (async () => {
       try {
-        if (groupId) {
-          const res = await getAssignments({ groupId });
-          setAssignments(res);
-          return;
-        }
-
-        if (athleteId) {
-          const res = await getAssignments({ athleteId });
-          setAssignments(res);
-          return;
-        }
-
-        // default: show group assignments only
-        const res = await getGroups();
-        setGroups(res);
+        const allTrainings = await getTrainings();
+        setTrainings(allTrainings);
       } catch (err) {
-        console.error("Failed to load assignments", err);
-        setAssignments([]);
+        console.error("Failed to load trainings", err);
       }
     })();
-  }, [groupId, athleteId]);
+  }, [setTrainings]);
+
+  // Fetch all calendar events (always show all events now)
+  useEffect(() => {
+    (async () => {
+      try {
+        setLoading(true);
+
+        // Calculate week range for fetching events
+        const today = new Date();
+        const startOfWeek = new Date(today);
+        const day = today.getDay();
+        const diff = day === 0 ? -6 : 1 - day;
+        startOfWeek.setDate(today.getDate() + diff);
+        startOfWeek.setHours(0, 0, 0, 0);
+
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+        endOfWeek.setHours(23, 59, 59, 999);
+
+        // Always fetch all events
+        const events = await getEventsByRange(startOfWeek, endOfWeek);
+
+        setAllEvents(events);
+      } catch (err) {
+        console.error("Failed to load calendar events", err);
+        setAllEvents([]);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  // Filter events based on selected group
+  useEffect(() => {
+    if (athleteId) {
+      // For athlete view, show events assigned to this athlete or their groups
+      const athleteEvents = allEvents.filter(event =>
+        event.athleteId === athleteId || event.type === "groupSchedule"
+      );
+      setFilteredEvents(athleteEvents);
+    } else if (selectedGroupId) {
+      // For group filter, show only events for this group
+      const groupEvents = allEvents.filter(event =>
+        event.groupId === selectedGroupId
+      );
+      setFilteredEvents(groupEvents);
+    } else {
+      // Show all events
+      setFilteredEvents(allEvents);
+    }
+  }, [allEvents, selectedGroupId, athleteId]);
 
   return (
     <Calendar
       trainings={trainings}
       setTrainings={setTrainings}
-      assignments={assignments || []}
-      setAssignments={setAssignments}
-      groups={groups || []}
-      setGroups={setGroups}
+      calendarEvents={filteredEvents}
+      setCalendarEvents={setAllEvents}
+      loading={loading}
+      selectedGroupId={selectedGroupId}
+      setSelectedGroupId={setSelectedGroupId}
+      athleteId={athleteId}
     />
   );
 }

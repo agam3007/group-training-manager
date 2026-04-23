@@ -6,6 +6,7 @@ interface Props {
   onClose: () => void;
   onEdit: () => void;
   onDelete: (id: string) => void;
+  deleteButtonText?: string;
 }
 
 export default function TrainingDetails({
@@ -13,6 +14,7 @@ export default function TrainingDetails({
   onClose,
   onEdit,
   onDelete,
+  deleteButtonText = "Delete",
 }: Props) {
   const getColor = (type: string) => {
     switch (type) {
@@ -30,8 +32,8 @@ export default function TrainingDetails({
   };
 
   return (
-    <div className="popup">
-      <div className="td-container">
+    <div className="popup-overlay" onClick={onClose}>
+      <div className="popup-content" onClick={(e) => e.stopPropagation()}>
         {/* HEADER */}
         <div className="td-header">
           <div>
@@ -51,12 +53,10 @@ export default function TrainingDetails({
             <button
               className="delete-btn"
               onClick={() => {
-                if (window.confirm("Delete this training?")) {
                   onDelete(training.id);
-                }
               }}
             >
-              Delete
+              {deleteButtonText}
             </button>
 
             <button className="close-btn" onClick={onClose}>

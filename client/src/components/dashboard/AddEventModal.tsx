@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { DayEvent } from "../../../../shared/types/dayEvent";
+import type { DayEvent } from "../../../../shared/types/calendarEvent";
 import "./AddEventModal.css";
 
 interface Props {

@@ -1,7 +1,22 @@
-.td-container {
-  width: 900px;
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+}
+
+.popup-content {
   background: white;
-  border-radius: 16px;
+  border-radius: 20px;
+  width: min(100%, 900px);
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
+  border: 1px solid rgba(15, 23, 42, 0.08);
   padding: 20px;
 }
 

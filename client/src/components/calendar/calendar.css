@@ -20,9 +20,11 @@
   align-items: center;
   gap: 10px;
 
-  padding: 10px;
+  padding: 10px 16px;
 
   border-bottom: 1px solid #eee;
+  flex-wrap: wrap;
+  background: white;
 }
 
 .calendar-nav button {
@@ -38,7 +40,10 @@
 
 .week-range {
   margin-left: 10px;
+  margin-right: 20px;
   font-weight: 600;
+  padding-right: 16px;
+  border-right: 1px solid #e0e0e0;
 }
 
 /* ================= WEEK HEADER ================= */
@@ -99,4 +104,172 @@
 .calendar-body {
   overflow: auto;
   flex: 1;
+}
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  padding: 24px;
+}
+
+.popup-content {
+  background: white;
+  border-radius: 20px;
+  width: min(100%, 600px);
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 18px;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.popup-header h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.popup-body {
+  padding: 20px 24px 24px;
+  display: grid;
+  gap: 16px;
+}
+
+.create-options {
+  display: grid;
+  gap: 12px;
+}
+
+.create-option-button {
+  display: grid;
+  gap: 6px;
+  text-align: left;
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.create-option-button:hover,
+.create-option-button:focus {
+  transform: translateY(-1px);
+  border-color: #60a5fa;
+  background: #f8fbff;
+}
+
+.create-option-button strong {
+  font-size: 15px;
+  color: #111827;
+}
+
+.create-option-button span {
+  color: #64748b;
+  font-size: 13px;
+}
+
+/* ================= GROUP FILTER ================= */
+
+.group-filter {
+  margin-left: auto;
+}
+
+.training-group {
+  margin-bottom: 20px;
+}
+
+.training-group-header {
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 14px;
+}
+
+.training-group-items {
+  display: grid;
+  gap: 10px;
+}
+
+.training-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.training-item:hover {
+  transform: translateY(-1px);
+  border-color: #60a5fa;
+  background: #f8fbff;
+}
+
+.training-item.selected {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.training-item h5 {
+  margin: 0 0 4px;
+  font-size: 15px;
+  color: #111827;
+}
+
+.training-item p {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.form-row {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.form-row label {
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+  color: #475569;
+}
+
+.form-row select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  color: #0f172a;
+}
+
+.group-filter select {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
 }

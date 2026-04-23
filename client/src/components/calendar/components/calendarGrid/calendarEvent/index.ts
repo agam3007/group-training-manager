@@ -1,1 +1,1 @@
-export { default as CalendarEvent } from "./CalendarEvent";
+export { default as Event } from "./CalendarEvent";

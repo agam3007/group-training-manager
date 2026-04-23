@@ -3,17 +3,11 @@ import { useState, useEffect } from "react";
 import type { Group } from "../../../../shared/types/group";
 import type { Athlete } from "../../../../shared/types/athlete";
 import type { Training } from "../../../../shared/types/training";
-import type { DayEvent } from "../../../../shared/types/dayEvent";
+import type { CalendarEvent } from "@/shared/types/calendarEvent";
 import type { AthleteTalk } from "../../types/athleteTalk";
 
 import { getGroups } from "../../api/group";
 import { getAthletes } from "../../api/athlete";
-import {
-  getEvents,
-  addEvent,
-  updateEvent,
-  deleteEvent,
-} from "../../api/events";
 
 import "./Dashboard.css";
 
@@ -29,7 +23,7 @@ interface Props {
 export default function Dashboard({ setTrainings }: Props) {
   const [groups, setGroups] = useState<Group[]>([]);
   const [athletes, setAthletes] = useState<Athlete[]>([]);
-  const [events, setEvents] = useState<DayEvent[]>([]);
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [talks] = useState<AthleteTalk[]>([]);
 
   const alerts = [
@@ -42,11 +36,11 @@ export default function Dashboard({ setTrainings }: Props) {
       try {
         const groupsData = await getGroups();
         const athletesData = await getAthletes();
-        const eventsData = await getEvents();
+        // const eventsData = await getEvents();
 
         setGroups(groupsData);
         setAthletes(athletesData);
-        setEvents(eventsData);
+        // setEvents(eventsData);
 
         // const trainings =
         //   groupsData.flatMap((group:Group)=>
@@ -62,9 +56,9 @@ export default function Dashboard({ setTrainings }: Props) {
     loadData();
   }, []);
 
-  const handleAddEvent = async (event: DayEvent) => {
+  const handleAddEvent = async (event: CalendarEvent) => {
     try {
-      await addEvent(event);
+      // await addEvent(event);
 
       setEvents((prev) => [...prev, event]);
     } catch (err) {
@@ -72,20 +66,20 @@ export default function Dashboard({ setTrainings }: Props) {
     }
   };
   const handleDeleteEvent = async (id: string) => {
-    await deleteEvent(id);
+    // await deleteEvent(id);
 
     setEvents((prev) => prev.filter((e) => e.id !== id));
   };
 
-  const handleUpdateEvent = async (event: DayEvent) => {
-    await updateEvent(event);
+  const handleUpdateEvent = async (event: CalendarEvent) => {
+    // await updateEvent(event);
 
     setEvents((prev) => prev.map((e) => (e.id === event.id ? event : e)));
   };
   const handleToggleDone = async (id: string) => {
-    setEvents((prev) =>
-      prev.map((e) => (e.id === id ? { ...e, done: !e.done } : e)),
-    );
+    // setEvents((prev) =>
+    //   prev.map((e) => (e.id === id ? { ...e, done: !e.done } : e)),
+    // );
   };
   const trainingsToday = events.filter((e) => e.type === "training").length;
 

@@ -1,22 +1,16 @@
-import {CalendarEvent} from "./calendarEvent";
-import type { Training, TrainingAssignment } from "@/shared/types";
-import type { Event } from "@/types/event";
-import type { Group } from "@/shared/types";
-import {
-  createAssignment,
-  updateAssignment,
-} from "@/api/trainingAssignment";
-import { useParams } from "react-router-dom";
+import {Event} from "./calendarEvent";
+import type { CalendarEvent, Training } from "@/shared/types";
 import "./CalendarGrid.css";
+import React from "react";
 
 interface Props {
-  events: Event[];
-  // setTrainings: React.Dispatch<React.SetStateAction<Training[]>>
+  events: CalendarEvent[];
   onEdit: (training: Training) => void;
-  onEmptyCellClick: (day: number, hour: number) => void;
+  onEmptyCellClick: (day: number, hour: number, minute: number) => void;
+  onEventClick?: (event: CalendarEvent) => void;
+  onTrainingDrop?: (training: Training, day: number, hour: number, minute: number, weekOffset: number) => void;
+  onEventDrop?: (event: CalendarEvent, day: number, hour: number, minute: number, weekOffset: number) => void;
   weekOffset: number;
-  setGroups: React.Dispatch<React.SetStateAction<Group[]>>;
-  setAssignments: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
 const hours = Array.from({ length: 16 }, (_, i) => i + 6);
@@ -40,123 +34,96 @@ function CurrentTimeLine() {
   return <div className="current-time-line" style={{ top }} />;
 }
 
+// 🎯 COLLISION DETECTION - Calculate overlapping events and assign column positions
+function calculateEventPositions(dayEvents: CalendarEvent[]) {
+  // For each event, find all events that overlap with it
+  const eventColumns: Record<string, { column: number; totalColumns: number }> = {};
+
+  dayEvents.forEach((event, index) => {
+    if (eventColumns[event.id]) return; // Already calculated
+
+    // Find all events that overlap with this event
+    const overlappingEvents = dayEvents.filter((otherEvent) => {
+      // Check if events overlap
+      return !(event.endTime <= otherEvent.startTime || event.startTime >= otherEvent.endTime);
+    });
+
+    // Assign column positions to overlapping events
+    overlappingEvents.forEach((overlappingEvent, columnIndex) => {
+      eventColumns[overlappingEvent.id] = {
+        column: columnIndex,
+        totalColumns: overlappingEvents.length,
+      };
+    });
+  });
+
+  return eventColumns;
+}
+
 export default function CalendarGrid({
   events,
   onEmptyCellClick,
+  onEventClick,
+  onTrainingDrop,
+  onEventDrop,
   weekOffset,
-  setGroups,
-  setAssignments,
 }: Props) {
-  const { groupId, athleteId } = useParams();
+  const [dragOverCell, setDragOverCell] = React.useState<{ day: number; hour: number; minute: number } | null>(null);
 
-  const handleDrop = async (e: React.DragEvent, newDay: number) => {
-    console.log("🔥 DROP EVENT:", { newDay, data: e.dataTransfer, events });
+  const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
 
-    const id = e.dataTransfer.getData("id");
-    const trainingData = e.dataTransfer.getData("training");
+  const handleHourCellDragEnter = (e: React.DragEvent, dayIndex: number, hour: number, minute: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOverCell({ day: dayIndex, hour, minute });
+  };
 
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const y = e.clientY - rect.top;
+  const handleHourCellDragLeave = (e: React.DragEvent, dayIndex: number, hour: number, minute: number) => {
+    e.preventDefault();
+    if (
+      dragOverCell?.day === dayIndex &&
+      dragOverCell?.hour === hour &&
+      dragOverCell?.minute === minute
+    ) {
+      setDragOverCell(null);
+    }
+  };
 
-    const minutesFromTop = y / PIXELS_PER_MINUTE;
-    const hour = Math.floor(minutesFromTop / 60) + START_HOUR;
-    const minute = Math.round((minutesFromTop % 60) / 15) * 15;
+  const handleHourCellDrop = (
+    e: React.DragEvent,
+    dayIndex: number,
+    hour: number,
+    minute: number,
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOverCell(null);
 
-    // 🟢 build start of week
-    const today = new Date();
-    const currentDay = (today.getDay() + 6) % 7;
+    const dragType = e.dataTransfer.getData("dragType");
 
-    const startOfWeek = new Date(today);
-    startOfWeek.setHours(0, 0, 0, 0);
-    startOfWeek.setDate(today.getDate() - currentDay + weekOffset * 7);
-
-    // 🟢 build exact day
-    const start = new Date(startOfWeek);
-    start.setDate(startOfWeek.getDate() + newDay);
-
-    // 🟢 set snapped time
-    start.setHours(hour, minute, 0, 0);
-
-    // 🟢 end
-    const end = new Date(start.getTime() + 60 * 60000);
-
-    // =========================
-    // 🟢 UPDATE EXISTING EVENT
-    // =========================
-    if (id) {
-      const event = events.find((ev) => ev.id === id);
-
-      if (event?.type === "group") {
-        setGroups((prev) =>
-          prev.map((g) => {
-            if (g.id !== event.groupId) return g;
-
-            const newSchedule = [...g.schedule];
-            const s = newSchedule[event.scheduleRef];
-
-            newSchedule[event.scheduleRef] = {
-              ...s,
-              day: newDay,
-              start: { hour, min: minute },
-              end: {
-                hour: hour + 1,
-                min: minute,
-              },
-            };
-
-            return {
-              ...g,
-              schedule: newSchedule,
-            };
-          }),
-        );
+    if (dragType === "training") {
+      const trainingData = e.dataTransfer.getData("training");
+      if (trainingData && onTrainingDrop) {
+        const training = JSON.parse(trainingData);
+        onTrainingDrop(training, dayIndex, hour, minute, weekOffset);
       }
-
-      // 🔥 UPDATE assignment
-      setAssignments((prev) =>
-        prev.map((a) =>
-          a.id === id
-            ? {
-                ...a,
-                startTime: start,
-                endTime: end,
-              }
-            : a,
-        ),
-      );
-      await updateAssignment(id, { startTime: start, endTime: end });
-
       return;
     }
 
-    // =========================
-    // 🔵 CREATE NEW ASSIGNMENT
-    // =========================
-    if (trainingData) {
-      const training = JSON.parse(trainingData);
-
-      const newAssignment = {
-        id: crypto.randomUUID(),
-
-        trainingId: training.id,
-
-        groupId: groupId || undefined,
-        athleteId: athleteId || undefined,
-
-        startTime: start,
-        endTime: end,
-
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      } as TrainingAssignment;
-
-      console.log("🔥 CREATE NEW ASSIGNMENT:", newAssignment);
-
-      setAssignments((prev) => [...prev, newAssignment]);
-
-      // 🔥 אם יש API:
-      await createAssignment(newAssignment);
+    if (dragType === "event") {
+      const eventData = e.dataTransfer.getData("event");
+      if (eventData && onEventDrop) {
+        const parsedEvent = JSON.parse(eventData);
+        const event: CalendarEvent = {
+          ...parsedEvent,
+          startTime: new Date(parsedEvent.startTime),
+          endTime: new Date(parsedEvent.endTime),
+        };
+        onEventDrop(event, dayIndex, hour, minute, weekOffset);
+      }
     }
   };
 
@@ -166,7 +133,6 @@ export default function CalendarGrid({
         const today = new Date();
 
         const todayIndex = (today.getDay() + 6) % 7;
-        console.log(events);
 
         const isToday = weekOffset === 0 && dayIndex === todayIndex;
         return (
@@ -174,37 +140,56 @@ export default function CalendarGrid({
             key={dayIndex}
             className={`day-column ${isToday ? "today-column" : ""}`}
             data-day={dayIndex}
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => handleDrop(e, dayIndex)}
+            onDragOver={handleDragOver}
           >
             {isToday && <CurrentTimeLine />}
 
             {hours.map((hour) => (
-              <div
-                key={hour}
-                className="hour-cell"
-                onClick={() => onEmptyCellClick(dayIndex, hour)}
-              />
+              <div key={hour} className="hour-cell">
+                {[0, 15, 30, 45].map((minute) => (
+                  <div
+                    key={minute}
+                    className={`half-hour-cell ${
+                      dragOverCell?.day === dayIndex &&
+                      dragOverCell?.hour === hour &&
+                      dragOverCell?.minute === minute
+                        ? "drag-over"
+                        : ""
+                    }`}
+                    data-day={dayIndex}
+                    data-hour={hour}
+                    data-minute={minute}
+                    onClick={() => onEmptyCellClick(dayIndex, hour, minute)}
+                    onDragEnter={(e) => handleHourCellDragEnter(e, dayIndex, hour, minute)}
+                    onDragLeave={(e) => handleHourCellDragLeave(e, dayIndex, hour, minute)}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleHourCellDrop(e, dayIndex, hour, minute)}
+                  />
+                ))}
+              </div>
             ))}
             {events
               .filter((e) => {
-                const day = (e.start.getDay() + 6) % 7;
+                const day = (e.startTime.getDay() + 6) % 7;
                 return day === dayIndex;
               })
               .map((event) => {
+                const dayEvents = events.filter((e) => {
+                  const day = (e.startTime.getDay() + 6) % 7;
+                  return day === dayIndex;
+                });
+
+                const eventPositions = calculateEventPositions(dayEvents);
+                const position = eventPositions[event.id] || { column: 0, totalColumns: 1 };
+
                 return (
-                  <div
+                  <Event
                     key={event.id}
-                    draggable
-                    onDragStart={(e) => e.dataTransfer.setData("id", event.id)}
-                  >
-                    <CalendarEvent
-                      event={event || {}}
-                      setGroups={setGroups}
-                      setAssignments={setAssignments}
-                      // onClick={() => {}}
-                    />
-                  </div>
+                    event={event || {}}
+                    onClick={onEventClick}
+                    columnPosition={position.column}
+                    totalColumns={position.totalColumns}
+                  />
                 );
               })}
           </div>

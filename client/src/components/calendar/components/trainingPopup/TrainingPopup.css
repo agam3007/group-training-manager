@@ -1,12 +1,26 @@
+.popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+}
+
 .training-popup {
   background: white;
-  width: 900px;
+  width: min(100%, 1400px);
   max-height: 90vh;
-  border-radius: 12px;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  gap: 16px;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  padding: 24px;
+  gap: 20px;
+  overflow-y: auto;
 }
 
 /* HEADER */
@@ -21,16 +35,63 @@
   font-weight: 600;
 }
 
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.training-title-edit {
+  flex: 1;
+}
+
+.training-title-text {
+  font-size: 22px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 0;
+}
+
+.training-title-text:hover {
+  opacity: 0.7;
+}
+
+.training-title-input {
+  font-size: 22px;
+  font-weight: 600;
+  border: none;
+  outline: none;
+  width: 100%;
+  border-bottom: 2px solid #2f80ed;
+  font-family: inherit;
+}
+
 /* SECTIONS */
 .section {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
 }
 
 .section label {
   font-size: 13px;
-  color: #555;
+  font-weight: 600;
+  color: #1f2937;
 }
 
 /* INPUT */
@@ -38,75 +99,175 @@
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 6px;
+  font-family: inherit;
 }
 
-/* BODY */
+.input:focus {
+  outline: none;
+  border-color: #2f80ed;
+  background: #f9fafb;
+}
+
+.notes-textarea {
+  min-height: 80px;
+  resize: vertical;
+  width: 90%;
+}
+
+/* NEW LAYOUT BODY */
 .training-body {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  grid-template-columns: 120px 1fr 300px;
   gap: 20px;
+  flex: 1;
+  min-height: 400px;
 }
 
-/* LEFT */
-.training-left {
-  border: 2px solid #2f80ed;
-  border-radius: 8px;
-  padding: 10px;
+/* LEFT SIDEBAR */
+.training-body > div:first-child {
+  min-height: 0;
 }
 
-/* HEADER LEFT */
-.workout-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  font-weight: 600;
+/* CENTER CONTENT AREA */
+.training-center {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 20px;
+  min-height: 0;
 }
 
-/* RIGHT */
-.training-right {
+/* RIGHT STATS PANEL */
+.training-stats-panel {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  min-width: 0;
+  gap: 24px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
 }
 
-/* STATS */
+.training-stats-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.training-stats-panel::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.training-stats-panel::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.training-stats-panel::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* RIGHT CONTENT AREA */
+.training-right {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 20px;
+  min-height: 0;
+}
+
+/* RIGHT TOP - VISUALIZER */
+.right-top {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+}
+
+.right-top h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+/* RIGHT BOTTOM - TEXT EDITOR */
+.right-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+}
+
+/* STATS SECTION */
 .stats {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .stats div {
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
 }
 
 .stats b {
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
 }
 
 .stats span {
   font-size: 12px;
-  color: #777;
+  color: #9ca3af;
+  margin-top: 2px;
 }
 
-/* NOTES */
-.notes-header {
+/* ZONES SECTION */
+.zones-section {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 12px;
 }
 
-/* TEXTAREA */
-.textarea {
-  min-height: 120px;
-  min-width: 0;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  box-sizing: border-box;
+.zones-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1f2937;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.zone-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.zone-label {
+  width: 32px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.zone-bar {
+  flex: 1;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.zone-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+.zone-percent {
+  width: 40px;
+  text-align: right;
+  font-size: 11px;
+  color: #4b5563;
 }
 
 /* BUTTONS */
@@ -127,6 +288,21 @@
   padding: 10px 18px;
   border-radius: 6px;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.save-btn:hover {
+  background: #1f5ac9;
+}
+
+.save-btn.secondary {
+  background: #f0f0f0;
+  color: #2f80ed;
+  border: 1px solid #2f80ed;
+}
+
+.save-btn.secondary:hover {
+  background: #e0e7ff;
 }
 
 .cancel-btn {
@@ -135,63 +311,18 @@
   padding: 10px 18px;
   border-radius: 6px;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-btn:hover {
+  background: #ddd;
 }
 
 .training-footer {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
 }
 
-.training-title-text {
-  font-size: 22px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.training-title-text:hover {
-  opacity: 0.7;
-}
-
-.training-title-input {
-  font-size: 22px;
-  font-weight: 600;
-  border: none;
-  outline: none;
-  width: 100%;
-  border-bottom: 2px solid #2f80ed;
-}
-
-.zones-section {
-  margin-top: 20px;
-}
-
-.zone-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 6px;
-}
-
-.zone-label {
-  width: 40px;
-}
-
-.zone-bar {
-  flex: 1;
-  height: 6px;
-  background: #eee;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.zone-fill {
-  height: 100%;
-  background: #4cafef;
-}
-
-.zone-percent {
-  width: 45px;
-  text-align: right;
-  font-size: 12px;
-}

@@ -84,18 +84,15 @@ export default function WorkoutBuilder({ steps, setSteps, sport }: Props) {
 
         <button onClick={() => addSet("drill")}>+ Drill</button>
       </div>
-      {steps.map(
-        (step) =>
-          "distance" in step && (
-            <EnduranceSetCard
-              key={step.id}
-              set={step}
-              update={update}
-              remove={remove}
-              duplicate={() => duplicate(step)}
-            />
-          ),
-      )}
+      {steps.map((step) => (
+  <EnduranceSetCard
+    key={step.id}
+    set={step as EnduranceSet}
+    update={update}
+    remove={remove}
+    duplicate={() => duplicate(step)}
+  />
+))}
     </div>
   );
 }

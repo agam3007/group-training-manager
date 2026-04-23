@@ -1,6 +1,14 @@
 export type TrainingType = "swim" | "run" | "bike";
 
-export type SetType = "warmup" | "main" | "cooldown" | "drill";
+export type SetType =
+  | "warmup"
+  | "cooldown"
+  | "drill"
+  | "steady"
+  | "interval2"
+  | "interval3"
+  | "rampup"
+  | "rampdown";
 
 export type Unit = "m" | "km" | "time" | "reps";
 
@@ -9,14 +17,14 @@ export interface EnduranceSet {
 
   setType: SetType;
 
-  reps: number;
+  reps?: number;
 
   mode: "distance" | "time" | "reps"; 
   distance?: number;
 
   duration?: number;
 
-  unit: Unit;
+  unit?: Unit;
 
   rest?: number;
 
@@ -38,7 +46,7 @@ export interface StrengthExercise {
   
 }
 
-export type WorkoutStep = EnduranceSet | StrengthExercise;
+export type WorkoutStep = EnduranceSet;
 
 export interface Training {
   creationDate: Date;

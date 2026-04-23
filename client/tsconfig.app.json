@@ -25,5 +25,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "../shared/types/athlete.ts", "../shared/types/group.ts", "../shared/types/training.ts", "../shared/types/dayEvent.ts"]
+  "include": ["src", "../shared/types/athlete.ts", "../shared/types/group.ts", "../shared/types/training.ts", "../shared/types/calendarEvent.ts"]
 }

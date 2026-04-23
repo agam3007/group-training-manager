@@ -57,8 +57,8 @@
         {
           "day": 0,
           "start": {
-            "hour": 18,
-            "min": 0
+            "hour": 17,
+            "min": 30
           },
           "end": {
             "hour": 19,
@@ -79,8 +79,8 @@
         {
           "day": 3,
           "start": {
-            "hour": 18,
-            "min": 0
+            "hour": 17,
+            "min": 30
           },
           "end": {
             "hour": 19,
@@ -116,12 +116,59 @@
       }
     },
     {
-      "id": "1776085058810",
-      "name": "",
-      "coach": "",
-      "level": "",
-      "sport": "",
-      "schedule": []
+      "id": "1776604085831",
+      "name": "מעוז נוער",
+      "coach": "אגם",
+      "level": "intermediate",
+      "sport": "triathlon",
+      "schedule": [
+        {
+          "day": "0",
+          "start": {
+            "hour": 18,
+            "min": 30
+          },
+          "end": {
+            "hour": 20,
+            "min": 0
+          }
+        },
+        {
+          "day": "0",
+          "start": {
+            "hour": 20,
+            "min": 0
+          },
+          "end": {
+            "hour": 21,
+            "min": 0
+          }
+        },
+        {
+          "day": "3",
+          "start": {
+            "hour": 18,
+            "min": 30
+          },
+          "end": {
+            "hour": 20,
+            "min": 0
+          }
+        },
+        {
+          "day": "3",
+          "start": {
+            "hour": 20,
+            "min": 0
+          },
+          "end": {
+            "hour": 21,
+            "min": 0
+          }
+        }
+      ],
+      "maxAthletes": 15,
+      "color": "#bc1a1a"
     }
   ],
   "athletes": [
@@ -398,82 +445,6 @@
       "notes": ""
     },
     {
-      "id": "1776085641609",
-      "date": "2026-04-13",
-      "type": "swim",
-      "title": "טכניקה ואירובי",
-      "description": "פיתוח אירובי וטכניקה",
-      "equipment": [],
-      "steps": [
-        {
-          "id": "645ac8ff-2f0e-4baa-8959-0c6daf490b89",
-          "setType": "warmup",
-          "reps": 8,
-          "distance": 50,
-          "unit": "m",
-          "mode": "distance",
-          "rest": 10,
-          "intensity": "Long",
-          "notes": "each 4th L1"
-        },
-        {
-          "id": "3c94117a-831e-4691-b4db-bd71cccac298",
-          "setType": "drill",
-          "reps": 4,
-          "distance": 100,
-          "unit": "m",
-          "mode": "distance",
-          "rest": 10,
-          "intensity": "L1",
-          "notes": "25 (שורטות, תחנת רוח, אגרופים, חתירה) עם סנפירים"
-        },
-        {
-          "id": "f7572db2-ad40-4553-b289-8a5e3cefe3a9",
-          "setType": "main",
-          "reps": 8,
-          "distance": 25,
-          "unit": "m",
-          "mode": "distance",
-          "rest": 10,
-          "intensity": "L1",
-          "notes": "15 תנועות"
-        },
-        {
-          "id": "1eb57cc2-400e-471f-92b2-d237f6f5f16e",
-          "setType": "main",
-          "reps": 8,
-          "distance": 50,
-          "unit": "m",
-          "mode": "distance",
-          "rest": 10,
-          "intensity": "L1",
-          "notes": "פירמידה תנועות מינימום + 1"
-        },
-        {
-          "id": "5f72a602-2e0c-4b07-9f17-177959e287d3",
-          "setType": "main",
-          "reps": 1,
-          "distance": 100,
-          "unit": "m",
-          "mode": "distance",
-          "notes": "גב",
-          "intensity": "L1"
-        },
-        {
-          "id": "21f92086-ae21-4c96-8bd0-c8b664f43f62",
-          "setType": "cooldown",
-          "reps": 6,
-          "distance": 50,
-          "unit": "m",
-          "mode": "distance",
-          "rest": 10,
-          "notes": "3/5",
-          "intensity": "Long"
-        }
-      ],
-      "notes": ""
-    },
-    {
       "id": "1776085785292",
       "date": "2026-04-13",
       "type": "bike",
@@ -493,6 +464,43 @@
         }
       ],
       "notes": ""
+    },
+    {
+      "id": "1776592862628",
+      "type": "swim",
+      "title": "swim",
+      "description": "1H",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "4d323e8d-98b2-4582-9c7d-1c7f619cf90c",
+          "setType": "warmup",
+          "reps": 1,
+          "distance": 1500,
+          "unit": "m",
+          "mode": "distance"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "1776600009204",
+      "type": "bike",
+      "title": "אימון בריק",
+      "description": "הכנה לתחרות ראשלצ",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "9674b274-63bd-4fd2-a4c7-e85c443108ed",
+          "setType": "warmup",
+          "reps": 1,
+          "distance": 1,
+          "unit": "km",
+          "mode": "time"
+        }
+      ],
+      "notes": "",
+      "creationDate": "2026-04-19T12:00:09.204Z"
     }
   ],
   "events": [
@@ -509,6 +517,16 @@
       "time": "15:00",
       "type": "task",
       "date": "2026-03-31"
+    },
+    {
+      "id": "25ef6d04-54c3-4dda-bbf6-103bfbfeeb94",
+      "title": "מעוז נוער - אימון בריק",
+      "type": "groupSchedule",
+      "startTime": "2026-04-19T15:00:00.000Z",
+      "endTime": "2026-04-19T16:00:00.000Z",
+      "groupId": "1776604085831",
+      "sourceId": "groupSchedule-1776604085831-1776610800000",
+      "createdAt": "2026-04-19T14:05:03.919Z"
     }
   ],
   "athleteGroups": [
@@ -538,94 +556,27 @@
       "groupId": "1775209197824"
     }
   ],
-  "trainingAssignments": [
+  "trainingAssignments": [],
+  "eventOverrides": [
     {
-      "id": "1775738132966",
-      "trainingId": "1775391922525",
-      "athleteId": null,
-      "groupId": "1775649005920",
-      "startTime": "2026-04-06T02:30:00.000Z",
-      "endTime": "2026-04-06T03:30:00.000Z",
-      "notes": "",
-      "createdAt": "2026-04-09T12:35:32.966Z",
-      "updatedAt": "2026-04-09T12:35:32.966Z"
+      "id": "a10fa62e-eaf1-4d9d-8bca-a079efee7b18",
+      "sourceId": "groupSchedule-1776604085831-1776871800000",
+      "originalStartTime": "2026-04-22T15:30:00.000Z",
+      "isCancelled": false,
+      "modifiedTitle": "מעוז נוער - triathlon",
+      "modifiedStartTime": "2026-04-23T15:15:00.000Z",
+      "modifiedEndTime": "2026-04-23T16:45:00.000Z",
+      "createdAt": "2026-04-23T09:50:31.433Z"
     },
     {
-      "id": "1775738162710",
-      "trainingId": "1775392166455",
-      "athleteId": null,
-      "groupId": "1775649005920",
-      "startTime": "2026-04-08T02:30:00.000Z",
-      "endTime": "2026-04-08T03:30:00.000Z",
-      "notes": "",
-      "createdAt": "2026-04-09T12:36:02.710Z",
-      "updatedAt": "2026-04-09T12:36:02.710Z"
-    },
-    {
-      "id": "1775738246130",
-      "trainingId": "1775391922525",
-      "athleteId": null,
-      "groupId": "1775649005920",
-      "startTime": "2026-04-06T04:45:00.000Z",
-      "endTime": "2026-04-06T05:45:00.000Z",
-      "notes": "",
-      "createdAt": "2026-04-09T12:37:26.130Z",
-      "updatedAt": "2026-04-09T12:37:26.130Z"
-    },
-    {
-      "id": "1775738736757",
-      "trainingId": "1775392166455",
-      "athleteId": null,
-      "groupId": "1775649005920",
-      "startTime": "2026-04-06T14:15:00.000Z",
-      "endTime": "2026-04-06T15:15:00.000Z",
-      "notes": "",
-      "createdAt": "2026-04-09T12:45:36.757Z",
-      "updatedAt": "2026-04-09T12:45:36.757Z"
-    },
-    {
-      "id": "1775833797556",
-      "trainingId": "1775391922525",
-      "athleteId": null,
-      "groupId": "1775649005920",
-      "startTime": "2026-04-10T12:30:00.000Z",
-      "endTime": "2026-04-10T13:30:00.000Z",
-      "notes": "",
-      "createdAt": "2026-04-10T15:09:57.557Z",
-      "updatedAt": "2026-04-10T15:09:57.557Z"
-    },
-    {
-      "id": "1776085124304",
-      "trainingId": "1775392166455",
-      "athleteId": "1773161190813",
-      "groupId": null,
-      "startTime": "2026-04-13T08:30:00.000Z",
-      "endTime": "2026-04-13T09:30:00.000Z",
-      "notes": "",
-      "createdAt": "2026-04-13T12:58:44.304Z",
-      "updatedAt": "2026-04-13T12:58:44.304Z"
-    },
-    {
-      "id": "1776085647032",
-      "trainingId": "1776085641609",
-      "athleteId": "1773161190813",
-      "groupId": null,
-      "startTime": "2026-04-16T10:30:00.000Z",
-      "endTime": "2026-04-16T11:30:00.000Z",
-      "notes": "",
-      "createdAt": "2026-04-13T13:07:27.032Z",
-      "updatedAt": "2026-04-13T13:07:27.032Z"
-    },
-    {
-      "id": "1776085800275",
-      "trainingId": "1776085785292",
-      "athleteId": "1773161190813",
-      "groupId": null,
-      "startTime": "2026-04-15T08:00:00.000Z",
-      "endTime": "2026-04-15T09:00:00.000Z",
-      "notes": "",
-      "createdAt": "2026-04-13T13:10:00.275Z",
-      "updatedAt": "2026-04-13T13:10:00.275Z"
+      "id": "7f199ea4-ff80-4f68-9e2e-0974b7f685ab",
+      "sourceId": "groupSchedule-1775649005920-1776954600000",
+      "originalStartTime": "2026-04-23T14:30:00.000Z",
+      "isCancelled": false,
+      "modifiedTitle": "ילדים מעוז - רכיבה נפח",
+      "modifiedStartTime": "2026-04-23T14:30:00.000Z",
+      "modifiedEndTime": "2026-04-23T16:00:00.000Z",
+      "createdAt": "2026-04-23T09:50:45.112Z"
     }
   ]
 }

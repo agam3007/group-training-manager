@@ -1,0 +1,149 @@
+.sport-metric-selector {
+  width: 100%;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* SPORT TYPE SELECTOR */
+.type-selector-integrated {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.type-selector-integrated .selector-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.type-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.type-btn {
+  flex: 1;
+  min-width: 60px;
+  padding: 8px 12px;
+  border: 2px solid #d1d5db;
+  background: white;
+  border-radius: 6px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.type-btn:hover {
+  border-color: #9ca3af;
+  background: #f3f4f6;
+}
+
+.type-btn.active {
+  border-color: #2f80ed;
+  background: #eff6ff;
+  box-shadow: 0 0 0 3px rgba(47, 128, 237, 0.1);
+}
+
+/* METRICS OPTIONS */
+.metric-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  padding: 12px;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+.metric-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.metric-group label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.metric-group select,
+.metric-group input {
+  padding: 6px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 12px;
+  background: white;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.metric-group input {
+  cursor: text;
+}
+
+.metric-group input:focus,
+.metric-group select:focus {
+  outline: none;
+  border-color: #2f80ed;
+  box-shadow: 0 0 0 3px rgba(47, 128, 237, 0.1);
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.option-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #4b5563;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.option-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #2f80ed;
+}
+
+/* LEGACY STYLES */
+.selector-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.selector-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.metric-format {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #4b5563;
+}
+
+.metric-format select {
+  padding: 4px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 12px;
+}

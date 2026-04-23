@@ -1,0 +1,137 @@
+.workout-visualizer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+.visualizer-container {
+  flex: 1;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+
+  display: flex;
+  align-items: flex-end;
+
+  overflow: hidden; /* לא יברח */
+  box-sizing: border-box;
+}
+
+/* 🔥 CONTAINER */
+.blocks-container {
+  width: 100%;
+  height: 100%;
+ min-width: 0;
+  display: flex;
+  align-items: flex-end;
+
+  gap: 0; /* במקום margin */
+
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* 🔥 כל בלוק מקבל מקום יחסי */
+.block-wrapper {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+  padding-right: 3px;
+}
+
+.rest-block-wrapper {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.workout-block {
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  border-radius: 4px 4px 0 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.workout-block:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.rest-block {
+  width: 100%;
+  flex: 1;
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  border: 1px solid #d1d5db;
+  border-radius: 4px 4px 0 0;
+  position: relative;
+  min-height: 12px;
+}
+
+/* 🎯 DROP ZONE OVERLAY - Absolutely positioned, no layout impact */
+.drop-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 12px;
+  background: transparent;
+  cursor: grab;
+  transition: all 0.15s ease;
+  z-index: 5;
+}
+
+.drop-zone-start {
+  left: -6px;
+}
+
+.drop-zone-end {
+  right: -6px;
+}
+
+.drop-zone:hover {
+  background: rgba(47, 128, 237, 0.1);
+  border: 1px dashed rgba(47, 128, 237, 0.4);
+}
+
+.drop-zone.active {
+  background: rgba(47, 128, 237, 0.2);
+  border: 1px dashed #2f80ed;
+  box-shadow: inset 0 0 8px rgba(47, 128, 237, 0.3);
+}
+
+.empty-state {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  text-align: center;
+  font-size: 14px;
+  min-height: 150px;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.empty-state:hover {
+  background: rgba(47, 128, 237, 0.05);
+  border-color: #2f80ed;
+  color: #6b7280;
+}
+
+.empty-state p {
+  max-width: 300px;
+  line-height: 1.6;
+}

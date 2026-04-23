@@ -1,9 +1,6 @@
 .training-event {
   position: absolute;
 
-  left: 6px;
-  right: 6px;
-
   border-radius: 10px;
 
   padding: 6px 8px;
@@ -39,6 +36,17 @@
 .training-event:active {
   cursor: grabbing;
   transform: scale(1.01);
+  opacity: 0.9;
+}
+
+.training-event.dragging {
+  opacity: 0.7;
+  transform: scale(1.02);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.training-event[draggable="true"] {
+  user-select: none;
 }
 
 /* 🧠 Title */
@@ -58,7 +66,8 @@
   opacity: 0.9;
 
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* מגביל ל-2 שורות */
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 
   overflow: hidden;
@@ -112,7 +121,7 @@
   background: linear-gradient(135deg, #9b51e0, #bb6bd9);
 }
 
-.training-group {
+.training-groupSchedule {
   background: linear-gradient(135deg, #f2994a, #f2c94c);
 }
 

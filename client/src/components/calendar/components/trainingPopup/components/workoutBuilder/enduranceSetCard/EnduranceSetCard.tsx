@@ -16,13 +16,33 @@ export default function EnduranceSetCard({
   duplicate,
 }: Props) {
   const [editing, setEditing] = useState(false);
+    const secondsToMMSS = (totalSeconds?: number) => {
+  if (!totalSeconds && totalSeconds !== 0) return "";
 
-  const formatMain = () => {
-    if (set.mode === "time") {
-      return `${set.reps} × ${set.duration || 0}s`;
-    }
-    return `${set.reps} × ${set.distance || 0}${set.unit || ""}`;
-  };
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+
+  return `${m.toString().padStart(2, "0")}:${s
+    .toString()
+    .padStart(2, "0")}`;
+};
+
+const mmssToSeconds = (value: string) => {
+  const [m, s] = value.split(":").map(Number);
+
+  if (isNaN(m) || isNaN(s)) return 0;
+
+  return m * 60 + s;
+};
+  const [localDuration, setLocalDuration] = useState(
+  secondsToMMSS(set.duration)
+);
+const formatMain = () => {
+  if (set.mode === "time") {
+    return `${set.reps} × ${secondsToMMSS(set.duration)}`;
+  }
+  return `${set.reps} × ${set.distance || 0}${set.unit || ""}`;
+};
 
   return (
     <div className={`set-card ${set.setType}`}>
@@ -113,16 +133,18 @@ export default function EnduranceSetCard({
               </>
             ) : (
               <div className="field">
-                <label>Time (sec)</label>
-                <input
-                  type="number"
-                  value={set.duration || ""}
-                  onChange={(e) =>
-                    update(set.id, {
-                      duration: Number(e.target.value),
-                    })
-                  }
-                />
+                <label>Time (MM:SS)</label>
+<input
+  type="text"
+  value={localDuration}
+  placeholder="MM:SS"
+  onChange={(e) => setLocalDuration(e.target.value)}
+  onBlur={() =>
+    update(set.id, {
+      duration: mmssToSeconds(localDuration),
+    })
+  }
+/>
               </div>
             )}
           </div>

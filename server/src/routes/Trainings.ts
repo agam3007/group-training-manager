@@ -23,13 +23,13 @@ router.post("/", (req, res) => {
 
   const newTraining: Training = {
     id: Date.now().toString(),
-    date: req.body.date,
     type: req.body.type,
     title: req.body.title,
     description: req.body.description,
     equipment: req.body.equipment || [],
     steps: req.body.steps || [],
     notes: req.body.notes || "",
+    creationDate: new Date()
   };
 
   db.trainings.push(newTraining);
@@ -37,7 +37,7 @@ router.post("/", (req, res) => {
   writeDb(db);
 
   logger.info(
-    `Created training ${newTraining.id} for date ${newTraining.date}`,
+    `Created training ${newTraining.id} for date ${newTraining.creationDate}`,
   );
 
   res.status(201).json(newTraining);

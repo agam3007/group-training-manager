@@ -5,3 +5,5 @@ export { TimeColumn } from "./timeColumn";
 export { TrainingDetails } from "./TrainingDetails";
 export { TrainingPopup } from "./trainingPopup";
 export { WeeklyHeader } from "./weeklyHeader";
+export { LoadCalculator } from "./loadCalculator"
+export { GroupSchedulePopup } from "./groupSchedulePopup"

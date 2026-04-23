@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { DayEvent } from "../../../../shared/types/dayEvent";
+import type { DayEvent } from "../../../../shared/types/calendarEvent";
 import AddEventModal from "./AddEventModal";
 import "./TodayTimline.css";
 

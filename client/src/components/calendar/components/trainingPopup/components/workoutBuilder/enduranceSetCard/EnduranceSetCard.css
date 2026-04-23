@@ -1,51 +1,90 @@
+.set-card {
+  background: white;
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.set-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+/* 🎯 TYPE COLORS */
+.set-card.warmup {
+  border-left: 4px solid #ff6b6b;
+  background: #f6fff6;
+}
+
+.set-card.main {
+  border-left: 4px solid #4dabf7;
+  background: #f5faff;
+}
+
+.set-card.cooldown {
+  border-left: 4px solid #9e9e9e;
+  background: #fafafa;
+}
+
+.set-card.drill {
+  border-left: 4px solid #ff9800;
+  background: #fff8f0;
+}
+
+/* SUMMARY */
 .set-summary {
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
+}
+
+.set-main {
+  display: flex;
+  gap: 8px;
+  font-size: 16px;
+}
+
+.intensity {
+  color: #2563eb;
+  font-weight: 500;
 }
 
 .set-notes {
-  font-size: 12px;
-  color: #666;
+  font-size: 13px;
+  color: #555;
 }
 
 .set-extra {
   font-size: 12px;
-  color: #888;
+  color: #777;
 }
 
-/* ===== EDIT MODE ===== */
-
+/* EDIT */
 .set-edit {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 100%;
-  flex: 1;
-  align-self: stretch;
 }
 
-/* GRID */
-.set-edit-grid {
+.set-row {
   display: flex;
-  flex-wrap: wrap; /* 🔥 זה הכי חשוב */
   gap: 8px;
+  flex-wrap: wrap;
 }
 
-.set-edit-grid > * {
-  min-width: 0;
-}
-
-/* FIELD */
 .field {
   display: flex;
   flex-direction: column;
   font-size: 11px;
   color: #666;
+  flex: 1;
+  min-width: 100px;
+}
 
-  flex: 1 1 100px; /* 🔥 שומר שלא יחרוג */
-  min-width: 80px;
+.field.small {
+  max-width: 90px;
 }
 
 .field input,
@@ -54,8 +93,7 @@
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 13px;
-
-  width: 100%; /* 🔥 חשוב */
+  width: 100%;
   box-sizing: border-box;
 }
 
@@ -100,29 +138,4 @@
   padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
-}
-
-.set-row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  font-size: 11px;
-  color: #666;
-  flex: 1;
-  min-width: 100px;
-}
-
-.field.small {
-  max-width: 90px;
-}
-
-.field input,
-.field select {
-  width: 100%;
-  box-sizing: border-box;
 }

@@ -86,9 +86,11 @@ export default function Library({ trainings, onAdd, onSelect }: Props) {
                       key={t.id}
                       className="library-item"
                       draggable
-                      onDragStart={(e) =>
-                        e.dataTransfer.setData("training", JSON.stringify(t))
-                      }
+                      onDragStart={(e) => {
+                        e.dataTransfer.effectAllowed = "copyMove";
+                        e.dataTransfer.setData("dragType", "training");
+                        e.dataTransfer.setData("training", JSON.stringify(t));
+                      }}
                       onClick={() => onSelect(t)}
                     >
                       <span className="library-icon">{getIcon(t.type)}</span>
