@@ -305,6 +305,15 @@
   background: #e0e7ff;
 }
 
+.save-btn.danger {
+  background: #dc2626;
+  color: white;
+}
+
+.save-btn.danger:hover {
+  background: #b91c1c;
+}
+
 .cancel-btn {
   background: #eee;
   border: none;

@@ -110,10 +110,9 @@ export default function Calendar({
         const today = new Date();
         const startOfWeek = new Date(today);
         const day = today.getDay();
-        const diff = day === 0 ? -6 : 1 - day;
+        const diff = day === 0 ? -7 : 1 - day;
         startOfWeek.setDate(today.getDate() + diff + weekOffset * 7);
         startOfWeek.setHours(0, 0, 0, 0);
-
         const endOfWeek = new Date(startOfWeek);
         endOfWeek.setDate(startOfWeek.getDate() + 6);
         endOfWeek.setHours(23, 59, 59, 999);
@@ -193,6 +192,27 @@ export default function Calendar({
         }));
       }
 
+            if (athleteId) {
+        await createAssignment({
+          id: crypto.randomUUID(),
+          trainingId: trainingToUse.id,
+            trainingSnapshot: {
+              id: trainingToUse.id,
+              title: trainingToUse.title,
+              description: trainingToUse.description,
+              type: trainingToUse.type,
+              steps: trainingToUse.steps,
+              notes: trainingToUse.notes,
+              duration: trainingToUse.duration,
+              creationDate: trainingToUse.creationDate,
+            },
+          athleteId: athleteId,
+          startTime,
+          status: "PENDING",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+      } else {
       await createEvent({
         title: effectiveTitle,
         type: asGroupSchedule ? "groupSchedule" : (training.type as any),
@@ -202,17 +222,7 @@ export default function Calendar({
         groupId: effectiveGroupId || undefined,
         sourceId,
       });
-
-      if (athleteId) {
-        await createAssignment({
-          id: crypto.randomUUID(),
-          trainingId: trainingToUse.id,
-          athleteId: athleteId,
-          startTime,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        });
-      }
+    }
 
       const weekStart = calculateWeekStartDate(weekOffset);
       const weekEnd = new Date(weekStart);
@@ -390,10 +400,25 @@ export default function Calendar({
 
   const getTrainingForEvent = async (event: CalendarEvent): Promise<Training | null> => {
     if (event.sourceId?.startsWith("training-")) {
+      const assignmentId = event.sourceId.replace("training-", "");
+
       const sourceTraining = trainings.find((t) => event.sourceId?.endsWith(t.id));
       if (sourceTraining) return sourceTraining;
       const localTraining = localTrainingBySourceId[event.sourceId];
       if (localTraining) return localTraining;
+
+      try {
+        const assignments = await getAssignments({
+          athleteId: event.athleteId || undefined,
+          groupId: event.groupId || undefined,
+        });
+        const assignment = assignments.find((a: any) => a.id === assignmentId);
+        if (assignment?.trainingSnapshot) {
+          return assignment.trainingSnapshot;
+        }
+      } catch (error) {
+        console.error("Failed to load assignment snapshot:", error);
+      }
     }
 
     if (event.athleteId) {
@@ -430,7 +455,30 @@ export default function Calendar({
       const endTime = new Date(newEventDate);
       endTime.setMinutes(endTime.getMinutes() + duration);
 
-      await createEvent({
+
+      // If athlete, create assignment
+      if (athleteId) {
+        await createAssignment({
+          id: crypto.randomUUID(),
+          trainingId: training.id,
+          trainingSnapshot: {
+            id: training.id,
+            title: training.title,
+            description: training.description,
+            type: training.type,
+            steps: training.steps,
+            notes: training.notes,
+            duration: training.duration,
+            creationDate: training.creationDate,
+          },
+          athleteId: athleteId,
+          startTime: newEventDate,
+          status: "PENDING",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+      } else {
+              await createEvent({
         title: training.title,
         type: training.type as any,
         startTime: newEventDate,
@@ -439,16 +487,6 @@ export default function Calendar({
         groupId: selectedGroupId || undefined,
       });
 
-      // If athlete, create assignment
-      if (athleteId) {
-        await createAssignment({
-          id: crypto.randomUUID(),
-          trainingId: training.id,
-          athleteId: athleteId,
-          startTime: newEventDate,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        });
       }
 
       // Refresh events
@@ -501,16 +539,22 @@ export default function Calendar({
         const endTime = new Date(newEventDate);
         endTime.setMinutes(endTime.getMinutes() + duration);
 
-        // Update event
-        await updateEvent(event.id, {
-          startTime: newEventDate,
-          endTime: endTime,
-        });
-
+     
         // Find and update the assignment if this is an athlete training
         if (event.athleteId) {
           // We would need the assignment ID here, but we don't have it in CalendarEvent
           // The assignment would need to be updated separately if available
+          await updateAssignment(event.sourceId?.split("-")[1] || event.id, {
+            startTime: newEventDate,
+            endTime: endTime,
+          });
+        } else {
+          
+             // Update event
+        await updateEvent(event.id, {
+          startTime: newEventDate,
+          endTime: endTime,
+        });
         }
       }
 
@@ -538,7 +582,6 @@ export default function Calendar({
     sourceId: ce.sourceId,
     createdAt: new Date()
   }));
-
   return (
     <div className="calendar">
       <Library
@@ -559,6 +602,11 @@ export default function Calendar({
           setEditing(newTraining);
         }}
         onSelect={(t) => setViewing(t)}
+        onUpdateTraining={(updated) => {
+          setTrainings((prev) =>
+            prev.map((t) => (t.id === updated.id ? updated : t))
+          );
+        }}
       />
       <div
         style={{
@@ -639,6 +687,23 @@ export default function Calendar({
               setEditingFromCalendar(false);
               setEditingEvent(null);
             }}
+            onDeleteTraining={
+              !editingFromCalendar && trainings.some((t) => t.id === editing.id)
+                ? async (trainingToDelete) => {
+                    if (!window.confirm(`Delete "${trainingToDelete.title || "Untitled"}" from library? Scheduled instances will stay on calendar as one-time trainings.`)) {
+                      return;
+                    }
+
+                    try {
+                      await deleteTraining(trainingToDelete.id);
+                      setTrainings((prev) => prev.filter((t) => t.id !== trainingToDelete.id));
+                      setEditing(null);
+                    } catch (err) {
+                      console.error("Delete failed", err);
+                    }
+                  }
+                : undefined
+            }
             onSave={async (updated) => {
               const exists = trainings.find((t) => t.id === updated.id);
 

@@ -1,4 +1,5 @@
 import type { Goal } from "./athlete";
+import type { Note } from "./note";
 
 export interface TrainingTime {
   day: number;
@@ -11,13 +12,6 @@ export interface TrainingTime {
     min: number;
   };
 }
-
-export type Note = {
-  id: string;
-  title: string;
-  content: string;
-  date: string;
-};
 
 export interface Group {
   id: string;

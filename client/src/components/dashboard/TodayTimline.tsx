@@ -1,21 +1,23 @@
 import { useState } from "react";
-import type { DayEvent } from "../../../../shared/types/calendarEvent";
+import type { CalendarEvent } from "@/shared/types";
 import AddEventModal from "./AddEventModal";
 import "./TodayTimline.css";
 
 interface Props {
-  events: DayEvent[];
+  events: CalendarEvent[];
 
-  onAdd: (event: DayEvent) => void;
+  onAdd: (event: CalendarEvent) => void;
 
-  onUpdate: (event: DayEvent) => void;
+  onUpdate: (event: CalendarEvent) => void;
 
   onDelete: (id: string) => void;
 
   onToggleDone: (id: string) => void;
+
+  ghostedEvents?: CalendarEvent[];
 }
 
-export default function TodayTimeline({
+export default function TodayTimelineSchedule({
   events,
   onAdd,
   onUpdate,
@@ -24,10 +26,18 @@ export default function TodayTimeline({
 }: Props) {
   const [open, setOpen] = useState(false);
 
-  const [editing, setEditing] = useState<DayEvent | null>(null);
+  const [editing, setEditing] = useState<CalendarEvent | null>(null);
 
-  const sorted = [...events].sort((a, b) => a.time.localeCompare(b.time));
+  // Convert string dates to Date objects
+  const normalizeEvents = (evts: CalendarEvent[]) => {
+    return evts.map((e) => ({
+      ...e,
+      startTime: typeof e.startTime === 'string' ? new Date(e.startTime) : e.startTime,
+      endTime: typeof e.endTime === 'string' ? new Date(e.endTime) : e.endTime,
+    }));
+  };
 
+  const sorted = [...normalizeEvents(events)].sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
   const color = (type: string) => {
     if (type === "training") return "#22c55e";
     if (type === "task") return "#f59e0b";
@@ -35,7 +45,6 @@ export default function TodayTimeline({
 
     return "#94a3b8";
   };
-
   return (
     <div className="timeline-card">
       <div className="timeline-header">
@@ -49,7 +58,7 @@ export default function TodayTimeline({
       <div className="timeline">
         {sorted.map((e) => (
           <div key={e.id} className="timeline-item">
-            <div className="timeline-time">{e.time}</div>
+            <div className="timeline-time">{e.startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
 
             <div className="timeline-dot" />
 

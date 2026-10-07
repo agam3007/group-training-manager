@@ -5,7 +5,7 @@ import "./AppLayout.css";
 export default function AppLayout() {
   const location = useLocation();
 
-  const isNoPaddingPage = location.pathname.startsWith("/schedule");
+  const isNoPaddingPage = location.pathname.startsWith("/schedule") || location.pathname.startsWith("/training-plans/");
 
   return (
     <div className="app-layout">

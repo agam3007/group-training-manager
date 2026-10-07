@@ -1,0 +1,30 @@
+.wizard-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px; /* הוספת ריווח מסביב למקרה של מסכים קטנים */
+}
+
+.wizard-wrapper {
+  width: 100%;
+  max-width: 920px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* מוודא שהתוכן ממורכז בתוך הוויזארד */
+  align-items: center;      /* מוודא שהתוכן ממורכז אופקית */
+  overflow: hidden;         /* מונע מהתוכן לחרוג מהגבולות */
+}
+
+/* וודא שכל מודאל (למשל Step1, Step2) הוא ברוחב מלא של הוויזארד או בעל רוחב מוגדר */
+.wizard-wrapper > div {
+  max-width: 920px; /* הרוחב המקסימלי האחיד */
+  background: white; /* רקע למודאל */
+  border-radius: 8px; /* אופציונלי: עיצוב ויזואלי */
+  overflow-y: auto; /* מאפשר גלילה בתוך המודאל אם הוא ארוך מהמסך */
+}
+

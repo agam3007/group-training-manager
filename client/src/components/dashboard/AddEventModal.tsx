@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
-import type { DayEvent } from "../../../../shared/types/calendarEvent";
+import type { CalendarEvent } from "@/shared/types/calendarEvent";
 import "./AddEventModal.css";
 
 interface Props {
-  onAdd: (event: DayEvent) => void;
+  onAdd: (event: CalendarEvent) => void;
 
-  onUpdate?: (event: DayEvent) => void;
+  onUpdate?: (event: CalendarEvent) => void;
 
   onClose: () => void;
 
-  event?: DayEvent;
+  event?: CalendarEvent;
 }
 
 export default function AddEventModal({
@@ -20,12 +20,12 @@ export default function AddEventModal({
 }: Props) {
   const [title, setTitle] = useState("");
   const [time, setTime] = useState("");
-  const [type, setType] = useState<"task" | "call" | "training">("task");
+  const [type, setType] = useState<CalendarEvent["type"]>("task");
 
   useEffect(() => {
     if (event) {
       setTitle(event.title);
-      setTime(event.time);
+      setTime(event.startTime.toISOString().slice(0, 10));
       setType(event.type);
     }
   }, [event]);
@@ -33,17 +33,24 @@ export default function AddEventModal({
   const submit = () => {
     if (!title || !time) return;
 
-    const newEvent: DayEvent = {
+    // Parse time input (HH:MM format)
+    const [hours, minutes] = time.split(':').map(Number);
+    
+    // Create dates for today
+    const today = new Date();
+    const startTime = new Date(today);
+    startTime.setHours(hours, minutes, 0, 0);
+    
+    const endTime = new Date(startTime);
+    endTime.setHours(startTime.getHours() + 1); // Add 1 hour
+
+    const newEvent: CalendarEvent = {
       id: event?.id || Date.now().toString(),
-
       title,
-
-      time,
-
+      startTime,
+      endTime,
       type,
-
-      date: event?.date || new Date().toISOString().slice(0, 10),
-
+      createdAt: new Date(), // Always set to current time
       done: event?.done || false,
     };
 

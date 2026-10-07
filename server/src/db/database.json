@@ -1,582 +1,4113 @@
 {
   "groups": [
     {
-      "id": "1773070277512",
-      "name": "רמה א",
-      "type": "general",
-      "athletes": [
-        "1773161190813",
-        "1774889754592",
-        "1775042095687"
-      ],
-      "schedule": [],
-      "coach": "אגם=",
-      "sport": "bike",
+      "id": "1778766852047",
+      "name": "מעוז",
+      "coach": "",
       "level": "beginner",
-      "maxAthletes": 5,
-      "color": "#ec3232",
-      "notes": [
-        {
-          "id": "1775121648751",
-          "title": "תוכנית אימונים",
-          "content": "לשים דגש על טכניקה uthruch",
-          "date": "2026-04-02T09:20:48.751Z"
-        },
-        {
-          "id": "1775121683887",
-          "title": "שינוי קבוצה לספורטאי",
-          "content": "ליסה לא מתאימה לרמה מתאימה לרמה א",
-          "date": "2026-04-02T09:21:23.887Z"
-        },
-        {
-          "id": "1775122431480",
-          "title": "לתכנן תחרות",
-          "content": "ליסה לא מתאימה",
-          "date": "2026-04-02T09:33:51.480Z"
-        }
-      ],
-      "goals": [
-        {
-          "id": "1775123351915",
-          "title": "אולימפי אילת",
-          "location": "אילת",
-          "date": "2026-12-12"
-        },
-        {
-          "id": "1775126412235",
-          "title": "ספרינט",
-          "location": "ראשון",
-          "date": "2026-01-05"
-        }
-      ]
-    },
-    {
-      "id": "1775649005920",
-      "name": "ילדים מעוז",
+      "sport": "triathlon",
       "schedule": [
         {
-          "day": 0,
+          "day": "1",
           "start": {
             "hour": 17,
             "min": 30
           },
           "end": {
-            "hour": 19,
-            "min": 0
-          }
-        },
-        {
-          "day": 0,
-          "start": {
-            "hour": 19,
-            "min": 0
-          },
-          "end": {
             "hour": 20,
             "min": 0
           }
         },
         {
-          "day": 3,
+          "day": "4",
           "start": {
             "hour": 17,
             "min": 30
           },
           "end": {
-            "hour": 19,
-            "min": 0
-          }
-        },
-        {
-          "day": 3,
-          "start": {
-            "hour": 19,
-            "min": 0
-          },
-          "end": {
             "hour": 20,
             "min": 0
           }
         }
       ],
-      "coach": "אגם",
-      "sport": "triathlon",
-      "level": "beginner",
-      "maxAthletes": 15,
-      "color": "#392ca0",
-      "groupId": "1775649005920",
-      "scheduleIndex": 2,
-      "start": {
-        "hour": 18,
-        "min": 0
-      },
-      "end": {
-        "hour": 19,
-        "min": 0
-      }
-    },
-    {
-      "id": "1776604085831",
-      "name": "מעוז נוער",
-      "coach": "אגם",
-      "level": "intermediate",
-      "sport": "triathlon",
-      "schedule": [
-        {
-          "day": "0",
-          "start": {
-            "hour": 18,
-            "min": 30
-          },
-          "end": {
-            "hour": 20,
-            "min": 0
-          }
-        },
-        {
-          "day": "0",
-          "start": {
-            "hour": 20,
-            "min": 0
-          },
-          "end": {
-            "hour": 21,
-            "min": 0
-          }
-        },
-        {
-          "day": "3",
-          "start": {
-            "hour": 18,
-            "min": 30
-          },
-          "end": {
-            "hour": 20,
-            "min": 0
-          }
-        },
-        {
-          "day": "3",
-          "start": {
-            "hour": 20,
-            "min": 0
-          },
-          "end": {
-            "hour": 21,
-            "min": 0
-          }
-        }
-      ],
-      "maxAthletes": 15,
-      "color": "#bc1a1a"
+      "maxAthletes": 15
     }
   ],
   "athletes": [
     {
-      "id": "1773161190813",
+      "id": "1778767098617",
       "name": "agam",
-      "level": "pro",
-      "age": 22,
-      "phone": "0542405393",
-      "parentPhone": "054",
-      "groups": [],
-      "notes": "hiiiiiiiiii",
-      "height": 158,
-      "weight": "60",
+      "level": "",
       "tests": [
         {
-          "id": "1774887292961",
+          "id": "1778767150499",
           "sport": "run",
-          "type": "5k",
+          "type": "1k",
           "method": "threshold",
-          "value": 1320,
-          "date": "2026-03-30T16:14:52.961Z",
+          "value": 300,
+          "date": "2026-05-14T13:59:10.499Z",
           "zones": {
             "pace": [
-              352,
-              310.5882352941177,
-              277.89473684210526,
-              251.42857142857142,
-              229.56521739130437
-            ]
-          }
-        },
-        {
-          "id": "1774887643143",
-          "sport": "run",
-          "type": "5k",
-          "method": "threshold",
-          "value": 1458,
-          "date": "2026-03-30T16:20:43.143Z",
-          "zones": {
-            "pace": [
-              388.8,
-              343.0588235294118,
-              306.94736842105266,
-              277.7142857142857,
-              253.5652173913044
-            ],
-            "hr": [
-              129.5,
-              148,
-              166.5,
-              175.75,
-              185
-            ]
-          }
-        },
-        {
-          "id": "1774887661873",
-          "sport": "bike",
-          "type": "ftp",
-          "method": "threshold",
-          "value": 200,
-          "date": "2026-03-30T16:21:01.873Z",
-          "zones": {
-            "hr": [
-              133,
-              152,
-              171,
-              180.5,
-              190
-            ],
-            "power": [
-              110.00000000000001,
-              150,
-              180,
-              210,
-              240
+              375,
+              333.33333333333337,
+              300,
+              315,
+              330
             ]
           }
         }
       ],
+      "goals": [],
       "zones": {
         "run": {
           "pace": [
-            388.8,
-            343.0588235294118,
-            306.94736842105266,
-            277.7142857142857,
-            253.5652173913044
-          ],
-          "hr": [
-            129.5,
-            148,
-            166.5,
-            175.75,
-            185
-          ]
-        },
-        "bike": {
-          "hr": [
-            133,
-            152,
-            171,
-            180.5,
-            190
-          ],
-          "power": [
-            110.00000000000001,
-            150,
-            180,
-            210,
-            240
+            375,
+            333.33333333333337,
+            300,
+            315,
+            330
           ]
         }
       },
+      "age": "22",
+      "height": "158",
+      "weight": "60",
       "restingHR": "60",
       "maxHR": "200",
-      "experience": "2",
-      "email": "agam3007@gmail.com",
-      "injuries": "pfps",
-      "limitations": "running",
-      "focus": "strength, cycling",
-      "allergies": "celiac",
-      "goals": [
-        {
-          "id": "1774887699946",
-          "title": "back to proper training",
-          "type": "general",
-          "raceName": null,
-          "location": null,
-          "date": null,
-          "target": "",
-          "createdAt": "2026-03-30T16:21:39.946Z",
-          "done": false
-        }
-      ]
+      "experience": "1",
+      "phone": "0542405393",
+      "lastCheckIn": "2026-05-14T14:01:17.210Z",
+      "injuries": "PFPS",
+      "injuryDate": "2026-05-14",
+      "limitations": "ריצה",
+      "focus": "כוח ואופניים",
+      "allergies": "צליאק"
     },
     {
-      "id": "1774890625391",
-      "name": "מיקה",
+      "id": "1778767527994",
+      "name": "דן נצר",
       "level": "",
-      "groups": [],
-      "tests": [
-        {
-          "id": "1775123964236",
-          "sport": "bike",
-          "type": "ftp",
-          "method": "threshold",
-          "value": 180,
-          "date": "2026-04-02T09:59:24.236Z",
-          "zones": {
-            "power": [
-              99.00000000000001,
-              135,
-              162,
-              189,
-              216
-            ]
-          }
-        }
-      ],
-      "goals": [],
-      "zones": {
-        "bike": {
-          "power": [
-            99.00000000000001,
-            135,
-            162,
-            189,
-            216
-          ]
-        }
-      }
-    },
-    {
-      "id": "1774890693243",
-      "name": "ליסה",
-      "level": "",
-      "groups": [],
-      "tests": [],
-      "goals": [],
-      "zones": {}
-    },
-    {
-      "id": "1774890711051",
-      "name": "צייסי",
-      "level": "",
-      "groups": [],
       "tests": [],
       "goals": [],
       "zones": {},
-      "age": "6",
-      "height": "100"
+      "age": "14",
+      "lastCheckIn": "2026-05-14T17:19:45.026Z"
     },
     {
-      "id": "1775042095687",
-      "name": "mike",
+      "id": "1778767557378",
+      "name": "נועם מורג",
       "level": "",
-      "groups": [
-        "1773070277512"
-      ],
       "tests": [],
       "goals": [],
       "zones": {},
-      "age": "8"
+      "age": "15",
+      "lastCheckIn": "2026-05-14T14:43:04.858Z"
+    },
+    {
+      "id": "1778767572226",
+      "name": "נוה",
+      "level": "",
+      "tests": [],
+      "goals": [],
+      "zones": {},
+      "age": "16",
+      "lastCheckIn": "2026-05-14T14:43:07.058Z"
     }
   ],
   "trainings": [
     {
-      "id": "1775391922525",
-      "date": "2026-04-05",
+      "id": "1778843010777",
       "type": "bike",
-      "title": "רכיבה נפח",
-      "description": "אירובי",
-      "day": 0,
-      "startHour": 8,
-      "equipment": [],
-      "steps": [
-        {
-          "id": "4815bdb2-b601-4c12-8218-2aa5623dcbcc",
-          "setType": "warmup",
-          "reps": 1,
-          "distance": 1,
-          "unit": "km",
-          "mode": "time",
-          "duration": 10800,
-          "intensity": "Z2"
-        }
-      ],
-      "notes": "להקפיד לשתות",
-      "groupId": "",
-      "startMinute": 0
-    },
-    {
-      "id": "1775392166455",
-      "date": "2026-04-05",
-      "type": "bike",
-      "title": "אינטרוולים Z3",
-      "description": "בניית בסיס אירובי",
-      "equipment": [],
-      "steps": [
-        {
-          "id": "633339a7-7a9c-4041-8a20-cde124c56a1d",
-          "setType": "warmup",
-          "reps": 1,
-          "distance": 1,
-          "unit": "km",
-          "mode": "time",
-          "duration": 1198,
-          "intensity": "Z1"
-        },
-        {
-          "id": "70f80c4c-0029-4a6d-a169-f2dd73ecf351",
-          "setType": "main",
-          "reps": 4,
-          "distance": 1,
-          "unit": "km",
-          "mode": "time",
-          "duration": 240,
-          "intensity": "Z3",
-          "rest": 180
-        },
-        {
-          "id": "6b1d24c5-6de6-4d13-9585-af79e9ba6d70",
-          "setType": "cooldown",
-          "reps": 1,
-          "distance": 1,
-          "unit": "km",
-          "mode": "time",
-          "duration": 1200,
-          "intensity": "Z1"
-        }
-      ],
-      "notes": ""
-    },
-    {
-      "id": "1776085785292",
-      "date": "2026-04-13",
-      "type": "bike",
-      "title": "רכיבה אירובית 60 דק",
+      "title": "רצף",
       "description": "",
       "equipment": [],
       "steps": [
         {
-          "id": "1c247193-a575-4175-83bd-95c89fc2b926",
-          "setType": "main",
+          "intensity": "Z1",
           "reps": 1,
-          "distance": 1,
-          "unit": "km",
+          "id": "88973cb4-cd09-4b53-9451-66e9673df133",
+          "setType": "warmup",
           "mode": "time",
-          "duration": 3600,
-          "intensity": "L1"
-        }
-      ],
-      "notes": ""
-    },
-    {
-      "id": "1776592862628",
-      "type": "swim",
-      "title": "swim",
-      "description": "1H",
-      "equipment": [],
-      "steps": [
+          "duration": 10
+        },
         {
-          "id": "4d323e8d-98b2-4582-9c7d-1c7f619cf90c",
-          "setType": "warmup",
+          "intensity": "Z2",
           "reps": 1,
-          "distance": 1500,
-          "unit": "m",
-          "mode": "distance"
-        }
-      ],
-      "notes": ""
-    },
-    {
-      "id": "1776600009204",
-      "type": "bike",
-      "title": "אימון בריק",
-      "description": "הכנה לתחרות ראשלצ",
-      "equipment": [],
-      "steps": [
+          "id": "35f2ed8d-8213-417f-9679-a8ca420e64c0",
+          "setType": "steady",
+          "mode": "time",
+          "duration": 20
+        },
         {
-          "id": "9674b274-63bd-4fd2-a4c7-e85c443108ed",
-          "setType": "warmup",
+          "intensity": "Z1",
           "reps": 1,
-          "distance": 1,
-          "unit": "km",
-          "mode": "time"
+          "id": "143a65da-ef1e-4d3a-b610-105a0b361e5d",
+          "setType": "cooldown",
+          "mode": "time",
+          "duration": 8
         }
       ],
       "notes": "",
-      "creationDate": "2026-04-19T12:00:09.204Z"
-    }
-  ],
-  "events": [
-    {
-      "id": "1774978203901",
-      "title": "cycling",
-      "time": "09:30",
-      "type": "training",
-      "date": "2026-03-31"
+      "creationDate": "2026-05-15T11:03:30.777Z",
+      "folderId": "1782308850884"
     },
     {
-      "id": "1774978476187",
-      "title": "להתחיל לפתח ספריית אימונים ומיקום בלוח שנה",
-      "time": "15:00",
-      "type": "task",
-      "date": "2026-03-31"
+      "id": "1778945504666",
+      "type": "bike",
+      "title": "נפח - נווה שלום - משולש",
+      "description": "",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "1778945499077-wj44ojicg",
+          "setType": "warmup",
+          "reps": 1,
+          "intensity": "Z2",
+          "rest": 0,
+          "mode": "time",
+          "duration": 180
+        }
+      ],
+      "notes": "",
+      "creationDate": "2026-05-16T15:31:44.666Z",
+      "folderId": "1782308850884"
     },
     {
-      "id": "25ef6d04-54c3-4dda-bbf6-103bfbfeeb94",
-      "title": "מעוז נוער - אימון בריק",
-      "type": "groupSchedule",
-      "startTime": "2026-04-19T15:00:00.000Z",
-      "endTime": "2026-04-19T16:00:00.000Z",
-      "groupId": "1776604085831",
-      "sourceId": "groupSchedule-1776604085831-1776610800000",
-      "createdAt": "2026-04-19T14:05:03.919Z"
+      "id": "1779107577724",
+      "type": "bike",
+      "title": "רכיבה פארטלק",
+      "description": "",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "1779107563722-db1zkqhu8",
+          "setType": "warmup",
+          "reps": 1,
+          "intensity": "Z1",
+          "rest": 0,
+          "mode": "time",
+          "duration": 20
+        },
+        {
+          "id": "1779107563722-qyrr9blzz",
+          "setType": "warmup",
+          "reps": 1,
+          "intensity": "Z3",
+          "rest": 0,
+          "mode": "time",
+          "duration": 3
+        },
+        {
+          "id": "1779107563722-7ap9qf2mt",
+          "setType": "warmup",
+          "reps": 1,
+          "intensity": "Z2",
+          "rest": 0,
+          "mode": "time",
+          "duration": 7
+        },
+        {
+          "id": "1779107563722-j4jkogkpv",
+          "setType": "warmup",
+          "reps": 1,
+          "intensity": "Z3",
+          "rest": 0,
+          "mode": "time",
+          "duration": 3
+        },
+        {
+          "id": "1779107563722-7m69shztf",
+          "setType": "warmup",
+          "reps": 1,
+          "intensity": "Z2",
+          "rest": 0,
+          "mode": "time",
+          "duration": 7
+        },
+        {
+          "id": "1779107563722-umglj7f0g",
+          "setType": "warmup",
+          "reps": 1,
+          "intensity": "Z3",
+          "rest": 0,
+          "mode": "time",
+          "duration": 3
+        },
+        {
+          "id": "1779107563722-vvj5p32m3",
+          "setType": "warmup",
+          "reps": 1,
+          "intensity": "Z2",
+          "rest": 0,
+          "mode": "time",
+          "duration": 7
+        },
+        {
+          "id": "1779107563722-r3hfqymov",
+          "setType": "warmup",
+          "reps": 1,
+          "intensity": "Z3",
+          "rest": 0,
+          "mode": "time",
+          "duration": 3
+        },
+        {
+          "id": "1779107563722-rvdnvxwf3",
+          "setType": "warmup",
+          "reps": 1,
+          "intensity": "Z2",
+          "rest": 0,
+          "mode": "time",
+          "duration": 7
+        },
+        {
+          "id": "1779107563722-z6klyvzbz",
+          "setType": "warmup",
+          "reps": 1,
+          "intensity": "Z1",
+          "rest": 0,
+          "mode": "time",
+          "duration": 10
+        }
+      ],
+      "notes": "",
+      "creationDate": "2026-05-18T12:32:57.724Z",
+      "folderId": "1782308850884"
+    },
+    {
+      "id": "1779107769745",
+      "type": "swim",
+      "title": "שחייה זון 3",
+      "description": "",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "1779107759175-nskmt07py",
+          "setType": "warmup",
+          "reps": 4,
+          "intensity": "Z1",
+          "rest": 0,
+          "mode": "distance",
+          "distance": 100,
+          "unit": "m"
+        },
+        {
+          "id": "1779107759175-hoe6dyjvi",
+          "setType": "warmup",
+          "reps": 4,
+          "intensity": "Z1",
+          "rest": 0,
+          "mode": "distance",
+          "distance": 100,
+          "unit": "m"
+        },
+        {
+          "id": "1779107759176-vtzv0v71q",
+          "setType": "warmup",
+          "reps": 6,
+          "intensity": "Z3",
+          "rest": 0,
+          "mode": "distance",
+          "distance": 100,
+          "unit": "m"
+        },
+        {
+          "id": "1779107759176-0o3kom89v",
+          "setType": "warmup",
+          "reps": 6,
+          "intensity": "Z3",
+          "rest": 0,
+          "mode": "distance",
+          "distance": 100,
+          "unit": "m"
+        },
+        {
+          "id": "1779107759176-cyq7l11it",
+          "setType": "warmup",
+          "reps": 4,
+          "intensity": "Z1",
+          "rest": 0,
+          "mode": "distance",
+          "distance": 50,
+          "unit": "m"
+        }
+      ],
+      "notes": "4*100m Z1 75fr 25back\n4*100 \n25 pause R 25 pause L 50 fr\nSet: \n6x100m @2:00\n6*100m P+P @2:00\nCool Down: 4x50m 3/5 R:10",
+      "creationDate": "2026-05-18T12:36:09.745Z"
+    },
+    {
+      "id": "1779107875784",
+      "type": "bike",
+      "title": "נפח + טמפו פדיה - עמק האלה",
+      "description": "",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "1779107870440-ozaa59qhe",
+          "setType": "warmup",
+          "reps": 1,
+          "intensity": "Z1",
+          "rest": 0,
+          "mode": "distance",
+          "distance": 10,
+          "unit": "km"
+        },
+        {
+          "id": "1779107870440-yx3jse4ah",
+          "setType": "warmup",
+          "reps": 1,
+          "intensity": "Z2",
+          "rest": 0,
+          "mode": "distance",
+          "distance": 40,
+          "unit": "km"
+        },
+        {
+          "id": "1779107870440-jv0sxbq0h",
+          "setType": "warmup",
+          "reps": 1,
+          "intensity": "Z3",
+          "rest": 0,
+          "mode": "distance",
+          "distance": 20,
+          "unit": "km"
+        },
+        {
+          "id": "1779107870440-0szjnq0a5",
+          "setType": "warmup",
+          "reps": 1,
+          "intensity": "Z1",
+          "rest": 0,
+          "mode": "distance",
+          "distance": 10,
+          "unit": "km"
+        }
+      ],
+      "notes": "",
+      "creationDate": "2026-05-18T12:37:55.784Z",
+      "folderId": "1782308850884"
+    },
+    {
+      "id": "1780575759005",
+      "type": "swim",
+      "title": "נפח שחייה",
+      "description": "",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "1780575750855-bd7xruf",
+          "setType": "warmup",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "intensity": "Z1",
+          "mode": "time",
+          "duration": 30,
+          "unit": "min"
+        }
+      ],
+      "notes": "",
+      "creationDate": "2026-06-04T12:22:39.006Z"
+    },
+    {
+      "id": "1781173460408",
+      "type": "run",
+      "title": "run-walk 7*30-2:30",
+      "description": "",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "1782290451725-s4d5la2",
+          "setType": "warmup",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        },
+        {
+          "id": "1782290451725-ks1wj70",
+          "setType": "main",
+          "reps": 7,
+          "tags": [],
+          "notes": "30sec Run\n2:30min Walk",
+          "mode": "time",
+          "duration": 3,
+          "unit": "min",
+          "_hasBreakdownLine": true
+        },
+        {
+          "id": "1782290451726-89kw9ar",
+          "setType": "cooldown",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        }
+      ],
+      "notes": "",
+      "creationDate": "2026-06-11T10:24:20.408Z",
+      "folderId": "1782308351172"
+    },
+    {
+      "id": "1781174951035",
+      "type": "run",
+      "title": "run - walk 2 + 4*30-2:30",
+      "description": "",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "1781174917818-62ovofg",
+          "setType": "warmup",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        },
+        {
+          "id": "1781174917819-ql72o1l",
+          "setType": "main",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Run",
+          "mode": "time",
+          "duration": 2,
+          "unit": "min"
+        },
+        {
+          "id": "1781174917819-xwfdggb",
+          "setType": "main",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 1,
+          "unit": "min"
+        },
+        {
+          "id": "1781174917819-j5p6x39",
+          "setType": "main",
+          "reps": 4,
+          "tags": [],
+          "notes": "30sec run\n2:30 walk",
+          "mode": "time",
+          "duration": 3,
+          "unit": "min",
+          "_hasBreakdownLine": true
+        },
+        {
+          "id": "1781174917819-nxl4iv9",
+          "setType": "cooldown",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        }
+      ],
+      "notes": "",
+      "creationDate": "2026-06-11T10:49:11.035Z",
+      "folderId": "1782308351172"
+    },
+    {
+      "id": "1781175833685",
+      "type": "run",
+      "title": "test",
+      "description": "",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "1781175831101-jgqsvpi",
+          "setType": "warmup",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        }
+      ],
+      "notes": "",
+      "creationDate": "2026-06-11T11:03:53.685Z"
+    },
+    {
+      "id": "1782211407870",
+      "type": "run",
+      "title": "run-walk 6*40-2:20",
+      "description": "",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "1782291095346-88z5upv",
+          "setType": "warmup",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        },
+        {
+          "id": "1782291095347-d9gn4sc",
+          "setType": "main",
+          "reps": 6,
+          "tags": [],
+          "notes": "40sec Run\n2:20min Walk",
+          "mode": "time",
+          "duration": 3,
+          "unit": "min",
+          "_hasBreakdownLine": true
+        },
+        {
+          "id": "1782291095348-zsohtv2",
+          "setType": "cooldown",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        }
+      ],
+      "notes": "",
+      "creationDate": "2026-06-23T10:43:27.870Z",
+      "folderId": "1782308351172"
+    },
+    {
+      "id": "1782291134406",
+      "type": "run",
+      "title": "run-walk 9*40-2:20",
+      "description": "",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "1782291127263-rw1tnob",
+          "setType": "warmup",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        },
+        {
+          "id": "1782291127263-88za0ir",
+          "setType": "main",
+          "reps": 9,
+          "tags": [],
+          "notes": "40sec Run\n2:20min Walk",
+          "mode": "time",
+          "duration": 3,
+          "unit": "min",
+          "_hasBreakdownLine": true
+        },
+        {
+          "id": "1782291127264-02m53sr",
+          "setType": "cooldown",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        }
+      ],
+      "notes": "",
+      "creationDate": "2026-06-24T08:52:14.406Z",
+      "folderId": "1782308351172"
+    },
+    {
+      "id": "1782291540294",
+      "type": "run",
+      "title": "run - walk 3 + 5*40-2:20",
+      "description": "",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "1782291521669-tzltg66",
+          "setType": "warmup",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        },
+        {
+          "id": "1782291521672-0gfduel",
+          "setType": "main",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Run",
+          "mode": "time",
+          "duration": 3,
+          "unit": "min"
+        },
+        {
+          "id": "1782291521672-mt8lqic",
+          "setType": "main",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 1,
+          "unit": "min"
+        },
+        {
+          "id": "1782291521672-lvmn9cr",
+          "setType": "main",
+          "reps": 5,
+          "tags": [],
+          "notes": "40sec run\n2:20 walk",
+          "mode": "time",
+          "duration": 3,
+          "unit": "min",
+          "_hasBreakdownLine": true
+        },
+        {
+          "id": "1782291521673-9tici5h",
+          "setType": "cooldown",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        }
+      ],
+      "notes": "",
+      "creationDate": "2026-06-24T08:59:00.294Z",
+      "folderId": "1782308351172"
+    },
+    {
+      "id": "1782291688148",
+      "type": "run",
+      "title": "run - walk 5*20-2:40",
+      "description": "",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "1782291674845-hozl4ev",
+          "setType": "warmup",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        },
+        {
+          "id": "1782291674845-1hzofew",
+          "setType": "main",
+          "reps": 5,
+          "tags": [],
+          "notes": "20sec Run\n2:40min Walk",
+          "mode": "time",
+          "duration": 3,
+          "unit": "min",
+          "_hasBreakdownLine": true
+        },
+        {
+          "id": "1782291674846-ciinmky",
+          "setType": "cooldown",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        }
+      ],
+      "notes": "",
+      "creationDate": "2026-06-24T09:01:28.148Z",
+      "folderId": "1782308351172"
+    },
+    {
+      "id": "1782291753387",
+      "type": "run",
+      "title": "run-walk 6*20-2:40",
+      "description": "",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "1782291721730-7guqe9n",
+          "setType": "warmup",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        },
+        {
+          "id": "1782291721731-8x3wlnv",
+          "setType": "main",
+          "reps": 6,
+          "tags": [],
+          "notes": "20sec Run\n2:40min Walk",
+          "mode": "time",
+          "duration": 3,
+          "unit": "min",
+          "_hasBreakdownLine": true
+        },
+        {
+          "id": "1782291721732-w3culzf",
+          "setType": "cooldown",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        }
+      ],
+      "notes": "",
+      "creationDate": "2026-06-24T09:02:33.387Z",
+      "folderId": "1782308351172"
+    },
+    {
+      "id": "1782291793171",
+      "type": "run",
+      "title": "run - walk 1 + 4*20-2:40",
+      "description": "",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "1782312291053-8vva9c4",
+          "setType": "warmup",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        },
+        {
+          "id": "1782312291053-i2wukh5",
+          "setType": "main",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Run",
+          "mode": "time",
+          "duration": 1,
+          "unit": "min"
+        },
+        {
+          "id": "1782312291053-57l9mma",
+          "setType": "main",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 2,
+          "unit": "min"
+        },
+        {
+          "id": "1782312291053-hrrycnr",
+          "setType": "main",
+          "reps": 4,
+          "tags": [],
+          "notes": "20sec run\n2:40 walk",
+          "mode": "time",
+          "duration": 3,
+          "unit": "min",
+          "_hasBreakdownLine": true
+        },
+        {
+          "id": "1782312291053-n0dmoi0",
+          "setType": "cooldown",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        }
+      ],
+      "notes": "",
+      "creationDate": "2026-06-24T09:03:13.171Z",
+      "folderId": "1782308351172"
+    },
+    {
+      "id": "1782292708994",
+      "type": "run",
+      "title": "run-walk 7*1:2",
+      "description": "",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "1782292685381-nnpvkrt",
+          "setType": "warmup",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        },
+        {
+          "id": "1782292685383-u3lwwds",
+          "setType": "main",
+          "reps": 7,
+          "tags": [],
+          "notes": "1min Run\n2min Walk",
+          "mode": "time",
+          "duration": 3,
+          "unit": "min",
+          "_hasBreakdownLine": true
+        },
+        {
+          "id": "1782292685383-2ltz7jg",
+          "setType": "cooldown",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        }
+      ],
+      "notes": "",
+      "creationDate": "2026-06-24T09:18:28.994Z",
+      "folderId": "1782308351172"
+    },
+    {
+      "id": "1782310114806",
+      "type": "run",
+      "title": "run-walk 10*1:2",
+      "description": "",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "1782310105774-fkz5dsv",
+          "setType": "warmup",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        },
+        {
+          "id": "1782310105774-e21yb08",
+          "setType": "main",
+          "reps": 10,
+          "tags": [],
+          "notes": "1min Run\n2min Walk",
+          "mode": "time",
+          "duration": 3,
+          "unit": "min",
+          "_hasBreakdownLine": true
+        },
+        {
+          "id": "1782310105774-te4h24m",
+          "setType": "cooldown",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        }
+      ],
+      "notes": "",
+      "creationDate": "2026-06-24T14:08:34.806Z",
+      "folderId": "1782308351172"
+    },
+    {
+      "id": "1782892563584",
+      "type": "run",
+      "title": "run - walk 5*30-2:30",
+      "description": "",
+      "equipment": [],
+      "steps": [
+        {
+          "id": "1781173317968-ckq7iyj",
+          "setType": "warmup",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        },
+        {
+          "id": "1781173317968-phgio0j",
+          "setType": "main",
+          "reps": 5,
+          "tags": [],
+          "notes": "30sec Run\n2:30min Walk",
+          "mode": "time",
+          "duration": 3,
+          "unit": "min",
+          "_hasBreakdownLine": true
+        },
+        {
+          "id": "1781173317968-q9cea61",
+          "setType": "cooldown",
+          "reps": 1,
+          "tags": [],
+          "notes": "",
+          "movement": "Walk",
+          "mode": "time",
+          "duration": 5,
+          "unit": "min"
+        }
+      ],
+      "notes": "",
+      "creationDate": "2026-07-01T07:56:03.584Z"
     }
   ],
+  "programs": [
+    {
+      "id": "1781183370056",
+      "name": "0-5k",
+      "assigneeType": "Individual",
+      "assigneeName": "",
+      "sport": "Running",
+      "startDate": "",
+      "endDate": "",
+      "mainGoal": "build base",
+      "level": "Beginner",
+      "macroEvents": [
+        {
+          "id": "1781183343857",
+          "type": "Test",
+          "name": "5k test",
+          "date": "Week 16, Day 7",
+          "endDate": "Week 16, Day 7",
+          "location": "",
+          "notes": ""
+        }
+      ],
+      "durationType": "weeks",
+      "weeks": 16,
+      "createdAt": "2026-06-11T13:09:30.056Z"
+    },
+    {
+      "id": "1783333605637",
+      "name": "מעוז נוער",
+      "assigneeType": "Group",
+      "assigneeName": "מעוז",
+      "sport": "Triathlon",
+      "startDate": "2026-07-06",
+      "endDate": "2026-12-12",
+      "mainGoal": "",
+      "level": "Intermediate",
+      "macroEvents": [
+        {
+          "id": "1783333374481",
+          "type": "B-Race",
+          "name": "טריאתלון אשדוד",
+          "date": "2026-09-18",
+          "endDate": "2026-09-18",
+          "location": "אשדוד",
+          "notes": ""
+        },
+        {
+          "id": "1783333352762",
+          "type": "B-Race",
+          "name": "טרי כינרת",
+          "date": "2026-10-16",
+          "endDate": "2026-10-16",
+          "location": "כינרת",
+          "notes": ""
+        },
+        {
+          "id": "1783333331343",
+          "type": "C-Race",
+          "name": "טריאתלון נס ציונה",
+          "date": "2026-10-24",
+          "endDate": "2026-10-24",
+          "location": "נס ציונה",
+          "notes": ""
+        },
+        {
+          "id": "1783333293619",
+          "type": "C-Race",
+          "name": "T100",
+          "date": "2026-10-31",
+          "endDate": "2026-10-31",
+          "location": "חוף בצת",
+          "notes": ""
+        },
+        {
+          "id": "1783333237969",
+          "type": "B-Race",
+          "name": "טריפל להבים",
+          "date": "2026-11-07",
+          "endDate": "2026-11-07",
+          "location": "להבים",
+          "notes": ""
+        },
+        {
+          "id": "1783333212067",
+          "type": "A-Race",
+          "name": "אליפות ישראל אילת",
+          "date": "2026-12-04",
+          "endDate": "2026-12-04",
+          "location": "אילת",
+          "notes": ""
+        }
+      ],
+      "durationType": "dates",
+      "createdAt": "2026-07-06T10:26:45.637Z"
+    }
+  ],
+  "mesoBlocks": [
+    {
+      "id": "1781183370094",
+      "programId": "1781183370056",
+      "name": "Base",
+      "order": 1,
+      "startWeekNumber": 1,
+      "durationWeeks": 16,
+      "loadingPattern": "2:1",
+      "intensityDistribution": {
+        "Z1_Z2": 80,
+        "Z3": 20,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1782899160620",
+      "programId": "1782899160589",
+      "name": "Base",
+      "order": 1,
+      "startWeekNumber": 1,
+      "durationWeeks": 9,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 80,
+        "Z3": 20,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1782899160672",
+      "programId": "1782899160589",
+      "name": "Build",
+      "order": 2,
+      "startWeekNumber": 10,
+      "durationWeeks": 9,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 70,
+        "Z3": 30,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1782899160731",
+      "programId": "1782899160589",
+      "name": "Peak",
+      "order": 3,
+      "startWeekNumber": 19,
+      "durationWeeks": 5,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 60,
+        "Z3": 40,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1782899160758",
+      "programId": "1782899160589",
+      "name": "Taper",
+      "order": 4,
+      "startWeekNumber": 24,
+      "durationWeeks": 2,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 50,
+        "Z3": 50,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1782899160770",
+      "programId": "1782899160589",
+      "name": "Base",
+      "order": 5,
+      "startWeekNumber": 26,
+      "durationWeeks": 3,
+      "loadingPattern": "2:1",
+      "intensityDistribution": {
+        "Z1_Z2": 80,
+        "Z3": 20,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1782899160790",
+      "programId": "1782899160589",
+      "name": "Build",
+      "order": 6,
+      "startWeekNumber": 29,
+      "durationWeeks": 2,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 70,
+        "Z3": 30,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783241620746",
+      "programId": "1783241620716",
+      "name": "Peak",
+      "order": 1,
+      "startWeekNumber": 1,
+      "durationWeeks": 3,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 60,
+        "Z3": 40,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783241620774",
+      "programId": "1783241620716",
+      "name": "Taper",
+      "order": 2,
+      "startWeekNumber": 4,
+      "durationWeeks": 3,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 50,
+        "Z3": 50,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783244103579",
+      "programId": "1783244103549",
+      "name": "Peak",
+      "order": 1,
+      "startWeekNumber": 1,
+      "durationWeeks": 4,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 60,
+        "Z3": 40,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783244103611",
+      "programId": "1783244103549",
+      "name": "Taper",
+      "order": 2,
+      "startWeekNumber": 5,
+      "durationWeeks": 3,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 50,
+        "Z3": 50,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783244238916",
+      "programId": "1783244238871",
+      "name": "Peak",
+      "order": 1,
+      "startWeekNumber": 1,
+      "durationWeeks": 3,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 60,
+        "Z3": 40,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783244238943",
+      "programId": "1783244238871",
+      "name": "Taper",
+      "order": 2,
+      "startWeekNumber": 4,
+      "durationWeeks": 3,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 50,
+        "Z3": 50,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783244408910",
+      "programId": "1783244408851",
+      "name": "Base",
+      "order": 1,
+      "startWeekNumber": 1,
+      "durationWeeks": 1,
+      "loadingPattern": "2:1",
+      "intensityDistribution": {
+        "Z1_Z2": 80,
+        "Z3": 20,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783244408926",
+      "programId": "1783244408851",
+      "name": "Build",
+      "order": 2,
+      "startWeekNumber": 2,
+      "durationWeeks": 1,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 70,
+        "Z3": 30,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783244408944",
+      "programId": "1783244408851",
+      "name": "Peak",
+      "order": 3,
+      "startWeekNumber": 3,
+      "durationWeeks": 4,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 60,
+        "Z3": 40,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783244409059",
+      "programId": "1783244408851",
+      "name": "Taper",
+      "order": 4,
+      "startWeekNumber": 7,
+      "durationWeeks": 3,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 50,
+        "Z3": 50,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783244706206",
+      "programId": "1783244706176",
+      "name": "Peak",
+      "order": 1,
+      "startWeekNumber": 1,
+      "durationWeeks": 3,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 60,
+        "Z3": 40,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783244706233",
+      "programId": "1783244706176",
+      "name": "Taper",
+      "order": 2,
+      "startWeekNumber": 4,
+      "durationWeeks": 3,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 50,
+        "Z3": 50,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783328305428",
+      "programId": "1783328305378",
+      "name": "Base",
+      "order": 1,
+      "startWeekNumber": 1,
+      "durationWeeks": 1,
+      "loadingPattern": "2:1",
+      "intensityDistribution": {
+        "Z1_Z2": 80,
+        "Z3": 20,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783328305463",
+      "programId": "1783328305378",
+      "name": "Build",
+      "order": 2,
+      "startWeekNumber": 2,
+      "durationWeeks": 1,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 70,
+        "Z3": 30,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783328305494",
+      "programId": "1783328305378",
+      "name": "Peak",
+      "order": 3,
+      "startWeekNumber": 3,
+      "durationWeeks": 4,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 60,
+        "Z3": 40,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783328305563",
+      "programId": "1783328305378",
+      "name": "Taper",
+      "order": 4,
+      "startWeekNumber": 7,
+      "durationWeeks": 3,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 50,
+        "Z3": 50,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783328342236",
+      "programId": "1783328342194",
+      "name": "Peak",
+      "order": 1,
+      "startWeekNumber": 1,
+      "durationWeeks": 3,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 60,
+        "Z3": 40,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783328342285",
+      "programId": "1783328342194",
+      "name": "Taper",
+      "order": 2,
+      "startWeekNumber": 4,
+      "durationWeeks": 3,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 50,
+        "Z3": 50,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783333605681",
+      "programId": "1783333605637",
+      "name": "Base",
+      "order": 1,
+      "startWeekNumber": 1,
+      "durationWeeks": 10,
+      "loadingPattern": "2:1",
+      "intensityDistribution": {
+        "Z1_Z2": 80,
+        "Z3": 20,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783333605756",
+      "programId": "1783333605637",
+      "name": "Build",
+      "order": 2,
+      "startWeekNumber": 11,
+      "durationWeeks": 9,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 70,
+        "Z3": 30,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783333605820",
+      "programId": "1783333605637",
+      "name": "Peak",
+      "order": 3,
+      "startWeekNumber": 20,
+      "durationWeeks": 3,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 60,
+        "Z3": 40,
+        "Z4_Z5": 0
+      }
+    },
+    {
+      "id": "1783333605838",
+      "programId": "1783333605637",
+      "name": "Taper",
+      "order": 4,
+      "startWeekNumber": 23,
+      "durationWeeks": 2,
+      "loadingPattern": "3:1",
+      "intensityDistribution": {
+        "Z1_Z2": 50,
+        "Z3": 50,
+        "Z4_Z5": 0
+      }
+    }
+  ],
+  "plannedWeeks": [
+    {
+      "id": "1781183370194",
+      "mesoBlockId": "1781183370094",
+      "weekNumber": 1,
+      "targetVolumeHours": 1.4,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "General"
+    },
+    {
+      "id": "1781183370203",
+      "mesoBlockId": "1781183370094",
+      "weekNumber": 2,
+      "targetVolumeHours": 1.6,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "General"
+    },
+    {
+      "id": "1781183370238",
+      "mesoBlockId": "1781183370094",
+      "weekNumber": 3,
+      "targetVolumeHours": 1.3,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Deload"
+    },
+    {
+      "id": "1781183370242",
+      "mesoBlockId": "1781183370094",
+      "weekNumber": 4,
+      "targetVolumeHours": 2,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1781183370302",
+      "mesoBlockId": "1781183370094",
+      "weekNumber": 5,
+      "targetVolumeHours": 2,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1781183370318",
+      "mesoBlockId": "1781183370094",
+      "weekNumber": 6,
+      "targetVolumeHours": 2,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1781183370372",
+      "mesoBlockId": "1781183370094",
+      "weekNumber": 7,
+      "targetVolumeHours": 2,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1781183370397",
+      "mesoBlockId": "1781183370094",
+      "weekNumber": 8,
+      "targetVolumeHours": 2,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1781183370414",
+      "mesoBlockId": "1781183370094",
+      "weekNumber": 9,
+      "targetVolumeHours": 2,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1781183370423",
+      "mesoBlockId": "1781183370094",
+      "weekNumber": 10,
+      "targetVolumeHours": 2,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1781183370484",
+      "mesoBlockId": "1781183370094",
+      "weekNumber": 11,
+      "targetVolumeHours": 2,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1781183370582",
+      "mesoBlockId": "1781183370094",
+      "weekNumber": 12,
+      "targetVolumeHours": 2,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1781183370595",
+      "mesoBlockId": "1781183370094",
+      "weekNumber": 13,
+      "targetVolumeHours": 2,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1781183370665",
+      "mesoBlockId": "1781183370094",
+      "weekNumber": 14,
+      "targetVolumeHours": 2,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1781183370700",
+      "mesoBlockId": "1781183370094",
+      "weekNumber": 15,
+      "targetVolumeHours": 2,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1781183370706",
+      "mesoBlockId": "1781183370094",
+      "weekNumber": 16,
+      "targetVolumeHours": 2,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1782899160627",
+      "mesoBlockId": "1782899160620",
+      "weekNumber": 1,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1782899160633",
+      "mesoBlockId": "1782899160620",
+      "weekNumber": 2,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1782899160639",
+      "mesoBlockId": "1782899160620",
+      "weekNumber": 3,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1782899160645",
+      "mesoBlockId": "1782899160620",
+      "weekNumber": 4,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1782899160649",
+      "mesoBlockId": "1782899160620",
+      "weekNumber": 5,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1782899160655",
+      "mesoBlockId": "1782899160620",
+      "weekNumber": 6,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1782899160659",
+      "mesoBlockId": "1782899160620",
+      "weekNumber": 7,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1782899160664",
+      "mesoBlockId": "1782899160620",
+      "weekNumber": 8,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1782899160667",
+      "mesoBlockId": "1782899160620",
+      "weekNumber": 9,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1782899160676",
+      "mesoBlockId": "1782899160672",
+      "weekNumber": 10,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1782899160679",
+      "mesoBlockId": "1782899160672",
+      "weekNumber": 11,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1782899160683",
+      "mesoBlockId": "1782899160672",
+      "weekNumber": 12,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1782899160687",
+      "mesoBlockId": "1782899160672",
+      "weekNumber": 13,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1782899160705",
+      "mesoBlockId": "1782899160672",
+      "weekNumber": 14,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1782899160712",
+      "mesoBlockId": "1782899160672",
+      "weekNumber": 15,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1782899160717",
+      "mesoBlockId": "1782899160672",
+      "weekNumber": 16,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1782899160723",
+      "mesoBlockId": "1782899160672",
+      "weekNumber": 17,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1782899160727",
+      "mesoBlockId": "1782899160672",
+      "weekNumber": 18,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1782899160735",
+      "mesoBlockId": "1782899160731",
+      "weekNumber": 19,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1782899160740",
+      "mesoBlockId": "1782899160731",
+      "weekNumber": 20,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1782899160744",
+      "mesoBlockId": "1782899160731",
+      "weekNumber": 21,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1782899160749",
+      "mesoBlockId": "1782899160731",
+      "weekNumber": 22,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1782899160752",
+      "mesoBlockId": "1782899160731",
+      "weekNumber": 23,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1782899160761",
+      "mesoBlockId": "1782899160758",
+      "weekNumber": 24,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1782899160765",
+      "mesoBlockId": "1782899160758",
+      "weekNumber": 25,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1782899160775",
+      "mesoBlockId": "1782899160770",
+      "weekNumber": 26,
+      "targetVolumeHours": 10,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1782899160779",
+      "mesoBlockId": "1782899160770",
+      "weekNumber": 27,
+      "targetVolumeHours": 10,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1782899160784",
+      "mesoBlockId": "1782899160770",
+      "weekNumber": 28,
+      "targetVolumeHours": 10,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1782899160795",
+      "mesoBlockId": "1782899160790",
+      "weekNumber": 29,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1782899160799",
+      "mesoBlockId": "1782899160790",
+      "weekNumber": 30,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1783241620755",
+      "mesoBlockId": "1783241620746",
+      "weekNumber": 1,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783241620764",
+      "mesoBlockId": "1783241620746",
+      "weekNumber": 2,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783241620769",
+      "mesoBlockId": "1783241620746",
+      "weekNumber": 3,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783241620780",
+      "mesoBlockId": "1783241620774",
+      "weekNumber": 4,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783241620786",
+      "mesoBlockId": "1783241620774",
+      "weekNumber": 5,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783241620790",
+      "mesoBlockId": "1783241620774",
+      "weekNumber": 6,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783244103588",
+      "mesoBlockId": "1783244103579",
+      "weekNumber": 1,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783244103595",
+      "mesoBlockId": "1783244103579",
+      "weekNumber": 2,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783244103600",
+      "mesoBlockId": "1783244103579",
+      "weekNumber": 3,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783244103605",
+      "mesoBlockId": "1783244103579",
+      "weekNumber": 4,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783244103617",
+      "mesoBlockId": "1783244103611",
+      "weekNumber": 5,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783244103621",
+      "mesoBlockId": "1783244103611",
+      "weekNumber": 6,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783244103628",
+      "mesoBlockId": "1783244103611",
+      "weekNumber": 7,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783244238926",
+      "mesoBlockId": "1783244238916",
+      "weekNumber": 1,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783244238931",
+      "mesoBlockId": "1783244238916",
+      "weekNumber": 2,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783244238937",
+      "mesoBlockId": "1783244238916",
+      "weekNumber": 3,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783244238947",
+      "mesoBlockId": "1783244238943",
+      "weekNumber": 4,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783244238957",
+      "mesoBlockId": "1783244238943",
+      "weekNumber": 5,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783244238962",
+      "mesoBlockId": "1783244238943",
+      "weekNumber": 6,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783244408919",
+      "mesoBlockId": "1783244408910",
+      "weekNumber": 1,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1783244408936",
+      "mesoBlockId": "1783244408926",
+      "weekNumber": 2,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1783244408954",
+      "mesoBlockId": "1783244408944",
+      "weekNumber": 3,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783244408973",
+      "mesoBlockId": "1783244408944",
+      "weekNumber": 4,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783244409027",
+      "mesoBlockId": "1783244408944",
+      "weekNumber": 5,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783244409051",
+      "mesoBlockId": "1783244408944",
+      "weekNumber": 6,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783244409070",
+      "mesoBlockId": "1783244409059",
+      "weekNumber": 7,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783244409077",
+      "mesoBlockId": "1783244409059",
+      "weekNumber": 8,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783244409092",
+      "mesoBlockId": "1783244409059",
+      "weekNumber": 9,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783244706217",
+      "mesoBlockId": "1783244706206",
+      "weekNumber": 1,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783244706222",
+      "mesoBlockId": "1783244706206",
+      "weekNumber": 2,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783244706228",
+      "mesoBlockId": "1783244706206",
+      "weekNumber": 3,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783244706238",
+      "mesoBlockId": "1783244706233",
+      "weekNumber": 4,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783244706245",
+      "mesoBlockId": "1783244706233",
+      "weekNumber": 5,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783244706250",
+      "mesoBlockId": "1783244706233",
+      "weekNumber": 6,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783328305447",
+      "mesoBlockId": "1783328305428",
+      "weekNumber": 1,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1783328305477",
+      "mesoBlockId": "1783328305463",
+      "weekNumber": 2,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1783328305508",
+      "mesoBlockId": "1783328305494",
+      "weekNumber": 3,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783328305521",
+      "mesoBlockId": "1783328305494",
+      "weekNumber": 4,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783328305534",
+      "mesoBlockId": "1783328305494",
+      "weekNumber": 5,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783328305548",
+      "mesoBlockId": "1783328305494",
+      "weekNumber": 6,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783328305575",
+      "mesoBlockId": "1783328305563",
+      "weekNumber": 7,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783328305588",
+      "mesoBlockId": "1783328305563",
+      "weekNumber": 8,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783328305602",
+      "mesoBlockId": "1783328305563",
+      "weekNumber": 9,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783328342249",
+      "mesoBlockId": "1783328342236",
+      "weekNumber": 1,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783328342262",
+      "mesoBlockId": "1783328342236",
+      "weekNumber": 2,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783328342274",
+      "mesoBlockId": "1783328342236",
+      "weekNumber": 3,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783328342315",
+      "mesoBlockId": "1783328342285",
+      "weekNumber": 4,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783328342332",
+      "mesoBlockId": "1783328342285",
+      "weekNumber": 5,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783328342346",
+      "mesoBlockId": "1783328342285",
+      "weekNumber": 6,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783333605687",
+      "mesoBlockId": "1783333605681",
+      "weekNumber": 1,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1783333605692",
+      "mesoBlockId": "1783333605681",
+      "weekNumber": 2,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1783333605697",
+      "mesoBlockId": "1783333605681",
+      "weekNumber": 3,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1783333605703",
+      "mesoBlockId": "1783333605681",
+      "weekNumber": 4,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1783333605707",
+      "mesoBlockId": "1783333605681",
+      "weekNumber": 5,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1783333605712",
+      "mesoBlockId": "1783333605681",
+      "weekNumber": 6,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1783333605718",
+      "mesoBlockId": "1783333605681",
+      "weekNumber": 7,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1783333605722",
+      "mesoBlockId": "1783333605681",
+      "weekNumber": 8,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1783333605725",
+      "mesoBlockId": "1783333605681",
+      "weekNumber": 9,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1783333605733",
+      "mesoBlockId": "1783333605681",
+      "weekNumber": 10,
+      "targetVolumeHours": 12,
+      "targetDistribution": {
+        "Z1": 80,
+        "Z2": 20,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Base"
+    },
+    {
+      "id": "1783333605765",
+      "mesoBlockId": "1783333605756",
+      "weekNumber": 11,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1783333605774",
+      "mesoBlockId": "1783333605756",
+      "weekNumber": 12,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1783333605786",
+      "mesoBlockId": "1783333605756",
+      "weekNumber": 13,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1783333605790",
+      "mesoBlockId": "1783333605756",
+      "weekNumber": 14,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1783333605797",
+      "mesoBlockId": "1783333605756",
+      "weekNumber": 15,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1783333605800",
+      "mesoBlockId": "1783333605756",
+      "weekNumber": 16,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1783333605805",
+      "mesoBlockId": "1783333605756",
+      "weekNumber": 17,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1783333605808",
+      "mesoBlockId": "1783333605756",
+      "weekNumber": 18,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1783333605816",
+      "mesoBlockId": "1783333605756",
+      "weekNumber": 19,
+      "targetVolumeHours": 14,
+      "targetDistribution": {
+        "Z1": 70,
+        "Z2": 30,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Build"
+    },
+    {
+      "id": "1783333605824",
+      "mesoBlockId": "1783333605820",
+      "weekNumber": 20,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783333605830",
+      "mesoBlockId": "1783333605820",
+      "weekNumber": 21,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783333605835",
+      "mesoBlockId": "1783333605820",
+      "weekNumber": 22,
+      "targetVolumeHours": 16,
+      "targetDistribution": {
+        "Z1": 60,
+        "Z2": 40,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Peak"
+    },
+    {
+      "id": "1783333605842",
+      "mesoBlockId": "1783333605838",
+      "weekNumber": 23,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    },
+    {
+      "id": "1783333605849",
+      "mesoBlockId": "1783333605838",
+      "weekNumber": 24,
+      "targetVolumeHours": 8,
+      "targetDistribution": {
+        "Z1": 50,
+        "Z2": 50,
+        "Z3": 0,
+        "Z4": 0,
+        "Z5": 0
+      },
+      "focus": "Taper"
+    }
+  ],
+  "scheduledWorkouts": [
+    {
+      "id": "1781183680527",
+      "programId": "1781183370056",
+      "plannedWeekId": "1781183370194",
+      "workoutLibraryId": "",
+      "weekNumber": 1,
+      "dayOfWeek": 1,
+      "status": "Planned",
+      "trainingSnapshot": {
+        "id": "1781173381263",
+        "title": "run - walk 5*30-2:30",
+        "description": "",
+        "type": "run",
+        "steps": [
+          {
+            "id": "1781173317968-ckq7iyj",
+            "setType": "warmup",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          },
+          {
+            "id": "1781173317968-phgio0j",
+            "setType": "main",
+            "reps": 5,
+            "tags": [],
+            "notes": "30sec Run\n2:30min Walk",
+            "mode": "time",
+            "duration": 3,
+            "unit": "min",
+            "_hasBreakdownLine": true
+          },
+          {
+            "id": "1781173317968-q9cea61",
+            "setType": "cooldown",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          }
+        ],
+        "notes": "",
+        "creationDate": "2026-06-11T10:23:01.263Z"
+      }
+    },
+    {
+      "id": "1781183686837",
+      "programId": "1781183370056",
+      "plannedWeekId": "1781183370194",
+      "workoutLibraryId": "1781173460408",
+      "weekNumber": 1,
+      "dayOfWeek": 3,
+      "status": "Planned"
+    },
+    {
+      "id": "1781183689748",
+      "programId": "1781183370056",
+      "plannedWeekId": "1781183370194",
+      "workoutLibraryId": "1781174951035",
+      "weekNumber": 1,
+      "dayOfWeek": 5,
+      "status": "Planned"
+    },
+    {
+      "id": "1782211417500",
+      "programId": "1781183370056",
+      "plannedWeekId": "1781183370203",
+      "workoutLibraryId": "1782211407870",
+      "weekNumber": 2,
+      "dayOfWeek": 1,
+      "status": "Planned"
+    },
+    {
+      "id": "1782291140505",
+      "programId": "1781183370056",
+      "plannedWeekId": "1781183370203",
+      "workoutLibraryId": "1782291134406",
+      "weekNumber": 2,
+      "dayOfWeek": 3,
+      "status": "Planned"
+    },
+    {
+      "id": "1782291544341",
+      "programId": "1781183370056",
+      "plannedWeekId": "1781183370203",
+      "workoutLibraryId": "1782291540294",
+      "weekNumber": 2,
+      "dayOfWeek": 5,
+      "status": "Planned"
+    },
+    {
+      "id": "1782291694848",
+      "programId": "1781183370056",
+      "plannedWeekId": "1781183370238",
+      "workoutLibraryId": "1782291688148",
+      "weekNumber": 3,
+      "dayOfWeek": 1,
+      "status": "Planned"
+    },
+    {
+      "id": "1782291757034",
+      "programId": "1781183370056",
+      "plannedWeekId": "1781183370238",
+      "workoutLibraryId": "1782291753387",
+      "weekNumber": 3,
+      "dayOfWeek": 3,
+      "status": "Planned"
+    },
+    {
+      "id": "1782291799130",
+      "programId": "1781183370056",
+      "plannedWeekId": "1781183370238",
+      "workoutLibraryId": "1782291793171",
+      "weekNumber": 3,
+      "dayOfWeek": 5,
+      "status": "Planned"
+    },
+    {
+      "id": "1782310087382",
+      "programId": "1781183370056",
+      "plannedWeekId": "1781183370242",
+      "workoutLibraryId": "1782292708994",
+      "weekNumber": 4,
+      "dayOfWeek": 1,
+      "status": "Planned"
+    },
+    {
+      "id": "1782310130609",
+      "programId": "1781183370056",
+      "plannedWeekId": "1781183370242",
+      "workoutLibraryId": "1782310114806",
+      "weekNumber": 4,
+      "dayOfWeek": 3,
+      "status": "Planned"
+    }
+  ],
+  "blocks": [],
+  "events": [],
   "athleteGroups": [
     {
-      "id": "1775118916995",
-      "athleteId": "1774889754592",
-      "groupId": "1773070277512"
+      "id": "1778767596708",
+      "athleteId": "1778767527994",
+      "groupId": "1778766852047"
     },
     {
-      "id": "1775119273647",
-      "athleteId": "1774889754592",
-      "groupId": "1773070310309"
+      "id": "1778767596710",
+      "athleteId": "1778767557378",
+      "groupId": "1778766852047"
     },
     {
-      "id": "1775123899201",
-      "athleteId": "1773161190813",
-      "groupId": "1773070277512"
-    },
-    {
-      "id": "1775124910988",
-      "athleteId": "1774890625391",
-      "groupId": "1773070277512"
-    },
-    {
-      "id": "1775209229300",
-      "athleteId": "1774890625391",
-      "groupId": "1775209197824"
+      "id": "1778767596712",
+      "athleteId": "1778767572226",
+      "groupId": "1778766852047"
     }
   ],
-  "trainingAssignments": [],
-  "eventOverrides": [
+  "trainingAssignments": [
     {
-      "id": "a10fa62e-eaf1-4d9d-8bca-a079efee7b18",
-      "sourceId": "groupSchedule-1776604085831-1776871800000",
-      "originalStartTime": "2026-04-22T15:30:00.000Z",
-      "isCancelled": false,
-      "modifiedTitle": "מעוז נוער - triathlon",
-      "modifiedStartTime": "2026-04-23T15:15:00.000Z",
-      "modifiedEndTime": "2026-04-23T16:45:00.000Z",
-      "createdAt": "2026-04-23T09:50:31.433Z"
+      "id": "1779009269323",
+      "trainingId": "1778843010777",
+      "athleteId": "1778767098617",
+      "groupId": null,
+      "startTime": "2026-05-13T09:00:00.000Z",
+      "endTime": "2026-05-13T10:00:00.000Z",
+      "notes": "",
+      "createdAt": "2026-05-17T09:14:29.323Z",
+      "updatedAt": "2026-05-17T09:22:41.140Z",
+      "status": "ATTENDED"
     },
     {
-      "id": "7f199ea4-ff80-4f68-9e2e-0974b7f685ab",
-      "sourceId": "groupSchedule-1775649005920-1776954600000",
-      "originalStartTime": "2026-04-23T14:30:00.000Z",
+      "id": "1779009768507",
+      "trainingId": "1778945504666",
+      "athleteId": "1778767098617",
+      "groupId": null,
+      "startTime": "2026-05-17T08:00:00.000Z",
+      "endTime": null,
+      "notes": "",
+      "createdAt": "2026-05-17T09:22:48.507Z",
+      "updatedAt": "2026-05-17T09:22:48.507Z",
+      "status": "ATTENDED"
+    },
+    {
+      "id": "1779107577730",
+      "trainingId": "1779107577724",
+      "athleteId": "1778767098617",
+      "groupId": null,
+      "startTime": "2026-05-18T04:00:00.000Z",
+      "endTime": null,
+      "notes": "",
+      "createdAt": "2026-05-18T12:32:57.731Z",
+      "updatedAt": "2026-05-18T12:32:57.731Z",
+      "status": "PENDING"
+    },
+    {
+      "id": "1779107769760",
+      "trainingId": "1779107769745",
+      "athleteId": "1778767098617",
+      "groupId": null,
+      "startTime": "2026-05-19T04:00:00.000Z",
+      "endTime": null,
+      "notes": "",
+      "createdAt": "2026-05-18T12:36:09.760Z",
+      "updatedAt": "2026-05-18T12:36:09.760Z",
+      "status": "PENDING"
+    },
+    {
+      "id": "1779107777681",
+      "trainingId": "1778843010777",
+      "athleteId": "1778767098617",
+      "groupId": null,
+      "startTime": "2026-05-20T04:00:00.000Z",
+      "endTime": null,
+      "notes": "",
+      "createdAt": "2026-05-18T12:36:17.681Z",
+      "updatedAt": "2026-05-18T12:36:17.681Z",
+      "status": "PENDING"
+    },
+    {
+      "id": "1779107875796",
+      "trainingId": "1779107875784",
+      "athleteId": "1778767098617",
+      "groupId": null,
+      "startTime": "2026-05-23T04:00:00.000Z",
+      "endTime": null,
+      "notes": "",
+      "createdAt": "2026-05-18T12:37:55.796Z",
+      "updatedAt": "2026-05-18T12:37:55.796Z",
+      "status": "PENDING"
+    },
+    {
+      "id": "1782894666104",
+      "trainingId": "1781183680527",
+      "trainingSnapshot": {
+        "id": "1781173381263",
+        "title": "run - walk 5*30-2:30",
+        "description": "",
+        "type": "run",
+        "steps": [
+          {
+            "id": "1781173317968-ckq7iyj",
+            "setType": "warmup",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          },
+          {
+            "id": "1781173317968-phgio0j",
+            "setType": "main",
+            "reps": 5,
+            "tags": [],
+            "notes": "30sec Run\n2:30min Walk",
+            "mode": "time",
+            "duration": 3,
+            "unit": "min",
+            "_hasBreakdownLine": true
+          },
+          {
+            "id": "1781173317968-q9cea61",
+            "setType": "cooldown",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          }
+        ],
+        "notes": "",
+        "creationDate": "2026-06-11T10:23:01.263Z"
+      },
+      "athleteId": "1778767098617",
+      "groupId": null,
+      "startTime": "2026-06-29T04:00:00.000Z",
+      "endTime": null,
+      "notes": "PROGRAM_APPLY:1781183370056 | Applied from program 0-5k",
+      "createdAt": "2026-07-01T08:31:06.104Z",
+      "updatedAt": "2026-07-01T08:31:06.104Z",
+      "status": "PENDING"
+    },
+    {
+      "id": "1782894666108",
+      "trainingId": "1781173460408",
+      "trainingSnapshot": {
+        "id": "1781173460408",
+        "title": "run-walk 7*30-2:30",
+        "description": "",
+        "type": "run",
+        "steps": [
+          {
+            "id": "1782290451725-s4d5la2",
+            "setType": "warmup",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          },
+          {
+            "id": "1782290451725-ks1wj70",
+            "setType": "main",
+            "reps": 7,
+            "tags": [],
+            "notes": "30sec Run\n2:30min Walk",
+            "mode": "time",
+            "duration": 3,
+            "unit": "min",
+            "_hasBreakdownLine": true
+          },
+          {
+            "id": "1782290451726-89kw9ar",
+            "setType": "cooldown",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          }
+        ],
+        "notes": "",
+        "creationDate": "2026-06-11T10:24:20.408Z"
+      },
+      "athleteId": "1778767098617",
+      "groupId": null,
+      "startTime": "2026-07-01T04:00:00.000Z",
+      "endTime": null,
+      "notes": "PROGRAM_APPLY:1781183370056 | Applied from program 0-5k",
+      "createdAt": "2026-07-01T08:31:06.108Z",
+      "updatedAt": "2026-07-01T08:31:06.108Z",
+      "status": "PENDING"
+    },
+    {
+      "id": "1782894666112",
+      "trainingId": "1781174951035",
+      "trainingSnapshot": {
+        "id": "1781174951035",
+        "title": "run - walk 2 + 4*30-2:30",
+        "description": "",
+        "type": "run",
+        "steps": [
+          {
+            "id": "1781174917818-62ovofg",
+            "setType": "warmup",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          },
+          {
+            "id": "1781174917819-ql72o1l",
+            "setType": "main",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Run",
+            "mode": "time",
+            "duration": 2,
+            "unit": "min"
+          },
+          {
+            "id": "1781174917819-xwfdggb",
+            "setType": "main",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 1,
+            "unit": "min"
+          },
+          {
+            "id": "1781174917819-j5p6x39",
+            "setType": "main",
+            "reps": 4,
+            "tags": [],
+            "notes": "30sec run\n2:30 walk",
+            "mode": "time",
+            "duration": 3,
+            "unit": "min",
+            "_hasBreakdownLine": true
+          },
+          {
+            "id": "1781174917819-nxl4iv9",
+            "setType": "cooldown",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          }
+        ],
+        "notes": "",
+        "creationDate": "2026-06-11T10:49:11.035Z"
+      },
+      "athleteId": "1778767098617",
+      "groupId": null,
+      "startTime": "2026-07-03T04:00:00.000Z",
+      "endTime": null,
+      "notes": "PROGRAM_APPLY:1781183370056 | Applied from program 0-5k",
+      "createdAt": "2026-07-01T08:31:06.112Z",
+      "updatedAt": "2026-07-01T08:31:06.112Z",
+      "status": "PENDING"
+    },
+    {
+      "id": "1782894666115",
+      "trainingId": "1782211407870",
+      "trainingSnapshot": {
+        "id": "1782211407870",
+        "title": "run-walk 6*40-2:20",
+        "description": "",
+        "type": "run",
+        "steps": [
+          {
+            "id": "1782291095346-88z5upv",
+            "setType": "warmup",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          },
+          {
+            "id": "1782291095347-d9gn4sc",
+            "setType": "main",
+            "reps": 6,
+            "tags": [],
+            "notes": "40sec Run\n2:20min Walk",
+            "mode": "time",
+            "duration": 3,
+            "unit": "min",
+            "_hasBreakdownLine": true
+          },
+          {
+            "id": "1782291095348-zsohtv2",
+            "setType": "cooldown",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          }
+        ],
+        "notes": "",
+        "creationDate": "2026-06-23T10:43:27.870Z"
+      },
+      "athleteId": "1778767098617",
+      "groupId": null,
+      "startTime": "2026-07-06T04:00:00.000Z",
+      "endTime": null,
+      "notes": "PROGRAM_APPLY:1781183370056 | Applied from program 0-5k",
+      "createdAt": "2026-07-01T08:31:06.115Z",
+      "updatedAt": "2026-07-01T08:31:06.115Z",
+      "status": "PENDING"
+    },
+    {
+      "id": "1782894666118",
+      "trainingId": "1782291134406",
+      "trainingSnapshot": {
+        "id": "1782291134406",
+        "title": "run-walk 9*40-2:20",
+        "description": "",
+        "type": "run",
+        "steps": [
+          {
+            "id": "1782291127263-rw1tnob",
+            "setType": "warmup",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          },
+          {
+            "id": "1782291127263-88za0ir",
+            "setType": "main",
+            "reps": 9,
+            "tags": [],
+            "notes": "40sec Run\n2:20min Walk",
+            "mode": "time",
+            "duration": 3,
+            "unit": "min",
+            "_hasBreakdownLine": true
+          },
+          {
+            "id": "1782291127264-02m53sr",
+            "setType": "cooldown",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          }
+        ],
+        "notes": "",
+        "creationDate": "2026-06-24T08:52:14.406Z"
+      },
+      "athleteId": "1778767098617",
+      "groupId": null,
+      "startTime": "2026-07-08T04:00:00.000Z",
+      "endTime": null,
+      "notes": "PROGRAM_APPLY:1781183370056 | Applied from program 0-5k",
+      "createdAt": "2026-07-01T08:31:06.118Z",
+      "updatedAt": "2026-07-01T08:31:06.118Z",
+      "status": "PENDING"
+    },
+    {
+      "id": "1782894666121",
+      "trainingId": "1782291540294",
+      "trainingSnapshot": {
+        "id": "1782291540294",
+        "title": "run - walk 3 + 5*40-2:20",
+        "description": "",
+        "type": "run",
+        "steps": [
+          {
+            "id": "1782291521669-tzltg66",
+            "setType": "warmup",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          },
+          {
+            "id": "1782291521672-0gfduel",
+            "setType": "main",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Run",
+            "mode": "time",
+            "duration": 3,
+            "unit": "min"
+          },
+          {
+            "id": "1782291521672-mt8lqic",
+            "setType": "main",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 1,
+            "unit": "min"
+          },
+          {
+            "id": "1782291521672-lvmn9cr",
+            "setType": "main",
+            "reps": 5,
+            "tags": [],
+            "notes": "40sec run\n2:20 walk",
+            "mode": "time",
+            "duration": 3,
+            "unit": "min",
+            "_hasBreakdownLine": true
+          },
+          {
+            "id": "1782291521673-9tici5h",
+            "setType": "cooldown",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          }
+        ],
+        "notes": "",
+        "creationDate": "2026-06-24T08:59:00.294Z"
+      },
+      "athleteId": "1778767098617",
+      "groupId": null,
+      "startTime": "2026-07-10T04:00:00.000Z",
+      "endTime": null,
+      "notes": "PROGRAM_APPLY:1781183370056 | Applied from program 0-5k",
+      "createdAt": "2026-07-01T08:31:06.121Z",
+      "updatedAt": "2026-07-01T08:31:06.121Z",
+      "status": "PENDING"
+    },
+    {
+      "id": "1782894666137",
+      "trainingId": "1782291688148",
+      "trainingSnapshot": {
+        "id": "1782291688148",
+        "title": "run - walk 5*20-2:40",
+        "description": "",
+        "type": "run",
+        "steps": [
+          {
+            "id": "1782291674845-hozl4ev",
+            "setType": "warmup",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          },
+          {
+            "id": "1782291674845-1hzofew",
+            "setType": "main",
+            "reps": 5,
+            "tags": [],
+            "notes": "20sec Run\n2:40min Walk",
+            "mode": "time",
+            "duration": 3,
+            "unit": "min",
+            "_hasBreakdownLine": true
+          },
+          {
+            "id": "1782291674846-ciinmky",
+            "setType": "cooldown",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          }
+        ],
+        "notes": "",
+        "creationDate": "2026-06-24T09:01:28.148Z"
+      },
+      "athleteId": "1778767098617",
+      "groupId": null,
+      "startTime": "2026-07-13T04:00:00.000Z",
+      "endTime": null,
+      "notes": "PROGRAM_APPLY:1781183370056 | Applied from program 0-5k",
+      "createdAt": "2026-07-01T08:31:06.137Z",
+      "updatedAt": "2026-07-01T08:31:06.137Z",
+      "status": "PENDING"
+    },
+    {
+      "id": "1782894666144",
+      "trainingId": "1782291753387",
+      "trainingSnapshot": {
+        "id": "1782291753387",
+        "title": "run-walk 6*20-2:40",
+        "description": "",
+        "type": "run",
+        "steps": [
+          {
+            "id": "1782291721730-7guqe9n",
+            "setType": "warmup",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          },
+          {
+            "id": "1782291721731-8x3wlnv",
+            "setType": "main",
+            "reps": 6,
+            "tags": [],
+            "notes": "20sec Run\n2:40min Walk",
+            "mode": "time",
+            "duration": 3,
+            "unit": "min",
+            "_hasBreakdownLine": true
+          },
+          {
+            "id": "1782291721732-w3culzf",
+            "setType": "cooldown",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          }
+        ],
+        "notes": "",
+        "creationDate": "2026-06-24T09:02:33.387Z"
+      },
+      "athleteId": "1778767098617",
+      "groupId": null,
+      "startTime": "2026-07-15T04:00:00.000Z",
+      "endTime": null,
+      "notes": "PROGRAM_APPLY:1781183370056 | Applied from program 0-5k",
+      "createdAt": "2026-07-01T08:31:06.144Z",
+      "updatedAt": "2026-07-01T08:31:06.144Z",
+      "status": "PENDING"
+    },
+    {
+      "id": "1782894666148",
+      "trainingId": "1782291793171",
+      "trainingSnapshot": {
+        "id": "1782291793171",
+        "title": "run - walk 1 + 4*20-2:40",
+        "description": "",
+        "type": "run",
+        "steps": [
+          {
+            "id": "1782312291053-8vva9c4",
+            "setType": "warmup",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          },
+          {
+            "id": "1782312291053-i2wukh5",
+            "setType": "main",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Run",
+            "mode": "time",
+            "duration": 1,
+            "unit": "min"
+          },
+          {
+            "id": "1782312291053-57l9mma",
+            "setType": "main",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 2,
+            "unit": "min"
+          },
+          {
+            "id": "1782312291053-hrrycnr",
+            "setType": "main",
+            "reps": 4,
+            "tags": [],
+            "notes": "20sec run\n2:40 walk",
+            "mode": "time",
+            "duration": 3,
+            "unit": "min",
+            "_hasBreakdownLine": true
+          },
+          {
+            "id": "1782312291053-n0dmoi0",
+            "setType": "cooldown",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          }
+        ],
+        "notes": "",
+        "creationDate": "2026-06-24T09:03:13.171Z"
+      },
+      "athleteId": "1778767098617",
+      "groupId": null,
+      "startTime": "2026-07-17T04:00:00.000Z",
+      "endTime": null,
+      "notes": "PROGRAM_APPLY:1781183370056 | Applied from program 0-5k",
+      "createdAt": "2026-07-01T08:31:06.148Z",
+      "updatedAt": "2026-07-01T08:31:06.148Z",
+      "status": "PENDING"
+    },
+    {
+      "id": "1782894666153",
+      "trainingId": "1782292708994",
+      "trainingSnapshot": {
+        "id": "1782292708994",
+        "title": "run-walk 7*1:2",
+        "description": "",
+        "type": "run",
+        "steps": [
+          {
+            "id": "1782292685381-nnpvkrt",
+            "setType": "warmup",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          },
+          {
+            "id": "1782292685383-u3lwwds",
+            "setType": "main",
+            "reps": 7,
+            "tags": [],
+            "notes": "1min Run\n2min Walk",
+            "mode": "time",
+            "duration": 3,
+            "unit": "min",
+            "_hasBreakdownLine": true
+          },
+          {
+            "id": "1782292685383-2ltz7jg",
+            "setType": "cooldown",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          }
+        ],
+        "notes": "",
+        "creationDate": "2026-06-24T09:18:28.994Z"
+      },
+      "athleteId": "1778767098617",
+      "groupId": null,
+      "startTime": "2026-07-20T04:00:00.000Z",
+      "endTime": null,
+      "notes": "PROGRAM_APPLY:1781183370056 | Applied from program 0-5k",
+      "createdAt": "2026-07-01T08:31:06.153Z",
+      "updatedAt": "2026-07-01T08:31:06.153Z",
+      "status": "PENDING"
+    },
+    {
+      "id": "1782894666161",
+      "trainingId": "1782310114806",
+      "trainingSnapshot": {
+        "id": "1782310114806",
+        "title": "run-walk 10*1:2",
+        "description": "",
+        "type": "run",
+        "steps": [
+          {
+            "id": "1782310105774-fkz5dsv",
+            "setType": "warmup",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          },
+          {
+            "id": "1782310105774-e21yb08",
+            "setType": "main",
+            "reps": 10,
+            "tags": [],
+            "notes": "1min Run\n2min Walk",
+            "mode": "time",
+            "duration": 3,
+            "unit": "min",
+            "_hasBreakdownLine": true
+          },
+          {
+            "id": "1782310105774-te4h24m",
+            "setType": "cooldown",
+            "reps": 1,
+            "tags": [],
+            "notes": "",
+            "movement": "Walk",
+            "mode": "time",
+            "duration": 5,
+            "unit": "min"
+          }
+        ],
+        "notes": "",
+        "creationDate": "2026-06-24T14:08:34.806Z"
+      },
+      "athleteId": "1778767098617",
+      "groupId": null,
+      "startTime": "2026-07-22T04:00:00.000Z",
+      "endTime": null,
+      "notes": "PROGRAM_APPLY:1781183370056 | Applied from program 0-5k",
+      "createdAt": "2026-07-01T08:31:06.161Z",
+      "updatedAt": "2026-07-01T08:31:06.161Z",
+      "status": "PENDING"
+    }
+  ],
+  "eventOverrides": [
+    {
+      "id": "dabc46e4-9ca6-4c6d-acdf-dfc669b5855a",
+      "sourceId": "groupSchedule-1778766852047-1779373800000",
+      "originalStartTime": "2026-05-21T14:30:00.000Z",
       "isCancelled": false,
-      "modifiedTitle": "ילדים מעוז - רכיבה נפח",
-      "modifiedStartTime": "2026-04-23T14:30:00.000Z",
-      "modifiedEndTime": "2026-04-23T16:00:00.000Z",
-      "createdAt": "2026-04-23T09:50:45.112Z"
+      "modifiedTitle": "מעוז - Custom Training",
+      "modifiedStartTime": "2026-05-21T14:30:00.000Z",
+      "modifiedEndTime": "2026-05-21T17:00:00.000Z",
+      "createdAt": "2026-05-18T18:32:05.681Z"
+    },
+    {
+      "id": "fc18291a-8490-4619-80ac-bf6c79a49911",
+      "sourceId": "groupSchedule-1778766852047-1783002600000",
+      "originalStartTime": "2026-07-02T14:30:00.000Z",
+      "isCancelled": false,
+      "modifiedTitle": "מעוז - Custom Training",
+      "modifiedStartTime": "2026-07-02T14:30:00.000Z",
+      "modifiedEndTime": "2026-07-02T17:00:00.000Z",
+      "createdAt": "2026-07-01T08:32:33.911Z"
+    }
+  ],
+  "attendances": [],
+  "notes": [],
+  "folders": [
+    {
+      "id": "1782308351172",
+      "name": "Run - Walk",
+      "createdAt": "2026-06-24T13:39:11.172Z",
+      "updatedAt": "2026-06-24T13:39:11.172Z"
+    },
+    {
+      "id": "1782308850884",
+      "name": "Cycling",
+      "createdAt": "2026-06-24T13:47:30.884Z",
+      "updatedAt": "2026-06-24T13:47:30.884Z"
     }
   ]
 }

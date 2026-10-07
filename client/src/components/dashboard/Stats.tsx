@@ -1,10 +1,9 @@
+import "./Stats.css";
+
 interface Props {
   athletes: number;
-
   groups: number;
-
   trainingsToday: number;
-
   callsPending: number;
 }
 
@@ -15,16 +14,23 @@ export default function Stats({
   callsPending,
 }: Props) {
   return (
-    <div className="dashboard-card">
-      <h3>Stats</h3>
-
-      <div>Athletes: {athletes}</div>
-
-      <div>Groups: {groups}</div>
-
-      <div>Trainings today: {trainingsToday}</div>
-
-      <div>Calls pending: {callsPending}</div>
+    <div className="stats-container">
+      <div className="stat-item">
+        <span className="stat-label">Athletes:</span>
+        <span className="stat-value">{athletes}</span>
+      </div>
+      <div className="stat-item">
+        <span className="stat-label">Groups:</span>
+        <span className="stat-value">{groups}</span>
+      </div>
+      <div className="stat-item">
+        <span className="stat-label">Trainings Today:</span>
+        <span className="stat-value">{trainingsToday}</span>
+      </div>
+      <div className="stat-item">
+        <span className="stat-label">Calls Pending:</span>
+        <span className="stat-value">{callsPending}</span>
+      </div>
     </div>
   );
 }

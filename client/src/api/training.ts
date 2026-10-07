@@ -16,7 +16,20 @@ export async function getTrainings() {
 }
 
 // ==========================
-// 👥 BY GROUP
+// � GET BY ID
+// ==========================
+export async function getTrainingById(id: string) {
+  const res = await fetch(`${API}/${id}`);
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch training");
+  }
+
+  return res.json();
+}
+
+// ==========================
+// �👥 BY GROUP
 // ==========================
 export async function getTrainingsByGroup(groupId: string) {
   const res = await fetch(`${API}/group/${groupId}`);

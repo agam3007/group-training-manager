@@ -21,35 +21,46 @@ function generateGroupScheduleEvents(
   trainingTitle: string
 ): CalendarEvent[] {
   const events: CalendarEvent[] = [];
+
   const currentDate = new Date(startRange);
+  // normalize hour to avoid timezone drift
+  currentDate.setHours(0, 0, 0, 0);
 
-  // Start from the first occurrence of the specified day
-  const dayOfWeek = trainingTime.day + 1; // 0 = Sunday, 1 = Monday, etc.
-  const daysUntilTarget = (dayOfWeek - currentDate.getDay() + 7) % 7;
+  // 0=Monday -> JS 1=Monday
+  const targetDay = trainingTime.day;
+  const currentDay = currentDate.getDay();
+
+  const daysUntilTarget =
+    (targetDay - currentDay + 7) % 7;
+
   currentDate.setDate(currentDate.getDate() + daysUntilTarget);
-
-  // Generate weekly recurring events
-  while (currentDate < endRange) {
+  while (currentDate <= endRange) {
     const eventStart = new Date(currentDate);
-    eventStart.setHours(trainingTime.start.hour, trainingTime.start.min, 0, 0);
+    eventStart.setHours(
+      trainingTime.start.hour,
+      trainingTime.start.min,
+      0,
+      0
+    );
 
     const eventEnd = new Date(currentDate);
-    eventEnd.setHours(trainingTime.end.hour, trainingTime.end.min, 0, 0);
+    eventEnd.setHours(
+      trainingTime.end.hour,
+      trainingTime.end.min,
+      0,
+      0
+    );
+    events.push({
+      id: crypto.randomUUID(),
+      type: "groupSchedule",
+      title: trainingTitle,
+      startTime: eventStart,
+      endTime: eventEnd,
+      groupId,
+      sourceId: `groupSchedule-${groupId}-${eventStart.getTime()}`,
+      createdAt: new Date(),
+    });
 
-    if (eventStart >= startRange && eventEnd <= endRange) {
-      events.push({
-        id: crypto.randomUUID(),
-        type: "groupSchedule",
-        title: trainingTitle,
-        startTime: eventStart,
-        endTime: eventEnd,
-        groupId,
-        sourceId: `groupSchedule-${groupId}-${eventStart.getTime()}`,
-        createdAt: new Date(),
-      });
-    }
-
-    // Move to next week
     currentDate.setDate(currentDate.getDate() + 7);
   }
 
@@ -111,7 +122,9 @@ function mergeCalendarEvents(
 
   // Add training assignments (one-time events)
   trainingAssignments.forEach((assignment) => {
-    const training = trainings.find((t) => t.id === assignment.trainingId);
+    const training =
+      trainings.find((t) => t.id === assignment.trainingId) ||
+      (assignment as any).trainingSnapshot;
     const key = `assignment-${assignment.id}`;
 
     eventMap.set(key, {
@@ -139,7 +152,6 @@ function mergeCalendarEvents(
         endRange,
         `${group.name} - ${group.sport}`
       );
-
       groupEvents.forEach((event) => {
         eventMap.set(event.sourceId!, event);
       });
@@ -177,10 +189,8 @@ router.get("/range", (req, res) => {
       message: "start and end query params are required",
     });
   }
-
   const startDate = new Date(start as string);
   const endDate = new Date(end as string);
-console.log(end)
   const db = readDb();
 
   // Get all data needed
@@ -198,7 +208,6 @@ console.log(end)
     startDate,
     endDate
   );
-
   // Also include manually created events from the events table
   const manualEvents = (db.events || []).filter((e: CalendarEvent) => {
     const eventStart = new Date(e.startTime);
@@ -256,7 +265,6 @@ router.get("/group/:groupId", (req, res) => {
     startDate,
     endDate
   );
-console.log(mergedEvents)
   // Include manually created group events
   const manualEvents = (db.events || []).filter(
     (e: CalendarEvent) => e.groupId === groupId

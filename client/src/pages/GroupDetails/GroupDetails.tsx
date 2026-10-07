@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {StatsChart} from "@/components/athletes";
+import { NotesPanel } from "@/components/shared";
 import "./GroupDetails.css";
 import type { Goal, Group } from "@/shared/types";
 import { getGroup, updateGroup } from "@/api/group";
@@ -24,7 +25,7 @@ const stringToTime = (value: string) => {
   return { hour, min };
 };
 export default function GroupDetails() {
-  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const days = ["Sun","Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -39,14 +40,6 @@ export default function GroupDetails() {
   const [editMode, setEditMode] = useState(false);
   const [editData, setEditData] = useState<any>(null);
 
-  const [showNoteModal, setShowNoteModal] = useState(false);
-  const [expandedNote, setExpandedNote] = useState<string | null>(null);
-
-  const [newNoteTitle, setNewNoteTitle] = useState("");
-  const [newNoteContent, setNewNoteContent] = useState("");
-
-  const [mode, setMode] = useState<"add" | "edit" | null>(null);
-
   const [showGoalModal, setShowGoalModal] = useState(false);
 
   const [newGoal, setNewGoal] = useState<Goal>({
@@ -56,10 +49,7 @@ export default function GroupDetails() {
     location: "",
     date: "",
     type: "general",
-
   });
-
-  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
 
   useEffect(() => {
     load();
@@ -223,71 +213,6 @@ export default function GroupDetails() {
   };
 
   const testKeys = ["5K", "10K", "100m", "200m", "500m", "FTP"];
-
-  const handleSaveNote = async () => {
-    if (!newNoteTitle.trim()) return;
-
-    let updatedNotes;
-
-    if (editingNoteId) {
-      // ✏️ EDIT
-      updatedNotes = (group.notes || []).map((n: any) =>
-        n.id === editingNoteId
-          ? {
-              ...n,
-              title: newNoteTitle,
-              content: newNoteContent,
-            }
-          : n,
-      );
-    } else {
-      // ➕ CREATE
-      const noteToAdd = {
-        id: Date.now().toString(),
-        title: newNoteTitle,
-        content: newNoteContent,
-        date: new Date().toISOString(),
-      };
-
-      updatedNotes = [...(group.notes || []), noteToAdd];
-    }
-
-    const updated = await updateGroup(group.id, {
-      ...group,
-      notes: updatedNotes,
-    });
-
-    setGroup(updated);
-
-    // reset
-    setNewNoteTitle("");
-    setNewNoteContent("");
-    setEditingNoteId(null);
-    setShowNoteModal(false);
-  };
-  const handleCloseModal = () => {
-    setShowNoteModal(false);
-    setEditingNoteId(null);
-    setNewNoteTitle("");
-  };
-
-  const handleDeleteNote = async (noteId: string) => {
-    const updatedNotes = (group.notes ?? []).filter((n) => n.id !== noteId);
-
-    const updated = await updateGroup(group.id, {
-      ...group,
-      notes: updatedNotes,
-    });
-
-    setGroup(updated);
-  };
-
-  const openEditNote = (note: any) => {
-    setEditingNoteId(note.id);
-    setNewNoteTitle(note.title);
-    setNewNoteContent(note.content);
-    setShowNoteModal(true);
-  };
 
   const handleSaveGoal = async () => {
     if (!newGoal.title.trim()) return;
@@ -747,80 +672,10 @@ export default function GroupDetails() {
           ))}
         </div>
 
-        <div className="card">
-          <div className="card-header">
-            <h3>Notes & Focus</h3>
-
-            <button
-              className="add-btn"
-              onClick={() => {
-                setMode("add");
-                setShowNoteModal(true);
-              }}
-            >
-              +
-            </button>
-          </div>
-
-          {(group.notes || []).length === 0 && (
-            <div className="empty">No notes yet</div>
-          )}
-          <div className="notes-list">
-            {(group.notes || []).map((note: any) => {
-              const isOpen = expandedNote === note.id;
-
-              return (
-                <div key={note.id} className="note-item">
-                  <div className="note-header">
-                    <div
-                      className="note-click"
-                      onClick={() => setExpandedNote(isOpen ? null : note.id)}
-                    >
-                      <b>{note.title}</b>
-                      <div className="note-date">
-                        {new Date(note.date).toLocaleDateString()}
-                      </div>
-                    </div>
-
-                    <div className="note-actions">
-                      <button onClick={() => openEditNote(note)}>✏️</button>
-                      <button onClick={() => handleDeleteNote(note.id)}>
-                        🗑️
-                      </button>
-                    </div>
-                  </div>
-
-                  {isOpen && <div className="note-content">{note.content}</div>}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-        {showNoteModal && (
-          <div className="modal-overlay" onClick={handleCloseModal}>
-            <div className="modal" onClick={(e) => e.stopPropagation()}>
-              <h3>{editingNoteId ? "Edit Note" : "Add Note"}</h3>
-
-              <input
-                className="input-modern"
-                placeholder="Title"
-                value={newNoteTitle}
-                onChange={(e) => setNewNoteTitle(e.target.value)}
-              />
-
-              <textarea
-                className="input-modern"
-                placeholder="Write note..."
-                value={newNoteContent}
-                onChange={(e) => setNewNoteContent(e.target.value)}
-              />
-
-              <button onClick={handleSaveNote}>
-                {editingNoteId ? "Save Changes" : "Add Note"}
-              </button>
-            </div>
-          </div>
-        )}
+        <NotesPanel
+          targetType="GROUP"
+          targetId={group.id}
+        />
       </div>
 
       {showModal && (

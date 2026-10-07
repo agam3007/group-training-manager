@@ -47,6 +47,8 @@ export interface Athlete {
   focus?: string;
 
   notes?: string;
+
+  lastCheckIn?: Date;
 }
 
 export type Goal = {

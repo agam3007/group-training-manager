@@ -1,6 +1,8 @@
-import { Home, Calendar, Users, Dumbbell, User } from "lucide-react";
+import { Home, Calendar, Users, Dumbbell, User, Folder } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
+import TrainingPlan from "@/pages/TrainingPlan/TrainingPlan";
+import { Kanban } from "lucide-react";
 
 export default function Sidebar() {
   return (
@@ -10,6 +12,7 @@ export default function Sidebar() {
       </div>
 
       <div className="sidebar-menu">
+
         <NavLink
           to="/"
           className={({ isActive }) =>
@@ -48,6 +51,15 @@ export default function Sidebar() {
         >
           <User size={22} />
           <span className="tooltip">Athletes</span>
+        </NavLink>
+                        <NavLink
+          to="/training-plans"
+          className={({ isActive }) =>
+            isActive ? "sidebar-item active" : "sidebar-item"
+          }
+        >
+          <Folder size={22} />
+          <span className="tooltip">Training Plans</span>
         </NavLink>
       </div>
     </div>

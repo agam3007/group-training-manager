@@ -1,0 +1,209 @@
+/* AttendancePopup.css */
+
+.attendance-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.65); /* צבע כהה עמוק יותר */
+  backdrop-filter: blur(4px); /* טשטוש עדין לרקע */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.attendance-modal {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  width: 100%;
+  max-width: 500px; /* הגדלתי מעט כדי שיהיה מקום להערות */
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: modalIn 0.3s ease-out;
+}
+
+@keyframes modalIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.attendance-header {
+  padding: 24px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.attendance-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+.quick-insights {
+  padding: 0px 24px 4px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+/* Quick Actions Section */
+.attendance-quick-actions {
+  padding: 16px 24px;
+  background: #fff;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+  flex-wrap: wrap;
+}
+
+.select-all-btn {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-right: auto;
+}
+
+.select-all-btn:hover {
+  background: #e2e8f0;
+}
+
+.quick-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1.1rem;
+}
+
+.quick-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Athletes List */
+.attendance-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #fff;
+}
+
+.attendance-row {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color 0.2s;
+}
+
+.attendance-row:hover {
+  border-color: #cbd5e1;
+}
+
+.athlete-info {
+  display: flex;
+  align-items: center;
+}
+
+.athlete-name {
+  font-weight: 600;
+  color: #334155;
+  font-size: 1rem;
+}
+
+.status-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.status-btn {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: 2px solid #f1f5f9;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-btn.active {
+  color: white; /* טקסט לבן כשהכפתור פעיל */
+}
+
+/* צבעים ספציפיים לסטטוס פעיל */
+.status-btn.active[title="Attended"] { background: #22c55e; border-color: #22c55e; }
+.status-btn.active[title="Missed"] { background: #ef4444; border-color: #ef4444; }
+.status-btn.active[title="Sick"] { background: #f59e0b; border-color: #f59e0b; }
+.status-btn.active[title="Injured"] { background: #8b5cf6; border-color: #8b5cf6; }
+
+.note-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+  background: #f8fafc;
+}
+
+.note-input:focus {
+  border-color: #3b82f6;
+  background: #fff;
+}
+
+.attendance-actions {
+  padding: 24px;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.confirm-btn {
+  width: 100%;
+  background: #3b82f6; /* כחול מודרני יותר */
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+}
+
+.confirm-btn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 8px -1px rgba(59, 130, 246, 0.4);
+}

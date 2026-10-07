@@ -58,7 +58,7 @@ router.get("/:id", (req, res) => {
 router.post("/", (req, res) => {
   const db = readDb();
 
-  const { trainingId, athleteId, groupId, startTime, endTime, notes } =
+  const { trainingId, trainingSnapshot, athleteId, groupId, startTime, endTime, notes } =
     req.body;
 
   // Validation
@@ -85,6 +85,7 @@ router.post("/", (req, res) => {
   const newAssignment: TrainingAssignment = {
     id: Date.now().toString(),
     trainingId,
+    trainingSnapshot,
     athleteId: athleteId || null,
     groupId: groupId || null,
     startTime,
@@ -92,6 +93,7 @@ router.post("/", (req, res) => {
     notes: notes || "",
     createdAt: new Date(),
     updatedAt: new Date(),
+    status: "PENDING",
   };
 
   db.trainingAssignments.push(newAssignment);

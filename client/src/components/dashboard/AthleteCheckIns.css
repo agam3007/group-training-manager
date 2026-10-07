@@ -1,0 +1,107 @@
+.athlete-checkins-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.athlete-checkins-card h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.empty-state {
+  padding: 24px;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+}
+
+.athlete-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.athlete-item {
+  display: grid;
+  grid-template-columns: 8px 1fr 24px;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.athlete-item:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+  transform: translateX(4px);
+}
+
+.athlete-risk-indicator {
+  width: 8px;
+  height: 100%;
+  border-radius: 4px;
+  min-height: 50px;
+}
+
+.athlete-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.athlete-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.athlete-reason {
+  font-size: 12px;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.athlete-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrow {
+  color: #999;
+  font-size: 16px;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.athlete-item:hover .arrow {
+  color: #333;
+}
+
+/* Risk level variants */
+.athlete-item.risk-danger:hover {
+  background: #fef2f2;
+}
+
+.athlete-item.risk-warning:hover {
+  background: #fffbeb;
+}
+
+.athlete-item.risk-safe:hover {
+  background: #f0fdf4;
+}

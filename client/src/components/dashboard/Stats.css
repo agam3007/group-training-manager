@@ -1,0 +1,25 @@
+.stats-container {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-label {
+  font-weight: 500;
+  color: #666;
+  font-size: 14px;
+}
+
+.stat-value {
+  font-weight: 700;
+  color: #333;
+  font-size: 18px;
+  min-width: 40px;
+}

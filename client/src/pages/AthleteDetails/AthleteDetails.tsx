@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import type { Athlete, Test } from "@/shared/types";
+import type { Athlete, Test, TrainingAssignment } from "@/shared/types";
 import {
   deleteAthlete,
   getAthlete,
@@ -16,6 +16,10 @@ import {
   getAthleteGroupsByAthleteId,
 } from "@/api/athleteGroup";
 import { getGroup } from "@/api/group";
+import { NotesPanel } from "@/components/shared";
+import { getAssignments } from "@/api/trainingAssignment";
+import { getAthleteCompliance } from "@/api/attendance";
+import { getTrainingById } from "@/api/training";
 
 /* -------- TYPES -------- */
 
@@ -42,6 +46,42 @@ const sportIcon = (sport: string) => {
   if (sport === "swim") return "🏊";
   return "";
 };
+
+/* -------- LOAD CALCULATION -------- */
+
+// Calculate load from training data based on duration and intensity
+function calculateTrainingLoad(training: any, duration: number): number {
+  if (!training) return Math.round((duration / 60) * 100);
+
+  // Base load from duration (minutes to load units)
+  let load = Math.round((duration / 60) * 100);
+
+  // Adjust based on training intensity from steps
+  if (training.steps && training.steps.length > 0) {
+    let highIntensityMinutes = 0;
+    let totalMinutes = 0;
+
+    training.steps.forEach((step: any) => {
+      const stepDuration = step.duration || 0;
+      totalMinutes += stepDuration;
+
+      // High intensity steps: interval2, interval3, rampup
+      if (["interval2", "interval3", "rampup"].includes(step.setType)) {
+        highIntensityMinutes += stepDuration;
+      }
+    });
+
+    // If more than 30% of training is high intensity, multiply load by 1.3
+    if (highIntensityMinutes > 0 && totalMinutes > 0) {
+      const intensityRatio = highIntensityMinutes / totalMinutes;
+      if (intensityRatio > 0.3) {
+        load = Math.round(load * (1 + intensityRatio * 0.5)); // Up to 50% boost
+      }
+    }
+  }
+
+  return load;
+}
 
 /* -------- FIELD -------- */
 
@@ -108,6 +148,11 @@ export default function AthleteDetails() {
 
   const [groups, setGroups] = useState<any[]>([]);
 
+  const [assignments, setAssignments] = useState<TrainingAssignment[]>([]);
+  const [compliance, setCompliance] = useState<any>(null);
+  const [trainings, setTrainings] = useState<Map<string, any>>(new Map());
+  const [dailyLoads, setDailyLoads] = useState<number[]>([20, 45, 60, 30, 80, 0, 50]);
+
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -140,6 +185,48 @@ export default function AthleteDetails() {
     );
 
     setGroups(groupsData);
+
+    // Fetch training assignments
+    const assignmentsData = await getAssignments({ athleteId: id! });
+    setAssignments(assignmentsData);
+
+    // Fetch compliance data
+    const complianceData = await getAthleteCompliance(id!);
+    setCompliance(complianceData);
+
+    // Fetch training data for all assignments
+    const trainingsMap = new Map<string, any>();
+    await Promise.all(
+      assignmentsData.map(async (assignment: TrainingAssignment) => {
+        try {
+          const training = await getTrainingById(assignment.trainingId);
+          trainingsMap.set(assignment.trainingId, training);
+        } catch (error) {
+          console.error(`Failed to fetch training ${assignment.trainingId}:`, error);
+        }
+      })
+    );
+    setTrainings(trainingsMap);
+
+    // Calculate daily loads (last 7 days) using training data
+    const now = new Date();
+    const dailyLoadArray = Array(7).fill(0);
+
+    assignmentsData.forEach((assignment: TrainingAssignment) => {
+      const assignDate = new Date(assignment.startTime);
+      const daysAgo = Math.floor((now.getTime() - assignDate.getTime()) / (1000 * 60 * 60 * 24));
+      
+      if (daysAgo >= 0 && daysAgo < 7 && assignment.status === "ATTENDED") {
+        const duration = assignment.endTime 
+          ? (new Date(assignment.endTime).getTime() - new Date(assignment.startTime).getTime()) / (1000 * 60)
+          : 60;
+        const training = trainingsMap.get(assignment.trainingId);
+        const load = calculateTrainingLoad(training, duration);
+        dailyLoadArray[6 - daysAgo] += load;
+      }
+    });
+
+    setDailyLoads(dailyLoadArray);
   };
 
   const saveEdit = async () => {
@@ -156,47 +243,65 @@ export default function AthleteDetails() {
   const isDirty = JSON.stringify(editData) !== JSON.stringify(athlete);
   /* -------- ATTENDANCE -------- */
 
-  const athleteTrainings = events.filter(
-    (e) =>
-      e.type === "training" &&
-      (e.athleteId === athlete.id || groups.some((g) => g.id === e.groupId)),
+  // Calculate weekly load (last 7 days)
+  const now = new Date();
+  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const twentyEightDaysAgo = new Date(now.getTime() - 28 * 24 * 60 * 60 * 1000);
+
+  const weeklyLoadValue = assignments
+    .filter(a => {
+      const assignDate = new Date(a.startTime);
+      return assignDate >= sevenDaysAgo && a.status === "ATTENDED";
+    })
+    .reduce((sum, a) => {
+      const duration = a.endTime 
+        ? (new Date(a.endTime).getTime() - new Date(a.startTime).getTime()) / (1000 * 60)
+        : 60;
+      const training = trainings.get(a.trainingId);
+      const load = calculateTrainingLoad(training, duration);
+      return sum + load;
+    }, 0);
+
+  const monthlyLoadValue = assignments
+    .filter(a => {
+      const assignDate = new Date(a.startTime);
+      return assignDate >= twentyEightDaysAgo && a.status === "ATTENDED";
+    })
+    .reduce((sum, a) => {
+      const duration = a.endTime 
+        ? (new Date(a.endTime).getTime() - new Date(a.startTime).getTime()) / (1000 * 60)
+        : 60;
+      const training = trainings.get(a.trainingId);
+      const load = calculateTrainingLoad(training, duration);
+      return sum + load;
+    }, 0);
+
+  // Calculate ACWR (Acute:Chronic Workload Ratio)
+  const acwrValue = monthlyLoadValue > 0 ? (weeklyLoadValue / (monthlyLoadValue / 4)).toFixed(2) : "0";
+
+  // Calculate streak and missed from assignments
+  const sortedAssignments = [...assignments].sort((a, b) => 
+    new Date(b.startTime).getTime() - new Date(a.startTime).getTime()
   );
-  /* -------- LOAD + ANALYTICS -------- */
 
-  // כרגע אין לך trainings אמיתיים → נשתמש ב-events כבסיס
-  // (בהמשך תחליפי ל-trainings אמיתיים)
-
-  const weeklyTrainings = athleteTrainings.slice(-7);
-
-  const weeklyLoad = weeklyTrainings.length * 50; // זמני (עד שיהיה zones אמיתי)
-
-  const lastWeekLoad = athleteTrainings.slice(-14, -7).length * 50;
-
-  const loadChange = lastWeekLoad
-    ? Math.round(((weeklyLoad - lastWeekLoad) / lastWeekLoad) * 100)
-    : 0;
-
-  // ACUTE / CHRONIC (PRO)
-  const acuteLoad = weeklyLoad;
-  const chronicLoad = (athleteTrainings.slice(-28).length * 50) / 4;
-
-  const acwr = chronicLoad ? (acuteLoad / chronicLoad).toFixed(2) : "0";
-
-  // STREAK
-  let streak = 0;
-  for (let i = athleteTrainings.length - 1; i >= 0; i--) {
-    if (athleteTrainings[i].done) streak++;
-    else break;
+  let streakValue = 0;
+  for (const assignment of sortedAssignments) {
+    if (assignment.status === "ATTENDED") {
+      streakValue++;
+    } else {
+      break;
+    }
   }
 
-  // MISSED
-  const missed = athleteTrainings.filter((t) => !t.done).length;
+  const missedValue = assignments.filter(
+    a => a.status === "MISSED" && new Date(a.startTime) >= sevenDaysAgo
+  ).length;
 
-  // LAST TRAINING
-  const lastDoneIndex = [...athleteTrainings]
-    .reverse()
-    .findIndex((t) => t.done);
-  const lastTrainingDaysAgo = lastDoneIndex === -1 ? null : lastDoneIndex;
+  // Insights
+  const loadChange = monthlyLoadValue > 0 
+    ? Math.round(((weeklyLoadValue - (monthlyLoadValue / 4)) / (monthlyLoadValue / 4)) * 100)
+    : 0;
+
 
   const insights = [];
 
@@ -204,15 +309,15 @@ export default function AthleteDetails() {
     insights.push("⚠️ Load increased sharply");
   }
 
-  if (Number(acwr) > 1.3) {
+  if (Number(acwrValue) > 1.3) {
     insights.push("⚠️ Injury risk (high ACWR)");
   }
 
-  if (streak >= 5) {
+  if (streakValue >= 5) {
     insights.push("🔥 Great consistency");
   }
 
-  if (missed >= 2) {
+  if (missedValue >= 2) {
     insights.push("⚠️ Missed trainings");
   }
 
@@ -667,6 +772,10 @@ export default function AthleteDetails() {
             )}
           </div>
         </div>
+                <NotesPanel
+                  targetType="ATHLETE"
+                  targetId={athlete.id}
+                />
       </div>
 
       {/* CENTER */}
@@ -674,47 +783,34 @@ export default function AthleteDetails() {
       <div className="center">
         <div className="card">
           <h3>Stats</h3>
-          {/* <div className="stats-grid">
-            <div>Attendance</div>
-            <div style={{
-              color:
-                attendance>80?"green":
-                attendance>60?"orange":"red"
-            }}>
-              {attendance}%
-            </div>
-
-            <div>Trainings</div>
-            <div>{total}</div>
-          </div> */}
           <div className="stats-compact">
             {/* KPI */}
             <div className="stats-kpis">
               <div className="kpi">
                 <span>Load</span>
-                <b>{weeklyLoad}</b>
+                <b>{weeklyLoadValue}</b>
               </div>
 
               <div className="kpi">
                 <span>ACWR</span>
-                <b>{acwr}</b>
+                <b>{acwrValue}</b>
               </div>
 
               <div className="kpi">
                 <span>Streak</span>
-                <b>{streak}</b>
+                <b>{streakValue}</b>
               </div>
 
               <div className="kpi">
                 <span>Missed</span>
-                <b>{missed}</b>
+                <b>{missedValue}</b>
               </div>
             </div>
 
             {/* MINI GRAPH + TREND */}
             <div className="stats-bottom">
               <div className="mini-chart">
-                <StatsChart data={[20, 45, 60, 30, 80, 0, 50]} />
+                <StatsChart data={dailyLoads} />
               </div>
 
               <div className="stats-side">
@@ -723,14 +819,12 @@ export default function AthleteDetails() {
                 </div>
 
                 <div className="last">
-                  {lastTrainingDaysAgo === null
-                    ? "-"
-                    : `${lastTrainingDaysAgo}d`}
+                  {compliance?.sessionsAssigned || 0} sessions
                 </div>
               </div>
             </div>
 
-            {/* 🔥 INSIGHT אחד בלבד */}
+            {/* 🔥 INSIGHT */}
             <div className="insight-line">{insights[0]}</div>
           </div>{" "}
         </div>

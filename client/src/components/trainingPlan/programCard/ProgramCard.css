@@ -1,0 +1,72 @@
+.program-card {
+  cursor: pointer;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: #ffffff;
+  padding: 22px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+  transition: transform 0.18s ease, border-color 0.18s ease;
+}
+
+.program-card:hover {
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+}
+
+.program-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.program-card-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.program-level {
+  color: #2563eb;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.program-detail-row,
+.program-date-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: #475569;
+  font-size: 0.92rem;
+  margin-bottom: 12px;
+}
+
+.program-chip {
+  background: #eef2ff;
+  color: #4338ca;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.program-goal {
+  color: #334155;
+  font-size: 0.96rem;
+  margin-bottom: 16px;
+  min-height: 48px;
+}
+
+.program-progress-bar {
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.program-progress-bar .progress {
+  height: 100%;
+  background: #2563eb;
+  border-radius: 999px;
+}

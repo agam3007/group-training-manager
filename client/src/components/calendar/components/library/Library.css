@@ -28,6 +28,42 @@
   gap: 8px;
 }
 
+.library-folder-create {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.library-folder-input {
+  flex: 1;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.library-folder-input:focus {
+  outline: none;
+  border-color: #2f80ed;
+  box-shadow: 0 0 0 2px rgba(47, 128, 237, 0.1);
+}
+
+.library-folder-add {
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.library-folder-add:hover {
+  background: #f3f4f6;
+}
+
 .library-search {
   flex: 1;
   width: 100%;
@@ -54,6 +90,46 @@
   font-size: 20px;
   padding: 8px;
   cursor: pointer;
+}
+
+.library-add-wrapper {
+  position: relative;
+}
+
+.library-add-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  min-width: 150px;
+}
+
+.library-add-menu-item {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.library-add-menu-item:first-child {
+  border-radius: 6px 6px 0 0;
+}
+
+.library-add-menu-item:last-child {
+  border-radius: 0 0 6px 6px;
+}
+
+.library-add-menu-item:hover {
+  background: #f3f4f6;
 }
 
 /* ================= LIST ================= */
@@ -86,6 +162,11 @@
 
 .library-group-header:hover {
   background: #f3f4f6;
+}
+
+.library-group-header.is-drop-target {
+  background: #dbeafe;
+  border: 1px solid #93c5fd;
 }
 
 .library-group-items {

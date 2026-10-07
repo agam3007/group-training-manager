@@ -7,7 +7,7 @@ export interface CalendarEvent {
 
   startTime: Date
   endTime: Date
-
+  done?: boolean
   athleteId?: string
   groupId?: string
 

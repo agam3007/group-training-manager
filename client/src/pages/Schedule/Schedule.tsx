@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { getTrainings } from "@/api/training";
 import { getEventsByRange } from "@/api/events";
 import { Calendar } from "@/components/calendar";
+import { getAthleteGroupsByGroupId } from "@/api/athleteGroup";
 
 interface Props {
   trainings: Training[];
@@ -50,7 +51,6 @@ export default function Schedule({ trainings, setTrainings }: Props) {
 
         // Always fetch all events
         const events = await getEventsByRange(startOfWeek, endOfWeek);
-
         setAllEvents(events);
       } catch (err) {
         console.error("Failed to load calendar events", err);
@@ -63,23 +63,45 @@ export default function Schedule({ trainings, setTrainings }: Props) {
 
   // Filter events based on selected group
   useEffect(() => {
+  const filterEvents = async () => {
     if (athleteId) {
-      // For athlete view, show events assigned to this athlete or their groups
-      const athleteEvents = allEvents.filter(event =>
-        event.athleteId === athleteId || event.type === "groupSchedule"
+      const athleteEvents = await Promise.all(
+        allEvents.map(async (event) => {
+          if (event.type === "groupSchedule" && event.groupId) {
+            const groups = await getAthleteGroupsByGroupId(event.groupId);
+
+            const isInGroup = groups.includes(athleteId);
+
+
+            return isInGroup ? event : null;
+          }
+
+          if (event.athleteId === athleteId) {
+            return event;
+          }
+
+          return null;
+        })
       );
-      setFilteredEvents(athleteEvents);
+
+      setFilteredEvents(
+        athleteEvents.filter(
+          (event): event is CalendarEvent => event !== null
+        )
+      );
     } else if (selectedGroupId) {
-      // For group filter, show only events for this group
-      const groupEvents = allEvents.filter(event =>
-        event.groupId === selectedGroupId
+      const groupEvents = allEvents.filter(
+        (event) => event.groupId === selectedGroupId
       );
+
       setFilteredEvents(groupEvents);
     } else {
-      // Show all events
       setFilteredEvents(allEvents);
     }
-  }, [allEvents, selectedGroupId, athleteId]);
+  };
+
+  filterEvents();
+}, [allEvents, selectedGroupId, athleteId]);
 
   return (
     <Calendar

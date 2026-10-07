@@ -178,7 +178,6 @@ export default function CalendarGrid({
                   const day = (e.startTime.getDay() + 6) % 7;
                   return day === dayIndex;
                 });
-
                 const eventPositions = calculateEventPositions(dayEvents);
                 const position = eventPositions[event.id] || { column: 0, totalColumns: 1 };
 

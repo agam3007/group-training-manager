@@ -18,7 +18,6 @@ export default function GroupCard({ group, onClick }: Props) {
   let athleteCount = 0;
   const load = async () => {
     const relations = await getAthleteGroupsByGroupId(group.id);
-
     // 🔥 מביאים אתלטים לפי קשרים
     const athletesData = await Promise.all(
       relations.map((r: any) => getAthlete(r.athleteId)),

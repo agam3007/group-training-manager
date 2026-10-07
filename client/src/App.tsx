@@ -11,6 +11,8 @@ import GroupsPage from "./pages/Groups/Group";
 import AthleteDetails from "./pages/AthleteDetails/AthleteDetails";
 import GroupDetails from "./pages/GroupDetails/GroupDetails";
 import { getTrainings } from "./api/training";
+import TrainingPlan from "./pages/TrainingPlan/TrainingPlan";
+import ProgramCalendarPage from "./pages/TrainingPlan/ProgramCalendarPage";
 
 function App() {
   const [trainings, setTrainings] = useState<Training[]>([]);
@@ -60,6 +62,9 @@ function App() {
           <Route path="/groups" element={<GroupsPage />} />
 
           <Route path="/groups/:id" element={<GroupDetails />} />
+          <Route path="/training-plans" element={<TrainingPlan />} />
+          <Route path="/training-plans/calendar" element={<ProgramCalendarPage />} />
+
         </Route>{" "}
       </Routes>
     </BrowserRouter>
