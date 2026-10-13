@@ -33,30 +33,11 @@
 
 ## 4. המשימה הראשונה שלך — F0.5 (בנייה ירוקה)
 
-> **F0.5 הושלם (13/10/2026)** — הבנייה ירוקה בשני הצדדים, הקוד המת נמחק, ה-env תוקן. המשימה הבאה: **F0.1 — Postgres+הגירה** (מומשה, להלן הפעלה).
-
-### F0.1 — הפעלת מסד הנתונים
-
-**מקומי (כבר מותקן במחשב זה)** — Postgres 17 נייד ב-`%USERPROFILE%\pg-dev`:
-```powershell
-# הדלקה (פעם אחר עליית המחשב):
-& "$env:USERPROFILE\pg-dev\pg17\bin\pg_ctl.exe" -D "$env:USERPROFILE\pg-dev\data" start
-# כיבוי:  ... pg_ctl.exe -D ...\data stop
-```
-`server/.env` מוגדר כבר ל-`postgresql://postgres@localhost:5432/gtm` (PGSSL=false).
-
-**הגירה + גיבוי** (בתוך `server/`):
-```
-npm run migrate   # database.json -> Postgres (ניקוי נתונים + דוח ספירות)
-npm run backup    # dump מלא -> server/backups/ (gitignored)
-```
-
-**מעבר ל-Supabase (ענן, D29)** — כשמעלים לפרוד:
-1. פרויקט חדש ב-[supabase.com](https://supabase.com) (חינם; region: Frankfurt).
-2. לעדכן `server/.env`: `DATABASE_URL=<Connection string מ-Settings→Database>` + `PGSSL=true`.
-3. `npm run migrate` מחדש → הנתונים עולים לענן; `npm run backup` לגיבוי מקומי.
-
-**סכמה**: `server/src/db/schema.sql` (idempotent); השכבה: `server/src/db/index.ts` — hybrid doc tables (עמודות יחסים + `data` jsonb). אין עוד fileDb.
+> **F0.5 הושלם (13/10/2026)** — הבנייה ירוקה בשני הצדדים, הקוד המת נמחק, ה-env תוקן.
+> **F0.1 הושלם (13/10/2026)** — Postgres חי. ה-DB בענן: Supabase (eu-central-1). `npm run migrate` + `npm run backup` ב-`server/`.
+> **F0.2 (Auth)** — הכניסה דורשת Supabase Auth. המשתמשת הראשונה שנכנסת = ה-owner של הטננט אוטומטית. משתמשים נוספים נוצרים ב-Supabase Dashboard → Authentication → Users, ומקבלים תפקידים דרך `PUT /auth/users/:id/roles` (owner only). הלקוח מצרף את ה-token בעצמו (`src/auth/attachAuth.ts`).
+>
+> להרצה מלאה: `server/` → `npm run dev`, `client/` → `npm run dev` → נפתח ב-`http://localhost:5173` → מסך כניסה.
 
 ## 5. מה חסר **בכוונה** — לא לבנות מוקדם
 

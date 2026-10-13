@@ -26,6 +26,7 @@ export const TABLES = new Set([
   "programs", "program_templates", "meso_blocks", "planned_weeks",
   "scheduled_workouts", "plans", "blocks", "training_assignments",
   "events", "event_overrides", "attendances", "notes",
+  "app_users", "user_roles",
 ]);
 
 export async function query<T = any>(text: string, params: any[] = []): Promise<T[]> {
@@ -82,6 +83,13 @@ function nowOr(v: any): string {
 /** Extracted relational columns per table, derived from the doc. */
 const EXTRA: Record<string, (d: any) => Record<string, any>> = {
   athlete_groups: (d) => ({ athlete_id: d.athleteId ?? null, group_id: d.groupId ?? null }),
+  app_users: (d) => ({ display_name: d.displayName ?? null, is_active: d.isActive ?? true }),
+  user_roles: (d) => ({
+    user_id: d.userId ?? null,
+    role: d.role ?? null,
+    scope_type: d.scopeType ?? null,
+    scope_id: d.scopeId ?? null,
+  }),
   groups: (d) => ({ name: d.name ?? null }),
   athletes: (d) => ({ name: d.name ?? null }),
   folders: (d) => ({ name: d.name ?? null }),
@@ -131,6 +139,25 @@ const ROW_TO_DOC: Record<string, { cols: string; map: (r: any) => any }> = {
   athlete_groups: {
     cols: "id, athlete_id, group_id",
     map: (r) => ({ id: r.id, athleteId: r.athlete_id, groupId: r.group_id }),
+  },
+  app_users: {
+    cols: "id, display_name, is_active, created_at",
+    map: (r) => ({
+      id: r.id,
+      displayName: r.display_name,
+      isActive: r.is_active,
+      createdAt: r.created_at,
+    }),
+  },
+  user_roles: {
+    cols: "id, user_id, role, scope_type, scope_id",
+    map: (r) => ({
+      id: r.id,
+      userId: r.user_id,
+      role: r.role,
+      scopeType: r.scope_type,
+      scopeId: r.scope_id,
+    }),
   },
 };
 

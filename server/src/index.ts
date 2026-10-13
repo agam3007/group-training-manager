@@ -15,21 +15,38 @@ import attendanceRoutes from "./routes/Attendance";
 import notesRoutes from "./routes/Notes";
 import programTemplateRoutes from "./routes/ProgramTemplates";
 import mesoBlockRoutes from "./routes/MesoBlocks";
-import plannedWeekRoutes from "./routes/PlannedWeeks";
+import plannedWeekRoute from "./routes/PlannedWeeks";
 import scheduledWorkoutRoutes from "./routes/ScheduledWorkouts";
 import folderRoutes from "./routes/Folders";
+import authRoutes from "./routes/Auth";
+import { requireAuth } from "./auth/middleware";
+import { query } from "./db";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Health check — unauthenticated (uptime ping / DB keep-alive)
+app.get("/health", async (_req, res) => {
+  try {
+    await query("SELECT 1");
+    res.json({ ok: true });
+  } catch {
+    res.status(500).json({ ok: false });
+  }
+});
+
+// Everything below requires a valid Supabase Auth token (F0.2)
+app.use(requireAuth);
+
+app.use("/auth", authRoutes);
 app.use("/groups", groupRoutes);
 app.use("/athletes", athleteRoutes);
 app.use("/trainings", trainingRoutes);
 app.use("/programs", programRoutes);
 app.use("/program-templates", programTemplateRoutes);
 app.use("/meso-blocks", mesoBlockRoutes);
-app.use("/planned-weeks", plannedWeekRoutes);
+app.use("/planned-weeks", plannedWeekRoute);
 app.use("/scheduled-workouts", scheduledWorkoutRoutes);
 app.use("/plans", planRoutes);
 app.use("/blocks", blockRoutes);

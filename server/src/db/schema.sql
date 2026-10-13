@@ -225,6 +225,31 @@ CREATE INDEX IF NOT EXISTS idx_attendances_event ON attendances(event_id);
 CREATE INDEX IF NOT EXISTS idx_attendances_athlete ON attendances(athlete_id);
 CREATE INDEX IF NOT EXISTS idx_attendances_created ON attendances(created_at);
 
+-- ---------- APP USERS (F0.2 auth) ----------
+-- id = the Supabase Auth user id (uuid, "sub" claim of the JWT).
+-- Roles per USR-12: a user may hold several grants; permission = union.
+CREATE TABLE IF NOT EXISTS app_users (
+  id           uuid PRIMARY KEY,
+  tenant_id    uuid NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  display_name text,
+  is_active    boolean NOT NULL DEFAULT true,
+  created_at   timestamptz NOT NULL DEFAULT now(),
+  updated_at   timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_app_users_tenant ON app_users(tenant_id);
+
+CREATE TABLE IF NOT EXISTS user_roles (
+  id         text PRIMARY KEY,
+  tenant_id  uuid NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  user_id    uuid NOT NULL REFERENCES app_users(id) ON DELETE CASCADE,
+  role       text NOT NULL,           -- owner | coach | instructor | athlete | guardian | professional | branch_manager | operations
+  scope_type text,                    -- null | 'group' | 'branch' | 'athlete'
+  scope_id   text,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_user_roles_tenant ON user_roles(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_user_roles_user ON user_roles(user_id);
+
 -- ---------- NOTES (polymorphic) ----------
 CREATE TABLE IF NOT EXISTS notes (
   id          text PRIMARY KEY,
