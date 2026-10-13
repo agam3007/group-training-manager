@@ -71,21 +71,45 @@ async function loadOrCreateUser(sub: string, email: string | null, name: string 
 
   let user = rows[0] as { id: string; display_name: string | null; is_active: boolean } | undefined;
 
-  // Bootstrap: the very first authenticated user becomes the owner.
+  // Bootstrap: the very first authenticated user becomes the owner + platform admin.
   if (!user) {
-    const [{ count }] = await query<{ count: string }>(`SELECT count(*)::int AS count FROM app_users WHERE tenant_id = $1`, [tenantId]);
+    const [{ count }] = await query<{ count: string }>(`SELECT count(*)::int AS count FROM app_users`);
     if (Number(count) !== 0) {
       return null; // exists users, but this one is not linked — owner must invite (later feature)
     }
     const displayName = name ?? email?.split("@")[0] ?? "Owner";
-    await upsertDoc("app_users", sub, { id: sub, displayName, isActive: true });
+    // Create as platform admin: tenant_id = null, is_platform_admin = true
+    await query(
+      `INSERT INTO app_users (id, tenant_id, display_name, is_active, is_platform_admin)
+       VALUES ($1, NULL, $2, true, true)
+       ON CONFLICT (id) DO UPDATE SET is_platform_admin = true, tenant_id = NULL`,
+      [sub, displayName]
+    );
+    // Still give them the owner role on the default tenant so they can operate within it
+    const defaultTenant = await getTenantId();
     await upsertDoc("user_roles", crypto.randomUUID(), {
       userId: sub,
       role: "owner",
       scopeType: null,
       scopeId: null,
     });
-    logger.info(`Auth bootstrap: first user ${sub} became tenant owner`);
+    logger.info(`Auth bootstrap: first user ${sub} became platform admin + tenant owner`);
+    // Re-read to get the full row
+    const refreshed = await query(
+      `SELECT id, display_name, is_active, is_platform_admin, tenant_id FROM app_users WHERE id = $1`,
+      [sub]
+    );
+    const row = refreshed[0];
+    if (row?.is_platform_admin) {
+      return {
+        id: sub,
+        tenantId: null,
+        displayName: row.display_name,
+        email,
+        isPlatformAdmin: true,
+        roles: [{ role: "owner", scopeType: null, scopeId: null }],
+      };
+    }
     user = { id: sub, display_name: displayName, is_active: true };
   }
 
