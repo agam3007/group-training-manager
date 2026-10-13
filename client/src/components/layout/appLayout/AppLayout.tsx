@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "../sideBar/SideBar";
+import AppHeader from "../header/AppHeader";
 import "./AppLayout.css";
 
 export default function AppLayout() {
@@ -11,8 +12,11 @@ export default function AppLayout() {
     <div className="app-layout">
       <Sidebar />
 
-      <div className={`app-content ${isNoPaddingPage ? "no-padding" : ""}`}>
-        <Outlet />
+      <div className="app-main">
+        <AppHeader />
+        <div className={`app-content ${isNoPaddingPage ? "no-padding" : ""}`}>
+          <Outlet />
+        </div>
       </div>
     </div>
   );

@@ -15,6 +15,7 @@
 import { Request, Response, NextFunction } from "express";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import { query, upsertDoc, getTenantId } from "../db";
+import { tenantContext, setTenantId } from "../db/tenantContext";
 import { logger } from "../utils/logger";
 
 const SUPABASE_JWKS_URL = process.env.SUPABASE_JWKS_URL;
@@ -159,7 +160,20 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
     }
 
     req.user = user;
-    next();
+
+    // Resolve the active tenant (D30):
+    // - Platform admin: X-Tenant-Id header, or first tenant
+    // - Tenant user: their bound tenant
+    const headerTenantId = (req.headers["x-tenant-id"] as string)?.trim();
+    if (user.isPlatformAdmin) {
+      const activeTenant = headerTenantId || user.tenantId || (await getTenantId());
+      tenantContext.run({ tenantId: activeTenant }, () => next());
+    } else if (user.tenantId) {
+      tenantContext.run({ tenantId: user.tenantId }, () => next());
+    } else {
+      const fallback = await getTenantId();
+      tenantContext.run({ tenantId: fallback }, () => next());
+    }
   } catch (err) {
     logger.info(`Auth rejected: ${err instanceof Error ? err.message : err}`);
     res.status(401).json({ message: "Invalid or expired token" });

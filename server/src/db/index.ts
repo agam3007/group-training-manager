@@ -49,23 +49,30 @@ export async function withTransaction<T>(fn: (client: PoolClient) => Promise<T>)
   }
 }
 
-// ---------- default tenant (single tenant until F0.2 auth) ----------
+// ---------- tenant resolution (D30: request-scoped, falls back to first tenant) ----------
 
-let tenantIdCache: string | null = null;
+import { getTenantIdFromContext } from "./tenantContext";
+
+let defaultTenantIdCache: string | null = null;
 
 export async function getTenantId(): Promise<string> {
-  if (tenantIdCache) return tenantIdCache;
+  // 1. Request-scoped (set by middleware from X-Tenant-Id)
+  const fromContext = getTenantIdFromContext();
+  if (fromContext) return fromContext;
+
+  // 2. Default tenant (first tenant)
+  if (defaultTenantIdCache) return defaultTenantIdCache;
   const rows = await query<{ id: string }>(`SELECT id FROM tenants ORDER BY created_at LIMIT 1`);
   if (rows.length) {
-    tenantIdCache = rows[0].id;
-    return tenantIdCache;
+    defaultTenantIdCache = rows[0].id;
+    return defaultTenantIdCache;
   }
   const [created] = await query<{ id: string }>(
     `INSERT INTO tenants (name) VALUES ($1) RETURNING id`,
     ["Default Club"]
   );
-  tenantIdCache = created.id;
-  return tenantIdCache;
+  defaultTenantIdCache = created.id;
+  return defaultTenantIdCache;
 }
 
 // ---------- mapping helpers ----------

@@ -18,6 +18,24 @@ router.get("/me", (req, res) => {
   });
 });
 
+// GET my accessible tenants — platform admin sees all; tenant user sees their own
+router.get("/tenants", async (req, res) => {
+  const user = req.user!;
+  if (user.isPlatformAdmin) {
+    const tenants = await query(
+      `SELECT id, name, tenant_type, plan, timezone FROM tenants ORDER BY created_at`
+    );
+    return res.json(tenants);
+  }
+  // tenant user: just their tenant (or the active one)
+  const tenantId = user.tenantId || (await getTenantId());
+  const [tenant] = await query(
+    `SELECT id, name, tenant_type, plan, timezone FROM tenants WHERE id = $1`,
+    [tenantId]
+  );
+  return res.json(tenant ? [tenant] : []);
+});
+
 // GET all tenant users (owner only)
 router.get("/users", requireRole("owner"), async (_req, res) => {
   const users = await listDocs("app_users");
