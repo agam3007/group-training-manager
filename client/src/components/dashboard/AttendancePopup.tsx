@@ -21,7 +21,6 @@ interface Props {
 export default function AttendanceModal({
   groupId,
   athletes,
-  eventDate,
   onClose,
 }: Props) {
   const [attendanceData, setAttendanceData] = useState<AthleteAttendanceData[]>([]);
@@ -42,14 +41,6 @@ export default function AttendanceModal({
     setAttendanceData((prev) =>
       prev.map((item) =>
         item.athleteId === athleteId ? { ...item, status } : item
-      )
-    );
-  };
-
-  const handleNoteChange = (athleteId: string, note: string) => {
-    setAttendanceData((prev) =>
-      prev.map((item) =>
-        item.athleteId === athleteId ? { ...item, note } : item
       )
     );
   };

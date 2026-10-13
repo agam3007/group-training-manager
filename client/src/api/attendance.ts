@@ -1,9 +1,7 @@
 import { env } from "@/env/env";
 import type { Attendance, AttendanceRecord, AthleteCompliance } from "@/shared/types";
-import type { Note } from "@/shared/types/note";
 
 const API = `${env.apiUrl}/attendance`;
-const NOTES_API = `${env.apiUrl}/notes`;
 
 // ==========================
 // Record bulk attendance for an event

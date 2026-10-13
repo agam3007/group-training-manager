@@ -1,4 +1,4 @@
-import "./Calendar.css";
+import "./calendar.css";
 
 import {WeeklyHeader, DaySummeryRow, TimeColumn, CalendarGrid, Library, TrainingPopup, TrainingDetails, LoadCalculator, GroupSchedulePopup} from "./components";
 

@@ -223,14 +223,6 @@ export default function Step3TimelineVisualizationModal({
     return formatDateObj(new Date(baseDate.getTime() + diffDays * msDay));
   };
 
-  const displayFormat = (dateStr: string) => {
-    if (isWeeks) {
-      const { w, day } = dateToWeekDay(dateStr);
-      return `W${w} D${day}`;
-    }
-    return formatDate(dateStr);
-  };
-
   // ממפה את האירועים לשלב התאריכים המדומים במידה ומדובר בתוכנית שבועות
   const normalizedEvents = events.map(e => {
     let nDate = e.date;

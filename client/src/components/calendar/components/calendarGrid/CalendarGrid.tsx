@@ -39,7 +39,7 @@ function calculateEventPositions(dayEvents: CalendarEvent[]) {
   // For each event, find all events that overlap with it
   const eventColumns: Record<string, { column: number; totalColumns: number }> = {};
 
-  dayEvents.forEach((event, index) => {
+  dayEvents.forEach((event) => {
     if (eventColumns[event.id]) return; // Already calculated
 
     // Find all events that overlap with this event

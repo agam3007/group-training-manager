@@ -1,8 +1,6 @@
 import { Home, Calendar, Users, Dumbbell, User, Folder } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import "./Sidebar.css";
-import TrainingPlan from "@/pages/TrainingPlan/TrainingPlan";
-import { Kanban } from "lucide-react";
+import "./SideBar.css";
 
 export default function Sidebar() {
   return (

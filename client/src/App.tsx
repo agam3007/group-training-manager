@@ -34,7 +34,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<AppLayout />}>
-          <Route path="/" element={<Dashboard setTrainings={setTrainings} />} />
+          <Route path="/" element={<Dashboard />} />
 
           <Route
             path="/schedule"

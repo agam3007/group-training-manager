@@ -1,5 +1,5 @@
 import type { Program } from "@/shared/types/periodization";
-import "./ProgramCard.css";
+import "./programCard.css";
 
 interface Props {
   program: Program;

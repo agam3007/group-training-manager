@@ -21,7 +21,7 @@ interface Props {
   onMetricsChange?: (metrics: any) => void;
 }
 
-export default function SportMetricSelector({ sport, onSportChange, metrics = {}, onMetricsChange }: Props) {
+export default function SportMetricSelector({ sport, onSportChange }: Props) {
   const types = [
     { id: "swim" as TrainingType, icon: "🏊" },
     { id: "bike" as TrainingType, icon: "🚴" },
@@ -30,11 +30,6 @@ export default function SportMetricSelector({ sport, onSportChange, metrics = {}
 
   const handleSportChange = (newSport: TrainingType) => {
     onSportChange?.(newSport);
-  };
-
-  const handleMetricChange = (key: string, value: any) => {
-    const newMetrics = { ...metrics, [key]: value };
-    onMetricsChange?.(newMetrics);
   };
 
   return (

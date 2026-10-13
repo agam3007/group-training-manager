@@ -150,7 +150,7 @@ export function parseWorkoutText(text: string, sport: TrainingType): ParsedWorko
 }
 
 // 🎯 שינוי החתימה ל-SetType
-function parseWorkoutLine(line: string, sport: TrainingType, currentBlockType: SetType): EnduranceSet | null {
+function parseWorkoutLine(line: string, _sport: TrainingType, currentBlockType: SetType): EnduranceSet | null {
   let workStr = line;
   
   // 🎯 מוגדר כ-Partial כדי שנוכל לבנות את האובייקט בהדרגה ללא שגיאות TS

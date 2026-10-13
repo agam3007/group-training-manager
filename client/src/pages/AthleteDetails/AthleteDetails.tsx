@@ -25,13 +25,6 @@ import { getTrainingById } from "@/api/training";
 
 type SportType = "run" | "bike" | "swim" | "gym";
 
-type DayEvent = {
-  athleteId?: string;
-  groupId?: string;
-  type: "training";
-  done?: boolean;
-};
-
 /* -------- HELPERS -------- */
 
 function secondsToTime(sec: number) {
@@ -122,8 +115,6 @@ export default function AthleteDetails() {
   const navigate = useNavigate();
 
   const [athlete, setAthlete] = useState<Athlete | null>(null);
-
-  const [events, setEvents] = useState<DayEvent[]>([]);
 
   const [sport, setSport] = useState<SportType>("run");
 

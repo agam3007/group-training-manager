@@ -206,14 +206,6 @@ export default function GroupDetails() {
     return bestTest;
   };
 
-  const formatTime = (sec: number) => {
-    const m = Math.floor(sec / 60);
-    const s = Math.round(sec % 60);
-    return `${m}:${s.toString().padStart(2, "0")}`;
-  };
-
-  const testKeys = ["5K", "10K", "100m", "200m", "500m", "FTP"];
-
   const handleSaveGoal = async () => {
     if (!newGoal.title.trim()) return;
 

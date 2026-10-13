@@ -4,30 +4,23 @@ import type { CalendarEvent } from "@/shared/types/calendarEvent";
 import type { Athlete } from "@/shared/types";
 import { getDashboardToday } from "@/api/dashboard";
 import { createEvent, deleteEvent, updateEvent } from "@/api/events";
-import { getGroup } from "@/api/group";
-import { createAssignment, updateAssignment } from "@/api/trainingAssignment";
+import { createAssignment } from "@/api/trainingAssignment";
 
 import "./Dashboard.css";
 
 import TodayTimelineSchedule from "../../components/dashboard/TodayTimline";
 import Stats from "../../components/dashboard/Stats";
 import AthleteCheckins from "../../components/dashboard/AthleteCheckIns";
-import QuickInsightWidget from "../../components/dashboard/QuickInsightWidget";
-import AdminTodoList from "../../components/dashboard/AdminTodoList";
 import AttendancePopup from "../../components/dashboard/AttendancePopup";
 import { getAthleteGroupsByGroupId } from "@/api/athleteGroup";
 import { getAthlete } from "@/api/athlete";
 import { recordBulkAttendance } from "@/api/attendance";
 
-interface Props {
-  setTrainings: React.Dispatch<React.SetStateAction<any[]>>;
-}
-
-export default function Dashboard({ setTrainings }: Props) {
+export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState<TodayTimeline | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
-  const [selectedAthleteId, setSelectedAthleteId] = useState<string | null>(null);
+  const [selectedGroupId] = useState<string | null>(null);
+  const [selectedAthleteId] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [attendanceEvent, setAttendanceEvent] = useState<CalendarEvent | null>(null);
   const [groupAthletes, setGroupAthletes] = useState<Athlete[]>([]);
@@ -152,32 +145,6 @@ const handleAttendanceClose = async (records: (AttendanceRecord & { athleteId: s
   }
 };
 
-  const handleContactAthlete = async (athleteId: string) => {
-    try {
-      await fetch("/api/contact-record", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ athleteId, timestamp: new Date() }),
-      });
-      setRefreshTrigger((prev) => prev + 1);
-    } catch (err) {
-      console.error("Failed to log contact:", err);
-    }
-  };
-
-  const handleSaveNote = async (note: any) => {
-    try {
-      await fetch("/api/notes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(note),
-      });
-      setRefreshTrigger((prev) => prev + 1);
-    } catch (err) {
-      console.error("Failed to save note:", err);
-    }
-  };
-
   if (loading) {
     return <div className="dashboard-loading">Loading dashboard...</div>;
   }
@@ -223,14 +190,11 @@ const handleAttendanceClose = async (records: (AttendanceRecord & { athleteId: s
             onDelete={handleDeleteEvent}
             onToggleDone={handleToggleDone}
           />
-
-          {/* <QuickInsightWidget onSaveNote={handleSaveNote} /> */}
         </div>
 
         {/* SIDEBAR - RIGHT COLUMN */}
         <aside className="dashboard-sidebar">
           <AthleteCheckins athletes={dashboardData.atRiskAthletes} />
-          {/* <AdminTodoList /> */}
         </aside>
       </div>
 

@@ -110,7 +110,7 @@ const MOCK_BASE_DATE = (() => {
   return new Date(Date.UTC(currentYear, 0, 1 + offsetToMonday));
 })();
 
-function generateWeekDates(weekStart: string, isWeeks = false): { date: Date; dateStr: string; day: number }[] {
+function generateWeekDates(weekStart: string, _isWeeks = false): { date: Date; dateStr: string; day: number }[] {
   // זיהוי מחרוזת שבוע גם אם isWeeks הוא false בטעות, ותיקון ה-Regex (ללא חובת פסיק)
   if (typeof weekStart === "string" && weekStart.startsWith("Week")) {
     const m = weekStart.match(/Week\s*(\d+)/);

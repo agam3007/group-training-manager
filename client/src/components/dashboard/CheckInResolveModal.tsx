@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { AthleteCheckInStatus } from "@/shared/types";
 import type { Note } from "@/shared/types/note";
 import { NotesPanel } from "@/components/shared";
@@ -14,11 +14,10 @@ interface Props {
 
 export default function CheckInResolveModal({
   athlete,
-  recentNotes = [],
   onResolve,
   onClose,
 }: Props) {
-  const [noteSummary, setNoteSummary] = useState("");
+  const [noteSummary] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
