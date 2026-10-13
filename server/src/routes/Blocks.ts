@@ -1,31 +1,30 @@
 import { Router } from "express";
-import { readDb, writeDb } from "../utils/fileDb";
+import type { PlanBlock } from "@shared/types/periodization";
+import { listDocs, getDoc, upsertDoc, deleteDoc } from "../db";
 import { logger } from "../utils/logger";
-import { PlanBlock } from "@shared/types/periodization";
 
 const router = Router();
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   logger.info("GET /blocks");
-  const db = readDb();
   const planId = req.query.planId as string | undefined;
-  const blocks = db.blocks || [];
-  res.json(planId ? blocks.filter((block: PlanBlock) => block.planId === planId) : blocks);
+  const blocks = await listDocs("blocks");
+  res.json(planId ? blocks.filter((b: any) => b.planId === planId) : blocks);
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
   logger.info(`GET /blocks/${id}`);
-  const db = readDb();
-  const block = (db.blocks || []).find((item: PlanBlock) => item.id === id);
+
+  const block = await getDoc("blocks", id);
+
   if (!block) {
     return res.status(404).json({ message: "Block not found" });
   }
   res.json(block);
 });
 
-router.post("/", (req, res) => {
-  const db = readDb();
+router.post("/", async (req, res) => {
   const newBlock: PlanBlock = {
     id: Date.now().toString(),
     planId: req.body.planId,
@@ -38,43 +37,41 @@ router.post("/", (req, res) => {
     intensityDistribution: req.body.intensityDistribution,
     weeklyStats: req.body.weeklyStats || [],
   };
-  db.blocks = db.blocks || [];
-  db.blocks.push(newBlock);
-  writeDb(db);
+
+  await upsertDoc("blocks", newBlock.id, newBlock);
+
   logger.info(`Created block ${newBlock.id}`);
   res.status(201).json(newBlock);
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
   logger.info(`PUT /blocks/${id}`);
-  const db = readDb();
-  db.blocks = db.blocks || [];
-  const index = db.blocks.findIndex((item: PlanBlock) => item.id === id);
-  if (index === -1) {
+
+  const existing = await getDoc("blocks", id);
+
+  if (!existing) {
     return res.status(404).json({ message: "Block not found" });
   }
-  const updatedBlock: PlanBlock = {
-    ...db.blocks[index],
-    ...req.body,
-    id,
-  };
-  db.blocks[index] = updatedBlock;
-  writeDb(db);
-  res.json(updatedBlock);
+
+  const updated = { ...existing, ...req.body, id };
+  await upsertDoc("blocks", id, updated);
+
+  res.json(updated);
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   logger.info(`DELETE /blocks/${id}`);
-  const db = readDb();
-  db.blocks = db.blocks || [];
-  const index = db.blocks.findIndex((item: PlanBlock) => item.id === id);
-  if (index === -1) {
+
+  const deleted = await getDoc("blocks", id);
+
+  if (!deleted) {
     return res.status(404).json({ message: "Block not found" });
   }
-  const deleted = db.blocks.splice(index, 1)[0];
-  writeDb(db);
+
+  await deleteDoc("blocks", id);
+
   res.json({ message: "Block deleted", block: deleted });
 });
 

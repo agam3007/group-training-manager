@@ -1,86 +1,59 @@
 import { Router } from "express";
-import { readDb, writeDb } from "../utils/fileDb";
+import type { TrainingAssignment } from "@shared/types/training";
+import { listDocs, getDoc, upsertDoc, deleteDoc } from "../db";
 import { logger } from "../utils/logger";
-import { TrainingAssignment } from "@shared/types/training";
 
 const router = Router();
 
-// ==========================
 // GET all (with filters)
-// ==========================
-router.get("/", (req, res) => {
-  const db = readDb();
+router.get("/", async (req, res) => {
   logger.info(`GET /training-assignments ${JSON.stringify(req.query)}`);
 
   const { athleteId, groupId, trainingId } = req.query;
 
-  let assignments = db.trainingAssignments || [];
+  let assignments = await listDocs("training_assignments");
   if (athleteId) {
-    assignments = assignments.filter((a: TrainingAssignment) => a.athleteId === athleteId);
+    assignments = assignments.filter((a: any) => a.athleteId === athleteId);
   }
-
   if (groupId) {
-    assignments = assignments.filter((a: TrainingAssignment) => a.groupId === groupId);
+    assignments = assignments.filter((a: any) => a.groupId === groupId);
   }
-
   if (trainingId) {
-    assignments = assignments.filter((a: TrainingAssignment) => a.trainingId === trainingId);
+    assignments = assignments.filter((a: any) => a.trainingId === trainingId);
   }
   res.json(assignments);
 });
 
-// ==========================
 // GET by id
-// ==========================
-router.get("/:id", (req, res) => {
-  const db = readDb();
-  logger.info(`GET /training-assignments/${req.params.id}`);
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
+  logger.info(`GET /training-assignments/${id}`);
 
-  const assignment = (db.trainingAssignments || []).find(
-    (a: TrainingAssignment) => a.groupId === id,
-  );
-  logger.info(
-    `Found assignment: ${JSON.stringify(db.trainingAssignments || [])}`,
-  );
+  const assignment = await getDoc("training_assignments", id);
+
   if (!assignment) {
-    return res.status(404).json({
-      message: "Assignment not found",
-    });
+    return res.status(404).json({ message: "Assignment not found" });
   }
 
   res.json(assignment);
 });
 
-// ==========================
 // CREATE assignment
-// ==========================
-router.post("/", (req, res) => {
-  const db = readDb();
-
-  const { trainingId, trainingSnapshot, athleteId, groupId, startTime, endTime, notes } =
-    req.body;
+router.post("/", async (req, res) => {
+  const { trainingId, trainingSnapshot, athleteId, groupId, startTime, endTime, notes } = req.body;
 
   // Validation
   if (!trainingId || !startTime) {
-    return res.status(400).json({
-      message: "trainingId and startTime are required",
-    });
+    return res.status(400).json({ message: "trainingId and startTime are required" });
   }
 
   if (!athleteId && !groupId) {
-    return res.status(400).json({
-      message: "Must assign to athlete or group",
-    });
+    return res.status(400).json({ message: "Must assign to athlete or group" });
   }
 
   if (athleteId && groupId) {
-    return res.status(400).json({
-      message: "Cannot assign to both athlete and group",
-    });
+    return res.status(400).json({ message: "Cannot assign to both athlete and group" });
   }
-
-  db.trainingAssignments = db.trainingAssignments || [];
 
   const newAssignment: TrainingAssignment = {
     id: Date.now().toString(),
@@ -96,34 +69,22 @@ router.post("/", (req, res) => {
     status: "PENDING",
   };
 
-  db.trainingAssignments.push(newAssignment);
-
-  writeDb(db);
+  await upsertDoc("training_assignments", newAssignment.id, newAssignment);
 
   logger.info(`Created assignment ${newAssignment.id}`);
 
   res.status(201).json(newAssignment);
 });
 
-// ==========================
 // UPDATE assignment
-// ==========================
-router.put("/:id", (req, res) => {
-  const db = readDb();
-
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
 
-  db.trainingAssignments = db.trainingAssignments || [];
+  const existing = await getDoc("training_assignments", id);
 
-  const index = db.trainingAssignments.findIndex((a: TrainingAssignment) => a.id === id);
-
-  if (index === -1) {
-    return res.status(404).json({
-      message: "Assignment not found",
-    });
+  if (!existing) {
+    return res.status(404).json({ message: "Assignment not found" });
   }
-
-  const existing = db.trainingAssignments[index];
 
   const updated = {
     ...existing,
@@ -133,48 +94,31 @@ router.put("/:id", (req, res) => {
 
   // Optional validation again
   if (updated.athleteId && updated.groupId) {
-    return res.status(400).json({
-      message: "Cannot assign to both athlete and group",
-    });
+    return res.status(400).json({ message: "Cannot assign to both athlete and group" });
   }
 
-  db.trainingAssignments[index] = updated;
-
-  writeDb(db);
+  await upsertDoc("training_assignments", id, updated);
 
   logger.info(`Updated assignment ${id}`);
 
   res.json(updated);
 });
 
-// ==========================
 // DELETE assignment
-// ==========================
-router.delete("/:id", (req, res) => {
-  const db = readDb();
-
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
-  db.trainingAssignments = db.trainingAssignments || [];
+  const removed = await getDoc("training_assignments", id);
 
-  const index = db.trainingAssignments.findIndex((a: TrainingAssignment) => a.id === id);
-
-  if (index === -1) {
-    return res.status(404).json({
-      message: "Assignment not found",
-    });
+  if (!removed) {
+    return res.status(404).json({ message: "Assignment not found" });
   }
 
-  const removed = db.trainingAssignments.splice(index, 1)[0];
-
-  writeDb(db);
+  await deleteDoc("training_assignments", id);
 
   logger.info(`Deleted assignment ${id}`);
 
-  res.json({
-    message: "Deleted",
-    assignment: removed,
-  });
+  res.json({ message: "Deleted", assignment: removed });
 });
 
 export default router;

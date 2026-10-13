@@ -1,65 +1,56 @@
 import { Router } from "express";
-import { readDb, writeDb } from "../utils/fileDb";
+import { listDocs, getDoc, upsertDoc, deleteDoc } from "../db";
 import { logger } from "../utils/logger";
-import { Athlete } from "@shared/types/athlete";
 
 const router = Router();
 
 // GET all athletes
-router.get("/", (req, res) => {
+router.get("/", async (_req, res) => {
   logger.info("GET /athletes");
-
-  const db = readDb();
-
-  res.json(db.athletes);
+  res.json(await listDocs("athletes"));
 });
 
 // GET athlete by ID
-router.get("/:id", (req, res) => {
-  logger.info(`GET athlete ${req.params.id}`);
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
+  logger.info(`GET athlete ${id}`);
 
-  const db = readDb();
-
-  const athlete = db.athletes.find((a: Athlete) => a.id === id);
+  const athlete = await getDoc("athletes", id);
 
   if (!athlete) {
     logger.info(`Athlete ${id} not found`);
-    return res.status(404).json({
-      message: "Athlete not found",
-    });
+    return res.status(404).json({ message: "Athlete not found" });
   }
 
   res.json(athlete);
 });
 
+// GET athletes by group (legacy filter on athlete.groups — the join table is the truth for membership)
+router.get("/group/:groupId", async (req, res) => {
+  const { groupId } = req.params;
+
+  logger.info(`GET athletes for group ${groupId}`);
+
+  const athletes = await listDocs("athletes");
+  res.json(athletes.filter((a: any) => Array.isArray(a.groups) && a.groups.includes(groupId)));
+});
+
 // CREATE athlete
-router.post("/", (req, res) => {
-  const db = readDb();
-
-  const newAthlete: Athlete = {
+router.post("/", async (req, res) => {
+  const newAthlete = {
     id: Date.now().toString(),
-
     name: req.body.name,
-
     level: req.body.level,
-
     age: req.body.age,
-
     phone: req.body.phone,
-
     parentPhone: req.body.parentPhone,
-
     notes: req.body.notes,
-
     tests: [],
     goals: [],
     zones: {},
   };
 
-  db.athletes.push(newAthlete);
-
-  writeDb(db);
+  await upsertDoc("athletes", newAthlete.id, newAthlete);
 
   logger.info(`Athlete created: ${newAthlete.name}`);
 
@@ -67,48 +58,35 @@ router.post("/", (req, res) => {
 });
 
 // UPDATE athlete
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
-
   logger.info(`UPDATE athlete ${id}`);
 
-  const db = readDb();
+  const existing = await getDoc("athletes", id);
 
-  const index = db.athletes.findIndex((a: Athlete) => a.id === id);
-
-  if (index === -1) {
-    return res.status(404).json({
-      message: "Athlete not found",
-    });
+  if (!existing) {
+    return res.status(404).json({ message: "Athlete not found" });
   }
 
-  const updatedAthlete: Athlete = {
-    ...db.athletes[index],
+  const updatedAthlete = {
+    ...existing,
     ...req.body,
-
-    goals: req.body.goals ?? db.athletes[index].goals,
-    tests: req.body.tests ?? db.athletes[index].tests,
-    zones: req.body.zones ?? db.athletes[index].zones,
+    goals: req.body.goals ?? existing.goals,
+    tests: req.body.tests ?? existing.tests,
+    zones: req.body.zones ?? existing.zones,
   };
 
-  db.athletes[index] = updatedAthlete;
-
-  writeDb(db);
+  await upsertDoc("athletes", id, updatedAthlete);
 
   res.json(updatedAthlete);
 });
 
 // DELETE athlete
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
-
   logger.info(`DELETE athlete ${id}`);
 
-  const db = readDb();
-
-  db.athletes = db.athletes.filter((a: Athlete) => a.id !== id);
-
-  writeDb(db);
+  await deleteDoc("athletes", id);
 
   res.json({ message: "Athlete deleted" });
 });

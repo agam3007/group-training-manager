@@ -1,28 +1,21 @@
 import { Router } from "express";
-import { readDb, writeDb } from "../utils/fileDb";
+import { listDocs, getDoc, upsertDoc, deleteDoc, withTransaction, getTenantId } from "../db";
 import { logger } from "../utils/logger";
-import { Folder } from "@shared/types/folder";
 
 const router = Router();
 
-// ==========================
-// 📥 GET all folders
-// ==========================
-router.get("/", (req, res) => {
+// GET all folders
+router.get("/", async (_req, res) => {
   logger.info("GET /folders");
-  const db = readDb();
-  res.json(db.folders || []);
+  res.json(await listDocs("folders"));
 });
 
-// ==========================
-// 📥 GET folder by ID
-// ==========================
-router.get("/:id", (req, res) => {
+// GET folder by ID
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
   logger.info(`GET /folders/${id}`);
 
-  const db = readDb();
-  const folder = (db.folders || []).find((f: Folder) => f.id === id);
+  const folder = await getDoc("folders", id);
 
   if (!folder) {
     return res.status(404).json({ message: "Folder not found" });
@@ -31,97 +24,59 @@ router.get("/:id", (req, res) => {
   res.json(folder);
 });
 
-// ==========================
-// ➕ CREATE folder
-// ==========================
-router.post("/", (req, res) => {
-  const db = readDb();
-
-  const newFolder: Folder = {
+// CREATE folder
+router.post("/", async (req, res) => {
+  const newFolder = {
     id: Date.now().toString(),
     name: req.body.name,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
 
-  if (!db.folders) {
-    db.folders = [];
-  }
-
-  db.folders.push(newFolder);
-
-  writeDb(db);
+  await upsertDoc("folders", newFolder.id, newFolder);
 
   logger.info(`Created folder ${newFolder.id} with name "${newFolder.name}"`);
 
   res.status(201).json(newFolder);
 });
 
-// ==========================
-// ✏️ UPDATE folder
-// ==========================
-router.put("/:id", (req, res) => {
-  const db = readDb();
+// UPDATE folder
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
 
-  if (!db.folders) {
-    db.folders = [];
-  }
+  const existing = await getDoc("folders", id);
 
-  const index = db.folders.findIndex((f: Folder) => f.id === id);
-
-  if (index === -1) {
+  if (!existing) {
     return res.status(404).json({ message: "Folder not found" });
   }
 
-  const updatedFolder: Folder = {
-    ...db.folders[index],
-    ...req.body,
-    id,
-    createdAt: db.folders[index].createdAt,
-    updatedAt: new Date(),
-  };
+  const updatedFolder = { ...existing, ...req.body, id, updatedAt: new Date() };
 
-  db.folders[index] = updatedFolder;
-
-  writeDb(db);
+  await upsertDoc("folders", id, updatedFolder);
 
   logger.info(`Updated folder ${id}`);
 
   res.json(updatedFolder);
 });
 
-// ==========================
-// 🗑 DELETE folder
-// ==========================
-router.delete("/:id", (req, res) => {
-  const db = readDb();
+// DELETE folder — also removes the folder reference from trainings (data + column, FK handles the column)
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
-  if (!db.folders) {
-    db.folders = [];
-  }
+  const deleted = await getDoc("folders", id);
 
-  const index = db.folders.findIndex((f: Folder) => f.id === id);
-
-  if (index === -1) {
+  if (!deleted) {
     return res.status(404).json({ message: "Folder not found" });
   }
 
-  const deleted = db.folders[index];
-
-  // Also remove trainings from this folder
-  if (db.trainings) {
-    db.trainings.forEach((t: any) => {
-      if (t.folderId === id) {
-        delete t.folderId;
-      }
-    });
-  }
-
-  db.folders.splice(index, 1);
-
-  writeDb(db);
+  const tenantId = await getTenantId();
+  await withTransaction(async (client) => {
+    await client.query(
+      `UPDATE trainings SET data = data - 'folderId', folder_id = NULL, updated_at = now() WHERE folder_id = $1 AND tenant_id = $2`,
+      [id, tenantId]
+    );
+    await client.query(`DELETE FROM folders WHERE id = $1 AND tenant_id = $2`, [id, tenantId]);
+  });
 
   logger.info(`Deleted folder ${id}`);
 

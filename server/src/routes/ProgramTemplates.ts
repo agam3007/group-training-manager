@@ -1,29 +1,28 @@
-import express from "express";
+import { Router } from "express";
 import type { ProgramTemplate } from "@shared/types/periodization";
-import { readDb, writeDb } from "../utils/fileDb";
+import { listDocs, getDoc, upsertDoc, deleteDoc } from "../db";
 import { logger } from "../utils/logger";
 
-const router = express.Router();
+const router = Router();
 
-router.get("/", (req, res) => {
+router.get("/", async (_req, res) => {
   logger.info("GET /program-templates");
-  const db = readDb();
-  res.json(db.programTemplates || []);
+  res.json(await listDocs("program_templates"));
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
   logger.info(`GET /program-templates/${id}`);
-  const db = readDb();
-  const item = (db.programTemplates || []).find((p: ProgramTemplate) => p.id === id);
+
+  const item = await getDoc("program_templates", id);
+
   if (!item) {
     return res.status(404).json({ message: "Program template not found" });
   }
   res.json(item);
 });
 
-router.post("/", (req, res) => {
-  const db = readDb();
+router.post("/", async (req, res) => {
   const newTemplate: ProgramTemplate = {
     id: Date.now().toString(),
     name: req.body.name,
@@ -38,38 +37,41 @@ router.post("/", (req, res) => {
     createdAt: new Date().toISOString(),
     macroEvents: req.body.macroEvents || [],
   };
-  db.programTemplates = db.programTemplates || [];
-  db.programTemplates.push(newTemplate);
-  writeDb(db);
+
+  await upsertDoc("program_templates", newTemplate.id, newTemplate);
+
   logger.info(`Created program template ${newTemplate.id}`);
   res.status(201).json(newTemplate);
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
   logger.info(`PUT /program-templates/${id}`);
-  const db = readDb();
-  db.programTemplates = db.programTemplates || [];
-  const index = db.programTemplates.findIndex((item: ProgramTemplate) => item.id === id);
-  if (index === -1) {
+
+  const existing = await getDoc("program_templates", id);
+
+  if (!existing) {
     return res.status(404).json({ message: "Program template not found" });
   }
-  db.programTemplates[index] = { ...db.programTemplates[index], ...req.body, id };
-  writeDb(db);
-  res.json(db.programTemplates[index]);
+
+  const updated = { ...existing, ...req.body, id };
+  await upsertDoc("program_templates", id, updated);
+
+  res.json(updated);
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   logger.info(`DELETE /program-templates/${id}`);
-  const db = readDb();
-  db.programTemplates = db.programTemplates || [];
-  const index = db.programTemplates.findIndex((item: ProgramTemplate) => item.id === id);
-  if (index === -1) {
+
+  const deleted = await getDoc("program_templates", id);
+
+  if (!deleted) {
     return res.status(404).json({ message: "Program template not found" });
   }
-  const deleted = db.programTemplates.splice(index, 1)[0];
-  writeDb(db);
+
+  await deleteDoc("program_templates", id);
+
   res.json({ message: "Program template deleted", programTemplate: deleted });
 });
 

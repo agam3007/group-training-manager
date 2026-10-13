@@ -1,44 +1,33 @@
 import { Router } from "express";
-import { readDb, writeDb } from "../utils/fileDb";
+import { listDocs, getDoc, upsertDoc, deleteDoc } from "../db";
 import { logger } from "../utils/logger";
-import { Group } from "@shared/types/group";
 
 const router = Router();
 
-router.get("/:id", (req, res) => {
-  const db = readDb();
-
+// GET group by ID
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
 
-  const group = db.groups.find((g: Group) => g.id === id);
+  const group = await getDoc("groups", id);
 
   if (!group) {
     logger.error(`Group not found: ${id}`);
-
-    return res.status(404).json({
-      message: "Group not found",
-    });
+    return res.status(404).json({ message: "Group not found" });
   }
 
   logger.info(`GET /groups/${id}`);
-
   res.json(group);
 });
 
 // GET all groups
-router.get("/", (req, res) => {
+router.get("/", async (_req, res) => {
   logger.info("GET /groups");
-
-  const db = readDb();
-
-  res.json(db.groups);
+  res.json(await listDocs("groups"));
 });
 
 // CREATE group
-router.post("/", (req, res) => {
-  const db = readDb();
-
-  const newGroup: Group = {
+router.post("/", async (req, res) => {
+  const newGroup = {
     id: Date.now().toString(),
     name: req.body.name,
     coach: req.body.coach,
@@ -47,9 +36,7 @@ router.post("/", (req, res) => {
     schedule: req.body.schedule || [],
   };
 
-  db.groups.push(newGroup);
-
-  writeDb(db);
+  await upsertDoc("groups", newGroup.id, newGroup);
 
   logger.info(`Group created: ${newGroup.name}`);
 
@@ -57,62 +44,41 @@ router.post("/", (req, res) => {
 });
 
 // UPDATE group
-router.put("/:id", (req, res) => {
-  const db = readDb();
-
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
 
-  const index = db.groups.findIndex((g: Group) => g.id === id);
+  const existing = await getDoc("groups", id);
 
-  if (index === -1) {
+  if (!existing) {
     logger.error(`Group not found: ${id}`);
-
-    return res.status(404).json({
-      message: "Group not found",
-    });
+    return res.status(404).json({ message: "Group not found" });
   }
 
-  const updatedGroup: Group = {
-    ...db.groups[index],
-    ...req.body,
-    id,
-  };
+  const updatedGroup = { ...existing, ...req.body, id };
 
-  db.groups[index] = updatedGroup;
-
-  writeDb(db);
+  await upsertDoc("groups", id, updatedGroup);
 
   logger.info(`Group updated: ${updatedGroup.name}`);
 
   res.json(updatedGroup);
 });
 
-// DELETE group
-router.delete("/:id", (req, res) => {
-  const db = readDb();
-
+// DELETE group (memberships cascade via FK)
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
-  const index = db.groups.findIndex((g: Group) => g.id === id);
+  const existing = await getDoc("groups", id);
 
-  if (index === -1) {
+  if (!existing) {
     logger.error(`Group not found for delete: ${id}`);
-
-    return res.status(404).json({
-      message: "Group not found",
-    });
+    return res.status(404).json({ message: "Group not found" });
   }
 
-  const removed = db.groups.splice(index, 1)[0];
+  await deleteDoc("groups", id);
 
-  writeDb(db);
+  logger.info(`Group deleted: ${existing.name}`);
 
-  logger.info(`Group deleted: ${removed.name}`);
-
-  res.json({
-    message: "Group deleted",
-    group: removed,
-  });
+  res.json({ message: "Group deleted", group: existing });
 });
 
 export default router;

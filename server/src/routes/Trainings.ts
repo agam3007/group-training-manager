@@ -1,29 +1,21 @@
 import { Router } from "express";
-import { readDb, writeDb } from "../utils/fileDb";
+import { listDocs, getDoc, upsertDoc, deleteDoc, withTransaction } from "../db";
 import { logger } from "../utils/logger";
-import { Training } from "@shared/types/training";
 
 const router = Router();
 
-// ==========================
-// 📥 GET all trainings
-// ==========================
-router.get("/", (req, res) => {
+// GET all trainings
+router.get("/", async (_req, res) => {
   logger.info("GET /trainings");
-
-  const db = readDb();
-  res.json(db.trainings);
+  res.json(await listDocs("trainings"));
 });
 
-// ==========================
-// 📥 GET training by ID
-// ==========================
-router.get("/:id", (req, res) => {
+// GET training by ID
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
   logger.info(`GET /trainings/${id}`);
 
-  const db = readDb();
-  const training = db.trainings.find((t: Training) => t.id === id);
+  const training = await getDoc("trainings", id);
 
   if (!training) {
     return res.status(404).json({ message: "Training not found" });
@@ -32,13 +24,9 @@ router.get("/:id", (req, res) => {
   res.json(training);
 });
 
-// ==========================
-// ➕ CREATE training
-// ==========================
-router.post("/", (req, res) => {
-  const db = readDb();
-
-  const newTraining: Training = {
+// CREATE training
+router.post("/", async (req, res) => {
+  const newTraining = {
     id: Date.now().toString(),
     type: req.body.type,
     title: req.body.title,
@@ -46,62 +34,44 @@ router.post("/", (req, res) => {
     equipment: req.body.equipment || [],
     steps: req.body.steps || [],
     notes: req.body.notes || "",
-    creationDate: new Date()
+    creationDate: new Date(),
   };
 
-  db.trainings.push(newTraining);
+  await upsertDoc("trainings", newTraining.id, newTraining);
 
-  writeDb(db);
-
-  logger.info(
-    `Created training ${newTraining.id} for date ${newTraining.creationDate}`,
-  );
+  logger.info(`Created training ${newTraining.id} for date ${newTraining.creationDate}`);
 
   res.status(201).json(newTraining);
 });
 
-// ==========================
-// ✏️ UPDATE training
-// ==========================
-router.put("/:id", (req, res) => {
-  const db = readDb();
+// UPDATE training
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
 
-  const index = db.trainings.findIndex((t: Training) => t.id === id);
+  const existing = await getDoc("trainings", id);
 
-  if (index === -1) {
+  if (!existing) {
     return res.status(404).json({ message: "Training not found" });
   }
 
-  const updatedTraining: Training = {
-    ...db.trainings[index],
-    ...req.body,
-    id, // שומר שלא ישתנה
-  };
+  const updatedTraining = { ...existing, ...req.body, id };
 
-  db.trainings[index] = updatedTraining;
-
-  writeDb(db);
+  await upsertDoc("trainings", id, updatedTraining);
 
   logger.info(`Updated training ${id}`);
 
   res.json(updatedTraining);
 });
 
-// ==========================
-// 🗑 DELETE training
-// ==========================
-router.delete("/:id", (req, res) => {
-  const db = readDb();
+// DELETE training — linked assignments/scheduled workouts become one-time snapshots (transaction)
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
-  const index = db.trainings.findIndex((t: Training) => t.id === id);
+  const deleted = await getDoc("trainings", id);
 
-  if (index === -1) {
+  if (!deleted) {
     return res.status(404).json({ message: "Training not found" });
   }
-
-  const deleted = db.trainings[index];
 
   const trainingSnapshot = {
     id: deleted.id,
@@ -114,34 +84,19 @@ router.delete("/:id", (req, res) => {
     creationDate: deleted.creationDate,
   };
 
-  // Convert linked assignments into one-time snapshots so they stay visible on calendar.
-  db.trainingAssignments = (db.trainingAssignments || []).map((assignment: any) => {
-    if (assignment.trainingId !== id) {
-      return assignment;
-    }
-
-    return {
-      ...assignment,
-      trainingSnapshot,
-    };
+  await withTransaction(async (client) => {
+    // Convert linked assignments into one-time snapshots so they stay visible on calendar.
+    await client.query(
+      `UPDATE training_assignments SET data = data || $2::jsonb, updated_at = now() WHERE training_id = $1`,
+      [id, JSON.stringify({ trainingSnapshot })]
+    );
+    // Convert linked scheduled workouts to one-time snapshots for training plan calendar.
+    await client.query(
+      `UPDATE scheduled_workouts SET data = data || $2::jsonb, updated_at = now() WHERE data->>'workoutLibraryId' = $1`,
+      [id, JSON.stringify({ workoutLibraryId: "", trainingSnapshot })]
+    );
+    await client.query(`DELETE FROM trainings WHERE id = $1`, [id]);
   });
-
-  // Convert linked scheduled workouts to one-time snapshots for training plan calendar.
-  db.scheduledWorkouts = (db.scheduledWorkouts || []).map((workout: any) => {
-    if (workout.workoutLibraryId !== id) {
-      return workout;
-    }
-
-    return {
-      ...workout,
-      workoutLibraryId: "",
-      trainingSnapshot,
-    };
-  });
-
-  db.trainings.splice(index, 1);
-
-  writeDb(db);
 
   logger.info(`Deleted training ${id}`);
 

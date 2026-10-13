@@ -1,8 +1,7 @@
 import { Router } from "express";
 import { logger } from "../utils/logger";
 import { recordBulkAttendance, getAthleteCompliance, getRedListAthletes, getEventAttendance, getAthleteEventAttendance } from "../services/attendanceService";
-import { readDb, writeDb } from "../utils/fileDb";
-import { createNote } from "../services/notesService";
+import { getDoc, upsertDoc } from "../db";
 import type { AttendanceRecord } from "@shared/types";
 
 const router = Router();
@@ -91,7 +90,7 @@ router.get("/event/:eventId/athlete/:athleteId", (req, res) => {
 // =========================
 // Resolve athlete check-in (Red List)
 // =========================
-router.post("/resolve-check-in", (req, res) => {
+router.post("/resolve-check-in", async (req, res) => {
   try {
     const { athleteId } = req.body;
 
@@ -102,24 +101,22 @@ router.post("/resolve-check-in", (req, res) => {
     logger.info(`Resolving check-in for athlete ${athleteId}`);
 
     // Update athlete's lastCheckIn
-    const db = readDb();
-    const athleteIndex = db.athletes.findIndex((a: any) => a.id === athleteId);
-    
-    if (athleteIndex === -1) {
+    const athlete = await getDoc("athletes", athleteId);
+
+    if (!athlete) {
       return res.status(404).json({ error: "Athlete not found" });
     }
 
     const now = new Date();
-    db.athletes[athleteIndex].lastCheckIn = now;
-    writeDb(db);
+    const updated = { ...athlete, lastCheckIn: now };
 
-    // Create a note for this check-in
+    await upsertDoc("athletes", athleteId, updated);
 
     logger.info(`Check-in resolved for athlete ${athleteId}`);
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       message: "Check-in resolved",
-      athlete: db.athletes[athleteIndex],
+      athlete: updated,
     });
   } catch (err) {
     logger.error("Failed to resolve check-in:" + err);

@@ -1,25 +1,24 @@
 /**
- * Notes Service
+ * Notes Service (F0.1 — Postgres)
  * Handles polymorphic note operations for all entity types
  */
 
-import { readDb, writeDb } from "../utils/fileDb";
+import { listDocs, getDoc, upsertDoc, deleteDoc } from "../db";
 import type { Note, NoteTargetType } from "@shared/types/note";
 
 /**
  * Get all notes for a specific target (ATHLETE, GROUP, ATTENDANCE, or EVENT)
  */
-export function getNotesByTarget(targetType: NoteTargetType, targetId: string): Note[] {
-  const db = readDb();
-  const notes = db.notes || [];
-  
+export async function getNotesByTarget(targetType: NoteTargetType, targetId: string): Promise<Note[]> {
+  const notes = await listDocs("notes");
+
   return notes
     .filter((note: any) => {
       // Check new polymorphic system
       if (note.targetType === targetType && note.targetId === targetId) {
         return true;
       }
-      
+
       // Backwards compatibility - old system
       if (targetType === "ATHLETE" && note.athleteId === targetId) {
         return true;
@@ -27,7 +26,7 @@ export function getNotesByTarget(targetType: NoteTargetType, targetId: string): 
       if (targetType === "GROUP" && note.groupId === targetId) {
         return true;
       }
-      
+
       return false;
     })
     .sort((a: any, b: any) => {
@@ -40,23 +39,23 @@ export function getNotesByTarget(targetType: NoteTargetType, targetId: string): 
 /**
  * Get recent notes for a target (limited)
  */
-export function getRecentNotesByTarget(
+export async function getRecentNotesByTarget(
   targetType: NoteTargetType,
   targetId: string,
   limit: number = 5
-): Note[] {
-  return getNotesByTarget(targetType, targetId).slice(0, limit);
+): Promise<Note[]> {
+  return (await getNotesByTarget(targetType, targetId)).slice(0, limit);
 }
 
 /**
  * Get notes filtered by category for a specific target
  */
-export function getNotesByTargetAndCategory(
+export async function getNotesByTargetAndCategory(
   targetType: NoteTargetType,
   targetId: string,
   category: string
-): Note[] {
-  return getNotesByTarget(targetType, targetId).filter(
+): Promise<Note[]> {
+  return (await getNotesByTarget(targetType, targetId)).filter(
     (note: any) => note.category === category
   );
 }
@@ -64,20 +63,14 @@ export function getNotesByTargetAndCategory(
 /**
  * Create a new polymorphic note
  */
-export function createNote(noteData: {
+export async function createNote(noteData: {
   title: string;
   description: string;
   category: string;
   targetType: NoteTargetType;
   targetId: string;
   flagForWorkoutSelection?: boolean;
-}): Note {
-  const db = readDb();
-  
-  if (!db.notes) {
-    db.notes = [];
-  }
-
+}): Promise<Note> {
   const now = new Date();
   const newNote: Note = {
     id: `note_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -91,8 +84,7 @@ export function createNote(noteData: {
     flagForWorkoutSelection: noteData.flagForWorkoutSelection || false,
   };
 
-  db.notes.push(newNote);
-  writeDb(db);
+  await upsertDoc("notes", newNote.id, newNote);
 
   return newNote;
 }
@@ -100,22 +92,17 @@ export function createNote(noteData: {
 /**
  * Update an existing note
  */
-export function updateNote(noteId: string, updates: Partial<Note>): Note | null {
-  const db = readDb();
-  const notes = db.notes || [];
-  
-  const index = notes.findIndex((n: any) => n.id === noteId);
-  if (index === -1) return null;
+export async function updateNote(noteId: string, updates: Partial<Note>): Promise<Note | null> {
+  const existing = await getDoc("notes", noteId);
+  if (!existing) return null;
 
   const updated: Note = {
-    ...notes[index],
+    ...existing,
     ...updates,
     updatedAt: new Date(),
   };
 
-  notes[index] = updated;
-  db.notes = notes;
-  writeDb(db);
+  await upsertDoc("notes", noteId, updated);
 
   return updated;
 }
@@ -123,36 +110,27 @@ export function updateNote(noteId: string, updates: Partial<Note>): Note | null 
 /**
  * Delete a note
  */
-export function deleteNote(noteId: string): boolean {
-  const db = readDb();
-  const notes = db.notes || [];
-  
-  const index = notes.findIndex((n: any) => n.id === noteId);
-  if (index === -1) return false;
+export async function deleteNote(noteId: string): Promise<boolean> {
+  const existing = await getDoc("notes", noteId);
+  if (!existing) return false;
 
-  notes.splice(index, 1);
-  db.notes = notes;
-  writeDb(db);
-
+  await deleteDoc("notes", noteId);
   return true;
 }
 
 /**
  * Get a single note by ID
  */
-export function getNoteById(noteId: string): Note | null {
-  const db = readDb();
-  const notes = db.notes || [];
-  const note = notes.find((n: any) => n.id === noteId);
-  return note || null;
+export async function getNoteById(noteId: string): Promise<Note | null> {
+  return getDoc("notes", noteId);
 }
 
 /**
  * Get all notes (for admin purposes)
  */
-export function getAllNotes(): Note[] {
-  const db = readDb();
-  return (db.notes || []).sort((a: any, b: any) => {
+export async function getAllNotes(): Promise<Note[]> {
+  const notes = await listDocs("notes");
+  return notes.sort((a: any, b: any) => {
     const dateA = new Date(a.createdAt).getTime();
     const dateB = new Date(b.createdAt).getTime();
     return dateB - dateA;

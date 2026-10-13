@@ -1,11 +1,10 @@
 /**
- * Dashboard Merging Service
+ * Dashboard Merging Service (F0.1 — Postgres)
  * Handles combining CalendarEvents with EventOverrides and calculating athlete risk status
  */
 
-import type { CalendarEvent, EventOverride, AthleteCheckInStatus, AthleteRiskLevel, TodayTimeline, DashboardStats } from "@shared/types";
-import { readDb } from "../utils/fileDb";
-import { get } from "node:http";
+import type { CalendarEvent, EventOverride, AthleteCheckInStatus, TodayTimeline, DashboardStats } from "@shared/types";
+import { listDocs } from "../db";
 import { getRedListAthletes } from "./attendanceService";
 
 /**
@@ -62,109 +61,15 @@ function shouldApplyOverride(override: EventOverride, eventStartTime: Date): boo
 }
 
 /**
- * Checks athlete risk status based on:
- * - Recent injuries (last 24h)
- * - Missed sessions (2+ consecutive)
- * - No contact (7+ days)
- */
-// export async function checkAthleteRiskStatus(
-//   athleteId: string,
-//   athleteName: string,
-//   whatsappNumber?: string,
-//   email?: string
-// ): Promise<AthleteCheckInStatus> {
-//   const now = new Date();
-//   const reasons: AthleteCheckInStatus["reasons"] = {};
-//   let riskLevel: AthleteRiskLevel = "safe";
-
-//   // Check for recent injury (last 24h)
-//   const injuryNotes = db.getInjuryNotesByAthlete(athleteId, 24);
-//   if (injuryNotes.length > 0) {
-//     const recentInjury = injuryNotes[0];
-//     reasons.recentInjury = {
-//       description: recentInjury.text,
-//       reportedAt: new Date(recentInjury.createdAt),
-//     };
-//     riskLevel = "danger";
-//   }
-
-//   // Check for missed sessions (2+ consecutive)
-//   const missedSessions = await countMissedSessions(athleteId);
-//   if (missedSessions >= 2) {
-//     const events = db.getCalendarEvents();
-//     const athleteEvents = events.filter((e) => e.athleteId === athleteId);
-//     const lastSession = athleteEvents.sort(
-//       (a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime()
-//     )[0];
-
-//     reasons.missedSessions = {
-//       count: missedSessions,
-//       lastSessionDate: lastSession ? new Date(lastSession.startTime) : undefined,
-//     };
-//     riskLevel = riskLevel === "danger" ? "danger" : "warning";
-//   }
-
-//   // Check for no contact (7+ days)
-//   const lastContact = db.getLastContact(athleteId);
-//   const daysSinceContact = lastContact
-//     ? Math.floor((now.getTime() - new Date(lastContact.timestamp).getTime()) / (1000 * 60 * 60 * 24))
-//     : 999;
-
-//   if (daysSinceContact >= 7) {
-//     reasons.noContact = {
-//       daysSinceContact,
-//       lastContactDate: lastContact ? new Date(lastContact.timestamp) : undefined,
-//     };
-//     riskLevel = riskLevel === "danger" ? "danger" : "warning";
-//   }
-
-//   return {
-//     athleteId,
-//     athleteName,
-//     risk: riskLevel,
-//     reasons,
-//     whatsappNumber,
-//     email,
-//     lastCheckedAt: now,
-//   };
-// }
-
-/**
- * Counts consecutive missed sessions by checking for events without completion/check-in
- * This is a simplified version - you'd need a "completion" status in CalendarEvent
- */
-// async function countMissedSessions(athleteId: string): Promise<number> {
-//   const events = db.getCalendarEvents();
-//   const athleteEvents = events.filter((e) => e.athleteId === athleteId);
-
-//   const pastEvents = athleteEvents
-//     .filter((e) => new Date(e.startTime) < new Date() && e.type === "training")
-//     .sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
-
-//   let missedCount = 0;
-//   for (const event of pastEvents) {
-//     // Check if event has completion/check-in record
-//     if (!event.completed) {
-//       missedCount++;
-//     } else {
-//       break; // Stop counting at first completed session
-//     }
-//   }
-
-//   return missedCount;
-// }
-
-/**
  * Gets unified dashboard data for a specific date
  */
 export async function getUnifiedDashboard(date: Date): Promise<TodayTimeline> {
-  // Fetch event data from database
-  const db = readDb();
-  const events = db.events || [];
-  const overrides = db.eventOverrides || [];
-  const athletes = db.athletes || [];
-  const groups = db.groups || [];
-  const trainings = db.trainings || [];
+  // Fetch data from Postgres
+  const events = await listDocs("events");
+  const overrides = await listDocs("event_overrides");
+  const athletes = await listDocs("athletes");
+  const groups = await listDocs("groups");
+  const trainings = await listDocs("trainings");
 
   // Merge calendar events with overrides for the specified date
   let mergedEvents = mergeEventsWithOverrides(events, overrides, date);
@@ -208,6 +113,7 @@ export async function getUnifiedDashboard(date: Date): Promise<TodayTimeline> {
   });
 
   // Return merged events with stats
+  const atRisk = await getRedListAthletes();
   return {
     date,
     events: mergedEvents,
@@ -216,8 +122,8 @@ export async function getUnifiedDashboard(date: Date): Promise<TodayTimeline> {
       totalGroups: groups.length,
       trainingsToday: mergedEvents.length,
       pendingTasks: mergedEvents.filter((e) => e.type === "task" && !e.done).length,
-      atRiskAthletes: getRedListAthletes().length,
+      atRiskAthletes: atRisk.length,
     },
-    atRiskAthletes: getRedListAthletes(),
+    atRiskAthletes: atRisk,
   };
 }

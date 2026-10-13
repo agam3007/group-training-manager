@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { readDb, writeDb } from "../utils/fileDb";
+import { listDocs, getDoc, upsertDoc, deleteDoc, query, getTenantId } from "../db";
 import { logger } from "../utils/logger";
-import { CalendarEvent, TrainingAssignment, EventOverride, TrainingTime, Group, Training } from "@shared/types";
+import { TrainingAssignment, EventOverride, TrainingTime, Group, Training, CalendarEvent } from "@shared/types";
 
 const router = Router();
 
 // =========================
-// UTILITY FUNCTIONS
+// UTILITY FUNCTIONS (unchanged merge engine)
 // =========================
 
 /**
@@ -168,18 +168,15 @@ function mergeCalendarEvents(
 // =========================
 // GET all events
 // =========================
-router.get("/", (req, res) => {
+router.get("/", async (_req, res) => {
   logger.info("GET /events");
-
-  const db = readDb();
-
-  res.json(db.events || []);
+  res.json(await listDocs("events"));
 });
 
 // =========================
 // GET events by range (including merged events from schedules & overrides)
 // =========================
-router.get("/range", (req, res) => {
+router.get("/range", async (req, res) => {
   const { start, end } = req.query;
 
   logger.info(`GET events range ${start} - ${end}`);
@@ -191,13 +188,11 @@ router.get("/range", (req, res) => {
   }
   const startDate = new Date(start as string);
   const endDate = new Date(end as string);
-  const db = readDb();
 
-  // Get all data needed
-  const trainingAssignments = db.trainingAssignments || [];
-  const groups = db.groups || [];
-  const overrides = db.eventOverrides || [];
-  const trainings = db.trainings || [];
+  const trainingAssignments = await listDocs("training_assignments");
+  const groups = await listDocs("groups");
+  const overrides = await listDocs("event_overrides");
+  const trainings = await listDocs("trainings");
 
   // Generate merged calendar events
   const mergedEvents = mergeCalendarEvents(
@@ -209,11 +204,7 @@ router.get("/range", (req, res) => {
     endDate
   );
   // Also include manually created events from the events table
-  const manualEvents = (db.events || []).filter((e: CalendarEvent) => {
-    const eventStart = new Date(e.startTime);
-    const eventEnd = new Date(e.endTime);
-    return eventStart < endDate && eventEnd > startDate;
-  });
+  const manualEvents = await listDocs("events");
 
   // Combine and filter by date range
   const allEvents = [...mergedEvents, ...manualEvents].filter((e) => {
@@ -228,7 +219,7 @@ router.get("/range", (req, res) => {
 // =========================
 // GET events by group (merged)
 // =========================
-router.get("/group/:groupId", (req, res) => {
+router.get("/group/:groupId", async (req, res) => {
   const { groupId } = req.params;
   const { start, end } = req.query;
 
@@ -243,15 +234,12 @@ router.get("/group/:groupId", (req, res) => {
   const startDate = new Date(start as string);
   const endDate = new Date(end as string);
 
-  const db = readDb();
-
-  // Get group-specific data
-  const trainingAssignments = (db.trainingAssignments || []).filter(
+  const trainingAssignments = (await listDocs("training_assignments")).filter(
     (a: TrainingAssignment) => a.groupId === groupId
   );
-  const group = (db.groups || []).find((g: Group) => g.id === groupId);
-  const overrides = db.eventOverrides || [];
-  const trainings = db.trainings || [];
+  const group = (await listDocs("groups")).find((g: Group) => g.id === groupId);
+  const overrides = await listDocs("event_overrides");
+  const trainings = await listDocs("trainings");
 
   if (!group) {
     return res.status(404).json({ message: "Group not found" });
@@ -266,7 +254,7 @@ router.get("/group/:groupId", (req, res) => {
     endDate
   );
   // Include manually created group events
-  const manualEvents = (db.events || []).filter(
+  const manualEvents = (await listDocs("events")).filter(
     (e: CalendarEvent) => e.groupId === groupId
   );
 
@@ -282,7 +270,7 @@ router.get("/group/:groupId", (req, res) => {
 // =========================
 // GET events by athlete (merged)
 // =========================
-router.get("/athlete/:athleteId", (req, res) => {
+router.get("/athlete/:athleteId", async (req, res) => {
   const { athleteId } = req.params;
   const { start, end } = req.query;
 
@@ -297,14 +285,11 @@ router.get("/athlete/:athleteId", (req, res) => {
   const startDate = new Date(start as string);
   const endDate = new Date(end as string);
 
-  const db = readDb();
-
-  // Get athlete-specific data
-  const trainingAssignments = (db.trainingAssignments || []).filter(
+  const trainingAssignments = (await listDocs("training_assignments")).filter(
     (a: TrainingAssignment) => a.athleteId === athleteId
   );
-  const overrides = db.eventOverrides || [];
-  const trainings = db.trainings || [];
+  const overrides = await listDocs("event_overrides");
+  const trainings = await listDocs("trainings");
 
   const mergedEvents = mergeCalendarEvents(
     trainingAssignments,
@@ -316,7 +301,7 @@ router.get("/athlete/:athleteId", (req, res) => {
   );
 
   // Include manually created athlete events
-  const manualEvents = (db.events || []).filter(
+  const manualEvents = (await listDocs("events")).filter(
     (e: CalendarEvent) => e.athleteId === athleteId
   );
 
@@ -332,9 +317,7 @@ router.get("/athlete/:athleteId", (req, res) => {
 // =========================
 // CREATE manual event
 // =========================
-router.post("/", (req, res) => {
-  const db = readDb();
-
+router.post("/", async (req, res) => {
   const newEvent: CalendarEvent = {
     id: crypto.randomUUID(),
     title: req.body.title,
@@ -347,13 +330,7 @@ router.post("/", (req, res) => {
     createdAt: new Date(),
   };
 
-  if (!db.events) {
-    db.events = [];
-  }
-
-  db.events.push(newEvent);
-
-  writeDb(db);
+  await upsertDoc("events", newEvent.id, newEvent);
 
   logger.info(`Event created: ${newEvent.title}`);
 
@@ -363,8 +340,8 @@ router.post("/", (req, res) => {
 // =========================
 // CREATE event override
 // =========================
-router.post("/override", (req, res) => {
-  const db = readDb();
+router.post("/override", async (req, res) => {
+  const tenantId = await getTenantId();
 
   const { sourceId, originalStartTime, isCancelled, modifiedTitle, modifiedStartTime, modifiedEndTime, modifiedLocation } = req.body;
 
@@ -375,23 +352,25 @@ router.post("/override", (req, res) => {
     });
   }
 
-  db.eventOverrides = db.eventOverrides || [];
+  const existing = (await query(
+    `SELECT id, data FROM event_overrides WHERE tenant_id = $1 AND source_id = $2`,
+    [tenantId, sourceId]
+  ))[0] as any;
 
-  const existingOverride = db.eventOverrides.find(
-    (override: EventOverride) => override.sourceId === sourceId
-  );
+  if (existing) {
+    const updated = {
+      ...existing.data,
+      isCancelled: isCancelled || false,
+      modifiedTitle,
+      modifiedStartTime: modifiedStartTime ? new Date(modifiedStartTime) : undefined,
+      modifiedEndTime: modifiedEndTime ? new Date(modifiedEndTime) : undefined,
+      modifiedLocation,
+    };
 
-  if (existingOverride) {
-    existingOverride.isCancelled = isCancelled || false;
-    existingOverride.modifiedTitle = modifiedTitle;
-    existingOverride.modifiedStartTime = modifiedStartTime ? new Date(modifiedStartTime) : undefined;
-    existingOverride.modifiedEndTime = modifiedEndTime ? new Date(modifiedEndTime) : undefined;
-    existingOverride.modifiedLocation = modifiedLocation;
-
-    writeDb(db);
+    await upsertDoc("event_overrides", existing.id, updated);
 
     logger.info(`Event override updated for source: ${sourceId}`);
-    return res.status(200).json(existingOverride);
+    return res.status(200).json(updated);
   }
 
   const newOverride: EventOverride = {
@@ -406,9 +385,7 @@ router.post("/override", (req, res) => {
     createdAt: new Date(),
   };
 
-  db.eventOverrides.push(newOverride);
-
-  writeDb(db);
+  await upsertDoc("event_overrides", newOverride.id, newOverride);
 
   logger.info(`Event override created for source: ${sourceId}`);
 
@@ -418,31 +395,27 @@ router.post("/override", (req, res) => {
 // =========================
 // UPDATE event
 // =========================
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
 
   logger.info(`UPDATE event ${id}`);
 
-  const db = readDb();
+  const existing = await getDoc("events", id);
 
-  const index = db.events.findIndex((e: CalendarEvent) => e.id === id);
-
-  if (index === -1) {
+  if (!existing) {
     return res.status(404).json({
       message: "Event not found",
     });
   }
 
   const updatedEvent: CalendarEvent = {
-    ...db.events[index],
+    ...existing,
     ...req.body,
-    startTime: req.body.startTime ? new Date(req.body.startTime) : db.events[index].startTime,
-    endTime: req.body.endTime ? new Date(req.body.endTime) : db.events[index].endTime,
+    startTime: req.body.startTime ? new Date(req.body.startTime) : existing.startTime,
+    endTime: req.body.endTime ? new Date(req.body.endTime) : existing.endTime,
   };
 
-  db.events[index] = updatedEvent;
-
-  writeDb(db);
+  await upsertDoc("events", id, updatedEvent);
 
   res.json(updatedEvent);
 });
@@ -450,16 +423,12 @@ router.put("/:id", (req, res) => {
 // =========================
 // DELETE event
 // =========================
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
   logger.info(`DELETE event ${id}`);
 
-  const db = readDb();
-
-  db.events = (db.events || []).filter((e: CalendarEvent) => e.id !== id);
-
-  writeDb(db);
+  await deleteDoc("events", id);
 
   res.json({ message: "Event deleted" });
 });
@@ -467,16 +436,12 @@ router.delete("/:id", (req, res) => {
 // =========================
 // DELETE event override
 // =========================
-router.delete("/override/:id", (req, res) => {
+router.delete("/override/:id", async (req, res) => {
   const { id } = req.params;
 
   logger.info(`DELETE event override ${id}`);
 
-  const db = readDb();
-
-  db.eventOverrides = (db.eventOverrides || []).filter((o: EventOverride) => o.id !== id);
-
-  writeDb(db);
+  await deleteDoc("event_overrides", id);
 
   res.json({ message: "Event override deleted" });
 });

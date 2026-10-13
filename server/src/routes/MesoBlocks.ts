@@ -1,31 +1,31 @@
-import express from "express";
+import { Router } from "express";
 import type { ProgramMesoBlock } from "@shared/types/periodization";
-import { readDb, writeDb } from "../utils/fileDb";
+import { getTenantId, query, listDocs, getDoc, upsertDoc, deleteDoc } from "../db";
 import { logger } from "../utils/logger";
 
-const router = express.Router();
+const router = Router();
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   logger.info("GET /meso-blocks");
-  const db = readDb();
+  const tenantId = await getTenantId();
   const programId = req.query.programId as string | undefined;
-  const blocks = db.mesoBlocks || [];
-  res.json(programId ? blocks.filter((block: ProgramMesoBlock) => block.programId === programId) : blocks);
+  const blocks = await listDocs("meso_blocks");
+  res.json(programId ? blocks.filter((b: any) => b.programId === programId) : blocks);
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
   logger.info(`GET /meso-blocks/${id}`);
-  const db = readDb();
-  const block = (db.mesoBlocks || []).find((item: ProgramMesoBlock) => item.id === id);
+
+  const block = await getDoc("meso_blocks", id);
+
   if (!block) {
     return res.status(404).json({ message: "Meso block not found" });
   }
   res.json(block);
 });
 
-router.post("/", (req, res) => {
-  const db = readDb();
+router.post("/", async (req, res) => {
   const newBlock: ProgramMesoBlock = {
     id: Date.now().toString(),
     programId: req.body.programId,
@@ -36,38 +36,41 @@ router.post("/", (req, res) => {
     loadingPattern: req.body.loadingPattern,
     intensityDistribution: req.body.intensityDistribution,
   };
-  db.mesoBlocks = db.mesoBlocks || [];
-  db.mesoBlocks.push(newBlock);
-  writeDb(db);
+
+  await upsertDoc("meso_blocks", newBlock.id, newBlock);
+
   logger.info(`Created meso block ${newBlock.id}`);
   res.status(201).json(newBlock);
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
   logger.info(`PUT /meso-blocks/${id}`);
-  const db = readDb();
-  db.mesoBlocks = db.mesoBlocks || [];
-  const index = db.mesoBlocks.findIndex((item: ProgramMesoBlock) => item.id === id);
-  if (index === -1) {
+
+  const existing = await getDoc("meso_blocks", id);
+
+  if (!existing) {
     return res.status(404).json({ message: "Meso block not found" });
   }
-  db.mesoBlocks[index] = { ...db.mesoBlocks[index], ...req.body, id };
-  writeDb(db);
-  res.json(db.mesoBlocks[index]);
+
+  const updated = { ...existing, ...req.body, id };
+  await upsertDoc("meso_blocks", id, updated);
+
+  res.json(updated);
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   logger.info(`DELETE /meso-blocks/${id}`);
-  const db = readDb();
-  db.mesoBlocks = db.mesoBlocks || [];
-  const index = db.mesoBlocks.findIndex((item: ProgramMesoBlock) => item.id === id);
-  if (index === -1) {
+
+  const deleted = await getDoc("meso_blocks", id);
+
+  if (!deleted) {
     return res.status(404).json({ message: "Meso block not found" });
   }
-  const deleted = db.mesoBlocks.splice(index, 1)[0];
-  writeDb(db);
+
+  await deleteDoc("meso_blocks", id);
+
   res.json({ message: "Meso block deleted", block: deleted });
 });
 

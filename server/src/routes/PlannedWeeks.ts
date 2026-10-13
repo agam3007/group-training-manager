@@ -1,31 +1,30 @@
-import express from "express";
+import { Router } from "express";
 import type { PlannedWeek } from "@shared/types/periodization";
-import { readDb, writeDb } from "../utils/fileDb";
+import { listDocs, getDoc, upsertDoc, deleteDoc } from "../db";
 import { logger } from "../utils/logger";
 
-const router = express.Router();
+const router = Router();
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   logger.info("GET /planned-weeks");
-  const db = readDb();
   const mesoBlockId = req.query.mesoBlockId as string | undefined;
-  const weeks = db.plannedWeeks || [];
-  res.json(mesoBlockId ? weeks.filter((week: PlannedWeek) => week.mesoBlockId === mesoBlockId) : weeks);
+  const weeks = await listDocs("planned_weeks");
+  res.json(mesoBlockId ? weeks.filter((w: any) => w.mesoBlockId === mesoBlockId) : weeks);
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
   logger.info(`GET /planned-weeks/${id}`);
-  const db = readDb();
-  const week = (db.plannedWeeks || []).find((item: PlannedWeek) => item.id === id);
+
+  const week = await getDoc("planned_weeks", id);
+
   if (!week) {
     return res.status(404).json({ message: "Planned week not found" });
   }
   res.json(week);
 });
 
-router.post("/", (req, res) => {
-  const db = readDb();
+router.post("/", async (req, res) => {
   const newWeek: PlannedWeek = {
     id: Date.now().toString(),
     mesoBlockId: req.body.mesoBlockId,
@@ -34,38 +33,41 @@ router.post("/", (req, res) => {
     targetDistribution: req.body.targetDistribution,
     focus: req.body.focus || "General",
   };
-  db.plannedWeeks = db.plannedWeeks || [];
-  db.plannedWeeks.push(newWeek);
-  writeDb(db);
+
+  await upsertDoc("planned_weeks", newWeek.id, newWeek);
+
   logger.info(`Created planned week ${newWeek.id}`);
   res.status(201).json(newWeek);
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
   logger.info(`PUT /planned-weeks/${id}`);
-  const db = readDb();
-  db.plannedWeeks = db.plannedWeeks || [];
-  const index = db.plannedWeeks.findIndex((item: PlannedWeek) => item.id === id);
-  if (index === -1) {
+
+  const existing = await getDoc("planned_weeks", id);
+
+  if (!existing) {
     return res.status(404).json({ message: "Planned week not found" });
   }
-  db.plannedWeeks[index] = { ...db.plannedWeeks[index], ...req.body, id };
-  writeDb(db);
-  res.json(db.plannedWeeks[index]);
+
+  const updated = { ...existing, ...req.body, id };
+  await upsertDoc("planned_weeks", id, updated);
+
+  res.json(updated);
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   logger.info(`DELETE /planned-weeks/${id}`);
-  const db = readDb();
-  db.plannedWeeks = db.plannedWeeks || [];
-  const index = db.plannedWeeks.findIndex((item: PlannedWeek) => item.id === id);
-  if (index === -1) {
+
+  const deleted = await getDoc("planned_weeks", id);
+
+  if (!deleted) {
     return res.status(404).json({ message: "Planned week not found" });
   }
-  const deleted = db.plannedWeeks.splice(index, 1)[0];
-  writeDb(db);
+
+  await deleteDoc("planned_weeks", id);
+
   res.json({ message: "Planned week deleted", plannedWeek: deleted });
 });
 

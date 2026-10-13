@@ -33,13 +33,32 @@
 
 ## 4. המשימה הראשונה שלך — F0.5 (בנייה ירוקה)
 
-1. הרצת `tsc -b` בלקוח ותיקון השגיאות (באג 4.32 — ייבואים ללא שימוש תחת noUnusedLocals).
-2. תיקון סדר ה-alias ב-`vite.config.ts` — `"@/shared"` לפני `"@"` (באג 4.33).
-3. תיקון ייבואי CSS בשגיאת רישיות (באג 4.34).
-4. הסרת קוד מת לפי §5 ב-[08-gaps.md](specs/08-gaps.md) (dnd-kit, Alerts, ProgramCard הכפול וכו').
-5. **ה-AC שלך**: `npm run build` ירוק **בשני הצדדים** (לקוח: tsc+vite; שרת: tsc --noEmit), **אפס שגיאות lint חדשות** (החוב הקיים — 93 `no-explicit-any` ועוד — תועד ומטופל במשימת ניקוי נפרדת), אפליקציה עולה ועובדת כמו קודם.
+> **F0.5 הושלם (13/10/2026)** — הבנייה ירוקה בשני הצדדים, הקוד המת נמחק, ה-env תוקן. המשימה הבאה: **F0.1 — Postgres+הגירה** (מומשה, להלן הפעלה).
 
-אחרי F0.5: F0.1 (Postgres+הגירה) — **התשתית אושרה: Supabase (D29, 13/10/2026)**; הפרויקט נפתח ב-[supabase.com](https://supabase.com) (תוכנית חינם), ההשהיה-האוטומטית מנוטרלת ב-ping שבועי, וידאו חוצה גבולות לקישורים חיצוניים בלבד. פירוט מלא — [09 §3](to-be/09-architecture.md).
+### F0.1 — הפעלת מסד הנתונים
+
+**מקומי (כבר מותקן במחשב זה)** — Postgres 17 נייד ב-`%USERPROFILE%\pg-dev`:
+```powershell
+# הדלקה (פעם אחר עליית המחשב):
+& "$env:USERPROFILE\pg-dev\pg17\bin\pg_ctl.exe" -D "$env:USERPROFILE\pg-dev\data" start
+# כיבוי:  ... pg_ctl.exe -D ...\data stop
+```
+`server/.env` מוגדר כבר ל-`postgresql://postgres@localhost:5432/gtm` (PGSSL=false).
+
+**הגירה + גיבוי** (בתוך `server/`):
+```
+npm run migrate   # database.json -> Postgres (ניקוי נתונים + דוח ספירות)
+npm run backup    # dump מלא -> server/backups/ (gitignored)
+```
+
+**מעבר ל-Supabase (ענן, D29)** — כשמעלים לפרוד:
+1. פרויקט חדש ב-[supabase.com](https://supabase.com) (חינם; region: Frankfurt).
+2. לעדכן `server/.env`: `DATABASE_URL=<Connection string מ-Settings→Database>` + `PGSSL=true`.
+3. `npm run migrate` מחדש → הנתונים עולים לענן; `npm run backup` לגיבוי מקומי.
+
+**סכמה**: `server/src/db/schema.sql` (idempotent); השכבה: `server/src/db/index.ts` — hybrid doc tables (עמודות יחסים + `data` jsonb). אין עוד fileDb.
+
+## 5. מה חסר **בכוונה** — לא לבנות מוקדם
 
 ## 5. מה חסר **בכוונה** — לא לבנות מוקדם
 

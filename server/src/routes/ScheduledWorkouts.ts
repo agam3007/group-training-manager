@@ -1,38 +1,37 @@
-import express from "express";
+import { Router } from "express";
 import type { ScheduledWorkout } from "@shared/types/periodization";
-import { readDb, writeDb } from "../utils/fileDb";
+import { listDocs, getDoc, upsertDoc, deleteDoc } from "../db";
 import { logger } from "../utils/logger";
 
-const router = express.Router();
+const router = Router();
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   logger.info("GET /scheduled-workouts");
-  const db = readDb();
   const programId = req.query.programId as string | undefined;
   const plannedWeekId = req.query.plannedWeekId as string | undefined;
-  let workouts = db.scheduledWorkouts || [];
+  let workouts = await listDocs("scheduled_workouts");
   if (programId) {
-    workouts = workouts.filter((workout: ScheduledWorkout) => workout.programId === programId);
+    workouts = workouts.filter((w: any) => w.programId === programId);
   }
   if (plannedWeekId) {
-    workouts = workouts.filter((workout: ScheduledWorkout) => workout.plannedWeekId === plannedWeekId);
+    workouts = workouts.filter((w: any) => w.plannedWeekId === plannedWeekId);
   }
   res.json(workouts);
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
   logger.info(`GET /scheduled-workouts/${id}`);
-  const db = readDb();
-  const workout = (db.scheduledWorkouts || []).find((item: ScheduledWorkout) => item.id === id);
+
+  const workout = await getDoc("scheduled_workouts", id);
+
   if (!workout) {
     return res.status(404).json({ message: "Scheduled workout not found" });
   }
   res.json(workout);
 });
 
-router.post("/", (req, res) => {
-  const db = readDb();
+router.post("/", async (req, res) => {
   const newWorkout: ScheduledWorkout = {
     id: Date.now().toString(),
     programId: req.body.programId,
@@ -46,38 +45,41 @@ router.post("/", (req, res) => {
     actualDuration: req.body.actualDuration,
     athleteNotes: req.body.athleteNotes,
   };
-  db.scheduledWorkouts = db.scheduledWorkouts || [];
-  db.scheduledWorkouts.push(newWorkout);
-  writeDb(db);
+
+  await upsertDoc("scheduled_workouts", newWorkout.id, newWorkout);
+
   logger.info(`Created scheduled workout ${newWorkout.id}`);
   res.status(201).json(newWorkout);
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
   logger.info(`PUT /scheduled-workouts/${id}`);
-  const db = readDb();
-  db.scheduledWorkouts = db.scheduledWorkouts || [];
-  const index = db.scheduledWorkouts.findIndex((item: ScheduledWorkout) => item.id === id);
-  if (index === -1) {
+
+  const existing = await getDoc("scheduled_workouts", id);
+
+  if (!existing) {
     return res.status(404).json({ message: "Scheduled workout not found" });
   }
-  db.scheduledWorkouts[index] = { ...db.scheduledWorkouts[index], ...req.body, id };
-  writeDb(db);
-  res.json(db.scheduledWorkouts[index]);
+
+  const updated = { ...existing, ...req.body, id };
+  await upsertDoc("scheduled_workouts", id, updated);
+
+  res.json(updated);
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   logger.info(`DELETE /scheduled-workouts/${id}`);
-  const db = readDb();
-  db.scheduledWorkouts = db.scheduledWorkouts || [];
-  const index = db.scheduledWorkouts.findIndex((item: ScheduledWorkout) => item.id === id);
-  if (index === -1) {
+
+  const deleted = await getDoc("scheduled_workouts", id);
+
+  if (!deleted) {
     return res.status(404).json({ message: "Scheduled workout not found" });
   }
-  const deleted = db.scheduledWorkouts.splice(index, 1)[0];
-  writeDb(db);
+
+  await deleteDoc("scheduled_workouts", id);
+
   res.json({ message: "Scheduled workout deleted", scheduledWorkout: deleted });
 });
 
