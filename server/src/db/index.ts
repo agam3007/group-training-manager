@@ -83,7 +83,7 @@ function nowOr(v: any): string {
 /** Extracted relational columns per table, derived from the doc. */
 const EXTRA: Record<string, (d: any) => Record<string, any>> = {
   athlete_groups: (d) => ({ athlete_id: d.athleteId ?? null, group_id: d.groupId ?? null }),
-  app_users: (d) => ({ display_name: d.displayName ?? null, is_active: d.isActive ?? true }),
+  app_users: (d) => ({ display_name: d.displayName ?? null, is_active: d.isActive ?? true, is_platform_admin: d.isPlatformAdmin ?? false }),
   user_roles: (d) => ({
     user_id: d.userId ?? null,
     role: d.role ?? null,

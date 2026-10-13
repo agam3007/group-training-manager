@@ -229,12 +229,13 @@ CREATE INDEX IF NOT EXISTS idx_attendances_created ON attendances(created_at);
 -- id = the Supabase Auth user id (uuid, "sub" claim of the JWT).
 -- Roles per USR-12: a user may hold several grants; permission = union.
 CREATE TABLE IF NOT EXISTS app_users (
-  id           uuid PRIMARY KEY,
-  tenant_id    uuid NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
-  display_name text,
-  is_active    boolean NOT NULL DEFAULT true,
-  created_at   timestamptz NOT NULL DEFAULT now(),
-  updated_at   timestamptz NOT NULL DEFAULT now()
+  id                uuid PRIMARY KEY,
+  tenant_id         uuid REFERENCES tenants(id) ON DELETE CASCADE, -- null = platform admin (D30)
+  display_name      text,
+  is_active         boolean NOT NULL DEFAULT true,
+  is_platform_admin boolean NOT NULL DEFAULT false,                -- D30: operates above all tenants
+  created_at        timestamptz NOT NULL DEFAULT now(),
+  updated_at        timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_app_users_tenant ON app_users(tenant_id);
 

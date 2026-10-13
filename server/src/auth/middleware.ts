@@ -1,19 +1,22 @@
 /**
- * Auth middleware (F0.2).
+ * Auth middleware (F0.2 + D30 platform admin).
  *
  * Verifies the Supabase Auth JWT (RS256 via JWKS) on every request,
- * attaches the app user + roles (union of grants, USR-12) to req.user,
- * and bootstraps the very first user as the tenant owner.
+ * attaches the app user + roles (union of grants, USR-12) to req.user.
  *
- * Verification depth in F0.2: signature (JWKS) + sub claim.
- * Issuer/audience checks tighten in F0.3 (documented in F0.2-card).
+ * Two user types:
+ *  - Tenant user: bound to a tenant (tenant_id), operates within it.
+ *  - Platform admin: NOT bound to a tenant; can operate on ANY tenant
+ *    by setting the X-Tenant-Id header (D30). Defaults to the first tenant.
+ *
+ * Bootstrap: the first authenticated user becomes tenant owner;
+ * `POST /auth/platform/claim` promotes them to platform admin.
  */
 import { Request, Response, NextFunction } from "express";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import { query, upsertDoc, getTenantId } from "../db";
 import { logger } from "../utils/logger";
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_JWKS_URL = process.env.SUPABASE_JWKS_URL;
 
 const JWKS = SUPABASE_JWKS_URL ? createRemoteJWKSet(new URL(SUPABASE_JWKS_URL)) : null;
@@ -25,10 +28,11 @@ export interface AppRole {
 }
 
 export interface AuthUser {
-  id: string; // Supabase Auth user id
-  tenantId: string;
+  id: string;
+  tenantId: string | null; // null = platform admin without a fixed tenant
   displayName: string | null;
   email: string | null;
+  isPlatformAdmin: boolean;
   roles: AppRole[]; // union of grants — USR-12
 }
 
@@ -41,8 +45,25 @@ declare global {
 }
 
 async function loadOrCreateUser(sub: string, email: string | null, name: string | null): Promise<AuthUser | null> {
-  const tenantId = await getTenantId();
+  // Check platform admin first (no tenant_id)
+  const platformRows = await query(
+    `SELECT id, display_name, is_active FROM app_users WHERE id = $1 AND is_platform_admin = true`,
+    [sub]
+  );
+  const platformAdmin = platformRows[0];
+  if (platformAdmin && platformAdmin.is_active) {
+    return {
+      id: sub,
+      tenantId: null,
+      displayName: platformAdmin.display_name,
+      email,
+      isPlatformAdmin: true,
+      roles: [{ role: "owner", scopeType: null, scopeId: null }], // implicit owner everywhere
+    };
+  }
 
+  // Tenant user
+  const tenantId = await getTenantId();
   const rows = await query(
     `SELECT id, display_name, is_active FROM app_users WHERE id = $1 AND tenant_id = $2`,
     [sub, tenantId]
@@ -80,6 +101,7 @@ async function loadOrCreateUser(sub: string, email: string | null, name: string 
     tenantId,
     displayName: user.display_name,
     email,
+    isPlatformAdmin: false,
     roles: roleRows.map((r: any) => ({ role: r.role, scopeType: r.scope_type, scopeId: r.scope_id })),
   };
 }
@@ -87,7 +109,6 @@ async function loadOrCreateUser(sub: string, email: string | null, name: string 
 export async function requireAuth(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     if (!JWKS) {
-      // Misconfiguration: fail closed.
       res.status(500).json({ message: "Auth is not configured" });
       return;
     }
@@ -124,10 +145,24 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
 /** Role gate — the user must hold at least one grant with this role. */
 export function requireRole(role: string) {
   return (req: Request, res: Response, next: NextFunction): void => {
+    // Platform admin passes all role gates
+    if (req.user?.isPlatformAdmin) {
+      next();
+      return;
+    }
     if (!req.user?.roles.some((r) => r.role === role)) {
       res.status(403).json({ message: `Requires ${role} role` });
       return;
     }
     next();
   };
+}
+
+/** Platform admin gate (D30) */
+export function requirePlatformAdmin(req: Request, res: Response, next: NextFunction): void {
+  if (!req.user?.isPlatformAdmin) {
+    res.status(403).json({ message: "Requires platform admin" });
+    return;
+  }
+  next();
 }

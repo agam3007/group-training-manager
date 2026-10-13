@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { listDocs, query, upsertDoc, deleteDoc, getTenantId } from "../db";
-import { requireRole } from "../auth/middleware";
+import { requireRole, requirePlatformAdmin } from "../auth/middleware";
 import { logger } from "../utils/logger";
 
 const router = Router();
@@ -12,6 +12,8 @@ router.get("/me", (req, res) => {
     id: user.id,
     displayName: user.displayName,
     email: user.email,
+    isPlatformAdmin: user.isPlatformAdmin,
+    tenantId: user.tenantId,
     roles: user.roles,
   });
 });
@@ -65,6 +67,61 @@ router.put("/users/:id/roles", requireRole("owner"), async (req, res) => {
 
   logger.info(`Roles updated for user ${id}: ${newRoles.map((r) => r.role).join(", ")}`);
   res.json({ id, roles: newRoles });
+});
+
+// =========================
+// PLATFORM ADMIN (D30)
+// =========================
+
+// POST claim platform admin — any authenticated user, only if no platform admin exists
+router.post("/platform/claim", async (req, res) => {
+  const user = req.user!;
+  const existing = await query(`SELECT id FROM app_users WHERE is_platform_admin = true`);
+  if (existing.length) {
+    return res.status(409).json({ message: "A platform admin already exists" });
+  }
+
+  // Promote: set is_platform_admin, clear tenant binding
+  await query(
+    `UPDATE app_users SET is_platform_admin = true, tenant_id = NULL, updated_at = now() WHERE id = $1`,
+    [user.id]
+  );
+  logger.info(`Platform admin claimed by user ${user.id}`);
+  res.json({ success: true, message: "Platform admin claimed" });
+});
+
+// GET all tenants (platform admin only)
+router.get("/platform/tenants", requirePlatformAdmin, async (_req, res) => {
+  const tenants = await query(
+    `SELECT id, name, tenant_type, plan, timezone, created_at FROM tenants ORDER BY created_at`
+  );
+  const stats = await query(
+    `SELECT tenant_id, count(*)::int AS athletes FROM athletes GROUP BY tenant_id`
+  );
+  const statsMap = new Map(stats.map((s: any) => [s.tenant_id, s.athletes]));
+
+  res.json(
+    tenants.map((t: any) => ({
+      ...t,
+      athleteCount: statsMap.get(t.id) ?? 0,
+    }))
+  );
+});
+
+// POST create a new tenant (platform admin only)
+router.post("/platform/tenants", requirePlatformAdmin, async (req, res) => {
+  const { name, tenantType } = req.body;
+  if (!name) {
+    return res.status(400).json({ message: "name is required" });
+  }
+
+  const [created] = await query(
+    `INSERT INTO tenants (name, tenant_type) VALUES ($1, $2) RETURNING id, name, tenant_type, plan, created_at`,
+    [name, tenantType === "practice" ? "practice" : "club"]
+  );
+
+  logger.info(`Tenant created: ${name} (${created.id})`);
+  res.status(201).json(created);
 });
 
 export default router;
