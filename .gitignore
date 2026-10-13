@@ -1,6 +1,7 @@
 # general
 .env
 .env.*
+!.env.example
 
 # frontend
 client/node_modules
