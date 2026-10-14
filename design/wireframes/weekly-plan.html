@@ -342,6 +342,8 @@
   .ev-kind button{flex:1;padding:8px 4px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text-muted);font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;}
   .ev-kind button.active{border-color:var(--accent);background:var(--accent-dim);color:var(--accent);}
   .ev-kind button svg{width:13px;height:13px;}
+  .rec-row{display:flex;gap:10px;align-items:center;margin-bottom:8px;}
+  .rec-row .sf-chip{min-width:52px;justify-content:center;}
 
   /* ==================== MULTI-TARGET (events + apply week) ==================== */
   .ev-list{max-height:150px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;padding:4px;background:var(--bg);}
@@ -879,13 +881,29 @@
   </div>
 </div>
 
+<!-- RECURRING SCHEDULE EDITOR -->
+<div class="overlay" id="recOverlay" onclick="if(event.target===this)hideOverlay('recOverlay')">
+  <div class="confirm-card" style="max-width:420px">
+    <h3><svg class="icon"><use href="#i-clock"/></svg> לוז קבוע — <span id="recTitle"></span></h3>
+    <p>הלוז הקבוע ממלא אוטומטית כל שבוע חדש. שינוי כאן <b>לא ימחק</b> אימונים שכבר תוכננו — ימים חדשים שנוספו יקבלו "אימון קבוע" להחלפה.</p>
+    <div class="ev-field">
+      <span class="ev-label">ימי אימון קבועים</span>
+      <div id="recDays"></div>
+    </div>
+    <div class="confirm-actions">
+      <button class="btn-copy" onclick="hideOverlay('recOverlay')">ביטול</button>
+      <button class="btn-publish" style="padding:12px 24px;font-size:14px" onclick="saveRecurring()"><svg class="icon"><use href="#i-check"/></svg> שמור לוז</button>
+    </div>
+  </div>
+</div>
+
 <!-- UNDO TOAST -->
 <div class="toast" id="toast">
   <span id="toastLabel"></span>
   <button onclick="undo()">בטל</button>
 </div>
 
-<div class="wf">WIREFRAME v11 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
+<div class="wf">WIREFRAME v12 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -989,6 +1007,14 @@ const PERSONAL = {
   noam: { 0:'p3', 2:'p7', 4:'p4' },
   me:   { 1:'p6', 2:'p7', 3:'p8', 5:'p9' },
 };
+
+/* recurring weekly template per group (Group.schedule) — auto-fills every week */
+const RECURRING = {
+  dagig:  [ { day:3, time:'18:00' }, { day:4, time:'18:00' } ],
+  neorim: [ { day:1, time:'17:00' }, { day:3, time:'19:30' }, { day:4, time:'19:30' } ],
+  bogarim:[ { day:2, time:'06:30' }, { day:4, time:'07:00' }, { day:5, time:'08:00' } ],
+};
+const W_RECUR = { name:'אימון קבוע', time:'18:00', sub:'לפי הלוז הקבוע — להחליף תוכן', zones:[[4,'z1'],[4,'z2'],[2,'z3']], steps:S_GEN, sport:'swim', load:60, text:'' };
 
 /* week 41 — heavier week (the high-load streak) */
 const PAST_41 = {
@@ -1323,7 +1349,8 @@ function renderMeta(){
     html = `<svg class="icon-sm"><use href="#i-users"/></svg>
       3 קבוצות · 2 מתאמנים אישיים · התוכנית שלך · השבוע: ${activeCount} אימונים פעילים · ביטול · תוספת · שינוי שעה · <b style="color:var(--danger)">קונפליקט צוות בד׳ 20:00</b>`;
   } else if (t.type === 'group'){
-    html = `<svg class="icon-sm"><use href="#i-repeat"/></svg> לוז קבוע: ${t.recurring} ${editBtn}`;
+    html = `<svg class="icon-sm"><use href="#i-repeat"/></svg> לוז קבוע: ${t.recurring}
+      <button class="meta-edit" onclick="openRecurringDialog()"><svg class="icon-xs"><use href="#i-pencil"/></svg> עריכה</button>`;
   } else if (mode === 'maya'){
     html = `<svg class="icon-sm"><use href="#i-user"/></svg> שחייה עם דגיגונים (ד׳, ה׳) · כוח (ב׳) · ריצה (ו׳) — מיזוג קבוצה + אישי ${editBtn}`;
   } else if (mode === 'noam'){
@@ -1371,8 +1398,11 @@ function renderMeso(){
         <div class="meso-name">${m.block} <span class="meso-pos">· שבוע ${m.pos} מתוך ${m.to-m.from+1}</span></div>
         <div class="meso-goal">${m.goal}${m.note?` · <b style="color:var(--warning)">${m.note}</b>`:''}</div>
       </div>
-      <span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;flex-shrink:0">
-        <span class="gdot" style="background:${t.color}"></span>${t.name}
+      <span style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+        <span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800">
+          <span class="gdot" style="background:${t.color}"></span>${t.name}
+        </span>
+        <button class="meta-edit" onclick="alert('WIREFRAME — עריכת התוכנית העונתית במודול התוכניות (Programs)')"><svg class="icon-xs"><use href="#i-pencil"/></svg> ערוך תוכנית</button>
       </span>
     </div>
     <div class="meso-bars">${bars}</div>`;
@@ -1791,15 +1821,18 @@ function renderDays(){
     }
 
     /* events on the board — planned around, not filtered by sport */
-    (EVENTS[i]||[]).forEach(ev=>{
+    (EVENTS[i]||[]).forEach((ev,ei)=>{
       const relevant = mode==='all' || (ev.athlete && ev.athlete===mode) || (!ev.athlete && (!ev.group || ev.group===mode ||
         (TARGET_MAP[mode].type==='personal' && Object.values(PERSONAL[mode]||{}).includes('@'+ev.group))));
       if (relevant){
         shown++;
         const icon = ev.kind==='competition' ? 'i-trophy' : ev.kind==='personal' ? 'i-user' : 'i-clipboard';
-        inner += `<div class="event-chip ${ev.kind==='competition'?'comp':''} ${ev.kind==='personal'?'pers':''}">
+        const editable = !isPast && mode!=='all';
+        inner += `<div class="event-chip ${ev.kind==='competition'?'comp':''} ${ev.kind==='personal'?'pers':''}" ${editable?`style="cursor:pointer" title="לחיצה מוחקת — ניתן לבטל" onclick="deleteEvent(${i},${ei})"`:''}>
           <svg class="icon-xs"><use href="#${icon}"/></svg>
-          ${ev.title} · ${ev.time}</div>`;
+          ${ev.title} · ${ev.time}
+          ${editable ? '<svg class="icon-xs" style="margin-inline-start:auto;opacity:.5"><use href="#i-x"/></svg>' : ''}
+        </div>`;
       }
     });
 
@@ -2463,6 +2496,15 @@ function confirmApply(){
   });
 }
 
+function deleteEvent(day, ei){
+  withUndo('האירוע נמחק', ()=>{
+    if (EVENTS[day]) EVENTS[day].splice(ei,1);
+    if (EVENTS[day] && !EVENTS[day].length) delete EVENTS[day];
+    markDirty();
+    renderDays();
+  });
+}
+
 /* ==================== COPY HUB — one dialog: source × destination ==================== */
 let copyCtx = { src:'prev', week:41, tpl:0 };
 
@@ -2567,6 +2609,50 @@ function saveWorkoutToLib(){
     LIBRARY.push({ name: w.name, cat:'טכניקה', sub: w.sub, zones: w.zones, sport: w.sport || 'swim' });
     renderLibrary();
     hideOverlay('copyWorkoutOverlay');
+  });
+}
+
+/* ==================== RECURRING SCHEDULE EDITOR ==================== */
+let recSel = {};
+function openRecurringDialog(){
+  if (TARGET_MAP[mode].type !== 'group'){ alert('WIREFRAME — לוז קבוע מוגדר לקבוצות'); return; }
+  recSel = {};
+  (RECURRING[mode]||[]).forEach(r=>{ recSel[r.day] = r.time; });
+  $('recTitle').innerHTML = TARGET_MAP[mode].name;
+  renderRecDays();
+  showOverlay('recOverlay');
+}
+function renderRecDays(){
+  $('recDays').innerHTML = DAYS.map((d,i)=>{
+    const on = recSel[i] !== undefined;
+    return `<div class="rec-row">
+      <button class="sf-chip ${on?'active':''}" onclick="toggleRecDay(${i})">${d.l}׳</button>
+      <input type="time" class="ev-input" style="width:110px" value="${on?recSel[i]:'18:00'}" ${on?'':'disabled'} onchange="recSel[${i}]=this.value">
+    </div>`;
+  }).join('');
+}
+function toggleRecDay(i){
+  if (recSel[i] !== undefined) delete recSel[i];
+  else recSel[i] = '18:00';
+  renderRecDays();
+}
+function saveRecurring(){
+  withUndo('הלוז הקבוע נשמר', ()=>{
+    RECURRING[mode] = Object.keys(recSel).map(d=>({ day:+d, time:recSel[d] }));
+    TARGET_MAP[mode].recurring = RECURRING[mode].map(r=>`${DAYS[r.day].l}׳ ${r.time}`).join(' · ') + ' · בריכת הים';
+    /* auto-fill: recurring days with no session get a placeholder to replace */
+    const plan = planForWeek()[mode];
+    RECURRING[mode].forEach(r=>{
+      if (plan[r.day] === undefined){
+        const id = 'wr' + r.day;
+        WORKOUTS[id] = Object.assign({}, W_RECUR, { time:r.time });
+        plan[r.day] = id;
+      }
+    });
+    hideOverlay('recOverlay');
+    renderMeta();
+    markDirty();
+    renderDays();
   });
 }
 
