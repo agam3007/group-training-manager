@@ -1,0 +1,1895 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Plan Workspace — Blue Fitness</title>
+<style>
+  :root{--bg:#F8FAFC;--surface:#FFF;--surface-ocean:#E0F2FE;--surface-hover:#F1F5F9;--border:#CBD5E1;--text:#0F172A;--text-muted:#475569;--text-faint:#94A3B8;--accent:#2563EB;--accent-hover:#1D4ED8;--accent-dim:rgba(37,99,235,.08);--accent-text:#FFF;--success:#16A34A;--success-bg:#DCFCE7;--danger:#DC2626;--danger-bg:#FEE2E2;--warning:#D97706;--warning-bg:#FEF3C7;--teal:#0D9488;--teal-bg:rgba(13,148,136,.12);--shadow-md:0 4px 12px rgba(15,23,42,.06);--shadow-lg:0 8px 32px rgba(15,23,42,.12);}
+  :root[data-theme="dark"]{--bg:#0F172A;--surface:#1E293B;--surface-ocean:#25334A;--surface-hover:#334155;--border:#334155;--text:#F8FAFC;--text-muted:#94A3B8;--text-faint:#64748B;--accent:#3B82F6;--accent-hover:#2563EB;--accent-dim:rgba(59,130,246,.15);--accent-text:#FFF;--success:#22C55E;--success-bg:rgba(34,197,94,.2);--danger:#EF4444;--danger-bg:rgba(239,68,68,.2);--warning:#FBBF24;--warning-bg:rgba(251,191,36,.2);--teal:#2DD4BF;--teal-bg:rgba(45,212,191,.15);--shadow-md:0 4px 12px rgba(0,0,0,.25);--shadow-lg:0 8px 32px rgba(0,0,0,.4);}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .2s,color .2s;}
+  .icon{width:20px;height:20px;stroke-width:2;flex-shrink:0;}
+  .icon-sm{width:16px;height:16px;}
+  .icon-xs{width:13px;height:13px;}
+  button{font-family:inherit;}
+
+  .theme-btn{position:fixed;top:12px;inset-inline-end:12px;z-index:200;padding:8px 16px;border:1px solid var(--border);border-radius:24px;background:var(--surface);color:var(--text-muted);font-size:12px;font-weight:600;cursor:pointer;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:6px;}
+
+  .layout{display:flex;min-height:100vh;}
+  .side{width:70px;background:var(--surface);border-inline-end:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding-top:24px;gap:16px;}
+  .side .logo{width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--accent);margin-bottom:20px;}
+  .side .nav{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:12px;color:var(--text-muted);cursor:pointer;}
+  .side .nav.active{background:var(--accent);color:var(--accent-text);}
+
+  .main{flex:1;padding:28px 36px 60px;max-width:1440px;margin:0 auto;width:100%;}
+
+  /* ==================== HEADER ==================== */
+  .plan-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:10px;}
+  .plan-title h1{font-size:24px;font-weight:800;letter-spacing:-.4px;}
+  .week-label{font-size:13px;color:var(--text-muted);margin-top:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .header-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+
+  /* ---- TARGET PICKER ---- */
+  .picker{position:relative;}
+  .picker-btn{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--surface);border:1px solid var(--border);border-radius:14px;cursor:pointer;font-size:14px;font-weight:800;box-shadow:var(--shadow-md);min-width:200px;justify-content:space-between;color:var(--text);}
+  .picker-btn:hover{border-color:var(--accent);}
+  .pcolor{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+  .picker-panel{position:absolute;top:calc(100% + 8px);inset-inline-start:0;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-lg);padding:10px;width:290px;z-index:100;display:none;}
+  .picker.open .picker-panel{display:block;}
+  .picker-search{display:flex;align-items:center;gap:8px;background:var(--surface-hover);border-radius:10px;padding:8px 10px;color:var(--text-faint);margin-bottom:6px;}
+  .picker-search input{border:none;background:transparent;color:var(--text);font-size:13px;flex:1;outline:none;font-family:inherit;min-width:0;}
+  .picker-sec{font-size:10.5px;font-weight:800;color:var(--text-faint);margin:8px 6px 4px;letter-spacing:.3px;}
+  .picker-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:700;}
+  .picker-item:hover{background:var(--surface-hover);}
+  .picker-item.active{background:var(--accent-dim);color:var(--accent);}
+  .picker-sub{font-size:10.5px;font-weight:600;color:var(--text-faint);}
+  .picker-item .icon-sm{color:var(--text-faint);}
+
+  /* ---- WEEK JUMP ---- */
+  .week-nav{display:flex;align-items:center;gap:8px;}
+  .week-nav button{width:36px;height:36px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .week-jump{display:flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:7px 12px;font-size:13px;font-weight:700;box-shadow:var(--shadow-md);}
+  .week-jump input{width:40px;border:none;background:transparent;color:var(--accent);font-weight:800;font-size:15px;text-align:center;outline:none;font-family:inherit;}
+  .wj-of{color:var(--text-faint);font-size:11px;}
+
+  /* ---- SCHEDULE META ---- */
+  .sched-meta{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-muted);margin-bottom:14px;flex-wrap:wrap;}
+  .sched-meta .icon-sm{color:var(--accent);}
+  .meta-edit{border:1px solid var(--border);background:var(--surface);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--text-muted);cursor:pointer;display:inline-flex;align-items:center;gap:5px;}
+  .meta-edit:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* ==================== WEEK STRIP ==================== */
+  .week-strip{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 8px;margin-bottom:6px;}
+  .week-chip{min-width:126px;flex-shrink:0;border:1px solid var(--border);border-radius:14px;padding:10px 12px;background:var(--surface);cursor:pointer;display:flex;flex-direction:column;gap:5px;transition:all .15s;}
+  .week-chip:hover{border-color:var(--accent);}
+  .week-chip.selected{border-color:var(--accent);background:var(--surface-ocean);box-shadow:var(--shadow-md);}
+  .wc-head{display:flex;justify-content:space-between;align-items:baseline;}
+  .wc-num{font-size:12px;font-weight:800;}
+  .wc-status{font-size:10px;font-weight:700;}
+  .st-done{color:var(--success);} .st-draft{color:var(--warning);} .st-empty{color:var(--text-faint);}
+  .wc-range{font-size:10px;color:var(--text-faint);}
+  .wc-body{display:flex;align-items:flex-end;gap:8px;height:32px;}
+  .wc-bar{width:10px;border-radius:4px;}
+  .wc-level{font-size:10px;color:var(--text-muted);font-weight:600;}
+
+  /* ==================== INSIGHT ==================== */
+  .insight{display:flex;align-items:center;gap:12px;background:var(--warning-bg);border-radius:14px;padding:12px 16px;margin-bottom:16px;font-size:13px;font-weight:600;color:var(--warning);}
+  .insight .icon{color:var(--warning);}
+  .insight .insight-x{margin-inline-start:auto;border:none;background:transparent;color:var(--warning);cursor:pointer;opacity:.6;}
+
+  /* ==================== SPORT FILTER ==================== */
+  .sport-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center;}
+  .sf-label{font-size:11px;font-weight:800;color:var(--text-faint);letter-spacing:.3px;}
+  .sf-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:700;color:var(--text-muted);cursor:pointer;transition:all .15s;}
+  .sf-chip svg{width:13px;height:13px;}
+  .sf-chip:hover{border-color:var(--accent);}
+  .sf-chip.active{background:var(--accent);color:var(--accent-text);border-color:var(--accent);}
+
+  /* ==================== CONTENT GRID ==================== */
+  .content{display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start;}
+  @media(max-width:1150px){.content{grid-template-columns:1fr;}}
+
+  /* ==================== DAY GRID ==================== */
+  .days{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:18px;}
+  @media(max-width:900px){.days{grid-template-columns:repeat(4,1fr);}}
+  @media(max-width:600px){.days{grid-template-columns:repeat(2,1fr);}}
+
+  .day-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:12px;min-height:158px;display:flex;flex-direction:column;gap:8px;transition:all .15s;}
+  .day-card:hover{border-color:var(--accent);}
+  .day-card.today{border-color:var(--accent);background:var(--surface-ocean);}
+  .day-card.dragover{border-color:var(--accent);background:var(--accent-dim);border-style:dashed;}
+
+  .day-head{display:flex;align-items:baseline;justify-content:space-between;}
+  .day-name{font-size:14px;font-weight:800;}
+  .day-num{font-size:11px;color:var(--text-faint);}
+
+  .day-session{background:var(--surface-ocean);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:4px;cursor:pointer;}
+  .day-card.today .day-session{background:var(--surface);}
+  .day-session:hover{outline:2px solid var(--accent);}
+  .day-session.canceled{opacity:.5;}
+  .day-session.canceled .session-name{text-decoration:line-through;}
+  .session-time{font-size:11px;font-weight:700;color:var(--accent);display:flex;align-items:center;gap:4px;}
+  .session-name{font-size:12.5px;font-weight:700;line-height:1.3;display:flex;align-items:center;gap:5px;}
+  .session-name .icon-xs{color:var(--text-muted);}
+  .session-sub{font-size:10.5px;color:var(--text-muted);}
+  .session-zones{display:flex;gap:2px;height:4px;overflow:hidden;border-radius:2px;}
+  .session-zones span{border-radius:2px;}
+
+  /* badges */
+  .session-badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:2px;}
+  .badge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:9.5px;font-weight:800;}
+  .badge svg{width:9px;height:9px;stroke-width:2.5;}
+  .b-fixed{background:var(--surface-hover);color:var(--text-muted);}
+  .b-add{background:var(--success-bg);color:var(--success);}
+  .b-cancel{background:var(--danger-bg);color:var(--danger);}
+  .b-time{background:var(--warning-bg);color:var(--warning);}
+  .b-personal{background:var(--teal-bg);color:var(--teal);}
+  .b-gref{background:var(--surface-hover);color:var(--text-muted);}
+
+  /* all-sessions chips */
+  .gs-chip{background:var(--surface-ocean);border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:2px;cursor:pointer;}
+  .gs-chip:hover{outline:2px solid var(--accent);}
+  .gs-chip.canceled{opacity:.5;}
+  .gs-chip.canceled .gs-wname{text-decoration:line-through;}
+  .gs-gline{display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;}
+  .gdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .gs-wname{font-size:11.5px;font-weight:700;line-height:1.3;display:flex;align-items:center;gap:4px;}
+  .gs-wname svg{width:11px;height:11px;color:var(--text-muted);}
+  .gs-sub{font-size:10px;color:var(--text-muted);}
+
+  .day-empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-faint);font-size:12px;}
+  .day-add{display:flex;align-items:center;justify-content:center;gap:5px;padding:9px 6px;border:1px dashed var(--border);border-radius:10px;background:transparent;color:var(--text-muted);font-size:11.5px;font-weight:700;cursor:pointer;margin-top:auto;}
+  .day-add:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* ==================== LIBRARY ==================== */
+  .library{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:var(--shadow-md);position:sticky;top:16px;}
+  @media(max-width:1150px){.library{position:static;}}
+  .lib-title{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800;margin-bottom:12px;}
+  .lib-title .icon{color:var(--accent);}
+  .lib-search{display:flex;align-items:center;gap:8px;background:var(--surface-hover);border-radius:12px;padding:10px 12px;color:var(--text-faint);}
+  .lib-search input{border:none;background:transparent;color:var(--text);font-size:13px;flex:1;outline:none;font-family:inherit;min-width:0;}
+  .lib-cats{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 12px;}
+  .lib-cat{padding:5px 12px;border-radius:20px;border:1px solid var(--border);font-size:11.5px;font-weight:700;color:var(--text-muted);cursor:pointer;background:var(--surface);}
+  .lib-cat.active{background:var(--accent);color:var(--accent-text);border-color:var(--accent);}
+  .lib-hint{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-faint);margin-bottom:10px;}
+  .lib-card{border:1px solid var(--border);border-radius:14px;padding:11px 12px;margin-bottom:8px;cursor:grab;display:flex;gap:10px;align-items:flex-start;background:var(--bg);transition:all .15s;}
+  .lib-card:hover{border-color:var(--accent);}
+  .lib-card:active{cursor:grabbing;}
+  .lib-grip{color:var(--text-faint);margin-top:2px;}
+  .lib-name{font-size:12.5px;font-weight:700;line-height:1.35;display:flex;align-items:center;gap:5px;}
+  .lib-name svg{width:12px;height:12px;color:var(--text-muted);}
+  .lib-sub{font-size:10.5px;color:var(--text-muted);margin-top:2px;}
+  .lib-zones{display:flex;gap:2px;height:4px;margin-top:6px;border-radius:2px;overflow:hidden;}
+  .lib-zones span{border-radius:2px;}
+  .lib-new{width:100%;padding:11px;border:1px dashed var(--border);border-radius:12px;background:transparent;color:var(--text-muted);font-size:12.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:4px;}
+  .lib-new:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* ==================== WORKOUT DETAIL ==================== */
+  .workout-detail{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:22px;margin-bottom:18px;box-shadow:var(--shadow-md);}
+  .wd-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+  .wd-header h3{font-size:17px;font-weight:800;display:flex;align-items:center;gap:8px;}
+  .wd-header h3 .icon{color:var(--accent);}
+  .wd-close{width:32px;height:32px;border:none;border-radius:50%;background:var(--surface-hover);color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
+  .wd-tabs{display:flex;background:var(--surface-hover);border-radius:12px;padding:4px;gap:4px;margin-bottom:14px;width:fit-content;}
+  .wd-tabs button{padding:8px 16px;border:none;border-radius:10px;background:transparent;color:var(--text-muted);font-size:12.5px;font-weight:700;cursor:pointer;}
+  .wd-tabs button.active{background:var(--accent);color:var(--accent-text);}
+
+  .wd-steps{display:flex;flex-direction:column;gap:8px;}
+  .wd-step{background:var(--surface-ocean);border-radius:12px;padding:12px 14px;display:flex;align-items:flex-start;gap:12px;}
+  .wd-set-type{min-width:52px;text-align:center;padding:7px 8px;border-radius:10px;font-size:11px;font-weight:800;flex-shrink:0;}
+  .wd-set-type.warmup{background:var(--success-bg);color:var(--success);}
+  .wd-set-type.main{background:var(--accent);color:var(--accent-text);}
+  .wd-set-type.cooldown{background:var(--surface-hover);color:var(--text-muted);}
+  .wd-set-type.drill,.wd-set-type.technique{background:var(--accent-dim);color:var(--accent);}
+  .wd-step-body{flex:1;min-width:0;}
+  .wd-step-title{font-size:13.5px;font-weight:700;}
+  .wd-step-detail{font-size:12px;color:var(--text-muted);margin-top:2px;}
+  .wd-step-zones{display:flex;gap:3px;height:4px;margin-top:7px;width:130px;border-radius:2px;overflow:hidden;}
+  .wd-step-zones span{border-radius:2px;}
+  .wd-add-step{width:100%;padding:12px;border:1px dashed var(--border);border-radius:12px;background:transparent;color:var(--text-muted);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;}
+  .wd-add-step:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* ==================== QUICK TEXT ==================== */
+  .qwrap{display:flex;flex-direction:column;gap:10px;}
+  .qtext{width:100%;min-height:170px;border:1px solid var(--border);border-radius:14px;padding:14px;background:var(--bg);color:var(--text);font-family:ui-monospace,Consolas,monospace;font-size:13px;line-height:1.8;direction:ltr;text-align:left;outline:none;resize:vertical;}
+  .qtext:focus{border-color:var(--accent);}
+  .q-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+  .qhint{font-size:11px;color:var(--text-faint);display:flex;align-items:center;gap:6px;}
+  .btn-parse{padding:10px 22px;border:none;border-radius:12px;background:var(--accent);color:var(--accent-text);font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 3px 12px rgba(37,99,235,.25);display:flex;align-items:center;gap:6px;}
+  .btn-parse:active{background:var(--accent-hover);}
+  .qok{display:flex;align-items:center;gap:7px;color:var(--success);font-size:12.5px;font-weight:700;margin-bottom:10px;}
+  .qresult{display:flex;flex-direction:column;gap:8px;}
+  .qapply{align-self:flex-start;margin-top:12px;padding:10px 20px;border:1px solid var(--accent);border-radius:12px;background:var(--accent-dim);color:var(--accent);font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;}
+
+  /* ==================== WEEK SUMMARY ==================== */
+  .week-summary{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;box-shadow:var(--shadow-md);flex-wrap:wrap;}
+  .summary-left h3{font-size:15px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+  .zone-bars{display:flex;gap:4px;width:210px;height:8px;border-radius:4px;overflow:hidden;}
+  .zone-bars span{border-radius:2px;}
+  .summary-stats{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .sport-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:20px;background:var(--surface-hover);font-size:12.5px;font-weight:700;color:var(--text-muted);}
+  .sport-chip svg{width:14px;height:14px;}
+  .sport-chip b{color:var(--text);}
+  .summary-stat{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:20px;font-size:12.5px;color:var(--text-muted);}
+  .summary-stat b{color:var(--text);}
+
+  /* ==================== ACTIONS ==================== */
+  .plan-actions{display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;min-height:48px;}
+  .btn-copy{padding:13px 22px;border:1px solid var(--border);border-radius:14px;background:var(--surface);color:var(--text-muted);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;}
+  .btn-copy:hover{border-color:var(--accent);color:var(--accent);}
+  .btn-publish{padding:15px 38px;border:none;border-radius:16px;background:var(--accent);color:var(--accent-text);font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 4px 20px rgba(37,99,235,.3);display:flex;align-items:center;gap:10px;}
+  .btn-publish:active{background:var(--accent-hover);}
+  .btn-publish.published{background:var(--success);box-shadow:0 4px 20px rgba(22,163,74,.3);}
+
+  .wf{position:fixed;bottom:2px;inset-inline:0;text-align:center;font-size:10px;color:var(--text-faint);z-index:200;}
+
+  /* ==================== MESO BLOCK PANEL ==================== */
+  .meso-panel{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:14px 18px;margin-bottom:14px;box-shadow:var(--shadow-md);}
+  .meso-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+  .meso-head .icon{color:var(--accent);}
+  .meso-name{font-size:15px;font-weight:800;}
+  .meso-pos{font-size:12px;font-weight:700;color:var(--accent);}
+  .meso-goal{font-size:11.5px;color:var(--text-muted);margin-top:2px;}
+  .meso-bars{display:flex;gap:10px;align-items:flex-end;}
+  .mb-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;cursor:pointer;padding:6px 4px;border-radius:10px;transition:all .15s;}
+  .mb-col:hover{background:var(--surface-hover);}
+  .mb-col.selected{background:var(--accent-dim);outline:2px solid var(--accent);}
+  .mb-bar{width:100%;max-width:46px;border-radius:6px 6px 2px 2px;min-height:6px;}
+  .mb-col.planned .mb-bar{opacity:.55;border:1px dashed var(--text-faint);}
+  .mb-n{font-size:10.5px;font-weight:800;color:var(--text-muted);}
+  .mb-col.selected .mb-n{color:var(--accent);}
+  .mb-status{font-size:9.5px;font-weight:700;color:var(--text-faint);}
+  .st-planned{color:var(--accent);}
+  .mb-rec{color:var(--success);}
+
+  /* ==================== WEEK NOTE ==================== */
+  .week-note{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px dashed var(--border);border-radius:14px;padding:10px 16px;margin-bottom:14px;font-size:12.5px;color:var(--text-muted);flex-wrap:wrap;}
+  .week-note .icon-sm{color:var(--warning);}
+  .week-note b{color:var(--text);}
+
+  /* ==================== EVENTS ON BOARD ==================== */
+  .event-chip{display:flex;align-items:center;gap:6px;border:1px dashed var(--border);border-radius:10px;padding:7px 9px;font-size:10.5px;font-weight:700;color:var(--text-muted);background:var(--bg);}
+  .event-chip .icon-xs{color:var(--warning);}
+  .event-chip.comp .icon-xs{color:var(--danger);}
+  .event-chip.pers .icon-xs{color:var(--teal);}
+
+  /* ==================== LOAD + SESSION MENU ==================== */
+  .load-chip{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:800;color:var(--text-muted);}
+  .load-chip svg{width:11px;height:11px;color:var(--accent);}
+  .load-dot{width:7px;height:7px;border-radius:50%;}
+  .sess-top{display:flex;align-items:center;justify-content:space-between;}
+  .sess-menu-btn{width:22px;height:22px;border:none;border-radius:6px;background:transparent;color:var(--text-faint);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .sess-menu-btn:hover{background:var(--surface-hover);color:var(--text);}
+  .sess-menu{position:fixed;z-index:300;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg);padding:6px;min-width:200px;}
+  .sm-item{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:8px;font-size:12.5px;font-weight:700;color:var(--text-muted);cursor:pointer;}
+  .sm-item:hover{background:var(--surface-hover);color:var(--text);}
+  .sm-item.danger{color:var(--danger);}
+
+  /* ==================== ACTUAL (past weeks) ==================== */
+  .actual-line{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;margin-top:2px;}
+  .actual-line.ok{color:var(--success);}
+  .actual-line.miss{color:var(--danger);}
+  .actual-line svg{width:10px;height:10px;stroke-width:3;}
+
+  /* ==================== CONFLICTS ==================== */
+  .conflict-chip{display:flex;align-items:center;gap:6px;background:var(--danger-bg);color:var(--danger);border-radius:10px;padding:7px 10px;font-size:10.5px;font-weight:800;}
+  .conflict-chip svg{width:12px;height:12px;}
+  .conf-outline{outline:2px solid var(--danger) !important;}
+
+  /* ==================== WEEK PUBLISH STATE ==================== */
+  .ws-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:800;}
+  .ws-chip svg{width:11px;height:11px;}
+  .ws-draft{background:var(--warning-bg);color:var(--warning);}
+  .ws-published{background:var(--success-bg);color:var(--success);}
+  .ws-dirty{background:var(--danger-bg);color:var(--danger);}
+  .ws-done{background:var(--surface-hover);color:var(--text-faint);}
+  .btn-publish.dirty{background:var(--warning);box-shadow:0 4px 20px rgba(217,119,6,.3);}
+  .publish-note{font-size:11.5px;font-weight:600;color:var(--text-faint);text-align:left;width:100%;}
+  .publish-note.ok{color:var(--success);}
+  .publish-note.warn{color:var(--warning);}
+
+  /* ==================== DETAIL EXTRAS ==================== */
+  .detail-meta{display:flex;align-items:center;gap:12px;font-size:12px;color:var(--text-muted);margin:-6px 0 12px;flex-wrap:wrap;}
+  .detail-meta .icon-xs{color:var(--accent);}
+  .variant-row{display:flex;gap:6px;flex-wrap:wrap;margin:-2px 0 12px;}
+  .target-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:20px;background:var(--surface-hover);font-size:12.5px;font-weight:700;color:var(--text-muted);}
+  .target-chip b{color:var(--text);}
+  .target-chip svg{width:14px;height:14px;flex-shrink:0;}
+  .target-bar{width:60px;height:6px;border-radius:3px;background:var(--border);overflow:hidden;display:inline-block;}
+  .target-bar span{display:block;height:100%;border-radius:3px;background:var(--accent);}
+
+  /* ==================== WEEK READINESS ==================== */
+  .readiness-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px;}
+  .rd-item{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--border);border-radius:20px;background:var(--surface);cursor:pointer;font-size:12px;font-weight:700;transition:all .15s;}
+  .rd-item:hover{border-color:var(--accent);}
+  .ws-empty{background:var(--danger-bg);color:var(--danger);}
+  .btn-bulk{padding:6px 16px;border:none;border-radius:20px;background:var(--accent);color:var(--accent-text);font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+  .btn-bulk:hover{background:var(--accent-hover);}
+
+  /* ==================== STAFF ==================== */
+  .coach-chip{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--text-muted);}
+  .coach-chip svg{width:10px;height:10px;}
+  .hours-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:20px;background:var(--surface-hover);font-size:12.5px;font-weight:700;color:var(--text-muted);}
+  .hours-chip svg{width:14px;height:14px;color:var(--accent);}
+  .hours-chip b{color:var(--text);}
+
+  /* ==================== OVERLAYS (confirm + athlete preview) ==================== */
+  .overlay{position:fixed;inset:0;background:var(--overlay);z-index:400;display:none;align-items:center;justify-content:center;padding:20px;}
+  .overlay.open{display:flex;}
+  .confirm-card{background:var(--surface);border-radius:20px;padding:26px;max-width:440px;width:100%;box-shadow:var(--shadow-lg);}
+  .confirm-card h3{font-size:18px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .confirm-card h3 .icon{color:var(--accent);}
+  .confirm-card p{font-size:13.5px;color:var(--text-muted);line-height:1.7;margin-bottom:10px;}
+  .confirm-card p b{color:var(--text);}
+  .cf-stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+  .cf-stat{padding:5px 12px;border-radius:20px;background:var(--surface-hover);font-size:12px;font-weight:700;color:var(--text-muted);}
+  .cf-stat b{color:var(--text);}
+  .confirm-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;}
+  .phone{background:var(--surface);border-radius:28px;padding:22px 18px;max-width:400px;width:100%;box-shadow:var(--shadow-lg);max-height:88vh;overflow-y:auto;}
+  .phone-top{display:flex;align-items:center;gap:10px;padding-bottom:14px;margin-bottom:12px;border-bottom:1px solid var(--border);}
+  .phone-top .icon{color:var(--accent);}
+  .phone-title{font-size:15px;font-weight:800;}
+  .phone-sub{font-size:11.5px;color:var(--text-faint);}
+  .pv-row{display:flex;align-items:flex-start;gap:12px;padding:12px 4px;border-bottom:1px solid var(--border);}
+  .pv-day{min-width:36px;text-align:center;background:var(--surface-hover);border-radius:10px;padding:6px 0;}
+  .pv-day .d{font-size:13px;font-weight:800;display:block;}
+  .pv-day .n{font-size:10px;color:var(--text-faint);}
+  .pv-body{flex:1;}
+  .pv-time{font-size:10.5px;font-weight:700;color:var(--accent);}
+  .pv-name{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:5px;margin-top:1px;}
+  .pv-name svg{width:13px;height:13px;color:var(--text-muted);}
+  .pv-zones{display:flex;gap:2px;height:4px;margin-top:6px;width:110px;border-radius:2px;overflow:hidden;}
+  .pv-chip{display:inline-flex;align-items:center;gap:4px;margin-top:5px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:800;background:var(--teal-bg);color:var(--teal);}
+  .pv-chip.grp{background:var(--surface-hover);color:var(--text-muted);}
+  .pv-note{margin-top:14px;padding:10px 14px;border:1px dashed var(--border);border-radius:12px;font-size:11.5px;color:var(--text-muted);display:flex;gap:8px;align-items:center;}
+  .pv-note .icon-sm{color:var(--warning);}
+
+  /* ==================== SIDEBAR TABS + ATHLETE PANEL ==================== */
+  .lib-tabs{display:flex;background:var(--surface-hover);border-radius:12px;padding:4px;gap:4px;margin-bottom:12px;}
+  .ltab{flex:1;padding:8px 6px;border:none;border-radius:10px;background:transparent;color:var(--text-muted);font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;}
+  .ltab.active{background:var(--accent);color:var(--accent-text);}
+  .ath-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .ath-avatar{width:46px;height:46px;border-radius:50%;background:var(--surface-ocean);display:flex;align-items:center;justify-content:center;color:var(--accent);}
+  .ath-name{font-size:16px;font-weight:800;}
+  .ath-sub{font-size:11.5px;color:var(--text-muted);margin-top:2px;}
+  .ath-section{margin-bottom:14px;}
+  .ath-section h4{font-size:12px;font-weight:800;color:var(--text-faint);letter-spacing:.3px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+  .ath-section h4 .icon-xs{color:var(--accent);}
+  .ath-test{background:var(--surface-ocean);border-radius:12px;padding:10px 14px;font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .ath-test .res{color:var(--accent);}
+  .zone-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12px;}
+  .zone-tag{width:26px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;}
+  .zone-range{color:var(--text-muted);font-size:11.5px;}
+  .compliance-row{margin-bottom:8px;}
+  .compliance-head{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:4px;}
+  .compliance-head .v{color:var(--success);}
+  .compliance-bar{height:6px;border-radius:3px;background:var(--border);overflow:hidden;}
+  .compliance-bar span{display:block;height:100%;border-radius:3px;background:var(--success);}
+  .ath-flag{display:flex;align-items:center;gap:8px;background:var(--warning-bg);color:var(--warning);border-radius:10px;padding:8px 12px;font-size:11.5px;font-weight:700;margin-bottom:6px;}
+  .ath-flag .icon-sm{flex-shrink:0;}
+  .ath-note{background:var(--surface-hover);border-radius:10px;padding:9px 12px;font-size:11.5px;color:var(--text-muted);margin-bottom:6px;line-height:1.5;}
+  .ath-note b{color:var(--text);}
+  .ath-actions{display:flex;gap:8px;margin-top:12px;}
+  .ath-btn{flex:1;padding:9px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text-muted);font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;}
+  .ath-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* Zone colors — intensity ladder, no purple */
+  .z1{background:#84CC16;} .z2{background:#38BDF8;} .z3{background:#FBBF24;} .z4{background:#F87171;} .z5{background:#DC2626;}
+</style>
+
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-dumbbell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14.4 14.4 9.6 9.6"/><path d="M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l1.767-1.768a2 2 0 1 1 2.828 2.828z"/><path d="M21.5 21.5l-1.4-1.4"/><path d="M3.9 3.9 2.5 2.5"/><path d="M6.494 8.985a2 2 0 1 1-2.829-2.828L1.897 4.926A2 2 0 1 1 4.726 2.1l6.364 6.364a2 2 0 1 1-2.829 2.828z"/>
+  </symbol>
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+  </symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/>
+  </symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+  </symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/>
+  </symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+  </symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+  </symbol>
+  <symbol id="i-waves" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 16c.6.5 1.2 1 2.5 1C7 17 7 15 9.5 15c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1C7 13 7 11 9.5 11c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/><path d="M2 8c.6.5 1.2 1 2.5 1C7 9 7 7 9.5 7c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/>
+  </symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="8" y="8" width="14" height="14" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2v2"/>
+  </symbol>
+  <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="20 6 9 17 4 12"/>
+  </symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 12h14"/><path d="M12 5v14"/>
+  </symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="9 18 15 12 9 6"/>
+  </symbol>
+  <symbol id="i-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="15 18 9 12 15 6"/>
+  </symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="6 9 12 15 18 9"/>
+  </symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>
+  </symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+  </symbol>
+  <symbol id="i-lib" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/>
+  </symbol>
+  <symbol id="i-grip" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+    <circle cx="9" cy="5" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="9" cy="19" r="1.6"/><circle cx="15" cy="5" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="15" cy="19" r="1.6"/>
+  </symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>
+  </symbol>
+  <symbol id="i-activity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+  </symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>
+  </symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+  </symbol>
+  <symbol id="i-bike" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/>
+  </symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+  </symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+  </symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>
+  </symbol>
+  <symbol id="i-more" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+    <circle cx="12" cy="5" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="12" cy="19" r="1.4"/>
+  </symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+  </symbol>
+  <symbol id="i-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>
+  </symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>
+  </symbol>
+  <symbol id="i-trend-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"/><polyline points="16 17 22 17 22 11"/>
+  </symbol>
+</svg>
+</head>
+<body>
+
+<button class="theme-btn" onclick="toggleTheme()" id="themeBtn">
+  <svg class="icon icon-sm"><use href="#i-moon"/></svg> Dark
+</button>
+
+<div class="layout">
+  <div class="side">
+    <div class="logo"><svg class="icon" style="width:28px;height:28px"><use href="#i-dumbbell"/></svg></div>
+    <div class="nav"><svg class="icon"><use href="#i-home"/></svg></div>
+    <div class="nav active"><svg class="icon"><use href="#i-calendar"/></svg></div>
+    <div class="nav"><svg class="icon"><use href="#i-users"/></svg></div>
+    <div class="nav"><svg class="icon"><use href="#i-user"/></svg></div>
+    <div class="nav"><svg class="icon"><use href="#i-folder"/></svg></div>
+    <div class="nav"><svg class="icon"><use href="#i-shield"/></svg></div>
+  </div>
+
+  <div class="main">
+    <!-- HEADER -->
+    <div class="plan-header">
+      <div class="plan-title">
+        <h1>תוכנית אימונים</h1>
+        <div class="week-label" id="weekLabel"></div>
+      </div>
+      <div class="header-controls">
+        <div class="picker" id="picker">
+          <button class="picker-btn" onclick="togglePicker(event)">
+            <span id="pickerLabel" style="display:flex;align-items:center;gap:8px"></span>
+            <svg class="icon-sm" style="color:var(--text-faint)"><use href="#i-chevron-down"/></svg>
+          </button>
+          <div class="picker-panel" onclick="event.stopPropagation()">
+            <div class="picker-search">
+              <svg class="icon icon-sm"><use href="#i-search"/></svg>
+              <input type="text" placeholder="חיפוש קבוצה / מתאמן..." id="pickerSearch" oninput="renderPickerList()">
+            </div>
+            <div id="pickerList"></div>
+          </div>
+        </div>
+        <div class="week-nav">
+          <button title="שבוע קודם" onclick="shiftWeek(-1)"><svg class="icon icon-sm"><use href="#i-chevron-right"/></svg></button>
+          <div class="week-jump">
+            <span>שבוע</span>
+            <input type="number" id="weekInput" min="1" max="52" value="42" onchange="jumpWeek(this.value)">
+            <span class="wj-of">/ 52</span>
+          </div>
+          <button title="שבוע הבא" onclick="shiftWeek(1)"><svg class="icon icon-sm"><use href="#i-chevron-left"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sched-meta" id="schedMeta"></div>
+
+    <div class="week-note">
+      <svg class="icon-sm"><use href="#i-note"/></svg>
+      <span><b>פתק שבוע:</b> שבת — תחרות אזורית לנערים. להוריד נפח ביום ד׳ לקבוצות.</span>
+      <button class="meta-edit" onclick="alert('WIREFRAME — עריכת פתק שבוע')"><svg class="icon-xs"><use href="#i-pencil"/></svg> עריכה</button>
+    </div>
+
+    <!-- WEEK READINESS — who planned, who published -->
+    <div class="readiness-row" id="readinessRow"></div>
+
+    <div class="meso-panel" id="mesoPanel"></div>
+
+    <div class="insight" id="insight">
+      <svg class="icon"><use href="#i-bulb"/></svg>
+      <span>עומס שבוע 42: 1,414 נק׳ · 23% מתחת לשבוע 41 · ACWR 0.90 — פריקה נמשכת אחרי שבועיים בעומס גבוה (40–41) · שבוע 43 מתוכנן כפריקה מלאה</span>
+      <button class="insight-x" onclick="document.getElementById('insight').style.display='none'">
+        <svg class="icon icon-sm"><use href="#i-x"/></svg>
+      </button>
+    </div>
+
+    <div class="content">
+      <!-- MAIN COLUMN -->
+      <div>
+        <div class="sport-filter" id="sportFilter"></div>
+        <div class="sport-filter" id="staffFilter"></div>
+        <div class="days" id="days"></div>
+
+        <!-- WORKOUT DETAIL -->
+        <div class="workout-detail" id="workoutDetail" style="display:none">
+          <div class="wd-header">
+            <h3 id="wdTitle"></h3>
+            <button class="wd-close" onclick="closeDetail()"><svg class="icon icon-sm"><use href="#i-x"/></svg></button>
+          </div>
+          <div class="detail-meta" id="detailMeta"></div>
+          <div class="variant-row" id="variantRow"></div>
+          <div class="wd-tabs">
+            <button id="tabStructured" class="active" onclick="setEditor('structured')">עורך מובנה</button>
+            <button id="tabText" onclick="setEditor('text')">
+              <span style="display:inline-flex;align-items:center;gap:6px">
+                <svg class="icon icon-xs"><use href="#i-waves"/></svg> כתיבה מהירה
+              </span>
+            </button>
+          </div>
+
+          <div id="editorStructured">
+            <div class="wd-steps" id="wdSteps"></div>
+            <button class="wd-add-step" onclick="alert('WIREFRAME — הוספת סט לאימון')">
+              <svg class="icon icon-sm"><use href="#i-plus"/></svg> הוסף סט
+            </button>
+          </div>
+
+          <div id="editorText" style="display:none">
+            <div class="qwrap">
+              <textarea class="qtext" id="qtext" spellcheck="false"></textarea>
+              <div class="q-row">
+                <div class="qhint">
+                  <svg class="icon icon-xs"><use href="#i-bulb"/></svg>
+                  כתוב שורות אימון — המערכת ממירה לסטים ובלוקים (WU / MAIN / CD)
+                </div>
+                <button class="btn-parse" onclick="parseText()">
+                  <svg class="icon icon-sm"><use href="#i-waves"/></svg> פענח לסטים
+                </button>
+              </div>
+              <div id="qresult"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WEEK SUMMARY -->
+        <div class="week-summary">
+          <div class="summary-left">
+            <h3><svg class="icon icon-sm"><use href="#i-chart"/></svg> סיכום שבוע</h3>
+            <div class="zone-bars">
+              <span class="z1" style="flex:3"></span>
+              <span class="z2" style="flex:4"></span>
+              <span class="z3" style="flex:2"></span>
+              <span class="z4" style="flex:1"></span>
+            </div>
+          </div>
+          <div class="summary-stats" id="summaryStats"></div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="plan-actions">
+          <button class="btn-copy" id="templateBtn" onclick="alert('WIREFRAME — בחירת שבוע מתוכנית / תבנית תוכנית')">
+            <svg class="icon icon-sm"><use href="#i-folder"/></svg>
+            מתוכנית...
+          </button>
+          <button class="btn-copy" id="copyBtn" onclick="copyPrevWeek()">
+            <svg class="icon icon-sm"><use href="#i-copy"/></svg>
+            העתק משבוע 41
+          </button>
+          <button class="btn-publish" id="publishBtn" onclick="publish()">
+            <svg class="icon"><use href="#i-send"/></svg>
+            פרסם לקבוצה
+          </button>
+        </div>
+        <div class="publish-note" id="publishNote"></div>
+      </div>
+
+      <!-- LIBRARY / ATHLETE PANEL -->
+      <aside class="library">
+        <div class="lib-tabs" id="libTabs"></div>
+        <div id="panelLibrary">
+        <div class="lib-title">
+          <svg class="icon"><use href="#i-lib"/></svg> ספריית אימונים
+        </div>
+        <div class="lib-search">
+          <svg class="icon icon-sm"><use href="#i-search"/></svg>
+          <input type="text" placeholder="חיפוש אימון..." id="libSearch" oninput="renderLibrary()">
+        </div>
+        <div class="lib-cats" id="libCats"></div>
+        <div class="lib-hint">
+          <svg class="icon icon-xs"><use href="#i-grip"/></svg>
+          גרור אימון ליום פנוי בלוח
+        </div>
+        <div id="libList"></div>
+        <button class="lib-new" onclick="quickCreate()">
+          <svg class="icon icon-sm"><use href="#i-plus"/></svg> אימון חדש
+        </button>
+        </div>
+        <div id="panelAthlete" style="display:none"></div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- PUBLISH CONFIRMATION -->
+<div class="overlay" id="confirmOverlay" onclick="if(event.target===this)hideOverlay('confirmOverlay')">
+  <div class="confirm-card">
+    <h3><svg class="icon"><use href="#i-send"/></svg> <span id="confirmTitle"></span></h3>
+    <div id="confirmBody"></div>
+    <div class="confirm-actions">
+      <button class="btn-copy" onclick="hideOverlay('confirmOverlay')">ביטול</button>
+      <button class="btn-copy" onclick="openPreview()">
+        <svg class="icon icon-sm"><use href="#i-user"/></svg> תצוגה כאתלט
+      </button>
+      <button class="btn-publish" style="padding:12px 24px;font-size:14px" onclick="confirmPublish()">
+        <svg class="icon"><use href="#i-send"/></svg> אישור ופרסום
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ATHLETE PREVIEW (phone) -->
+<div class="overlay" id="previewOverlay" onclick="if(event.target===this)hideOverlay('previewOverlay')">
+  <div class="phone">
+    <div class="phone-top">
+      <svg class="icon"><use href="#i-user"/></svg>
+      <div>
+        <div class="phone-title" id="pvTitle"></div>
+        <div class="phone-sub">מה האתלט רואה · תצוגה בלבד</div>
+      </div>
+    </div>
+    <div id="pvBody"></div>
+    <button class="btn-copy" style="width:100%;justify-content:center;margin-top:14px" onclick="hideOverlay('previewOverlay')">
+      חזרה לתצוגת המאמן
+    </button>
+  </div>
+</div>
+
+<div class="wf">WIREFRAME v6 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
+
+<script>
+/* ==================== DATA ==================== */
+const DAYS = [
+  { l:'א', d:11 }, { l:'ב', d:12 }, { l:'ג', d:13 }, { l:'ד', d:14 },
+  { l:'ה', d:15 }, { l:'ו', d:16 }, { l:'ש', d:17 },
+];
+const TODAY = 3; // ד = 14.10 (Wednesday)
+const TYPE_LABEL = { warmup:'חימום', main:'עיקרי', cooldown:'קירור', drill:'טכני', technique:'טכניקה' };
+
+/* sports */
+const SPORTS = {
+  swim:     { label:'שחייה',  icon:'i-waves',    color:'#0EA5E9' },
+  bike:     { label:'רכיבה', icon:'i-bike',     color:'#F59E0B' },
+  run:      { label:'ריצה',   icon:'i-activity', color:'#F97316' },
+  strength: { label:'כוח',    icon:'i-dumbbell', color:'#64748B' },
+  flex:     { label:'גמישות', icon:'i-leaf',     color:'#84CC16' },
+};
+const sportIcon = w => (SPORTS[(w && w.sport) || 'swim'] || SPORTS.swim).icon;
+
+/* targets */
+const TARGETS = [
+  { id:'all',     name:'כל האימונים',   type:'all',      color:null },
+  { id:'dagig',   name:'דגיגונים',     type:'group',    color:'#2563EB', recurring:'ד׳ 18:00 · ה׳ 18:00 · בריכת הים', facility:'בריכת הים · 4 מסלולים', athletes:16 },
+  { id:'neorim',  name:'נערים',        type:'group',    color:'#D97706', recurring:'ב׳ 17:00 · ד׳ + ה׳ 19:30 · בריכת הים', facility:'בריכת הים · 6 מסלולים', athletes:12 },
+  { id:'bogarim', name:'בוגרים',       type:'group',    color:'#16A34A', recurring:'ג׳ 06:30 · ה׳ 07:00 · ו׳ 08:00 · בריכת הים', facility:'בריכת הים · 6 מסלולים', athletes:20 },
+  { id:'maya',    name:'מאיה כהן',     type:'personal', color:'#0D9488', sub:'דגיגונים + אישי', athletes:1 },
+  { id:'noam',    name:'נועם חץ',      type:'personal', color:'#0D9488', sub:'תוכנית אישית', athletes:1 },
+  { id:'me',      name:'התוכנית שלי',  type:'me',       color:'#0F172A', sub:'שחייה · ריצה · רכיבה', athletes:1 },
+];
+const TARGET_MAP = {};
+TARGETS.forEach(t=>TARGET_MAP[t.id]=t);
+
+const S_W1 = [
+  { t:'warmup',   title:'200 FR Z1 + 4×50 drill', detail:'עם סנפירים · דגש תנועת ידיים', zones:[[10,'z1']] },
+  { t:'main',     title:'6×100 FR Z3 R:15s',      detail:'עם משוטי ידיים · 15 שנ׳ מנוחה', zones:[[6,'z2'],[4,'z3']] },
+  { t:'cooldown', title:'200 kickboard Z1',        detail:'רגליים עם לוח', zones:[[10,'z1']] },
+];
+const S_W2 = [
+  { t:'warmup',   title:'300 FR mixed Z1-Z2',  detail:'חימום מדורג', zones:[[6,'z1'],[4,'z2']] },
+  { t:'main',     title:'10×100 FR Z4 R:20s',  detail:'אינטרוולים — קצב תחרות', zones:[[4,'z3'],[6,'z4']] },
+  { t:'cooldown', title:'200 easy Z1',         detail:'שחייה קלה', zones:[[10,'z1']] },
+];
+const S_GEN = [
+  { t:'warmup',   title:'200 FR Z1',           detail:'חימום קל', zones:[[10,'z1']] },
+  { t:'main',     title:'עיקרי — לפי תבנית',   detail:'', zones:[[6,'z2'],[4,'z3']] },
+  { t:'cooldown', title:'150 easy',            detail:'', zones:[[10,'z1']] },
+];
+
+const WORKOUTS = {
+  w1:{ name:'טכניקה + אירובי', time:'18:00', sub:'60 דק׳ · 2,000 מ׳', zones:[[3,'z1'],[5,'z2'],[2,'z3']], steps:S_W1, sport:'swim', load:82,
+       variants:[{name:'מאיה כהן',note:'80% נפח'},{name:'יובל לוי',note:'ללא סנפירים (כתף)'}],
+       text:'WU:\n200 FR Z1\n4x50 drill tech fins\n\nMAIN:\n6x100 FR Z3 R:15s paddles\n\nCD:\n200 kickboard Z1' },
+  w2:{ name:'אינטרוולים', time:'18:00', sub:'60 דק׳ · 1,800 מ׳', zones:[[4,'z2'],[3,'z3'],[3,'z4']], steps:S_W2, sport:'swim', load:118,
+       variants:[{name:'מאיה כהן',note:'8×100 במקום 10'}],
+       text:'WU:\n300 FR mixed Z1 Z2\n\nMAIN:\n10x100 FR Z4 R:20s\n\nCD:\n200 easy Z1' },
+  w3:{ name:'ספרינטים', time:'17:00', sub:'75 דק׳ · 2,400 מ׳', zones:[[2,'z2'],[3,'z3'],[5,'z4']], steps:S_GEN, sport:'swim', load:95, text:'' },
+  w4:{ name:'אירובי בסיס', time:'19:30', sub:'75 דק׳ · 3,000 מ׳', zones:[[3,'z1'],[6,'z2'],[1,'z3']], steps:S_GEN, sport:'swim', load:88,
+       variants:[{name:'דנה אבידן',note:'Z3 במקום Z4'}], text:'' },
+  w5:{ name:'שחייה קלה', time:'19:30', sub:'60 דק׳ · 2,200 מ׳', zones:[[5,'z1'],[4,'z2'],[1,'z3']], steps:S_GEN, sport:'swim', load:62, text:'' },
+  w6:{ name:'בוקר אירובי', time:'06:30', sub:'60 דק׳ · 2,800 מ׳', zones:[[4,'z1'],[5,'z2'],[1,'z4']], steps:S_GEN, sport:'swim', load:80, text:'' },
+  w7:{ name:'טכניקה ידיים', time:'07:00', sub:'60 דק׳ · 2,500 מ׳', zones:[[3,'z1'],[5,'z2'],[2,'z3']], steps:S_GEN, sport:'swim', load:85, text:'' },
+  w8:{ name:'ארוך רגליים', time:'08:00', sub:'75 דק׳ · 3,200 מ׳', zones:[[6,'z1'],[3,'z2'],[1,'z3']], steps:S_GEN, sport:'swim', load:92, text:'' },
+  w9:{ name:'אימון מפצה — בריכה', time:'17:30', sub:'60 דק׳ · 1,800 מ׳', zones:[[4,'z1'],[4,'z2'],[2,'z3']], steps:S_GEN, sport:'swim', load:70, text:'' },
+  /* personal / coach workouts */
+  p1:{ name:'חדר כושר — כוח', time:'20:00', sub:'45 דק׳ · פרטני', zones:[[6,'z2'],[4,'z3']], steps:S_GEN, sport:'strength', load:45, text:'' },
+  p2:{ name:'ריצת בוקר', time:'08:00', sub:'30 דק׳ · Z2', zones:[[8,'z2'],[2,'z3']], steps:S_GEN, sport:'run', load:35, text:'' },
+  p3:{ name:'שחיית טכניקה', time:'07:00', sub:'60 דק׳ · 2,200 מ׳', zones:[[3,'z1'],[5,'z2'],[2,'z3']], steps:S_GEN, sport:'swim', load:65, text:'' },
+  p4:{ name:'ריצת אינטרוולים', time:'18:30', sub:'45 דק׳ · Z4', zones:[[3,'z2'],[3,'z4'],[4,'z5']], steps:S_GEN, sport:'run', load:88, text:'' },
+  p5:{ name:'שחיית אירובי', time:'07:00', sub:'60 דק׳ · 2,500 מ׳', zones:[[4,'z1'],[5,'z2'],[1,'z3']], steps:S_GEN, sport:'swim', load:70, text:'' },
+  p6:{ name:'ריצה קלה', time:'06:30', sub:'45 דק׳ · Z2', zones:[[8,'z2'],[2,'z3']], steps:S_GEN, sport:'run', load:50, text:'' },
+  p7:{ name:'אופניים — כביש', time:'06:00', sub:'90 דק׳ · Z2-Z3', zones:[[7,'z2'],[3,'z3']], steps:S_GEN, sport:'bike', load:110, text:'' },
+  p8:{ name:'שחיית מאסטרס', time:'20:00', sub:'60 דק׳ · 2,800 מ׳', zones:[[4,'z1'],[5,'z2'],[1,'z4']], steps:S_GEN, sport:'swim', load:95, text:'' },
+  p9:{ name:'ריצה ארוכה', time:'07:00', sub:'75 דק׳ · Z2', zones:[[10,'z2']], steps:S_GEN, sport:'run', load:80, text:'' },
+};
+
+/* week 42 — group plans */
+const SCHEDULE = {
+  dagig:  { 3:'w1', 4:'w2' },
+  neorim: { 1:'w3', 3:'w4', 4:'w5' },
+  bogarim:{ 2:'w6', 4:'w7', 5:'w8' },
+};
+
+/* week 42 overrides */
+const OVERRIDES = {
+  dagig:  { 4:{ type:'cancel' }, 5:{ type:'add', wid:'w9' } },
+  neorim: { 3:{ type:'time', time:'20:00' } },
+};
+
+/* personal plans — '@group' = inherits that group's session */
+const PERSONAL = {
+  maya: { 1:'p1', 3:'@dagig', 4:'@dagig', 5:'p2' },
+  noam: { 0:'p3', 2:'p7', 4:'p4' },
+  me:   { 1:'p6', 2:'p7', 3:'p8', 5:'p9' },
+};
+
+/* week 41 — heavier week (the high-load streak) */
+const PAST_41 = {
+  dagig:  { 0:'w2', 2:'w1', 3:'w2', 4:'w1' },
+  neorim: { 1:'w3', 3:'w4', 4:'w5', 5:'w3' },
+  bogarim:{ 2:'w6', 3:'w7', 4:'w8', 5:'w6' },
+};
+
+const WEEKS = [
+  { n:39, range:'20–26 ספט׳',      load:1350, level:'בינוני',    status:'בוצע',    st:'st-done',    bar:'#FBBF24' },
+  { n:40, range:'27 ספט׳–3 אוק׳',  load:1700, level:'קשה',      status:'בוצע',    st:'st-done',    bar:'#F87171' },
+  { n:41, range:'4–10 אוק׳',       load:1840, level:'עומס גבוה', status:'בוצע',   st:'st-done',    bar:'#DC2626' },
+  { n:42, range:'11–17 אוק׳',      load:1414, level:'מתוכנן',   status:'טיוטה',   st:'st-draft',   bar:'#2563EB', current:true },
+  { n:43, range:'18–24 אוק׳',      load:1080, level:'פריקה',    status:'מתוכנן', st:'st-planned', bar:'#84CC16', recovery:true },
+  { n:44, range:'25–31 אוק׳',      load:1620, level:'שיא',      status:'מתוכנן', st:'st-planned', bar:'#F97316' },
+];
+const BLOCK = 'מסו-בלוק: בסיס אירובי (שבועות 39–44)';
+
+/* weekly load target per target */
+const LOAD_TARGET = { all:null, dagig:240, neorim:300, bogarim:300, maya:200, noam:290, me:380 };
+
+/* events on the board */
+const EVENTS = {
+  1: { title:'טיול שנתי בית ספר — מאיה', time:'08:00', kind:'personal', athlete:'maya' },
+  5: { title:'מבחן ביומטרי — דגיגונים', time:'16:30', kind:'test', group:'dagig' },
+  6: { title:'תחרות אזורית — נערים', time:'09:00', kind:'competition', group:'neorim' },
+};
+
+/* week 41 — what actually happened */
+const PAST_ACTUAL = {
+  dagig:  { 0:{done:true,att:'15/16'}, 2:{done:true,att:'13/16'}, 3:{done:true,att:'14/16'}, 4:{done:false,note:'בוטל — סופת רעמים'} },
+  neorim: { 1:{done:true,att:'11/12'}, 3:{done:true,att:'10/12'}, 4:{done:true,att:'12/12'}, 5:{done:true,att:'9/12'} },
+  bogarim:{ 2:{done:true,att:'18/20'}, 3:{done:true,att:'17/20'}, 4:{done:true,att:'19/20'}, 5:{done:true,att:'16/20'} },
+};
+
+/* week 41 — personal sessions: did the athlete complete them */
+const PAST_ACTUAL_PERSONAL = {
+  maya: { 1:{done:true,note:'RPE 6'}, 5:{done:false,note:'לא בוצע — מחלה'} },
+  noam: { 0:{done:true,note:'RPE 7'}, 2:{done:true,note:'RPE 5'}, 4:{done:true,note:'RPE 8'} },
+  me:   { 1:{done:true,note:''}, 2:{done:true,note:''}, 3:{done:false,note:'בוטל — עבודה'}, 5:{done:true,note:''} },
+};
+
+/* staff — instructors per group-day (D27 staff scheduling) */
+const STAFF = [
+  { id:'me',    name:'את' },
+  { id:'yogev', name:'יובל' },
+  { id:'tamar', name:'תמר' },
+];
+const COACH_MAP = {
+  dagig:  { 3:'me', 4:'me' },
+  neorim: { 1:'yogev', 3:'me', 4:'yogev' },
+  bogarim:{ 2:'tamar', 4:'tamar', 5:'tamar' },
+};
+const staffName = id => (STAFF.find(s=>s.id===id)||{name:'—'}).name;
+const coachOf = (groupId, day) => (COACH_MAP[groupId]||{})[day] || 'me';
+
+/* athlete context cards (personal planning) */
+const ATHLETE_CONTEXT = {
+  maya: {
+    test: { name:'7×100 חתירה', date:'2 אוק׳', result:'1:38 / 100מ׳' },
+    zones: [ {t:'Z1',r:'2:10–2:25',c:'#84CC16'}, {t:'Z2',r:'1:55–2:10',c:'#38BDF8'}, {t:'Z3',r:'1:40–1:55',c:'#FBBF24'}, {t:'Z4',r:'1:25–1:40',c:'#F87171'} ],
+    compliance: 92, attendance: 88,
+    flags: [ 'כתף ימין — להימנע מסנפירים עד סוף החודש' ],
+    notes: [
+      { d:'1 אוק׳', t:'מגיבה טוב לטיפול פיזיו. להעלות נפח בהדרגה.' },
+      { d:'24 ספט׳', t:'ביקשה להוסיף ריצה — לשלב ביום ו׳.' },
+    ],
+  },
+  noam: {
+    test: { name:'מבחן סף לקסי (ריצה)', date:'5 אוק׳', result:'4:12 / ק"מ' },
+    zones: [ {t:'Z1',r:'5:50–6:20',c:'#84CC16'}, {t:'Z2',r:'5:10–5:50',c:'#38BDF8'}, {t:'Z3',r:'4:35–5:10',c:'#FBBF24'}, {t:'Z4',r:'<4:35',c:'#F87171'} ],
+    compliance: 78, attendance: null,
+    flags: [ 'עומס עבודה גבוה — להיזהר מרצפי אינטרוולים' ],
+    notes: [
+      { d:'3 אוק׳', t:'מתכונן לחצי איש בנובמבר — לבנות רמפה.' },
+    ],
+  },
+};
+
+const LIBRARY = [
+  { name:'טכניקה — תנועת ידיים', cat:'טכניקה',     sub:'6×100 · 2,000 מ׳', zones:[[3,'z1'],[5,'z2'],[2,'z3']], sport:'swim' },
+  { name:'אירובי בסיס Z2',      cat:'אירובי',     sub:'3,000 מ׳ · 60 דק׳', zones:[[4,'z1'],[6,'z2']], sport:'swim' },
+  { name:'אינטרוולים 100s',     cat:'אינטרוולים', sub:'10×100 Z4 · 2,500 מ׳', zones:[[4,'z2'],[3,'z3'],[3,'z4']], sport:'swim' },
+  { name:'רגליים + לוח',        cat:'רגליים',     sub:'8×50 · 1,200 מ׳', zones:[[4,'z1'],[4,'z3']], sport:'swim' },
+  { name:'ספרינטים 25s',        cat:'אינטרוולים', sub:'12×25 ALLOUT · 800 מ׳', zones:[[3,'z2'],[3,'z4'],[4,'z5']], sport:'swim' },
+  { name:'התאוששות + גמישות',   cat:'התאוששות',   sub:'1,500 מ׳ · Z1', zones:[[10,'z1']], sport:'flex' },
+];
+const CATS = ['הכל','טכניקה','אירובי','אינטרוולים','רגליים','התאוששות'];
+
+/* ==================== STATE ==================== */
+let mode = 'dagig';
+let selectedWeek = 42;
+let activeCat = 'הכל';
+let sportFilter = 'all';
+let staffFilter = 'all';
+let sidebarTab = 'library';
+let publishMode = 'single';
+let detailCtx = null;
+let parsedSteps = null;
+const WEEK_PLANS = {};
+
+/* publish state per week+target: draft | published | dirty | empty (computed) */
+const weekState = { '42:neorim':'published', '42:maya':'published' };
+const pendingMap = {};
+const stKey = (week, target) => week + ':' + target;
+function targetState(week, target){
+  const k = stKey(week, target);
+  if (weekState[k]) return weekState[k];
+  const t = TARGET_MAP[target];
+  if (!t) return 'draft';
+  const plan = (t.type==='group') ? (planForWeek()[target]||{}) : (PERSONAL[target]||{});
+  return Object.keys(plan).length ? 'draft' : 'empty';
+}
+const targetPending = (week, target) => pendingMap[stKey(week,target)] || 0;
+
+/* ==================== HELPERS ==================== */
+const $ = id => document.getElementById(id);
+const zonesHTML = z => z.map(([f,c]) => `<span class="${c}" style="flex:${f}"></span>`).join('');
+const isCurrentWeek = () => selectedWeek === 42;
+const isFutureWeek = () => selectedWeek > 42;
+const subMeters = sub => { const m = (sub||'').match(/([\d,\.]+)\s*מ׳/); return m ? parseFloat(m[1].replace(/,/g,'')) : 0; };
+const subMins = sub => { const m = (sub||'').match(/(\d+)\s*דק׳/); return m ? +m[1] : 0; };
+const toMin = t => { const p = (t||'18:00').split(':'); return (+p[0])*60 + (+p[1]||0); };
+const endMin = (w, t) => toMin(t || w.time) + (subMins(w.sub) || 60);
+const loadColor = v => v<60 ? '#84CC16' : v<100 ? '#FBBF24' : v<130 ? '#F87171' : '#DC2626';
+const loadChip = w => `<span class="load-chip"><svg><use href="#i-zap"/></svg> ${w.load||0} <span class="load-dot" style="background:${loadColor(w.load||0)}"></span></span>`;
+
+/* staff conflicts — same instructor in two places at once */
+function conflictsFor(dayIdx){
+  const slots = [];
+  TARGETS.filter(t=>t.type==='group').forEach(g=>{
+    sessionAt(g.id, dayIdx).forEach(s=>{
+      const w = WORKOUTS[s.wid];
+      const ov = (s.kind==='group') ? ovFor(g.id, dayIdx) : null;
+      if (ov && ov.type==='cancel') return;
+      const st = (ov && ov.type==='time') ? ov.time : w.time;
+      slots.push({ id:g.id, wid:s.wid, coach:coachOf(g.id, dayIdx), st:toMin(st), en:endMin(w, st) });
+    });
+  });
+  sessionAt('me', dayIdx).filter(s=>s.kind==='personal').forEach(s=>{
+    const w = WORKOUTS[s.wid];
+    slots.push({ id:'me', wid:s.wid, coach:'me', st:toMin(w.time), en:endMin(w) });
+  });
+  const out = [];
+  for (let i=0;i<slots.length;i++) for (let j=i+1;j<slots.length;j++){
+    if (slots[i].coach===slots[j].coach && slots[i].st < slots[j].en && slots[j].st < slots[i].en) out.push([slots[i], slots[j]]);
+  }
+  return out;
+}
+
+function planForWeek(){
+  if (selectedWeek === 42) return SCHEDULE;
+  if (selectedWeek < 42) return PAST_41;
+  return (WEEK_PLANS[selectedWeek] ||= { dagig:{}, neorim:{}, bogarim:{} });
+}
+function ovFor(groupId, dayIdx){
+  return (isCurrentWeek() && OVERRIDES[groupId]) ? OVERRIDES[groupId][dayIdx] : null;
+}
+
+function sessionAt(targetId, dayIdx){
+  const plan = planForWeek();
+  if (targetId === 'all') return [];
+  const t = TARGET_MAP[targetId];
+  if (t.type === 'group'){
+    const out = [];
+    const ov = ovFor(targetId, dayIdx);
+    const wid = plan[targetId] && plan[targetId][dayIdx];
+    if (wid) out.push({ wid, kind:'group' });
+    if (ov && ov.type === 'add') out.push({ wid:ov.wid, kind:'add' });
+    return out;
+  }
+  const pid = PERSONAL[targetId] && PERSONAL[targetId][dayIdx];
+  if (!pid) return [];
+  if (pid.startsWith('@')){
+    const gid = pid.slice(1);
+    const wid = plan[gid] && plan[gid][dayIdx];
+    return wid ? [{ wid, kind:'groupRef', group:gid }] : [];
+  }
+  return [{ wid:pid, kind:'personal' }];
+}
+
+/* ==================== TARGET PICKER ==================== */
+function togglePicker(e){
+  e.stopPropagation();
+  $('picker').classList.toggle('open');
+  if ($('picker').classList.contains('open')){ $('pickerSearch').value=''; renderPickerList(); $('pickerSearch').focus(); }
+}
+document.addEventListener('click', e=>{
+  if (!e.target.closest || !e.target.closest('.picker')) $('picker').classList.remove('open');
+});
+
+function renderPickerBtn(){
+  const t = TARGET_MAP[mode];
+  $('pickerLabel').innerHTML = t.color
+    ? `<span class="pcolor" style="background:${t.color}"></span> ${t.name}`
+    : `<svg class="icon-sm" style="color:var(--accent)"><use href="#i-users"/></svg> ${t.name}`;
+}
+function renderPickerList(){
+  const q = ($('pickerSearch').value || '').trim();
+  const match = t => !q || t.name.includes(q) || (t.sub||'').includes(q);
+  const sec = (label, items) => items.length ? `
+    <div class="picker-sec">${label}</div>
+    ${items.map(t=>`
+      <div class="picker-item ${t.id===mode?'active':''}" onclick="setMode('${t.id}')">
+        ${t.color ? `<span class="pcolor" style="background:${t.color}"></span>` : `<svg class="icon-sm"><use href="#i-users"/></svg>`}
+        <span style="flex:1">${t.name}${t.sub?` <span class="picker-sub">· ${t.sub}</span>`:''}</span>
+        ${t.id===mode ? `<svg class="icon-xs" style="color:var(--accent)"><use href="#i-check"/></svg>` : ''}
+      </div>`).join('')}` : '';
+  $('pickerList').innerHTML =
+    sec('סקירה', TARGETS.filter(t=>t.type==='all' && match(t))) +
+    sec('קבוצות', TARGETS.filter(t=>t.type==='group' && match(t))) +
+    sec('מתאמנים אישיים', TARGETS.filter(t=>t.type==='personal' && match(t))) +
+    sec('אני', TARGETS.filter(t=>t.type==='me' && match(t)));
+}
+
+function setMode(m){
+  mode = m;
+  $('picker').classList.remove('open');
+  const t = TARGET_MAP[m];
+  if (!(t.type==='group' || t.type==='all')) staffFilter = 'all';
+  sidebarTab = t.type==='personal' ? 'athlete' : 'library';
+  renderPickerBtn();
+  renderDays();
+  renderMeta();
+  renderStaffFilter();
+  renderSidebar();
+  updateActions();
+  renderWeekStateChip();
+  closeDetail();
+}
+
+/* ==================== SCHEDULE META ==================== */
+function renderMeta(){
+  const t = TARGET_MAP[mode];
+  const editBtn = `<button class="meta-edit" onclick="alert('WIREFRAME — עריכת לוז קבוע / תבנית שבועית')">
+    <svg class="icon-xs"><use href="#i-pencil"/></svg> עריכה</button>`;
+  let html = '';
+  if (t.type === 'all'){
+    html = `<svg class="icon-sm"><use href="#i-users"/></svg>
+      3 קבוצות · 2 מתאמנים אישיים · התוכנית שלך · השבוע: ${activeCount} אימונים פעילים · ביטול · תוספת · שינוי שעה · <b style="color:var(--danger)">קונפליקט צוות בד׳ 20:00</b>`;
+  } else if (t.type === 'group'){
+    html = `<svg class="icon-sm"><use href="#i-repeat"/></svg> לוז קבוע: ${t.recurring} ${editBtn}`;
+  } else if (mode === 'maya'){
+    html = `<svg class="icon-sm"><use href="#i-user"/></svg> שחייה עם דגיגונים (ד׳, ה׳) · כוח (ב׳) · ריצה (ו׳) — מיזוג קבוצה + אישי ${editBtn}`;
+  } else if (mode === 'noam'){
+    html = `<svg class="icon-sm"><use href="#i-user"/></svg> תוכנית אישית רב-ענפית — שחייה · רכיבה · ריצה ${editBtn}`;
+  } else {
+    html = `<svg class="icon-sm"><use href="#i-user"/></svg> התוכנית שלך — ריצה · רכיבה · שחייה ${editBtn}`;
+  }
+  $('schedMeta').innerHTML = html;
+}
+
+/* ==================== MESO BLOCK PANEL + WEEK STATE ==================== */
+function renderMeso(){
+  const maxL = Math.max(...WEEKS.map(w=>w.load||0));
+  $('mesoPanel').innerHTML = `
+    <div class="meso-head">
+      <svg class="icon"><use href="#i-chart"/></svg>
+      <div style="flex:1">
+        <div class="meso-name">מסו-בלוק: בסיס אירובי <span class="meso-pos">· שבוע 4 מתוך 6</span></div>
+        <div class="meso-goal">מטרה: בסיס אירובי + טכניקה · פריקה מתוכננת בשבוע 43 · שיא בשבוע 44</div>
+      </div>
+    </div>
+    <div class="meso-bars">
+      ${WEEKS.map(w=>{
+        const h = Math.max(8, Math.round(((w.load||60)/maxL)*48));
+        const planned = w.n >= 42 ? ' planned' : '';
+        const sel = w.n===selectedWeek ? ' selected' : '';
+        return `<div class="mb-col${planned}${sel}" onclick="selectWeek(${w.n})" title="שבוע ${w.n} · ${w.level}">
+          ${w.recovery ? `<svg class="icon-xs mb-rec" style="margin-bottom:2px"><use href="#i-trend-down"/></svg>` : ''}
+          <div class="mb-bar" style="height:${h}px;background:${w.bar||'var(--border)'}"></div>
+          <div class="mb-n">${w.n}</div>
+          <div class="mb-status ${w.st}">${w.status}</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+function renderWeekStateChip(){
+  const el = $('wsChip'); if (!el) return;
+  if (mode === 'all'){
+    const pend = Object.keys(pendingMap).reduce((a,k)=>a+pendingMap[k],0);
+    const pub = TARGETS.filter(t=>t.type!=='all' && targetState(selectedWeek,t.id)==='published').length;
+    const draft = TARGETS.filter(t=>t.type!=='all' && targetState(selectedWeek,t.id)==='draft').length;
+    el.innerHTML = selectedWeek>=42
+      ? `<span class="ws-chip ws-draft">${draft} בטיוטה · ${pub} פורסמו${pend?` · ${pend} שינויים ממתינים`:''}</span>`
+      : `<span class="ws-chip ws-done">היסטוריה</span>`;
+    return;
+  }
+  const st = targetState(selectedWeek, mode);
+  el.innerHTML = st==='published'
+    ? `<span class="ws-chip ws-published"><svg><use href="#i-check"/></svg> פורסם</span>`
+    : st==='dirty'
+    ? `<span class="ws-chip ws-dirty"><svg><use href="#i-alert"/></svg> ${targetPending(selectedWeek,mode)} שינויים ממתינים</span>`
+    : st==='empty'
+    ? `<span class="ws-chip ws-empty">לא תוכנן</span>`
+    : (selectedWeek>=42 ? `<span class="ws-chip ws-draft">טיוטה</span>` : `<span class="ws-chip ws-done">היסטוריה</span>`);
+}
+function selectWeek(n){
+  selectedWeek = n;
+  $('weekInput').value = n;
+  renderMeso();
+  const w = WEEKS.find(x=>x.n===n);
+  let label;
+  if (w){
+    const extra = n===42 ? '' : (n<42 ? ' · שבוע שעבר — לצפייה' : ' · עתידי');
+    label = `שבוע ${w.n} · ${w.range} 2026${extra} · ${BLOCK}`;
+  } else {
+    label = `שבוע ${n} · ${n<42 ? 'שבוע שעבר — לצפייה' : 'שבוע עתידי — לתכנון'} · ${BLOCK}`;
+  }
+  $('weekLabel').innerHTML =
+    `<svg class="icon icon-sm"><use href="#i-calendar"/></svg> ${label} <span id="wsChip"></span>` +
+    (isCurrentWeek() ? '' : ` <button style="border:none;background:var(--accent-dim);color:var(--accent);border-radius:20px;padding:3px 12px;font-size:11px;font-weight:700;cursor:pointer" onclick="selectWeek(42)">חזור לשבוע הנוכחי</button>`);
+  renderWeekStateChip();
+  renderDays();
+  updateActions();
+  renderReadiness();
+}
+function shiftWeek(dir){ selectWeek(Math.max(1, Math.min(52, selectedWeek + dir))); }
+function jumpWeek(v){
+  const n = Math.max(1, Math.min(52, parseInt(v,10) || 42));
+  selectWeek(n);
+}
+
+/* ==================== SPORT FILTER ==================== */
+function renderSportFilter(){
+  const chips = [`<button class="sf-chip ${sportFilter==='all'?'active':''}" onclick="setSportFilter('all')">הכל</button>`]
+    .concat(Object.keys(SPORTS).map(k=>{
+      const s = SPORTS[k];
+      return `<button class="sf-chip ${sportFilter===k?'active':''}" onclick="setSportFilter('${k}')">
+        <svg><use href="#${s.icon}"/></svg> ${s.label}</button>`;
+    }));
+  $('sportFilter').innerHTML = `<span class="sf-label">ענף:</span>` + chips.join('');
+}
+function setSportFilter(s){ sportFilter = s; renderSportFilter(); renderDays(); }
+
+/* ==================== WEEK READINESS ==================== */
+function renderReadiness(){
+  const row = $('readinessRow');
+  if (!isCurrentWeek()){ row.style.display='none'; return; }
+  row.style.display='';
+  const items = TARGETS.filter(t=>t.type!=='all').map(t=>{
+    const st = targetState(42, t.id);
+    const cls = st==='published'?'ws-published':st==='dirty'?'ws-dirty':st==='empty'?'ws-empty':'ws-draft';
+    const label = st==='published'?'פורסם':st==='dirty'?`${targetPending(42,t.id)} שינויים`:st==='empty'?'לא תוכנן':'טיוטה';
+    const dot = t.color?`<span class="gdot" style="background:${t.color}"></span>`:'';
+    return `<div class="rd-item" onclick="setMode('${t.id}')">${dot}${t.name}<span class="ws-chip ${cls}">${label}</span></div>`;
+  }).join('');
+  const ready = TARGETS.filter(t=>t.type!=='all' && ['draft','dirty'].includes(targetState(42,t.id))).length;
+  row.innerHTML = `<span class="sf-label">מוכנות שבוע:</span>${items}` +
+    (ready ? `<button class="btn-bulk" onclick="bulkPublish()"><svg class="icon-xs"><use href="#i-send"/></svg> פרסם הכל שמוכן (${ready})</button>` : '');
+}
+
+/* ==================== STAFF FILTER ==================== */
+function renderStaffFilter(){
+  const t = TARGET_MAP[mode];
+  $('staffFilter').style.display = (t.type==='group'||t.type==='all') ? '' : 'none';
+  $('staffFilter').innerHTML = `<span class="sf-label">מדריך:</span>
+    <button class="sf-chip ${staffFilter==='all'?'active':''}" onclick="setStaffFilter('all')">הכל</button>
+    ${STAFF.map(s=>`<button class="sf-chip ${staffFilter===s.id?'active':''}" onclick="setStaffFilter('${s.id}')"><svg><use href="#i-user"/></svg> ${s.name}</button>`).join('')}`;
+}
+function setStaffFilter(s){ staffFilter = s; renderStaffFilter(); renderDays(); }
+
+/* ==================== SIDEBAR TABS + ATHLETE CONTEXT ==================== */
+function renderSidebar(){
+  const t = TARGET_MAP[mode];
+  const personal = t.type==='personal';
+  $('libTabs').style.display = personal ? '' : 'none';
+  $('panelLibrary').style.display = (personal && sidebarTab==='athlete') ? 'none' : '';
+  $('panelAthlete').style.display = (personal && sidebarTab==='athlete') ? '' : 'none';
+  $('libTabs').innerHTML = personal ? `
+    <button class="ltab ${sidebarTab==='library'?'active':''}" onclick="setSidebarTab('library')">
+      <svg class="icon-xs"><use href="#i-lib"/></svg> ספריית אימונים</button>
+    <button class="ltab ${sidebarTab==='athlete'?'active':''}" onclick="setSidebarTab('athlete')">
+      <svg class="icon-xs"><use href="#i-user"/></svg> כרטיס ${t.name.split(' ')[0]}</button>` : '';
+  if (personal && sidebarTab==='athlete') renderAthletePanel(mode);
+}
+function setSidebarTab(s){ sidebarTab = s; renderSidebar(); }
+
+function renderAthletePanel(id){
+  const a = ATHLETE_CONTEXT[id]; if (!a) return;
+  const t = TARGET_MAP[id];
+  const unit = id==='maya' ? ' / 100מ׳' : ' / ק"מ';
+  $('panelAthlete').innerHTML = `
+    <div class="ath-head">
+      <div class="ath-avatar"><svg class="icon" style="width:24px;height:24px"><use href="#i-user"/></svg></div>
+      <div><div class="ath-name">${t.name}</div><div class="ath-sub">${t.sub||''}</div></div>
+    </div>
+    <div class="ath-section">
+      <h4><svg class="icon-xs"><use href="#i-clipboard"/></svg> מבחן אחרון</h4>
+      <div class="ath-test"><span>${a.test.name}</span><span class="res">${a.test.result}</span></div>
+      <div style="font-size:10.5px;color:var(--text-faint);margin-top:4px">${a.test.date}</div>
+    </div>
+    <div class="ath-section">
+      <h4><svg class="icon-xs"><use href="#i-chart"/></svg> טווחי עוצמה (Zones)</h4>
+      ${a.zones.map(z=>`<div class="zone-row"><span class="zone-tag" style="background:${z.c}">${z.t}</span><span class="zone-range">${z.r}${unit}</span></div>`).join('')}
+    </div>
+    <div class="ath-section">
+      <h4><svg class="icon-xs"><use href="#i-check"/></svg> עמידה בתוכנית</h4>
+      <div class="compliance-row">
+        <div class="compliance-head"><span>ביצוע תוכנית</span><span class="v">${a.compliance}%</span></div>
+        <div class="compliance-bar"><span style="width:${a.compliance}%"></span></div>
+      </div>
+      ${a.attendance!==null?`
+      <div class="compliance-row">
+        <div class="compliance-head"><span>נוכחות קבוצה</span><span class="v">${a.attendance}%</span></div>
+        <div class="compliance-bar"><span style="width:${a.attendance}%"></span></div>
+      </div>`:''}
+    </div>
+    <div class="ath-section">
+      <h4><svg class="icon-xs"><use href="#i-alert"/></svg> דגלים</h4>
+      ${a.flags.map(f=>`<div class="ath-flag"><svg class="icon-sm"><use href="#i-alert"/></svg> ${f}</div>`).join('')}
+    </div>
+    <div class="ath-section">
+      <h4><svg class="icon-xs"><use href="#i-note"/></svg> פתקים אחרונים</h4>
+      ${a.notes.map(n=>`<div class="ath-note"><b>${n.d}:</b> ${n.t}</div>`).join('')}
+    </div>
+    <div class="ath-actions">
+      <button class="ath-btn" onclick="alert('WIREFRAME — שליחת הודעה למתאמן')"><svg class="icon-xs"><use href="#i-send"/></svg> הודעה</button>
+      <button class="ath-btn" onclick="alert('WIREFRAME — הוספת מבחן')"><svg class="icon-xs"><use href="#i-plus"/></svg> מבחן</button>
+    </div>`;
+}
+
+/* staff teaching hours for the viewed week */
+function staffHours(){
+  const hours = {};
+  TARGETS.filter(t=>t.type==='group').forEach(g=>{
+    const plan = planForWeek()[g.id]||{};
+    Object.keys(plan).forEach(day=>{
+      const ov = ovFor(g.id, +day);
+      if (ov && ov.type==='cancel') return;
+      const w = WORKOUTS[plan[day]]; if (!w) return;
+      const c = coachOf(g.id, +day);
+      hours[c] = (hours[c]||0) + (subMins(w.sub)||60)/60;
+    });
+  });
+  return hours;
+}
+
+/* ==================== DAY GRID ==================== */
+let activeCount = 0;
+let sportAgg = {};
+
+function badge(kind, group, ov){
+  const b = [];
+  if (kind === 'group')      b.push(`<span class="badge b-fixed"><svg><use href="#i-repeat"/></svg> קבוע</span>`);
+  if (kind === 'add')        b.push(`<span class="badge b-add"><svg><use href="#i-plus"/></svg> נוסף</span>`);
+  if (kind === 'personal')   b.push(`<span class="badge b-personal"><svg><use href="#i-user"/></svg> אישי</span>`);
+  if (kind === 'groupRef')   b.push(`<span class="badge b-gref"><svg><use href="#i-users"/></svg> מקבוצה: ${TARGET_MAP[group].name}</span>`);
+  if (ov && ov.type === 'cancel') b.push(`<span class="badge b-cancel"><svg><use href="#i-x"/></svg> בוטל</span>`);
+  if (ov && ov.type === 'time')   b.push(`<span class="badge b-time"><svg><use href="#i-clock"/></svg> שעה שונתה</span>`);
+  return b.join('');
+}
+function aggSport(w){
+  if (!w) return;
+  const k = w.sport || 'swim';
+  sportAgg[k] = sportAgg[k] || { count:0, meters:0, mins:0, load:0 };
+  sportAgg[k].count++;
+  sportAgg[k].meters += subMeters(w.sub);
+  sportAgg[k].mins += subMins(w.sub);
+  sportAgg[k].load += w.load || 0;
+}
+
+function renderDays(){
+  const passes = w => sportFilter==='all' || (w && w.sport===sportFilter);
+  const editableWeek = isCurrentWeek() || isFutureWeek();
+  const isPast = !editableWeek;
+  activeCount = 0;
+  sportAgg = {};
+  let html = '';
+
+  DAYS.forEach((day,i)=>{
+    const today = (i===TODAY && isCurrentWeek()) ? ' today' : '';
+    let inner = '';
+    let shown = 0;
+    const confs = editableWeek && (mode==='all' || TARGET_MAP[mode].type==='group' || mode==='me') ? conflictsFor(i) : [];
+    const confHit = (tid, wid) => confs.some(([a,b]) => (a.id===tid && a.wid===wid) || (b.id===tid && b.wid===wid));
+    const coachOk = gid => staffFilter==='all' || coachOf(gid, i)===staffFilter;
+
+    if (mode === 'all'){
+      /* groups */
+      TARGETS.filter(x=>x.type==='group').forEach(g=>{
+        sessionAt(g.id, i).forEach(s=>{
+          const w = WORKOUTS[s.wid];
+          const ov = (s.kind==='group') ? ovFor(g.id, i) : null;
+          const canceled = ov && ov.type==='cancel';
+          const time = (ov && ov.type==='time') ? ov.time : w.time;
+          if (!canceled){ activeCount++; aggSport(w); }
+          if (!passes(w) || !coachOk(g.id)) return;
+          shown++;
+          const actual = isPast && PAST_ACTUAL[g.id] ? PAST_ACTUAL[g.id][i] : null;
+          inner += `
+            <div class="gs-chip ${canceled?'canceled':''} ${confHit(g.id,s.wid)?'conf-outline':''}" onclick="openDetail('${g.id}',${i})">
+              <div class="gs-gline" style="color:${g.color}"><span class="gdot" style="background:${g.color}"></span>${g.name} · ${time} · ${staffName(coachOf(g.id,i))}</div>
+              <div class="gs-wname"><svg><use href="#${sportIcon(w)}"/></svg>${w.name}</div>
+              <div class="gs-sub">${w.sub} · עומס ${w.load||0}</div>
+              ${actual ? `<div class="actual-line ${actual.done?'ok':'miss'}"><svg><use href="#${actual.done?'i-check':'i-x'}"/></svg> ${actual.done?`בוצע · נוכחות ${actual.att}`:`לא בוצע · ${actual.note||''}`}</div>` : ''}
+              ${canceled || (ov&&ov.type==='time') || s.kind==='add' ? `<div class="session-badges">${badge(s.kind, g.id, ov)}</div>` : ''}
+            </div>`;
+        });
+      });
+      /* personal + me — only their own sessions (group-inherited appear under the group) */
+      TARGETS.filter(x=>x.type==='personal'||x.type==='me').forEach(p=>{
+        if (staffFilter!=='all') return;
+        sessionAt(p.id, i).filter(s=>s.kind==='personal').forEach(s=>{
+          const w = WORKOUTS[s.wid];
+          activeCount++; aggSport(w);
+          if (!passes(w)) return;
+          shown++;
+          inner += `
+            <div class="gs-chip ${confHit(p.id,s.wid)?'conf-outline':''}" onclick="openDetail('${p.id}',${i})">
+              <div class="gs-gline" style="color:${p.color}"><span class="gdot" style="background:${p.color}"></span>${p.name} · ${w.time}</div>
+              <div class="gs-wname"><svg><use href="#${sportIcon(w)}"/></svg>${w.name}</div>
+              <div class="gs-sub">${w.sub} · עומס ${w.load||0}</div>
+            </div>`;
+        });
+      });
+      if (confs.length){
+        shown++;
+        inner += `<div class="conflict-chip"><svg><use href="#i-alert"/></svg> קונפליקט — ${staffName(confs[0][0].coach)}: ${TARGET_MAP[confs[0][0].id].name} ↔ ${TARGET_MAP[confs[0][1].id].name}</div>`;
+      }
+    } else {
+      const t = TARGET_MAP[mode];
+      sessionAt(mode, i).forEach(s=>{
+        const w = WORKOUTS[s.wid];
+        const gid = s.group || (t.type==='group' ? mode : null);
+        const ov = (s.kind==='group' || s.kind==='groupRef') ? ovFor(gid, i) : null;
+        const canceled = ov && ov.type==='cancel';
+        const time = (ov && ov.type==='time') ? ov.time : w.time;
+        if (!canceled){ activeCount++; aggSport(w); }
+        if (!passes(w)) return;
+        if (t.type==='group' && !coachOk(mode)) return;
+        if (t.type!=='group' && staffFilter!=='all') return;
+        shown++;
+        const canAct = editableWeek && s.kind!=='groupRef';
+        const draggable = canAct ? ` draggable="true" ondragstart="dragStartSession(event,${i})"` : '';
+        const menuBtn = canAct
+          ? `<button class="sess-menu-btn" title="פעולות" onclick="event.stopPropagation();openSessMenu(event,'${mode}',${i},'${s.wid}','${s.kind}')"><svg class="icon-xs"><use href="#i-more"/></svg></button>` : '';
+        const varBadge = (t.type==='group' && w.variants)
+          ? `<span class="badge b-personal"><svg><use href="#i-users"/></svg> ${w.variants.length} התאמות אישיות</span>` : '';
+        const confBadge = (confHit(mode, s.wid) || (gid && confHit(gid, s.wid)))
+          ? `<span class="badge b-cancel"><svg><use href="#i-alert"/></svg> חפיפה</span>` : '';
+        const coachBadge = (t.type==='group')
+          ? `<span class="coach-chip"><svg><use href="#i-user"/></svg> מדריך: ${staffName(coachOf(mode,i))}</span>` : '';
+        const actual = (isPast && t.type==='group' && PAST_ACTUAL[mode]) ? PAST_ACTUAL[mode][i]
+          : (isPast && PAST_ACTUAL_PERSONAL[mode]) ? PAST_ACTUAL_PERSONAL[mode][i] : null;
+        inner += `
+          <div class="day-session ${canceled?'canceled':''}${(gid && confHit(gid,s.wid)) || confHit(mode,s.wid)?' conf-outline':''}"${draggable} onclick="openDetail('${mode}',${i},${s.kind==='groupRef'?`'${gid}'`:'null'})">
+            <div class="sess-top">
+              <span class="session-time"><svg class="icon icon-xs"><use href="#i-clock"/></svg> ${time}</span>
+              ${menuBtn}
+            </div>
+            <div class="session-name"><svg class="icon-xs"><use href="#${sportIcon(w)}"/></svg>${w.name}</div>
+            <div class="session-badges">${badge(s.kind, gid, ov)}${varBadge}${confBadge}${coachBadge}</div>
+            <div class="session-sub">${w.sub}</div>
+            <div class="session-zones">${zonesHTML(w.zones)}</div>
+            <div>${loadChip(w)}${actual ? ` <span class="actual-line ${actual.done?'ok':'miss'}" style="display:inline-flex;margin-inline-start:6px"><svg><use href="#${actual.done?'i-check':'i-x'}"/></svg> ${actual.done?`בוצע${actual.att?` · נוכחות ${actual.att}`:(actual.note?` · ${actual.note}`:'')}`:`לא בוצע${actual.note?` · ${actual.note}`:''}`}</span>` : ''}</div>
+          </div>`;
+      });
+    }
+
+    /* events on the board — planned around, not filtered by sport */
+    const ev = EVENTS[i];
+    if (ev){
+      const relevant = mode==='all' || (ev.athlete && ev.athlete===mode) || (!ev.athlete && (!ev.group || ev.group===mode ||
+        (TARGET_MAP[mode].type==='personal' && Object.values(PERSONAL[mode]||{}).includes('@'+ev.group))));
+      if (relevant){
+        shown++;
+        const icon = ev.kind==='competition' ? 'i-trophy' : ev.kind==='personal' ? 'i-user' : 'i-clipboard';
+        inner += `<div class="event-chip ${ev.kind==='competition'?'comp':''} ${ev.kind==='personal'?'pers':''}">
+          <svg class="icon-xs"><use href="#${icon}"/></svg>
+          ${ev.title} · ${ev.time}</div>`;
+      }
+    }
+
+    if (!shown){
+      if (isPast || sportFilter !== 'all' || mode==='all'){
+        inner = `<div class="day-empty">—</div>`;
+      } else {
+        inner = `<button class="day-add" onclick="quickAdd(${i})"><svg class="icon icon-xs"><use href="#i-plus"/></svg> הוסף</button>`;
+      }
+    }
+    html += `
+      <div class="day-card${today}" data-day="${i}">
+        <div class="day-head"><span class="day-name">${day.l}</span><span class="day-num">${day.d}.10</span></div>
+        ${inner}
+      </div>`;
+  });
+  $('days').innerHTML = html;
+  bindDrop();
+  updateSummary();
+}
+
+/* ==================== SUMMARY — load target, sports, compare, actual ==================== */
+function updateSummary(){
+  const keys = Object.keys(sportAgg).sort((a,b)=>sportAgg[b].count-sportAgg[a].count);
+  const chips = keys.map(k=>{
+    const s = SPORTS[k], a = sportAgg[k];
+    const val = (k==='swim' && a.meters) ? `${a.meters.toLocaleString('he-IL')} מ׳`
+              : a.mins ? `${a.mins} דק׳` : '';
+    return `<span class="sport-chip">
+      <svg style="color:${s.color}"><use href="#${s.icon}"/></svg> ${s.label} <b>${a.count}</b>${val?` · ${val}`:''}
+    </span>`;
+  }).join('');
+
+  const totalLoad = keys.reduce((sum,k)=>sum + sportAgg[k].load, 0);
+  const target = LOAD_TARGET[mode];
+  const isPast = !isCurrentWeek() && !isFutureWeek();
+
+  let loadHtml = '';
+  if (isPast){
+    let doneCount = 0;
+    if (mode==='all'){
+      TARGETS.filter(t=>t.type==='group').forEach(g=>{
+        doneCount += Object.values(PAST_ACTUAL[g.id]||{}).filter(a=>a.done).length;
+      });
+    } else if (PAST_ACTUAL[mode]){
+      doneCount = Object.values(PAST_ACTUAL[mode]).filter(a=>a.done).length;
+    }
+    loadHtml = `<span class="target-chip"><svg style="color:var(--text-faint)"><use href="#i-chart"/></svg> תוכנן <b>${activeCount}</b> · בוצע <b>${doneCount}</b></span>`;
+  } else if (target){
+    const pct = Math.min(100, Math.round(totalLoad/target*100));
+    loadHtml = `<span class="target-chip"><svg style="color:var(--accent)"><use href="#i-zap"/></svg> עומס <b>${totalLoad}</b> / יעד ${target} <span class="target-bar"><span style="width:${pct}%"></span></span></span>`;
+  } else {
+    loadHtml = `<span class="target-chip"><svg style="color:var(--accent)"><use href="#i-zap"/></svg> עומס כולל <b>${totalLoad}</b></span>`;
+  }
+
+  const compareHtml = isPast ? '' :
+    `<span class="sport-chip"><svg style="color:var(--text-faint)"><use href="#i-chart"/></svg> מול שבוע 33 (בלוח קודם): עומס +9%</span>`;
+
+  const t = TARGET_MAP[mode];
+  let hoursHtml = '';
+  if (t.type==='group' || t.type==='all'){
+    const h = staffHours();
+    const parts = Object.keys(h).map(id=>`${staffName(id)} <b>${h[id].toFixed(1)}</b>`).join(' · ');
+    hoursHtml = `<span class="hours-chip"><svg><use href="#i-clock"/></svg> שעות הוראה: ${parts}</span>`;
+  }
+
+  $('summaryStats').innerHTML =
+    loadHtml + chips + compareHtml + hoursHtml + `<span class="summary-stat"><b>${activeCount}</b> אימונים</span>`;
+}
+
+/* ==================== DROP TARGETS ==================== */
+function bindDrop(){
+  const t = TARGET_MAP[mode];
+  const droppable = mode !== 'all' && (isCurrentWeek() || isFutureWeek());
+  document.querySelectorAll('.day-card').forEach(card=>{
+    card.addEventListener('dragover', e=>{
+      if (droppable){ e.preventDefault(); card.classList.add('dragover'); }
+    });
+    card.addEventListener('dragleave', ()=> card.classList.remove('dragover'));
+    card.addEventListener('drop', e=>{
+      e.preventDefault(); card.classList.remove('dragover');
+      if (!droppable) return;
+      const data = e.dataTransfer.getData('text/plain');
+      const day = +card.dataset.day;
+
+      /* move an existing session between days */
+      if (data.startsWith('move:')){
+        const from = +data.split(':')[1];
+        if (from === day) return;
+        const src = t.type==='group' ? planForWeek()[mode] : PERSONAL[mode];
+        if (src[day] !== undefined){ alert('WIREFRAME — ביום זה כבר יש אימון'); return; }
+        src[day] = src[from]; delete src[from];
+        markDirty(); renderDays();
+        return;
+      }
+
+      /* drop a workout from the library */
+      const lib = LIBRARY.find(l=>l.name===data);
+      if (!lib) return;
+      const id = 'c' + Date.now();
+      WORKOUTS[id] = { name:lib.name, time:'18:00', sub:lib.sub, zones:lib.zones, steps:S_GEN, sport:lib.sport || 'swim', text:'', load:75 };
+      if (t.type === 'group') planForWeek()[mode][day] = id;
+      else PERSONAL[mode][day] = id;
+      markDirty(); renderDays();
+    });
+  });
+}
+
+/* ==================== SESSION MENU + MOVE + PUBLISH STATE ==================== */
+function dragStartSession(e, dayIdx){
+  e.dataTransfer.setData('text/plain', 'move:' + dayIdx);
+  e.stopPropagation();
+}
+
+let sessMenuEl = null;
+function openSessMenu(e, targetId, dayIdx, wid, kind){
+  closeSessMenu();
+  const t = TARGET_MAP[targetId];
+  const canEdit = isCurrentWeek() || isFutureWeek();
+  const items = [];
+  items.push(`<div class="sm-item" onclick="closeSessMenu();openDetail('${targetId}',${dayIdx})"><svg class="icon-xs"><use href="#i-pencil"/></svg> עריכה</div>`);
+  if (canEdit){
+    if (kind==='group') items.push(`<div class="sm-item" onclick="closeSessMenu();cancelSession('${targetId}',${dayIdx})"><svg class="icon-xs"><use href="#i-x"/></svg> בטל אימון</div>`);
+    items.push(`<div class="sm-item" onclick="closeSessMenu();alert('WIREFRAME — גרור את האימון ליום אחר בלוח')"><svg class="icon-xs"><use href="#i-repeat"/></svg> העבר ליום אחר (גרור)</div>`);
+    items.push(`<div class="sm-item" onclick="closeSessMenu();duplicateSession('${targetId}',${dayIdx},'${wid}','${kind}')"><svg class="icon-xs"><use href="#i-copy"/></svg> שכפל ליום הבא</div>`);
+    if (t.type==='group') items.push(`<div class="sm-item" onclick="closeSessMenu();alert('WIREFRAME — שכפול לקבוצה אחרת עם התאמת סקאלה')"><svg class="icon-xs"><use href="#i-users"/></svg> שכפל לקבוצה אחרת</div>`);
+    items.push(`<div class="sm-item danger" onclick="closeSessMenu();deleteSession('${targetId}',${dayIdx},'${kind}')"><svg class="icon-xs"><use href="#i-x"/></svg> מחק</div>`);
+  }
+  sessMenuEl = document.createElement('div');
+  sessMenuEl.className = 'sess-menu';
+  sessMenuEl.innerHTML = items.join('');
+  document.body.appendChild(sessMenuEl);
+  const r = e.target.getBoundingClientRect();
+  sessMenuEl.style.top = (r.bottom + 4) + 'px';
+  sessMenuEl.style.left = Math.max(8, r.left - 160) + 'px';
+  e.stopPropagation();
+}
+function closeSessMenu(){ if (sessMenuEl){ sessMenuEl.remove(); sessMenuEl = null; } }
+document.addEventListener('click', e=>{
+  if (sessMenuEl && (!e.target.closest || !e.target.closest('.sess-menu'))) closeSessMenu();
+});
+
+function cancelSession(g, day){
+  (OVERRIDES[g] = OVERRIDES[g] || {})[day] = { type:'cancel' };
+  markDirty(); renderDays();
+}
+function deleteSession(targetId, day, kind){
+  const t = TARGET_MAP[targetId];
+  if (t.type==='group'){
+    if (kind==='add'){ delete OVERRIDES[targetId][day]; }
+    else {
+      delete planForWeek()[targetId][day];
+      if (OVERRIDES[targetId]) delete OVERRIDES[targetId][day];
+    }
+  } else {
+    delete PERSONAL[targetId][day];
+  }
+  markDirty(); renderDays(); closeDetail();
+}
+function duplicateSession(targetId, day, wid, kind){
+  if (day >= 6){ alert('WIREFRAME — אין יום נוסף בשבוע'); return; }
+  if (kind==='add'){ alert('WIREFRAME — שכפול אימון נוסף'); return; }
+  const t = TARGET_MAP[targetId];
+  const dst = t.type==='group' ? planForWeek()[targetId] : PERSONAL[targetId];
+  dst[day+1] = wid;
+  markDirty(); renderDays();
+}
+
+function markDirty(){
+  const targets = mode==='all'
+    ? TARGETS.filter(t=>t.type==='group'||t.type==='personal').map(t=>t.id)
+    : [mode];
+  targets.forEach(id=>{
+    const k = stKey(selectedWeek, id);
+    if (weekState[k] === 'published'){ weekState[k] = 'dirty'; pendingMap[k] = (pendingMap[k]||0) + 1; }
+  });
+  updateActions();
+  renderWeekStateChip();
+  renderReadiness();
+}
+
+/* ==================== LIBRARY ==================== */
+function renderCats(){
+  $('libCats').innerHTML = CATS.map(c=>
+    `<button class="lib-cat ${c===activeCat?'active':''}" onclick="setCat('${c}')">${c}</button>`
+  ).join('');
+}
+function setCat(c){ activeCat = c; renderCats(); renderLibrary(); }
+
+function renderLibrary(){
+  const q = ($('libSearch').value || '').trim();
+  const items = LIBRARY.filter(l =>
+    (activeCat==='הכל' || l.cat===activeCat) &&
+    (!q || l.name.includes(q) || l.sub.includes(q))
+  );
+  $('libList').innerHTML = items.length ? items.map(l=>`
+    <div class="lib-card" draggable="true" ondragstart="event.dataTransfer.setData('text/plain','${l.name}')">
+      <svg class="icon-sm lib-grip"><use href="#i-grip"/></svg>
+      <div style="flex:1">
+        <div class="lib-name"><svg><use href="#${sportIcon(l)}"/></svg>${l.name}</div>
+        <div class="lib-sub">${l.sub}</div>
+        <div class="lib-zones">${zonesHTML(l.zones)}</div>
+      </div>
+    </div>`).join('')
+  : `<div style="text-align:center;color:var(--text-faint);font-size:12px;padding:20px 0">לא נמצאו אימונים</div>`;
+}
+
+/* ==================== WORKOUT DETAIL ==================== */
+function openDetail(targetId, dayIdx, refGroup){
+  const sessions = sessionAt(targetId, dayIdx);
+  let s = sessions[0];
+  if (refGroup) s = sessions.find(x=>x.group===refGroup) || s;
+  if (!s) return;
+  detailCtx = { targetId, day:dayIdx, isNew:false, wid:s.wid };
+  showDetail(WORKOUTS[s.wid], detailSubtitle(targetId, dayIdx, s), TARGET_MAP[targetId]);
+}
+function detailSubtitle(targetId, dayIdx, s){
+  const t = TARGET_MAP[targetId];
+  const w = WORKOUTS[s.wid];
+  let ctxName = t.name;
+  if (s.kind === 'groupRef') ctxName = `${t.name} · מקבוצת ${TARGET_MAP[s.group].name}`;
+  return `${ctxName} · ${DAYS[dayIdx].l}׳ ${w.time}`;
+}
+function showDetail(w, subtitle, target){
+  $('workoutDetail').style.display = '';
+  $('wdTitle').innerHTML =
+    `<svg class="icon"><use href="#${sportIcon(w)}"/></svg> ${w.name} — ${subtitle}`;
+  const fac = target && target.facility ? `<span><svg class="icon-xs"><use href="#i-pin"/></svg> ${target.facility}</span>` : '';
+  const coach = target && target.type==='group' ? `<span><svg class="icon-xs"><use href="#i-user"/></svg> מאמן: את</span>` : '';
+  $('detailMeta').innerHTML = `${fac}${coach}<span>${loadChip(w)}</span>`;
+  $('variantRow').innerHTML = (w.variants||[]).map(v=>
+    `<span class="badge b-personal" style="font-size:10.5px;padding:4px 10px"><svg><use href="#i-user"/></svg> ${v.name} · ${v.note}</span>`).join('');
+  $('wdSteps').innerHTML = (w.steps||S_GEN).map(s=>`
+    <div class="wd-step">
+      <div class="wd-set-type ${s.t}">${TYPE_LABEL[s.t]||''}</div>
+      <div class="wd-step-body">
+        <div class="wd-step-title" style="direction:ltr;text-align:right">${s.title}</div>
+        ${s.detail ? `<div class="wd-step-detail">${s.detail}</div>` : ''}
+        <div class="wd-step-zones">${zonesHTML(s.zones)}</div>
+      </div>
+    </div>`).join('');
+  $('qtext').value = w.text || '';
+  $('qresult').innerHTML = '';
+  parsedSteps = null;
+  $('workoutDetail').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+function closeDetail(){ $('workoutDetail').style.display = 'none'; detailCtx = null; }
+
+function setEditor(which){
+  $('tabStructured').classList.toggle('active', which==='structured');
+  $('tabText').classList.toggle('active', which==='text');
+  $('editorStructured').style.display = which==='structured' ? '' : 'none';
+  $('editorText').style.display = which==='text' ? '' : 'none';
+}
+
+function quickAdd(dayIdx){
+  const t = TARGET_MAP[mode];
+  if (t.type === 'all') return;
+  detailCtx = { targetId:mode, day:dayIdx, isNew:true };
+  $('workoutDetail').style.display = '';
+  $('wdTitle').innerHTML =
+    `<svg class="icon"><use href="#i-waves"/></svg> אימון חדש — ${t.name} · ${DAYS[dayIdx].l}׳`;
+  $('wdSteps').innerHTML = `<div style="color:var(--text-faint);font-size:13px;padding:16px;text-align:center">כתוב אימון בכתיבה מהירה, או גרור מהספרייה</div>`;
+  $('qtext').value = 'WU:\n200 FR Z1\n\nMAIN:\n6x100 FR Z3 R:15s\n\nCD:\n200 easy Z1';
+  $('qresult').innerHTML = '';
+  setEditor('text');
+  $('workoutDetail').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+function quickCreate(){ quickAdd(3); }
+
+/* ==================== QUICK TEXT ==================== */
+function parseText(){
+  const text = $('qtext').value;
+  const HEAD_MAP = { WU:'warmup', MAIN:'main', CD:'cooldown', DRILL:'drill', TECH:'technique' };
+  const steps = []; let cur = 'main'; let totalM = 0;
+
+  text.split('\n').map(l=>l.trim()).filter(Boolean).forEach(line=>{
+    const head = HEAD_MAP[line.replace(/[:\-]/g,' ').trim().toUpperCase()];
+    if (head){ cur = head; return; }
+    const z = (line.toUpperCase().match(/\bZ[1-5]\b/)||[])[0];
+    const inten = z || (/EASY/i.test(line)?'Z1' : /THRESHOLD|HARD/i.test(line)?'Z4' : /ALLOUT|SPRINT|MAX|FAST/i.test(line)?'Z5' : null);
+    const reps = line.match(/^(\d+)\s*[x*]\s*(\d+(?:\.\d+)?)/i);
+    const rest = line.match(/R:\s*(\d+)\s*(S|SEC|MIN|M)?/i);
+    const tags = ['paddles','pullbuoy','fins','snorkel','band','kickboard'].filter(t=>new RegExp('\\b'+t+'s?\\b','i').test(line));
+    let meters = 0, title = line;
+    if (reps){
+      const r = +reps[1], d = +reps[2];
+      const unit = /km\b/i.test(line) ? 'km' : 'm';
+      meters = unit==='km' ? r*d*1000 : r*d;
+      title = `${r}×${d}${unit==='km'?' ק"מ':' מ׳'} ${line.replace(reps[0],'').trim().split(/\s+/).slice(0,2).join(' ')}`;
+    } else {
+      const m1 = line.match(/(\d+(?:\.\d+)?)\s*(km)\b/i);
+      if (m1) meters = +m1[1]*1000;
+      else { const m2 = line.match(/(\d+(?:\.\d+)?)\s*(m)\b/i); if (m2) meters = +m2[1]; }
+    }
+    totalM += meters;
+    const parts = [];
+    if (inten) parts.push(inten);
+    if (rest) parts.push(`מנוחה ${rest[1]} ${(rest[2]||'s').toLowerCase().startsWith('m')?'דק׳':'שנ׳'}`);
+    if (tags.length) parts.push(tags.join(' '));
+    steps.push({ t:cur, title, detail:parts.join(' · '), zones:[[10, 'z'+((inten||'Z2').slice(1))]] });
+  });
+
+  if (!steps.length){
+    $('qresult').innerHTML = `<div style="color:var(--text-faint);font-size:12px">כתוב שורות אימון כדי לפענח</div>`;
+    return;
+  }
+  parsedSteps = steps;
+  $('qresult').innerHTML = `
+    <div class="qok"><svg class="icon-sm"><use href="#i-check"/></svg>
+      הומר ל-${steps.length} סטים${totalM?` · סה"כ ${totalM.toLocaleString('he-IL')} מ׳`:''}
+    </div>
+    <div class="qresult">
+      ${steps.map(s=>`
+        <div class="wd-step">
+          <div class="wd-set-type ${s.t}">${TYPE_LABEL[s.t]||''}</div>
+          <div class="wd-step-body">
+            <div class="wd-step-title" style="direction:ltr;text-align:right">${s.title}</div>
+            ${s.detail?`<div class="wd-step-detail">${s.detail}</div>`:''}
+            <div class="wd-step-zones">${zonesHTML(s.zones)}</div>
+          </div>
+        </div>`).join('')}
+    </div>
+    <button class="qapply" onclick="applyParsed()">
+      <svg class="icon icon-sm"><use href="#i-check"/></svg> החל על האימון
+    </button>`;
+}
+function applyParsed(){
+  if (!parsedSteps || !detailCtx) return;
+  let wid;
+  if (detailCtx.isNew){
+    wid = 'c' + Date.now();
+    WORKOUTS[wid] = { name:'אימון מכתיבה מהירה', time:'18:00', sub:'כתיבה מהירה', zones:[[6,'z2'],[4,'z3']], steps:parsedSteps, sport:'swim', text:$('qtext').value, load:80 };
+    const t = TARGET_MAP[detailCtx.targetId];
+    if (t.type === 'group') planForWeek()[detailCtx.targetId][detailCtx.day] = wid;
+    else PERSONAL[detailCtx.targetId][detailCtx.day] = wid;
+    renderDays();
+  } else {
+    wid = detailCtx.wid;
+    WORKOUTS[wid].steps = parsedSteps;
+  }
+  markDirty();
+  const subtitle = `${TARGET_MAP[detailCtx.targetId].name} · ${DAYS[detailCtx.day].l}׳ ${WORKOUTS[wid].time}`;
+  detailCtx = { targetId:detailCtx.targetId, day:detailCtx.day, isNew:false, wid };
+  showDetail(WORKOUTS[wid], subtitle, TARGET_MAP[detailCtx.targetId]);
+  setEditor('structured');
+}
+
+/* ==================== COPY PREVIOUS WEEK ==================== */
+function copyPrevWeek(){
+  const t = TARGET_MAP[mode];
+  if (!isCurrentWeek()) return;
+  if (t.type === 'all'){
+    TARGETS.filter(x=>x.type==='group').forEach(g=>{ SCHEDULE[g.id] = Object.assign({}, PAST_41[g.id]); });
+  } else if (t.type === 'group'){
+    SCHEDULE[mode] = Object.assign({}, PAST_41[mode]);
+  } else {
+    alert('WIREFRAME — העתקת שבוע קודם לתוכנית אישית');
+    return;
+  }
+  renderDays();
+  markDirty();
+  const btn = $('copyBtn');
+  btn.innerHTML = '<svg class="icon icon-sm"><use href="#i-check"/></svg> הועתק משבוע 41';
+  setTimeout(()=>{ btn.innerHTML = '<svg class="icon icon-sm"><use href="#i-copy"/></svg> העתק משבוע 41'; }, 1800);
+}
+
+/* ==================== ACTIONS PER TARGET + PUBLISH (confirm + preview) ==================== */
+function updateActions(){
+  const t = TARGET_MAP[mode];
+  const editableWeek = isCurrentWeek() || isFutureWeek();
+  const pub = $('publishBtn');
+  pub.classList.remove('published','dirty');
+  const showPub = editableWeek && (t.type==='group' || t.type==='personal');
+  pub.style.display = showPub ? '' : 'none';
+  $('copyBtn').style.display = (editableWeek && (t.type==='group' || t.type==='all')) ? '' : 'none';
+  $('templateBtn').style.display = (editableWeek && t.type!=='all') ? '' : 'none';
+
+  const note = $('publishNote');
+  if (!showPub){ note.innerHTML=''; return; }
+  const st = targetState(selectedWeek, mode);
+  if (st==='empty'){
+    note.className = 'publish-note warn';
+    note.innerHTML = 'אין אימונים בשבוע זה — אין מה לפרסם';
+    return;
+  }
+  if (st==='published'){
+    pub.classList.add('published');
+    pub.innerHTML = t.type==='personal'
+      ? '<svg class="icon"><use href="#i-check"/></svg> נשלח למתאמן'
+      : '<svg class="icon"><use href="#i-check"/></svg> פורסם לקבוצה';
+    note.className = 'publish-note ok';
+    note.innerHTML = `האתלטים רואים את השבוע הזה עכשיו`;
+  } else if (st==='dirty'){
+    pub.classList.add('dirty');
+    pub.innerHTML = `<svg class="icon"><use href="#i-send"/></svg> פרסום חוזר · ${targetPending(selectedWeek,mode)} שינויים`;
+    note.className = 'publish-note warn';
+    note.innerHTML = 'האתלטים עדיין רואים גרסה קודמת';
+  } else {
+    pub.innerHTML = t.type==='personal'
+      ? '<svg class="icon"><use href="#i-send"/></svg> שלח למתאמן'
+      : '<svg class="icon"><use href="#i-send"/></svg> פרסם לקבוצה';
+    note.className = 'publish-note';
+    note.innerHTML = 'טיוטה — עדיין לא נשלח לאתלטים';
+  }
+}
+
+/* publish = outward-facing action → confirmation with what will be sent */
+function publish(){
+  publishMode = 'single';
+  const t = TARGET_MAP[mode];
+  const count = t.athletes || 1;
+  const vars = countVariants();
+  $('confirmTitle').innerHTML = `פרסום שבוע ${selectedWeek} — ${t.name}`;
+  $('confirmBody').innerHTML = `
+    <p>הפרסום יישלח ל<b> ${count} ${count>1?'אתלטים':'מתאמן'}</b>. הם יראו את האימונים, ההתאמות האישיות שלהם ופתק השבוע.</p>
+    <div class="cf-stats">
+      <span class="cf-stat">אימונים: <b>${activeCount}</b></span>
+      <span class="cf-stat">התאמות אישיות: <b>${vars}</b></span>
+      <span class="cf-stat">אירועים: <b>2</b></span>
+      <span class="cf-stat">פתק שבוע: <b>כן</b></span>
+    </div>`;
+  showOverlay('confirmOverlay');
+}
+function bulkPublish(){
+  publishMode = 'bulk';
+  const ready = TARGETS.filter(t=>t.type!=='all' && ['draft','dirty'].includes(targetState(42,t.id)));
+  const people = ready.reduce((a,t)=>a+(t.athletes||1),0);
+  $('confirmTitle').innerHTML = `פרסום כולל — שבוע 42`;
+  $('confirmBody').innerHTML = `
+    <p>הפרסום יישלח ל<b> ${people} אתלטים</b> ב<b> ${ready.length}</b> יעדים: ${ready.map(t=>t.name).join(' · ')}.</p>
+    <div class="cf-stats">
+      <span class="cf-stat">יעדים: <b>${ready.length}</b></span>
+      <span class="cf-stat">אתלטים: <b>${people}</b></span>
+    </div>`;
+  showOverlay('confirmOverlay');
+}
+function confirmPublish(){
+  if (publishMode==='single'){
+    weekState[stKey(selectedWeek, mode)] = 'published';
+    pendingMap[stKey(selectedWeek, mode)] = 0;
+  } else {
+    TARGETS.filter(t=>t.type!=='all').forEach(t=>{
+      if (['draft','dirty'].includes(targetState(42,t.id))) weekState[stKey(42,t.id)] = 'published';
+    });
+  }
+  hideOverlay('confirmOverlay');
+  updateActions(); renderWeekStateChip(); renderReadiness();
+}
+function countVariants(){
+  let n = 0;
+  DAYS.forEach((d,i)=> sessionAt(mode,i).forEach(s=>{ n += (WORKOUTS[s.wid].variants||[]).length; }));
+  return n;
+}
+
+/* overlays */
+function showOverlay(id){ $(id).classList.add('open'); }
+function hideOverlay(id){ $(id).classList.remove('open'); }
+
+/* athlete preview — what the athlete sees on their phone */
+function openPreview(){
+  hideOverlay('confirmOverlay');
+  renderPreview();
+  showOverlay('previewOverlay');
+}
+function renderPreview(){
+  const t = TARGET_MAP[mode];
+  const demoAs = t.type==='group' ? 'מאיה כהן' : t.name;
+  $('pvTitle').innerHTML = `${t.name} · שבוע ${selectedWeek}${t.type==='group' ? ' · דוגמה כפי שמאיה רואה' : ''}`;
+  let html = '';
+  DAYS.forEach((day,i)=>{
+    sessionAt(mode,i).forEach(s=>{
+      const w = WORKOUTS[s.wid];
+      const ov = (s.kind==='group'||s.kind==='groupRef') ? ovFor(s.group||mode, i) : null;
+      const canceled = ov && ov.type==='cancel';
+      const time = (ov && ov.type==='time') ? ov.time : w.time;
+      const mine = (w.variants||[]).find(v=>v.name===demoAs);
+      html += `
+        <div class="pv-row">
+          <div class="pv-day"><span class="d">${day.l}</span><span class="n">${day.d}.10</span></div>
+          <div class="pv-body">
+            <div class="pv-time">${time}</div>
+            <div class="pv-name"><svg><use href="#${sportIcon(w)}"/></svg>${canceled?'<s>'+w.name+'</s>':w.name}</div>
+            <div class="pv-zones">${zonesHTML(w.zones)}</div>
+            ${canceled?'<div class="pv-chip grp">האימון בוטל</div>':''}
+            ${mine?`<div class="pv-chip">התאמה שלך: ${mine.note}</div>`:''}
+            ${s.kind==='groupRef'?`<div class="pv-chip grp">מקבוצה: ${TARGET_MAP[s.group].name}</div>`:''}
+            ${s.kind==='personal'?`<div class="pv-chip">אישי</div>`:''}
+          </div>
+        </div>`;
+    });
+  });
+  html += `
+    <div class="pv-note">
+      <svg class="icon-sm"><use href="#i-note"/></svg>
+      <span>פתק שבוע: שבת — תחרות אזורית. ביום ד׳ נפח נמוך יותר.</span>
+    </div>`;
+  $('pvBody').innerHTML = html || `<div style="text-align:center;color:var(--text-faint);padding:24px">אין אימונים להצגה</div>`;
+}
+
+/* ==================== THEME ==================== */
+function toggleTheme(){
+  const html = document.documentElement;
+  const isDark = html.dataset.theme === 'dark';
+  html.dataset.theme = isDark ? '' : 'dark';
+  $('themeBtn').innerHTML = isDark
+    ? '<svg class="icon icon-sm"><use href="#i-moon"/></svg> Dark'
+    : '<svg class="icon icon-sm"><use href="#i-sun"/></svg> Light';
+}
+
+/* ==================== INIT ==================== */
+renderPickerBtn();
+renderCats();
+renderLibrary();
+renderSportFilter();
+selectWeek(42);
+setMode('dagig');
+openDetail('dagig', TODAY);
+</script>
+</body>
+</html>
