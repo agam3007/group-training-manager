@@ -1,4 +1,4 @@
-import { Home, Calendar, Users, Dumbbell, User, Folder, LogOut, Shield, Languages } from "lucide-react";
+import { Home, Calendar, Users, Dumbbell, User, Folder, LogOut, Shield } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./SideBar.css";
 import { useAuth } from "@/auth/AuthContext";
@@ -6,7 +6,7 @@ import { useLang } from "@/i18n/LanguageContext";
 
 export default function Sidebar() {
   const { session, profile, logout } = useAuth();
-  const { t, lang, toggle } = useLang();
+  const { t } = useLang();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -44,11 +44,6 @@ export default function Sidebar() {
             <span className="tooltip">{item.label}</span>
           </NavLink>
         ))}
-
-        <button className="sidebar-item sidebar-lang" onClick={toggle} title={lang === "he" ? "English" : "עברית"}>
-          <Languages size={22}/>
-          <span className="tooltip">{lang === "he" ? "English" : "עברית"}</span>
-        </button>
       </div>
 
       <div className="sidebar-user">

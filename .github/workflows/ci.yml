@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+    branches: [dev, main]
+
+jobs:
+  build:
+    name: Build & Typecheck
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            client/package-lock.json
+            server/package-lock.json
+
+      - name: Build server (tsc --noEmit)
+        working-directory: server
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build client (tsc -b && vite build)
+        working-directory: client
+        run: |
+          npm ci
+          npm run build
+
+  lint:
+    name: Lint (informational)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            client/package-lock.json
+
+      - name: Lint client
+        working-directory: client
+        run: |
+          npm ci
+          npm run lint
+        continue-on-error: true

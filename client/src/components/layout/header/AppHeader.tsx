@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { ChevronDown, Building2 } from "lucide-react";
+import { ChevronDown, Building2, Languages } from "lucide-react";
 import { useAuth } from "@/auth/AuthContext";
 import { getSelectedTenant, setSelectedTenant } from "@/auth/attachAuth";
+import { useLang } from "@/i18n/LanguageContext";
 import "./AppHeader.css";
 
 interface Tenant {
@@ -13,6 +14,7 @@ interface Tenant {
 
 export default function AppHeader() {
   const { session } = useAuth();
+  const { lang, toggle } = useLang();
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [selected, setSelected] = useState<Tenant | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -75,6 +77,10 @@ export default function AppHeader() {
         </div>
       </div>
       <div className="header-right">
+        <button className="lang-toggle" onClick={toggle} type="button">
+          <Languages size={18} />
+          <span>{lang === "he" ? "EN" : "עב"}</span>
+        </button>
         <span className="user-email">{session?.user?.email}</span>
       </div>
     </div>

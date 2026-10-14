@@ -20,6 +20,27 @@
 .header-right {
   display: flex;
   align-items: center;
+  gap: 14px;
+}
+
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  transition: 0.15s;
+}
+
+.lang-toggle:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
 }
 
 .user-email {
