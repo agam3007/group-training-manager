@@ -142,4 +142,65 @@ router.post("/platform/tenants", requirePlatformAdmin, async (req, res) => {
   res.status(201).json(created);
 });
 
+// PUT update a tenant (platform admin only)
+router.put("/platform/tenants/:id", requirePlatformAdmin, async (req, res) => {
+  const { id } = req.params;
+  const { name, tenantType, plan, timezone } = req.body;
+
+  const existing = await query(`SELECT id FROM tenants WHERE id = $1`, [id]);
+  if (!existing.length) {
+    return res.status(404).json({ message: "Tenant not found" });
+  }
+
+  const updates: string[] = [];
+  const params: any[] = [];
+  let paramIdx = 1;
+
+  if (name !== undefined) {
+    updates.push(`name = $${paramIdx++}`);
+    params.push(name);
+  }
+  if (tenantType !== undefined) {
+    updates.push(`tenant_type = $${paramIdx++}`);
+    params.push(tenantType === "practice" ? "practice" : "club");
+  }
+  if (plan !== undefined) {
+    updates.push(`plan = $${paramIdx++}`);
+    params.push(plan === "pro" ? "pro" : "free");
+  }
+  if (timezone !== undefined) {
+    updates.push(`timezone = $${paramIdx++}`);
+    params.push(timezone);
+  }
+
+  if (!updates.length) {
+    return res.status(400).json({ message: "No fields to update" });
+  }
+
+  updates.push(`updated_at = now()`);
+  params.push(id);
+
+  const [updated] = await query(
+    `UPDATE tenants SET ${updates.join(", ")} WHERE id = $${params.length} RETURNING id, name, tenant_type, plan, timezone, updated_at`,
+    params
+  );
+
+  logger.info(`Tenant updated: ${id}`);
+  res.json(updated);
+});
+
+// DELETE a tenant (platform admin only) — cascades to all data
+router.delete("/platform/tenants/:id", requirePlatformAdmin, async (req, res) => {
+  const { id } = req.params;
+
+  const existing = await query(`SELECT id, name FROM tenants WHERE id = $1`, [id]);
+  if (!existing.length) {
+    return res.status(404).json({ message: "Tenant not found" });
+  }
+
+  await query(`DELETE FROM tenants WHERE id = $1`, [id]);
+  logger.info(`Tenant deleted: ${existing[0].name} (${id})`);
+  res.json({ message: "Tenant deleted", name: existing[0].name });
+});
+
 export default router;

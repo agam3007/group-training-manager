@@ -4,8 +4,18 @@ import type { Session } from "@supabase/supabase-js";
 import { Navigate } from "react-router-dom";
 import { supabase } from "./authClient";
 
+export interface AppProfile {
+  id: string;
+  displayName: string | null;
+  email: string | null;
+  isPlatformAdmin: boolean;
+  tenantId: string | null;
+  roles: { role: string; scopeType?: string | null; scopeId?: string | null }[];
+}
+
 interface AuthCtx {
   session: Session | null;
+  profile: AppProfile | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<string | null>;
   logout: () => Promise<void>;
@@ -15,16 +25,36 @@ const Ctx = createContext<AuthCtx | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
+  const [profile, setProfile] = useState<AppProfile | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const fetchProfile = async (s: Session | null) => {
+    if (!s) {
+      setProfile(null);
+      return;
+    }
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL ?? "http://localhost:3001"}/auth/me`, {
+        headers: { Authorization: `Bearer ${s.access_token}` },
+      });
+      if (res.ok) {
+        setProfile(await res.json());
+      }
+    } catch {
+      console.error("Failed to fetch profile");
+    }
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
+      fetchProfile(data.session);
       setLoading(false);
     });
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => {
       setSession(s);
+      fetchProfile(s);
     });
 
     return () => sub.subscription.unsubscribe();
@@ -39,7 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut();
   };
 
-  return <Ctx.Provider value={{ session, loading, login, logout }}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={{ session, profile, loading, login, logout }}>{children}</Ctx.Provider>;
 }
 
 export function useAuth(): AuthCtx {

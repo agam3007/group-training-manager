@@ -1,0 +1,220 @@
+.admin-page {
+  padding: 24px;
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.admin-header h1 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+.admin-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #646cff;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-add-btn:hover {
+  background: #535bf2;
+}
+
+.tenants-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.tenant-card {
+  padding: 20px;
+  border-radius: 12px;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tenant-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tenant-card-header h3 {
+  font-size: 17px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+.tenant-plan {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.tenant-plan.free {
+  background: #1a3a5c;
+  color: #60a5fa;
+}
+
+.tenant-plan.pro {
+  background: #3a2a1a;
+  color: #fbbf24;
+}
+
+.tenant-card-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.tenant-type {
+  text-transform: capitalize;
+}
+
+.tenant-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.tenant-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+}
+
+.tenant-action:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+.tenant-action.danger:hover {
+  background: #7f1d1d;
+  color: #fca5a5;
+}
+
+/* Modal */
+.admin-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.admin-modal {
+  width: 400px;
+  padding: 32px;
+  border-radius: 16px;
+  background: #242424;
+  border: 1px solid #3a3a3a;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admin-modal h3 {
+  margin: 0;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+.admin-modal p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.5;
+}
+
+.admin-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-field label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-field input,
+.admin-field select {
+  padding: 10px 14px;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  background: #1e1e1e;
+  color: rgba(255, 255, 255, 0.87);
+  font-size: 14px;
+}
+
+.admin-field input:focus,
+.admin-field select:focus {
+  outline: 1px solid #646cff;
+}
+
+.admin-modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.admin-modal-actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  background: #3a3a3a;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.admin-modal-actions button.primary {
+  background: #646cff;
+  color: white;
+}
+
+.admin-modal-actions button.primary:hover {
+  background: #535bf2;
+}
+
+.admin-modal-actions button.danger {
+  background: #dc2626;
+  color: white;
+}
+
+.admin-modal-actions button.danger:hover {
+  background: #b91c1c;
+}

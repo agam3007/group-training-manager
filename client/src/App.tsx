@@ -12,6 +12,7 @@ import AthleteDetails from "./pages/AthleteDetails/AthleteDetails"
 import TrainingPlan from "./pages/TrainingPlan/TrainingPlan"
 import ProgramCalendarPage from "./pages/TrainingPlan/ProgramCalendarPage"
 import Login from "./pages/Login/Login"
+import Admin from "./pages/Admin/Admin"
 import { RequireAuth } from "./auth/AuthContext"
 
 function App(){
@@ -48,6 +49,7 @@ function App(){
           <Route path="/groups/:id" element={<GroupsPage/>} />
           <Route path="/training-plans" element={<TrainingPlan/>} />
           <Route path="/training-plans/calendar" element={<ProgramCalendarPage/>} />
+          <Route path="/admin" element={<Admin/>} />
         </Route>
       </Routes>
     </BrowserRouter>
