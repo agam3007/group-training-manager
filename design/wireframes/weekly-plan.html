@@ -300,10 +300,19 @@
   .target-bar{width:60px;height:6px;border-radius:3px;background:var(--border);overflow:hidden;display:inline-block;}
   .target-bar span{display:block;height:100%;border-radius:3px;background:var(--accent);}
 
-  /* ==================== WEEK READINESS ==================== */
-  .readiness-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px;}
-  .rd-item{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--border);border-radius:20px;background:var(--surface);cursor:pointer;font-size:12px;font-weight:700;transition:all .15s;}
-  .rd-item:hover{border-color:var(--accent);}
+  /* ==================== WEEK READINESS (scales: state chips, not per-target) ==================== */
+  .readiness-wrap{position:relative;margin-bottom:14px;}
+  .readiness-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .rd-sum{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:700;color:var(--text-muted);cursor:pointer;transition:all .15s;}
+  .rd-sum b{color:var(--text);}
+  .rd-sum:hover{border-color:var(--accent);}
+  .rs-published{color:var(--success);}
+  .rs-draft{color:var(--warning);}
+  .rs-dirty{color:var(--danger);}
+  .rs-empty{color:var(--danger);border-color:var(--danger);background:var(--danger-bg);}
+  .rs-empty b{color:var(--danger);}
+  .rd-panel{position:absolute;top:calc(100% + 8px);inset-inline-start:0;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-lg);padding:10px;width:min(430px,92vw);z-index:100;display:none;max-height:400px;overflow-y:auto;}
+  .readiness-wrap.open .rd-panel{display:block;}
   .ws-empty{background:var(--danger-bg);color:var(--danger);}
   .btn-bulk{padding:6px 16px;border:none;border-radius:20px;background:var(--accent);color:var(--accent-text);font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
   .btn-bulk:hover{background:var(--accent-hover);}
@@ -551,8 +560,11 @@
       <button class="meta-edit" onclick="alert('WIREFRAME — עריכת פתק שבוע')"><svg class="icon-xs"><use href="#i-pencil"/></svg> עריכה</button>
     </div>
 
-    <!-- WEEK READINESS — who planned, who published -->
-    <div class="readiness-row" id="readinessRow"></div>
+    <!-- WEEK READINESS — aggregated by state, expands to full list -->
+    <div class="readiness-wrap" id="readinessWrap">
+      <div class="readiness-row" id="readinessRow"></div>
+      <div class="rd-panel" id="rdPanel" onclick="event.stopPropagation()"></div>
+    </div>
 
     <div class="meso-panel" id="mesoPanel"></div>
 
@@ -705,7 +717,7 @@
   </div>
 </div>
 
-<div class="wf">WIREFRAME v6 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
+<div class="wf">WIREFRAME v7 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -736,6 +748,14 @@ const TARGETS = [
   { id:'noam',    name:'נועם חץ',      type:'personal', color:'#0D9488', sub:'תוכנית אישית', athletes:1 },
   { id:'me',      name:'התוכנית שלי',  type:'me',       color:'#0F172A', sub:'שחייה · ריצה · רכיבה', athletes:1 },
 ];
+/* scale demo — 24 more groups: proves picker search + readiness aggregation at 30 targets */
+const SCALE_GROUPS = ['נערות א','נערות ב','ילדים א','ילדים ב','טריאתלון','מאסטרס','הכנה תחרותית','כושר יבש',
+  'אימוני בוקר','שחיית נשים','אליפות נוער','קדטים','אולימפי נוער','מתחילים','בריאות','ריצת פארק',
+  'בית ספר לשחייה','פיתוח מאמנים','התאוששות','מבוגרים','נוער מתקדם','שחיית על','אקסלנס','פרו-טריאתלון'];
+const SCALE_COLORS = ['#2563EB','#0D9488','#D97706','#16A34A','#0284C7','#65A30D','#B45309','#475569'];
+SCALE_GROUPS.forEach((name,i)=>{
+  TARGETS.push({ id:'sg'+i, name, type:'group', color:SCALE_COLORS[i%SCALE_COLORS.length], recurring:'—', facility:'בריכת הים', athletes: 8 + (i%3)*6 });
+});
 const TARGET_MAP = {};
 TARGETS.forEach(t=>TARGET_MAP[t.id]=t);
 
@@ -905,6 +925,11 @@ const WEEK_PLANS = {};
 /* publish state per week+target: draft | published | dirty | empty (computed) */
 const weekState = { '42:neorim':'published', '42:maya':'published' };
 const pendingMap = {};
+/* scale demo states — mixed readiness across the 24 demo groups */
+['sg0','sg1','sg2','sg3','sg4','sg5','sg6','sg7'].forEach(id=>weekState['42:'+id]='published');
+weekState['42:sg8']='dirty'; pendingMap['42:sg8']=2;
+weekState['42:sg9']='dirty'; pendingMap['42:sg9']=1;
+['sg10','sg11','sg12','sg13'].forEach(id=>weekState['42:'+id]='draft');
 const stKey = (week, target) => week + ':' + target;
 function targetState(week, target){
   const k = stKey(week, target);
@@ -1084,8 +1109,9 @@ function renderWeekStateChip(){
     const pend = Object.keys(pendingMap).reduce((a,k)=>a+pendingMap[k],0);
     const pub = TARGETS.filter(t=>t.type!=='all' && targetState(selectedWeek,t.id)==='published').length;
     const draft = TARGETS.filter(t=>t.type!=='all' && targetState(selectedWeek,t.id)==='draft').length;
+    const empty = TARGETS.filter(t=>t.type!=='all' && targetState(selectedWeek,t.id)==='empty').length;
     el.innerHTML = selectedWeek>=42
-      ? `<span class="ws-chip ws-draft">${draft} בטיוטה · ${pub} פורסמו${pend?` · ${pend} שינויים ממתינים`:''}</span>`
+      ? `<span class="ws-chip ws-draft">${draft} בטיוטה · ${pub} פורסמו · ${empty} לא תוכננו${pend?` · ${pend} שינויים ממתינים`:''}</span>`
       : `<span class="ws-chip ws-done">היסטוריה</span>`;
     return;
   }
@@ -1136,21 +1162,74 @@ function renderSportFilter(){
 }
 function setSportFilter(s){ sportFilter = s; renderSportFilter(); renderDays(); }
 
-/* ==================== WEEK READINESS ==================== */
-function renderReadiness(){
-  const row = $('readinessRow');
-  if (!isCurrentWeek()){ row.style.display='none'; return; }
-  row.style.display='';
-  const items = TARGETS.filter(t=>t.type!=='all').map(t=>{
+/* ==================== WEEK READINESS — state chips + expandable list ==================== */
+let rdFilter = 'all';
+
+function readinessByState(){
+  const by = { published:[], draft:[], dirty:[], empty:[] };
+  TARGETS.filter(t=>t.type!=='all').forEach(t=>{
     const st = targetState(42, t.id);
-    const cls = st==='published'?'ws-published':st==='dirty'?'ws-dirty':st==='empty'?'ws-empty':'ws-draft';
-    const label = st==='published'?'פורסם':st==='dirty'?`${targetPending(42,t.id)} שינויים`:st==='empty'?'לא תוכנן':'טיוטה';
-    const dot = t.color?`<span class="gdot" style="background:${t.color}"></span>`:'';
-    return `<div class="rd-item" onclick="setMode('${t.id}')">${dot}${t.name}<span class="ws-chip ${cls}">${label}</span></div>`;
-  }).join('');
-  const ready = TARGETS.filter(t=>t.type!=='all' && ['draft','dirty'].includes(targetState(42,t.id))).length;
-  row.innerHTML = `<span class="sf-label">מוכנות שבוע:</span>${items}` +
-    (ready ? `<button class="btn-bulk" onclick="bulkPublish()"><svg class="icon-xs"><use href="#i-send"/></svg> פרסם הכל שמוכן (${ready})</button>` : '');
+    by[st].push({ t, pend: targetPending(42, t.id) });
+  });
+  return by;
+}
+function renderReadiness(){
+  const wrap = $('readinessWrap');
+  if (!isCurrentWeek()){ wrap.style.display='none'; closeRdPanel(); return; }
+  wrap.style.display='';
+  const by = readinessByState();
+  const total = TARGETS.filter(t=>t.type!=='all').length;
+  const chip = (key, label, cls) => by[key].length
+    ? `<button class="rd-sum ${cls}" onclick="toggleRdPanel('${key}')">${label} <b>${by[key].length}</b></button>` : '';
+  const ready = by.draft.length + by.dirty.length;
+  $('readinessRow').innerHTML = `<span class="sf-label">מוכנות שבוע:</span>
+    ${chip('empty','לא תוכנן','rs-empty')}
+    ${chip('dirty','שינויים ממתינים','rs-dirty')}
+    ${chip('draft','טיוטה','rs-draft')}
+    ${chip('published','פורסם','rs-published')}
+    <button class="rd-sum" onclick="toggleRdPanel('all')">כל היעדים <b>${total}</b></button>
+    ${ready ? `<button class="btn-bulk" onclick="bulkPublish()"><svg class="icon-xs"><use href="#i-send"/></svg> פרסם הכל שמוכן (${ready})</button>` : ''}`;
+  ensureRdPanel();
+  renderRdPanel();
+}
+function ensureRdPanel(){
+  if ($('rdList')) return;
+  $('rdPanel').innerHTML = `
+    <div class="picker-search">
+      <svg class="icon icon-sm"><use href="#i-search"/></svg>
+      <input id="rdSearch" placeholder="חיפוש קבוצה / מתאמן..." oninput="renderRdPanel()">
+    </div>
+    <div class="picker-sec">ממוין לפי דחיפות — לא תוכנן קודם</div>
+    <div id="rdList"></div>`;
+}
+function toggleRdPanel(filter){
+  const wrap = $('readinessWrap');
+  if (wrap.classList.contains('open') && rdFilter===filter){ closeRdPanel(); return; }
+  rdFilter = filter;
+  renderRdPanel();
+  wrap.classList.add('open');
+}
+function closeRdPanel(){ $('readinessWrap').classList.remove('open'); }
+document.addEventListener('click', e=>{
+  if (!e.target.closest || !e.target.closest('.readiness-wrap')) closeRdPanel();
+});
+function renderRdPanel(){
+  const list = $('rdList'); if (!list) return;
+  const by = readinessByState();
+  const order = ['empty','dirty','draft','published'];
+  const labels = { published:'פורסם', draft:'טיוטה', dirty:'שינויים ממתינים', empty:'לא תוכנן' };
+  const cls = { published:'ws-published', draft:'ws-draft', dirty:'ws-dirty', empty:'ws-empty' };
+  let items = [];
+  order.forEach(st=>{ if (rdFilter==='all' || rdFilter===st) by[st].forEach(x=>items.push(Object.assign({st}, x))); });
+  const q = ($('rdSearch').value||'').trim();
+  if (q) items = items.filter(x=>x.t.name.includes(q));
+  list.innerHTML = items.map(x=>`
+    <div class="picker-item" onclick="setMode('${x.t.id}');closeRdPanel()">
+      <span class="pcolor" style="background:${x.t.color}"></span>
+      <span style="flex:1">${x.t.name}${x.t.athletes>1?` <span class="picker-sub">· ${x.t.athletes} אתלטים</span>`:''}</span>
+      <span class="ws-chip ${cls[x.st]}">${x.st==='dirty' ? x.pend+' שינויים' : labels[x.st]}</span>
+    </div>`).join('')
+    || `<div style="text-align:center;color:var(--text-faint);font-size:12px;padding:16px">אין תוצאות</div>`;
 }
 
 /* ==================== STAFF FILTER ==================== */
@@ -1800,9 +1879,11 @@ function bulkPublish(){
   publishMode = 'bulk';
   const ready = TARGETS.filter(t=>t.type!=='all' && ['draft','dirty'].includes(targetState(42,t.id)));
   const people = ready.reduce((a,t)=>a+(t.athletes||1),0);
+  const names = ready.map(t=>t.name);
+  const namesTxt = names.slice(0,6).join(' · ') + (names.length>6 ? ` ועוד ${names.length-6}` : '');
   $('confirmTitle').innerHTML = `פרסום כולל — שבוע 42`;
   $('confirmBody').innerHTML = `
-    <p>הפרסום יישלח ל<b> ${people} אתלטים</b> ב<b> ${ready.length}</b> יעדים: ${ready.map(t=>t.name).join(' · ')}.</p>
+    <p>הפרסום יישלח ל<b> ${people} אתלטים</b> ב<b> ${ready.length}</b> יעדים: ${namesTxt}.</p>
     <div class="cf-stats">
       <span class="cf-stat">יעדים: <b>${ready.length}</b></span>
       <span class="cf-stat">אתלטים: <b>${people}</b></span>
