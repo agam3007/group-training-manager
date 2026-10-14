@@ -423,6 +423,11 @@
   .ath-btn{flex:1;padding:9px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text-muted);font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;}
   .ath-btn:hover{border-color:var(--accent);color:var(--accent);}
 
+  /* ==================== UNDO TOAST ==================== */
+  .toast{position:fixed;bottom:24px;inset-inline-start:50%;transform:translateX(50%) translateY(90px);background:var(--text);color:var(--bg);border-radius:14px;padding:12px 18px;display:flex;align-items:center;gap:16px;font-size:13px;font-weight:700;z-index:500;transition:transform .25s;box-shadow:var(--shadow-lg);max-width:90vw;}
+  .toast.show{transform:translateX(50%) translateY(0);}
+  .toast button{border:none;background:transparent;color:#60A5FA;font-weight:800;cursor:pointer;font-size:13px;font-family:inherit;}
+
   /* Zone colors — intensity ladder, no purple */
   .z1{background:#84CC16;} .z2{background:#38BDF8;} .z3{background:#FBBF24;} .z4{background:#F87171;} .z5{background:#DC2626;}
 </style>
@@ -683,9 +688,13 @@
             <svg class="icon icon-sm"><use href="#i-users"/></svg>
             החל על קבוצות...
           </button>
-          <button class="btn-copy" id="templateBtn" onclick="alert('WIREFRAME — בחירת שבוע מתוכנית / תבנית תוכנית')">
+          <button class="btn-copy" id="templateBtn" onclick="openTemplateDialog()">
             <svg class="icon icon-sm"><use href="#i-folder"/></svg>
             מתוכנית...
+          </button>
+          <button class="btn-copy" id="repeatBtn" onclick="openRepeatDialog()">
+            <svg class="icon icon-sm"><use href="#i-repeat"/></svg>
+            חזור על...
           </button>
           <button class="btn-copy" id="copyBtn" onclick="copyPrevWeek()">
             <svg class="icon icon-sm"><use href="#i-copy"/></svg>
@@ -817,7 +826,61 @@
   </div>
 </div>
 
-<div class="wf">WIREFRAME v9 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
+<!-- TEMPLATES / PROGRAM -->
+<div class="overlay" id="tplOverlay" onclick="if(event.target===this)hideOverlay('tplOverlay')">
+  <div class="confirm-card" style="max-width:430px">
+    <h3><svg class="icon"><use href="#i-folder"/></svg> מתוכנית / תבניות</h3>
+    <div class="ev-tog" style="border:1px dashed var(--border);margin-bottom:10px" onclick="saveWeekTemplate()">
+      <svg class="icon-sm" style="color:var(--accent)"><use href="#i-plus"/></svg>
+      <span id="tplSaveLabel">שמור את השבוע הנוכחי כתבנית</span>
+    </div>
+    <span class="ev-label">תבניות להחלה על השבוע הנוכחי</span>
+    <div class="ev-list" id="tplList"></div>
+    <div class="confirm-actions">
+      <button class="btn-copy" onclick="hideOverlay('tplOverlay')">סגור</button>
+    </div>
+  </div>
+</div>
+
+<!-- REPEAT WEEK -->
+<div class="overlay" id="repeatOverlay" onclick="if(event.target===this)hideOverlay('repeatOverlay')">
+  <div class="confirm-card" style="max-width:380px">
+    <h3><svg class="icon"><use href="#i-repeat"/></svg> <span id="repeatTitle"></span></h3>
+    <p>השבוע הנוכחי יועתק גם לשבועות הבאים. אפשר לערוך כל שבוע בנפרד אחר כך — כל עותק יישא תג מקור.</p>
+    <div class="ev-field">
+      <span class="ev-label">לכמה שבועות קדימה</span>
+      <input type="number" id="repeatN" class="ev-input" value="2" min="1" max="8">
+    </div>
+    <div class="confirm-actions">
+      <button class="btn-copy" onclick="hideOverlay('repeatOverlay')">ביטול</button>
+      <button class="btn-publish" style="padding:12px 24px;font-size:14px" onclick="repeatWeek()"><svg class="icon"><use href="#i-repeat"/></svg> חזור על השבוע</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGE TIME -->
+<div class="overlay" id="timeOverlay" onclick="if(event.target===this)hideOverlay('timeOverlay')">
+  <div class="confirm-card" style="max-width:340px">
+    <h3><svg class="icon"><use href="#i-clock"/></svg> <span id="timeTitle"></span></h3>
+    <div class="ev-field">
+      <span class="ev-label">שעה חדשה</span>
+      <input type="time" id="timeInput" class="ev-input" value="19:00">
+    </div>
+    <p id="timeNote" style="font-size:12px;color:var(--text-faint)"></p>
+    <div class="confirm-actions">
+      <button class="btn-copy" onclick="hideOverlay('timeOverlay')">ביטול</button>
+      <button class="btn-publish" style="padding:12px 24px;font-size:14px" onclick="confirmTime()"><svg class="icon"><use href="#i-check"/></svg> שנה שעה</button>
+    </div>
+  </div>
+</div>
+
+<!-- UNDO TOAST -->
+<div class="toast" id="toast">
+  <span id="toastLabel"></span>
+  <button onclick="undo()">בטל</button>
+</div>
+
+<div class="wf">WIREFRAME v10 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -1036,6 +1099,14 @@ const LIBRARY = [
 ];
 const CATS = ['הכל','טכניקה','אירובי','אינטרוולים','רגליים','התאוששות'];
 
+/* week templates — seeded + coach-saved (PLAN-4) */
+const TEMPLATES = [
+  { name:'בסיס אירובי — שבוע דגיגונים', days:{ 3:'w1', 4:'w2' } },
+  { name:'בנייה — שבוע אינטנסיבי',      days:{ 0:'w2', 2:'w3', 4:'w2' } },
+  { name:'ריצה — שבוע חצי איש',          days:{ 0:'p3', 2:'p7', 4:'p9', 5:'p6' } },
+  { name:'פריקה — שבוע לפני תחרות',      days:{ 2:'w5', 4:'w9' } },
+];
+
 /* ==================== STATE ==================== */
 let mode = 'dagig';
 let selectedWeek = 42;
@@ -1109,6 +1180,55 @@ function planForWeek(){
   if (selectedWeek < 42) return PAST_41;
   return (WEEK_PLANS[selectedWeek] ||= { dagig:{}, neorim:{}, bogarim:{} });
 }
+function planForWeekAt(w){
+  if (w === 42) return SCHEDULE;
+  if (w < 42) return PAST_41;
+  return (WEEK_PLANS[w] ||= { dagig:{}, neorim:{}, bogarim:{} });
+}
+
+/* multi-session per day: day → wid | [wid, ...] */
+function addToDay(map, day, wid){
+  const v = map[day];
+  if (v === undefined) map[day] = wid;
+  else if (Array.isArray(v)){ if (!v.includes(wid)) v.push(wid); }
+  else if (v !== wid) map[day] = [v, wid];
+}
+function removeFromDay(map, day, wid){
+  const v = map[day];
+  if (v === undefined) return;
+  if (Array.isArray(v)){
+    const nv = v.filter(x=>x!==wid);
+    if (nv.length) map[day] = nv; else delete map[day];
+  } else if (v === wid) delete map[day];
+}
+
+/* undo — snapshot + toast on every mutation */
+let undoSnapshot = null;
+let undoTimer = null;
+function snapshotState(){
+  return JSON.parse(JSON.stringify({ SCHEDULE, OVERRIDES, PERSONAL, WEEK_PLANS, weekState, pendingMap, EVENTS, WORKOUTS, TEMPLATES }));
+}
+function withUndo(label, fn){
+  undoSnapshot = snapshotState();
+  fn();
+  const toast = $('toast');
+  $('toastLabel').textContent = label;
+  toast.classList.add('show');
+  clearTimeout(undoTimer);
+  undoTimer = setTimeout(()=>toast.classList.remove('show'), 6000);
+}
+function undo(){
+  if (!undoSnapshot) return;
+  const cur = { SCHEDULE, OVERRIDES, PERSONAL, WEEK_PLANS, weekState, pendingMap, EVENTS, WORKOUTS, TEMPLATES };
+  Object.keys(cur).forEach(k=>{
+    Object.keys(cur[k]).forEach(key=>delete cur[k][key]);
+    Object.assign(cur[k], undoSnapshot[k]);
+  });
+  undoSnapshot = null;
+  $('toast').classList.remove('show');
+  renderDays(); renderReadiness(); renderWeekStateChip(); updateActions();
+}
+
 function ovFor(groupId, dayIdx){
   return (isCurrentWeek() && OVERRIDES[groupId]) ? OVERRIDES[groupId][dayIdx] : null;
 }
@@ -1120,13 +1240,16 @@ function sessionAt(targetId, dayIdx){
   if (t.type === 'group'){
     const out = [];
     const ov = ovFor(targetId, dayIdx);
-    const wid = plan[targetId] && plan[targetId][dayIdx];
-    if (wid) out.push({ wid, kind:'group' });
+    const raw = plan[targetId] && plan[targetId][dayIdx];
+    if (raw !== undefined && raw !== null){
+      (Array.isArray(raw) ? raw : [raw]).forEach(wid=> out.push({ wid, kind:'group' }));
+    }
     if (ov && ov.type === 'add') out.push({ wid:ov.wid, kind:'add' });
     return out;
   }
   const pid = PERSONAL[targetId] && PERSONAL[targetId][dayIdx];
-  if (!pid) return [];
+  if (pid === undefined || pid === null) return [];
+  if (Array.isArray(pid)) return pid.map(w=>({ wid:w, kind:'personal' }));
   if (pid.startsWith('@')){
     const gid = pid.slice(1);
     const wid = plan[gid] && plan[gid][dayIdx];
@@ -1336,14 +1459,14 @@ let rdFilter = 'all';
 function readinessByState(){
   const by = { published:[], draft:[], dirty:[], empty:[] };
   TARGETS.filter(t=>t.type!=='all').forEach(t=>{
-    const st = targetState(42, t.id);
-    by[st].push({ t, pend: targetPending(42, t.id) });
+    const st = targetState(selectedWeek, t.id);
+    by[st].push({ t, pend: targetPending(selectedWeek, t.id) });
   });
   return by;
 }
 function renderReadiness(){
   const wrap = $('readinessWrap');
-  if (!isCurrentWeek()){ wrap.style.display='none'; closeRdPanel(); return; }
+  if (selectedWeek < 42){ wrap.style.display='none'; closeRdPanel(); return; }
   wrap.style.display='';
   const by = readinessByState();
   const total = TARGETS.filter(t=>t.type!=='all').length;
@@ -1632,7 +1755,7 @@ function renderDays(){
         if (t.type!=='group' && staffFilter!=='all') return;
         shown++;
         const canAct = editableWeek && s.kind!=='groupRef';
-        const draggable = canAct ? ` draggable="true" ondragstart="dragStartSession(event,${i})"` : '';
+        const draggable = canAct ? ` draggable="true" ondragstart="dragStartSession(event,${i},'${s.wid}')"` : '';
         const menuBtn = canAct
           ? `<button class="sess-menu-btn" title="פעולות" onclick="event.stopPropagation();openSessMenu(event,'${mode}',${i},'${s.wid}','${s.kind}')"><svg class="icon-xs"><use href="#i-more"/></svg></button>` : '';
         const varBadge = (t.type==='group' && w.variants)
@@ -1763,36 +1886,43 @@ function bindDrop(){
       const data = e.dataTransfer.getData('text/plain');
       const day = +card.dataset.day;
 
-      /* move an existing session between days */
+      /* move an existing session between days (by wid — day can hold several) */
       if (data.startsWith('move:')){
-        const from = +data.split(':')[1];
+        const parts = data.split(':');
+        const from = +parts[1];
+        const wid = parts[2];
         if (from === day) return;
         const src = t.type==='group' ? planForWeek()[mode] : PERSONAL[mode];
-        if (src[day] !== undefined){ alert('WIREFRAME — ביום זה כבר יש אימון'); return; }
-        src[day] = src[from]; delete src[from];
-        markDirty(); renderDays();
+        withUndo('האימון הועבר בין ימים', ()=>{
+          removeFromDay(src, from, wid);
+          addToDay(src, day, wid);
+          markDirty(); renderDays();
+        });
         return;
       }
 
-      /* drop a workout from the library */
+      /* drop a workout from the library — appends even if the day is busy */
       const lib = LIBRARY.find(l=>l.name===data);
       if (!lib) return;
       const id = 'c' + Date.now();
       WORKOUTS[id] = { name:lib.name, time:'18:00', sub:lib.sub, zones:lib.zones, steps:S_GEN, sport:lib.sport || 'swim', text:'', load:75 };
-      if (t.type === 'group') planForWeek()[mode][day] = id;
-      else PERSONAL[mode][day] = id;
-      markDirty(); renderDays();
+      withUndo('האימון נוסף ליום', ()=>{
+        if (t.type === 'group') addToDay(planForWeek()[mode], day, id);
+        else addToDay(PERSONAL[mode], day, id);
+        markDirty(); renderDays();
+      });
     });
   });
 }
 
 /* ==================== SESSION MENU + MOVE + PUBLISH STATE ==================== */
-function dragStartSession(e, dayIdx){
-  e.dataTransfer.setData('text/plain', 'move:' + dayIdx);
+function dragStartSession(e, dayIdx, wid){
+  e.dataTransfer.setData('text/plain', 'move:' + dayIdx + ':' + wid);
   e.stopPropagation();
 }
 
 let sessMenuEl = null;
+let timeCtx = null;
 function openSessMenu(e, targetId, dayIdx, wid, kind){
   closeSessMenu();
   const t = TARGET_MAP[targetId];
@@ -1800,11 +1930,12 @@ function openSessMenu(e, targetId, dayIdx, wid, kind){
   const items = [];
   items.push(`<div class="sm-item" onclick="closeSessMenu();openDetail('${targetId}',${dayIdx})"><svg class="icon-xs"><use href="#i-pencil"/></svg> עריכה</div>`);
   if (canEdit){
+    items.push(`<div class="sm-item" onclick="closeSessMenu();openTimeDialog('${targetId}',${dayIdx},'${wid}','${kind}')"><svg class="icon-xs"><use href="#i-clock"/></svg> שנה שעה</div>`);
     if (kind==='group') items.push(`<div class="sm-item" onclick="closeSessMenu();cancelSession('${targetId}',${dayIdx})"><svg class="icon-xs"><use href="#i-x"/></svg> בטל אימון</div>`);
     items.push(`<div class="sm-item" onclick="closeSessMenu();alert('WIREFRAME — גרור את האימון ליום אחר בלוח')"><svg class="icon-xs"><use href="#i-repeat"/></svg> העבר ליום אחר (גרור)</div>`);
     items.push(`<div class="sm-item" onclick="closeSessMenu();duplicateSession('${targetId}',${dayIdx},'${wid}','${kind}')"><svg class="icon-xs"><use href="#i-copy"/></svg> שכפל ליום הבא</div>`);
-    if (t.type==='group') items.push(`<div class="sm-item" onclick="closeSessMenu();alert('WIREFRAME — שכפול לקבוצה אחרת עם התאמת סקאלה')"><svg class="icon-xs"><use href="#i-users"/></svg> שכפל לקבוצה אחרת</div>`);
-    items.push(`<div class="sm-item danger" onclick="closeSessMenu();deleteSession('${targetId}',${dayIdx},'${kind}')"><svg class="icon-xs"><use href="#i-x"/></svg> מחק</div>`);
+    if (t.type==='group') items.push(`<div class="sm-item" onclick="closeSessMenu();alert('WIREFRAME — שכפול לקבוצה אחרת עם התאמת סקאלה — אפשר דרך החל על קבוצות')"><svg class="icon-xs"><use href="#i-users"/></svg> שכפל לקבוצה אחרת</div>`);
+    items.push(`<div class="sm-item danger" onclick="closeSessMenu();deleteSession('${targetId}',${dayIdx},'${kind}','${wid}')"><svg class="icon-xs"><use href="#i-x"/></svg> מחק</div>`);
   }
   sessMenuEl = document.createElement('div');
   sessMenuEl.className = 'sess-menu';
@@ -1821,29 +1952,58 @@ document.addEventListener('click', e=>{
 });
 
 function cancelSession(g, day){
-  (OVERRIDES[g] = OVERRIDES[g] || {})[day] = { type:'cancel' };
-  markDirty(); renderDays();
+  withUndo('האימון בוטל', ()=>{
+    (OVERRIDES[g] = OVERRIDES[g] || {})[day] = { type:'cancel' };
+    markDirty(); renderDays();
+  });
 }
-function deleteSession(targetId, day, kind){
+function deleteSession(targetId, day, kind, wid){
   const t = TARGET_MAP[targetId];
-  if (t.type==='group'){
+  withUndo('האימון נמחק', ()=>{
     if (kind==='add'){ delete OVERRIDES[targetId][day]; }
-    else {
-      delete planForWeek()[targetId][day];
-      if (OVERRIDES[targetId]) delete OVERRIDES[targetId][day];
+    else if (t.type==='group'){
+      removeFromDay(planForWeek()[targetId], day, wid);
+      if (OVERRIDES[targetId] && !planForWeek()[targetId][day]) delete OVERRIDES[targetId][day];
+    } else {
+      removeFromDay(PERSONAL[targetId], day, wid);
     }
-  } else {
-    delete PERSONAL[targetId][day];
-  }
-  markDirty(); renderDays(); closeDetail();
+    markDirty(); renderDays(); closeDetail();
+  });
 }
 function duplicateSession(targetId, day, wid, kind){
   if (day >= 6){ alert('WIREFRAME — אין יום נוסף בשבוע'); return; }
   if (kind==='add'){ alert('WIREFRAME — שכפול אימון נוסף'); return; }
   const t = TARGET_MAP[targetId];
-  const dst = t.type==='group' ? planForWeek()[targetId] : PERSONAL[targetId];
-  dst[day+1] = wid;
-  markDirty(); renderDays();
+  withUndo('האימון שוכפל ליום הבא', ()=>{
+    const dst = t.type==='group' ? planForWeek()[targetId] : PERSONAL[targetId];
+    addToDay(dst, day+1, wid);
+    markDirty(); renderDays();
+  });
+}
+
+/* change session time — group sessions create a time override (EventOverride) */
+function openTimeDialog(targetId, dayIdx, wid, kind){
+  timeCtx = { targetId, dayIdx, wid, kind };
+  const t = TARGET_MAP[targetId];
+  const cur = WORKOUTS[wid].time;
+  $('timeTitle').innerHTML = `שינוי שעה — ${DAYS[dayIdx].l}׳ · ${t.name}`;
+  $('timeInput').value = cur === '18:00' ? '19:00' : cur;
+  $('timeNote').innerHTML = kind==='group'
+    ? 'השינוי נרשם כחריגה לשבוע זה בלבד — הלוז הקבוע לא משתנה.'
+    : 'השעה תתעדכן לכל המופעים של אימון זה בתוכנית האישית.';
+  showOverlay('timeOverlay');
+}
+function confirmTime(){
+  const v = $('timeInput').value || '19:00';
+  withUndo('השעה שונתה', ()=>{
+    if (timeCtx.kind==='group'){
+      (OVERRIDES[timeCtx.targetId] = OVERRIDES[timeCtx.targetId] || {})[timeCtx.dayIdx] = { type:'time', time:v };
+    } else {
+      WORKOUTS[timeCtx.wid].time = v;
+    }
+    hideOverlay('timeOverlay');
+    markDirty(); renderDays();
+  });
 }
 
 function markDirty(){
@@ -2012,8 +2172,8 @@ function applyParsed(){
     wid = 'c' + Date.now();
     WORKOUTS[wid] = { name:'אימון מכתיבה מהירה', time:'18:00', sub:'כתיבה מהירה', zones:[[6,'z2'],[4,'z3']], steps:parsedSteps, sport:'swim', text:$('qtext').value, load:80 };
     const t = TARGET_MAP[detailCtx.targetId];
-    if (t.type === 'group') planForWeek()[detailCtx.targetId][detailCtx.day] = wid;
-    else PERSONAL[detailCtx.targetId][detailCtx.day] = wid;
+    if (t.type === 'group') addToDay(planForWeek()[detailCtx.targetId], detailCtx.day, wid);
+    else addToDay(PERSONAL[detailCtx.targetId], detailCtx.day, wid);
     renderDays();
   } else {
     wid = detailCtx.wid;
@@ -2030,16 +2190,19 @@ function applyParsed(){
 function copyPrevWeek(){
   const t = TARGET_MAP[mode];
   if (!isCurrentWeek()) return;
-  if (t.type === 'all'){
-    TARGETS.filter(x=>x.type==='group').forEach(g=>{ SCHEDULE[g.id] = Object.assign({}, PAST_41[g.id]); });
-  } else if (t.type === 'group'){
-    SCHEDULE[mode] = Object.assign({}, PAST_41[mode]);
-  } else {
+  if (t.type !== 'all' && t.type !== 'group'){
     alert('WIREFRAME — העתקת שבוע קודם לתוכנית אישית');
     return;
   }
-  renderDays();
-  markDirty();
+  withUndo('הועתק משבוע 41', ()=>{
+    if (t.type === 'all'){
+      TARGETS.filter(x=>x.type==='group').forEach(g=>{ SCHEDULE[g.id] = Object.assign({}, PAST_41[g.id]); });
+    } else {
+      SCHEDULE[mode] = Object.assign({}, PAST_41[mode]);
+    }
+    renderDays();
+    markDirty();
+  });
   const btn = $('copyBtn');
   btn.innerHTML = '<svg class="icon icon-sm"><use href="#i-check"/></svg> הועתק משבוע 41';
   setTimeout(()=>{ btn.innerHTML = '<svg class="icon icon-sm"><use href="#i-copy"/></svg> העתק משבוע 41'; }, 1800);
@@ -2056,6 +2219,7 @@ function updateActions(){
   $('copyBtn').style.display = (editableWeek && (t.type==='group' || t.type==='all')) ? '' : 'none';
   $('templateBtn').style.display = (editableWeek && t.type!=='all') ? '' : 'none';
   $('applyWeekBtn').style.display = (editableWeek && t.type==='group') ? '' : 'none';
+  $('repeatBtn').style.display = (editableWeek && t.type!=='all' && targetState(selectedWeek, mode)!=='empty') ? '' : 'none';
 
   const note = $('publishNote');
   if (!showPub){ note.innerHTML=''; return; }
@@ -2105,11 +2269,11 @@ function publish(){
 }
 function bulkPublish(){
   publishMode = 'bulk';
-  const ready = TARGETS.filter(t=>t.type!=='all' && ['draft','dirty'].includes(targetState(42,t.id)));
+  const ready = TARGETS.filter(t=>t.type!=='all' && ['draft','dirty'].includes(targetState(selectedWeek,t.id)));
   const people = ready.reduce((a,t)=>a+(t.athletes||1),0);
   const names = ready.map(t=>t.name);
   const namesTxt = names.slice(0,6).join(' · ') + (names.length>6 ? ` ועוד ${names.length-6}` : '');
-  $('confirmTitle').innerHTML = `פרסום כולל — שבוע 42`;
+  $('confirmTitle').innerHTML = `פרסום כולל — שבוע ${selectedWeek}`;
   $('confirmBody').innerHTML = `
     <p>הפרסום יישלח ל<b> ${people} אתלטים</b> ב<b> ${ready.length}</b> יעדים: ${namesTxt}.</p>
     <div class="cf-stats">
@@ -2124,7 +2288,7 @@ function confirmPublish(){
     pendingMap[stKey(selectedWeek, mode)] = 0;
   } else {
     TARGETS.filter(t=>t.type!=='all').forEach(t=>{
-      if (['draft','dirty'].includes(targetState(42,t.id))) weekState[stKey(42,t.id)] = 'published';
+      if (['draft','dirty'].includes(targetState(selectedWeek,t.id))) weekState[stKey(selectedWeek,t.id)] = 'published';
     });
   }
   hideOverlay('confirmOverlay');
@@ -2249,19 +2413,21 @@ function addEvent(){
   const time = $('evTime').value || '09:00';
   const general = evTargets.has('all');
   const targets = general ? [] : Array.from(evTargets);
-  if (general){
-    (EVENTS[evCtx.day] = EVENTS[evCtx.day] || []).push({ title, time, kind: evCtx.kind });
-  } else {
-    targets.forEach(id=>{
-      const t = TARGET_MAP[id];
-      const ev = { title, time, kind: evCtx.kind };
-      if (t.type==='group') ev.group = id; else ev.athlete = id;
-      (EVENTS[evCtx.day] = EVENTS[evCtx.day] || []).push(ev);
-    });
-  }
-  hideOverlay('eventOverlay');
-  markDirty();
-  renderDays();
+  withUndo(general ? 'האירוע נוסף לכל הלוח' : `האירוע נוסף ל-${targets.length} יעדים`, ()=>{
+    if (general){
+      (EVENTS[evCtx.day] = EVENTS[evCtx.day] || []).push({ title, time, kind: evCtx.kind });
+    } else {
+      targets.forEach(id=>{
+        const t = TARGET_MAP[id];
+        const ev = { title, time, kind: evCtx.kind };
+        if (t.type==='group') ev.group = id; else ev.athlete = id;
+        (EVENTS[evCtx.day] = EVENTS[evCtx.day] || []).push(ev);
+      });
+    }
+    hideOverlay('eventOverlay');
+    markDirty();
+    renderDays();
+  });
 }
 
 /* ==================== APPLY WEEK TO MULTIPLE GROUPS ==================== */
@@ -2312,15 +2478,69 @@ function updateApplySummary(){
 }
 function confirmApply(){
   if (!applySel.size){ alert('WIREFRAME — בחר לפחות קבוצה אחת'); return; }
-  const src = planForWeek()[mode] || {};
-  applySel.forEach(g=>{
-    planForWeek()[g] = Object.assign({}, src);
-    WEEK_APPLY_META[stKey(selectedWeek, g)] = { from: mode, scale: applyScale };
-    const k = stKey(selectedWeek, g);
-    if (weekState[k]==='published'){ weekState[k]='dirty'; pendingMap[k]=(pendingMap[k]||0)+1; }
+  const n = applySel.size;
+  withUndo(`השבוע הוחל על ${n} קבוצות`, ()=>{
+    const src = planForWeek()[mode] || {};
+    applySel.forEach(g=>{
+      planForWeek()[g] = Object.assign({}, src);
+      WEEK_APPLY_META[stKey(selectedWeek, g)] = { from: mode, scale: applyScale };
+      const k = stKey(selectedWeek, g);
+      if (weekState[k]==='published'){ weekState[k]='dirty'; pendingMap[k]=(pendingMap[k]||0)+1; }
+    });
+    hideOverlay('applyOverlay');
+    renderReadiness(); renderDays(); renderWeekStateChip();
   });
-  hideOverlay('applyOverlay');
-  renderReadiness(); renderDays(); renderWeekStateChip();
+}
+
+/* ==================== TEMPLATES + REPEAT WEEK ==================== */
+function openTemplateDialog(){
+  $('tplSaveLabel').innerHTML = `שמור את שבוע ${selectedWeek} — ${TARGET_MAP[mode].name} כתבנית`;
+  renderTplList();
+  showOverlay('tplOverlay');
+}
+function renderTplList(){
+  $('tplList').innerHTML = TEMPLATES.map((tpl,i)=>`
+    <div class="ev-tog" onclick="applyTemplate(${i})">
+      <svg class="icon-sm" style="color:var(--accent)"><use href="#i-folder"/></svg>
+      <span style="flex:1">${tpl.name}</span>
+      <span class="staff-hours">${Object.keys(tpl.days).length} אימונים</span>
+      <svg class="icon-sm"><use href="#i-chevron-left"/></svg>
+    </div>`).join('');
+}
+function saveWeekTemplate(){
+  const name = `שבוע ${selectedWeek} — ${TARGET_MAP[mode].name}`;
+  withUndo('השבוע נשמר כתבנית', ()=>{
+    TEMPLATES.unshift({ name, days: Object.assign({}, planForWeek()[mode] || {}) });
+    renderTplList();
+    hideOverlay('tplOverlay');
+  });
+}
+function applyTemplate(i){
+  const tpl = TEMPLATES[i];
+  withUndo(`התבנית "${tpl.name}" הוחלה`, ()=>{
+    planForWeek()[mode] = Object.assign({}, tpl.days);
+    hideOverlay('tplOverlay');
+    markDirty(); renderDays();
+  });
+}
+function openRepeatDialog(){
+  $('repeatTitle').innerHTML = `חזרה על שבוע ${selectedWeek} — ${TARGET_MAP[mode].name}`;
+  $('repeatN').value = 2;
+  showOverlay('repeatOverlay');
+}
+function repeatWeek(){
+  const n = Math.max(1, Math.min(8, +$('repeatN').value || 2));
+  withUndo(`השבוע חזר על עצמו ל-${n} שבועות`, ()=>{
+    const src = Object.assign({}, planForWeek()[mode] || {});
+    for (let k=1;k<=n;k++){
+      const w = selectedWeek + k;
+      if (w > 52) break;
+      planForWeekAt(w)[mode] = Object.assign({}, src);
+      WEEK_APPLY_META[stKey(w, mode)] = { from: mode, scale: 1 };
+    }
+    hideOverlay('repeatOverlay');
+    renderDays();
+  });
 }
 
 /* ==================== INIT ==================== */
