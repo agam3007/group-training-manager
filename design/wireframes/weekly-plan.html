@@ -35,7 +35,8 @@
   .picker-btn{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--surface);border:1px solid var(--border);border-radius:14px;cursor:pointer;font-size:14px;font-weight:800;box-shadow:var(--shadow-md);min-width:200px;justify-content:space-between;color:var(--text);}
   .picker-btn:hover{border-color:var(--accent);}
   .pcolor{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-  .picker-panel{position:absolute;top:calc(100% + 8px);inset-inline-start:0;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-lg);padding:10px;width:290px;z-index:100;display:none;}
+  .picker-panel{position:absolute;top:calc(100% + 8px);inset-inline-start:0;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-lg);padding:10px;width:290px;z-index:100;display:none;max-height:min(420px,70vh);overflow-y:auto;}
+  .picker-panel .picker-search{position:sticky;top:-10px;margin:-10px -10px 6px;padding:8px 10px;background:var(--surface);}
   .picker.open .picker-panel{display:block;}
   .picker-search{display:flex;align-items:center;gap:8px;background:var(--surface-hover);border-radius:10px;padding:8px 10px;color:var(--text-faint);margin-bottom:6px;}
   .picker-search input{border:none;background:transparent;color:var(--text);font-size:13px;flex:1;outline:none;font-family:inherit;min-width:0;}
@@ -316,6 +317,31 @@
   .ws-empty{background:var(--danger-bg);color:var(--danger);}
   .btn-bulk{padding:6px 16px;border:none;border-radius:20px;background:var(--accent);color:var(--accent-text);font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
   .btn-bulk:hover{background:var(--accent-hover);}
+
+  /* ==================== STAFF PICKER (scales to 10-20 instructors) ==================== */
+  .staff-picker{position:relative;display:inline-block;}
+  .staff-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border:1px solid var(--border);border-radius:20px;background:var(--surface);font-size:12px;font-weight:700;color:var(--text-muted);cursor:pointer;transition:all .15s;}
+  .staff-btn svg{width:12px;height:12px;}
+  .staff-btn:hover{border-color:var(--accent);}
+  .staff-panel{position:absolute;top:calc(100% + 8px);inset-inline-start:0;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-lg);padding:10px;width:min(290px,88vw);z-index:100;display:none;max-height:320px;overflow-y:auto;}
+  .staff-picker.open .staff-panel{display:block;}
+  .staff-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--text-muted);}
+  .staff-item:hover{background:var(--surface-hover);}
+  .staff-item.active{background:var(--accent-dim);color:var(--accent);}
+  .staff-hours{font-size:10.5px;color:var(--text-faint);font-weight:600;}
+
+  /* ==================== EVENT ADD ==================== */
+  .day-adds{display:flex;gap:6px;margin-top:auto;}
+  .day-evadd{display:flex;align-items:center;justify-content:center;gap:4px;padding:7px 6px;border:1px dashed var(--border);border-radius:10px;background:transparent;color:var(--text-faint);font-size:10.5px;font-weight:700;cursor:pointer;flex:1;}
+  .day-evadd:hover{border-color:var(--accent);color:var(--accent);}
+  .ev-field{margin-bottom:12px;}
+  .ev-label{font-size:11px;font-weight:800;color:var(--text-faint);margin-bottom:6px;display:block;letter-spacing:.3px;}
+  .ev-input,.ev-select{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none;}
+  .ev-input:focus,.ev-select:focus{border-color:var(--accent);}
+  .ev-kind{display:flex;gap:6px;}
+  .ev-kind button{flex:1;padding:8px 4px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text-muted);font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;}
+  .ev-kind button.active{border-color:var(--accent);background:var(--accent-dim);color:var(--accent);}
+  .ev-kind button svg{width:13px;height:13px;}
 
   /* ==================== STAFF ==================== */
   .coach-chip{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--text-muted);}
@@ -717,7 +743,38 @@
   </div>
 </div>
 
-<div class="wf">WIREFRAME v7 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
+<!-- ADD EVENT -->
+<div class="overlay" id="eventOverlay" onclick="if(event.target===this)hideOverlay('eventOverlay')">
+  <div class="confirm-card" style="max-width:410px">
+    <h3><svg class="icon"><use href="#i-plus"/></svg> אירוע חדש — <span id="evDayLabel"></span></h3>
+    <div class="ev-field">
+      <span class="ev-label">סוג אירוע</span>
+      <div class="ev-kind" id="evKindBtns"></div>
+    </div>
+    <div class="ev-field">
+      <span class="ev-label">כותרת</span>
+      <input class="ev-input" id="evTitle" type="text" placeholder="למשל: תחרות אזורית — נערים">
+    </div>
+    <div style="display:flex;gap:10px">
+      <div class="ev-field" style="flex:1">
+        <span class="ev-label">שעה</span>
+        <input class="ev-input" id="evTime" type="time" value="09:00">
+      </div>
+      <div class="ev-field" style="flex:2">
+        <span class="ev-label">למי</span>
+        <select class="ev-select" id="evTarget"></select>
+      </div>
+    </div>
+    <div class="confirm-actions">
+      <button class="btn-copy" onclick="hideOverlay('eventOverlay')">ביטול</button>
+      <button class="btn-publish" style="padding:12px 24px;font-size:14px" onclick="addEvent()">
+        <svg class="icon"><use href="#i-check"/></svg> הוסף אירוע
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="wf">WIREFRAME v8 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -842,11 +899,11 @@ const BLOCK = 'מסו-בלוק: בסיס אירובי (שבועות 39–44)';
 /* weekly load target per target */
 const LOAD_TARGET = { all:null, dagig:240, neorim:300, bogarim:300, maya:200, noam:290, me:380 };
 
-/* events on the board */
+/* events on the board — multiple events per day supported */
 const EVENTS = {
-  1: { title:'טיול שנתי בית ספר — מאיה', time:'08:00', kind:'personal', athlete:'maya' },
-  5: { title:'מבחן ביומטרי — דגיגונים', time:'16:30', kind:'test', group:'dagig' },
-  6: { title:'תחרות אזורית — נערים', time:'09:00', kind:'competition', group:'neorim' },
+  1: [ { title:'טיול שנתי בית ספר — מאיה', time:'08:00', kind:'personal', athlete:'maya' } ],
+  5: [ { title:'מבחן ביומטרי — דגיגונים', time:'16:30', kind:'test', group:'dagig' } ],
+  6: [ { title:'תחרות אזורית — נערים', time:'09:00', kind:'competition', group:'neorim' } ],
 };
 
 /* week 41 — what actually happened */
@@ -863,11 +920,20 @@ const PAST_ACTUAL_PERSONAL = {
   me:   { 1:{done:true,note:''}, 2:{done:true,note:''}, 3:{done:false,note:'בוטל — עבודה'}, 5:{done:true,note:''} },
 };
 
-/* staff — instructors per group-day (D27 staff scheduling) */
+/* staff — instructors per group-day (D27) — demo scale: 12 */
 const STAFF = [
   { id:'me',    name:'את' },
   { id:'yogev', name:'יובל' },
   { id:'tamar', name:'תמר' },
+  { id:'roni',  name:'רוני' },
+  { id:'shira', name:'שירה' },
+  { id:'dana',  name:'דנה' },
+  { id:'iti',   name:'איתי' },
+  { id:'michal',name:'מיכל' },
+  { id:'omer',  name:'עומר' },
+  { id:'lior',  name:'ליאור' },
+  { id:'noao',  name:'נועה' },
+  { id:'ido',   name:'עידו' },
 ];
 const COACH_MAP = {
   dagig:  { 3:'me', 4:'me' },
@@ -1232,15 +1298,65 @@ function renderRdPanel(){
     || `<div style="text-align:center;color:var(--text-faint);font-size:12px;padding:16px">אין תוצאות</div>`;
 }
 
-/* ==================== STAFF FILTER ==================== */
+/* ==================== STAFF PICKER (scales to 10-20 instructors) ==================== */
 function renderStaffFilter(){
   const t = TARGET_MAP[mode];
   $('staffFilter').style.display = (t.type==='group'||t.type==='all') ? '' : 'none';
-  $('staffFilter').innerHTML = `<span class="sf-label">מדריך:</span>
-    <button class="sf-chip ${staffFilter==='all'?'active':''}" onclick="setStaffFilter('all')">הכל</button>
-    ${STAFF.map(s=>`<button class="sf-chip ${staffFilter===s.id?'active':''}" onclick="setStaffFilter('${s.id}')"><svg><use href="#i-user"/></svg> ${s.name}</button>`).join('')}`;
+  if (t.type!=='group' && t.type!=='all') return;
+  const cur = STAFF.find(s=>s.id===staffFilter);
+  $('staffFilter').innerHTML = `
+    <span class="sf-label">מדריך:</span>
+    <div class="staff-picker" id="staffPicker">
+      <button class="staff-btn" onclick="event.stopPropagation();toggleStaffPanel()">
+        <svg><use href="#i-user"/></svg> ${staffFilter==='all' ? 'הכל' : cur.name}
+        <svg><use href="#i-chevron-down"/></svg>
+      </button>
+      <div class="staff-panel" onclick="event.stopPropagation()" id="staffPanel"></div>
+    </div>`;
+  renderStaffPanel();
 }
-function setStaffFilter(s){ staffFilter = s; renderStaffFilter(); renderDays(); }
+function toggleStaffPanel(){
+  const p = $('staffPicker');
+  if (p.classList.contains('open')){ p.classList.remove('open'); return; }
+  renderStaffPanel();
+  p.classList.add('open');
+}
+function renderStaffPanel(){
+  const panel = $('staffPanel'); if (!panel) return;
+  if (!$('staffSearch')){
+    panel.innerHTML = `
+      <div class="picker-search">
+        <svg class="icon icon-sm"><use href="#i-search"/></svg>
+        <input id="staffSearch" placeholder="חיפוש מדריך..." oninput="renderStaffList()">
+      </div>
+      <div id="staffList"></div>`;
+  }
+  renderStaffList();
+}
+function renderStaffList(){
+  const list = $('staffList'); if (!list) return;
+  const h = staffHours();
+  const q = ($('staffSearch').value||'').trim();
+  list.innerHTML =
+    `<div class="staff-item ${staffFilter==='all'?'active':''}" onclick="setStaffFilter('all')">
+      <svg class="icon-xs"><use href="#i-users"/></svg><span style="flex:1">הכל</span></div>` +
+    STAFF.filter(s=>!q || s.name.includes(q)).map(s=>`
+      <div class="staff-item ${staffFilter===s.id?'active':''}" onclick="setStaffFilter('${s.id}')">
+        <svg class="icon-xs"><use href="#i-user"/></svg>
+        <span style="flex:1">${s.name}</span>
+        <span class="staff-hours">${(h[s.id]||0).toFixed(1)} ש"ה</span>
+      </div>`).join('');
+}
+function setStaffFilter(s){
+  staffFilter = s;
+  const p = $('staffPicker'); if (p) p.classList.remove('open');
+  renderStaffFilter();
+  renderDays();
+}
+document.addEventListener('click', e=>{
+  const p = $('staffPicker');
+  if (p && (!e.target.closest || !e.target.closest('.staff-picker'))) p.classList.remove('open');
+});
 
 /* ==================== SIDEBAR TABS + ATHLETE CONTEXT ==================== */
 function renderSidebar(){
@@ -1441,8 +1557,7 @@ function renderDays(){
     }
 
     /* events on the board — planned around, not filtered by sport */
-    const ev = EVENTS[i];
-    if (ev){
+    (EVENTS[i]||[]).forEach(ev=>{
       const relevant = mode==='all' || (ev.athlete && ev.athlete===mode) || (!ev.athlete && (!ev.group || ev.group===mode ||
         (TARGET_MAP[mode].type==='personal' && Object.values(PERSONAL[mode]||{}).includes('@'+ev.group))));
       if (relevant){
@@ -1452,14 +1567,21 @@ function renderDays(){
           <svg class="icon-xs"><use href="#${icon}"/></svg>
           ${ev.title} · ${ev.time}</div>`;
       }
-    }
+    });
 
+    const canAddEvent = !isPast && mode!=='all';
+    const canAddWorkout = canAddEvent && sportFilter==='all' && staffFilter==='all';
     if (!shown){
-      if (isPast || sportFilter !== 'all' || mode==='all'){
-        inner = `<div class="day-empty">—</div>`;
+      if (canAddEvent){
+        inner = `<div class="day-adds">
+          ${canAddWorkout ? `<button class="day-add" style="flex:1" onclick="quickAdd(${i})"><svg class="icon icon-xs"><use href="#i-plus"/></svg> אימון</button>` : ''}
+          <button class="day-evadd" onclick="openEventDialog(${i})"><svg class="icon-xs"><use href="#i-calendar"/></svg> אירוע</button>
+        </div>`;
       } else {
-        inner = `<button class="day-add" onclick="quickAdd(${i})"><svg class="icon icon-xs"><use href="#i-plus"/></svg> הוסף</button>`;
+        inner = inner || `<div class="day-empty">—</div>`;
       }
+    } else if (canAddEvent){
+      inner += `<button class="day-evadd" style="margin-top:auto" onclick="openEventDialog(${i})"><svg class="icon-xs"><use href="#i-calendar"/></svg> אירוע</button>`;
     }
     html += `
       <div class="day-card${today}" data-day="${i}">
@@ -1961,6 +2083,58 @@ function toggleTheme(){
   $('themeBtn').innerHTML = isDark
     ? '<svg class="icon icon-sm"><use href="#i-moon"/></svg> Dark'
     : '<svg class="icon icon-sm"><use href="#i-sun"/></svg> Light';
+}
+
+/* ==================== ADD EVENT (competition / test / personal) ==================== */
+let evCtx = { day:0, kind:'competition' };
+const EV_KINDS = [
+  { id:'competition', label:'תחרות', icon:'i-trophy' },
+  { id:'test',        label:'מבחן',   icon:'i-clipboard' },
+  { id:'personal',    label:'אישי',   icon:'i-user' },
+];
+const EV_PREFIX = { competition:'תחרות — ', test:'מבחן — ', personal:'' };
+
+function openEventDialog(dayIdx){
+  const t = TARGET_MAP[mode];
+  evCtx = { day:dayIdx, kind:'competition' };
+  $('evDayLabel').innerHTML = `${DAYS[dayIdx].l}׳ · ${DAYS[dayIdx].d}.10`;
+  $('evTitle').value = 'תחרות — ' + t.name;
+  $('evTime').value = '09:00';
+  $('evTarget').innerHTML = `<option value="all">כללי — כל הלוח</option>` +
+    TARGETS.filter(x=>x.type==='group'||x.type==='personal'||x.type==='me')
+      .map(x=>`<option value="${x.id}" ${x.id===mode?'selected':''}>${x.name}</option>`).join('');
+  renderEvKinds();
+  showOverlay('eventOverlay');
+}
+function setEvKind(k){
+  const oldPrefix = EV_PREFIX[evCtx.kind] || '';
+  let title = $('evTitle').value;
+  if (title.startsWith(oldPrefix)) title = title.slice(oldPrefix.length);
+  const newPrefix = EV_PREFIX[k] || '';
+  if (newPrefix && !title.startsWith(newPrefix)) title = newPrefix + title;
+  evCtx.kind = k;
+  $('evTitle').value = title;
+  renderEvKinds();
+}
+function renderEvKinds(){
+  $('evKindBtns').innerHTML = EV_KINDS.map(k=>`
+    <button class="${evCtx.kind===k.id?'active':''}" onclick="setEvKind('${k.id}')">
+      <svg><use href="#${k.icon}"/></svg> ${k.label}</button>`).join('');
+}
+function addEvent(){
+  const title = $('evTitle').value.trim();
+  if (!title){ alert('WIREFRAME — נדרשת כותרת לאירוע'); return; }
+  const target = $('evTarget').value;
+  const ev = { title, time: $('evTime').value || '09:00', kind: evCtx.kind };
+  if (target !== 'all'){
+    const t = TARGET_MAP[target];
+    if (t && t.type==='group') ev.group = target;
+    else ev.athlete = target;
+  }
+  (EVENTS[evCtx.day] = EVENTS[evCtx.day] || []).push(ev);
+  hideOverlay('eventOverlay');
+  markDirty();
+  renderDays();
 }
 
 /* ==================== INIT ==================== */
