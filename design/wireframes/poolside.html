@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Poolside — Blue Fitness</title>
+<style>
+  :root {
+    --bg:#F8FAFC; --surface:#FFFFFF; --surface-ocean:#E0F2FE;
+    --surface-hover:#F1F5F9; --border:#CBD5E1;
+    --text:#0F172A; --text-muted:#475569; --text-faint:#94A3B8;
+    --accent:#2563EB; --accent-hover:#1D4ED8; --accent-text:#FFFFFF;
+    --success:#16A34A; --success-bg:#DCFCE7;
+    --danger:#DC2626; --danger-bg:#FEE2E2;
+    --shadow-md:0 4px 12px rgba(15,23,42,0.06);
+  }
+  :root[data-theme="dark"] {
+    --bg:#0F172A; --surface:#1E293B; --surface-ocean:#25334A;
+    --surface-hover:#334155; --border:#334155;
+    --text:#F8FAFC; --text-muted:#94A3B8; --text-faint:#64748B;
+    --accent:#3B82F6; --accent-hover:#2563EB; --accent-text:#FFFFFF;
+    --success:#22C55E; --success-bg:rgba(34,197,94,0.2);
+    --danger:#EF4444; --danger-bg:rgba(239,68,68,0.2);
+    --shadow-md:0 4px 12px rgba(0,0,0,0.25);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .2s,color .2s;}
+
+  /* Lucide icon sizing */
+  .icon{width:20px;height:20px;stroke-width:2;flex-shrink:0;}
+  .icon-sm{width:16px;height:16px;}
+  .icon-lg{width:24px;height:24px;}
+
+  .theme-btn{position:fixed;top:12px;inset-inline-start:12px;z-index:200;padding:8px 16px;border:1px solid var(--border);border-radius:24px;background:var(--surface);color:var(--text-muted);font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:6px;}
+
+  .frame{max-width:390px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;}
+
+  /* HEADER */
+  .header{background:var(--surface);padding:24px 20px 20px;border-bottom:1px solid var(--border);}
+  .header h1{font-size:24px;font-weight:800;letter-spacing:-.4px;}
+  .header .meta{display:flex;gap:14px;margin-top:8px;font-size:14px;color:var(--text-muted);}
+  .header .meta span{display:flex;align-items:center;gap:4px;}
+  .live{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:4px 14px;border-radius:24px;background:var(--success-bg);color:var(--success);font-size:12px;font-weight:700;}
+  .live .dot{width:8px;height:8px;border-radius:50%;background:var(--success);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+  /* QUICK */
+  .quick{display:flex;gap:8px;padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--border);}
+  .quick button{flex:1;padding:12px;border:none;border-radius:12px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;}
+  .quick .all-here{background:var(--success-bg);color:var(--success);}
+  .quick .all-out{background:var(--danger-bg);color:var(--danger);}
+
+  /* LIST */
+  .list{flex:1;overflow-y:auto;padding:12px 20px 20px;}
+  .row{display:flex;align-items:center;gap:14px;padding:14px 16px;margin-bottom:8px;background:var(--surface);border:1px solid var(--border);border-radius:16px;min-height:64px;transition:background .12s;}
+  .row.here{background:var(--success-bg);border-color:transparent;}
+  .row.out{background:var(--danger-bg);border-color:transparent;}
+
+  .avatar{width:44px;height:44px;border-radius:50%;background:var(--surface-ocean);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;flex-shrink:0;}
+  .row.here .avatar{background:var(--surface);color:var(--success);}
+  .row.out .avatar{background:var(--surface);color:var(--danger);}
+
+  .info{flex:1;min-width:0;}
+  .name{font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .sub{font-size:13px;color:var(--text-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+  .flag{display:flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;flex-shrink:0;background:var(--danger-bg);color:var(--danger);}
+
+  .actions{display:flex;gap:8px;flex-shrink:0;}
+  .act{width:48px;height:48px;border-radius:50%;border:2px solid var(--border);background:transparent;font-size:22px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;color:var(--text-faint);}
+  .act:active{transform:scale(.9);}
+  .act.yes.active{background:var(--success);border-color:var(--success);color:#fff;}
+  .act.no.active{background:var(--danger);border-color:var(--danger);color:#fff;}
+
+  /* BOTTOM — Point of Courage */
+  .bottom{display:flex;gap:10px;padding:14px 20px;background:var(--surface);border-top:1px solid var(--border);}
+  .btn-secondary{padding:14px;border:1px solid var(--border);border-radius:12px;background:transparent;color:var(--text-muted);font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .btn-primary{flex:1;padding:16px;border:none;border-radius:14px;background:var(--accent);color:var(--accent-text);font-size:17px;font-weight:800;font-family:inherit;cursor:pointer;box-shadow:0 4px 16px rgba(37,99,235,.25);display:flex;align-items:center;justify-content:center;gap:8px;}
+  .btn-primary:active{background:var(--accent-hover);}
+
+  /* NOTE POPUP */
+  .popup-bg{position:fixed;inset:0;background:rgba(15,23,42,.4);display:none;align-items:flex-end;z-index:100;}
+  .popup-bg.open{display:flex;}
+  .sheet{width:100%;max-width:390px;background:var(--surface);border-radius:24px 24px 0 0;padding:28px 20px 24px;}
+  .sheet h4{font-size:18px;font-weight:700;margin-bottom:4px;}
+  .sheet .hint{font-size:13px;color:var(--text-muted);margin-bottom:16px;}
+  .sheet textarea{width:100%;padding:14px;border:1px solid var(--border);border-radius:12px;background:var(--bg);color:var(--text);font-size:15px;font-family:inherit;resize:none;outline:none;}
+  .sheet textarea:focus{border-color:var(--accent);}
+  .sheet .row-actions{display:flex;gap:10px;margin-top:16px;}
+  .sheet .row-actions button{flex:1;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;}
+  .sheet .cancel{background:var(--surface-hover);color:var(--text-muted);}
+  .sheet .save{background:var(--accent);color:var(--accent-text);}
+
+  .wf{position:fixed;bottom:2px;inset-inline:0;text-align:center;font-size:10px;color:var(--text-faint);z-index:200;}
+  @media(max-width:390px){.wf{display:none;}}
+</style>
+
+<!-- LUCIDE ICONS (SVG symbols — stroke:currentColor, width:24) -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+  </symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+  </symbol>
+  <symbol id="i-pool" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 16c.6.5 1.2 1 2.5 1C7 17 7 15 9.5 15c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/>
+    <path d="M2 12c.6.5 1.2 1 2.5 1C7 13 7 11 9.5 11c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/>
+    <path d="M2 8c.6.5 1.2 1 2.5 1C7 9 7 7 9.5 7c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/>
+    <path d="M7 4v3"/><path d="M12 4v3"/><path d="M17 4v3"/>
+  </symbol>
+  <symbol id="i-bandage" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 10a2 2 0 1 1 4 0"/><path d="M12 14a2 2 0 1 0 0-4"/><rect x="4" y="4" width="16" height="16" rx="8"/>
+  </symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/>
+  </symbol>
+  <symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="20 6 9 17 4 12"/>
+  </symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </symbol>
+</svg>
+
+<script>
+  function icon(name, cls) {
+    return `<svg class="icon ${cls||''}"><use href="#i-${name}"/></svg>`;
+  }
+</script>
+</head>
+<body>
+
+<button class="theme-btn" onclick="toggleTheme()" id="themeBtn">
+  <svg class="icon icon-sm"><use href="#i-moon"/></svg>
+  Dark
+</button>
+
+<div class="frame">
+
+  <div class="header">
+    <h1>דגיגונים</h1>
+    <div class="meta">
+      <span><svg class="icon icon-sm"><use href="#i-clock"/></svg> 18:00–19:00</span>
+      <span><svg class="icon icon-sm"><use href="#i-pin"/></svg> בריכת הפועל</span>
+      <span><svg class="icon icon-sm"><use href="#i-pool"/></svg> 4 מסלולים</span>
+    </div>
+    <div class="live"><div class="dot"></div>מתקיים עכשיו</div>
+  </div>
+
+  <div class="quick">
+    <button class="all-here" onclick="markAll('here')">
+      <svg class="icon icon-sm"><use href="#i-check"/></svg> כולם נכחו
+    </button>
+    <button class="all-out" onclick="markAll('out')">
+      <svg class="icon icon-sm"><use href="#i-x"/></svg> כולם נעדרו
+    </button>
+  </div>
+
+  <div class="list">
+
+    <div class="row" data-name="דילן כהן">
+      <div class="avatar">דל</div>
+      <div class="info"><div class="name">דילן כהן</div><div class="sub">מסלול 1</div></div>
+      <span class="flag"><svg class="icon icon-sm"><use href="#i-bandage"/></svg></span>
+      <div class="actions">
+        <button class="act yes" onclick="setRow(this,'here')"><svg class="icon icon-lg"><use href="#i-check"/></svg></button>
+        <button class="act no" onclick="setRow(this,'out')"><svg class="icon icon-lg"><use href="#i-x"/></svg></button>
+      </div>
+    </div>
+
+    <div class="row" data-name="רם לוי">
+      <div class="avatar">רם</div>
+      <div class="info"><div class="name">רם לוי</div><div class="sub">מסלול 1</div></div>
+      <div class="actions">
+        <button class="act yes" onclick="setRow(this,'here')"><svg class="icon icon-lg"><use href="#i-check"/></svg></button>
+        <button class="act no" onclick="setRow(this,'out')"><svg class="icon icon-lg"><use href="#i-x"/></svg></button>
+      </div>
+    </div>
+
+    <div class="row" data-name="נעמי שרון">
+      <div class="avatar">נע</div>
+      <div class="info"><div class="name">נעמי שרון</div><div class="sub">מסלול 2</div></div>
+      <span class="flag"><svg class="icon icon-sm"><use href="#i-bandage"/></svg> פציעה</span>
+      <div class="actions">
+        <button class="act yes" onclick="setRow(this,'here')"><svg class="icon icon-lg"><use href="#i-check"/></svg></button>
+        <button class="act no" onclick="setRow(this,'out')"><svg class="icon icon-lg"><use href="#i-x"/></svg></button>
+      </div>
+    </div>
+
+    <div class="row" data-name="אלמוג בר">
+      <div class="avatar">אל</div>
+      <div class="info"><div class="name">אלמוג בר</div><div class="sub">מסלול 2</div></div>
+      <div class="actions">
+        <button class="act yes" onclick="setRow(this,'here')"><svg class="icon icon-lg"><use href="#i-check"/></svg></button>
+        <button class="act no" onclick="setRow(this,'out')"><svg class="icon icon-lg"><use href="#i-x"/></svg></button>
+      </div>
+    </div>
+
+    <div class="row" data-name="תאר שגב">
+      <div class="avatar">תא</div>
+      <div class="info"><div class="name">תאר שגב</div><div class="sub">חולה — דיווח הורה</div></div>
+      <div class="actions">
+        <button class="act yes" onclick="setRow(this,'here')"><svg class="icon icon-lg"><use href="#i-check"/></svg></button>
+        <button class="act no" onclick="setRow(this,'out')"><svg class="icon icon-lg"><use href="#i-x"/></svg></button>
+      </div>
+    </div>
+
+    <div class="row" data-name="מיקה דור">
+      <div class="avatar">מי</div>
+      <div class="info"><div class="name">מיקה דור</div><div class="sub">מסלול 3</div></div>
+      <div class="actions">
+        <button class="act yes" onclick="setRow(this,'here')"><svg class="icon icon-lg"><use href="#i-check"/></svg></button>
+        <button class="act no" onclick="setRow(this,'out')"><svg class="icon icon-lg"><use href="#i-x"/></svg></button>
+      </div>
+    </div>
+
+    <div class="row" data-name="שיר זהבי">
+      <div class="avatar">שי</div>
+      <div class="info"><div class="name">שיר זהבי</div><div class="sub">מסלול 3</div></div>
+      <div class="actions">
+        <button class="act yes" onclick="setRow(this,'here')"><svg class="icon icon-lg"><use href="#i-check"/></svg></button>
+        <button class="act no" onclick="setRow(this,'out')"><svg class="icon icon-lg"><use href="#i-x"/></svg></button>
+      </div>
+    </div>
+
+    <div class="row" data-name="ליסה אבידן">
+      <div class="avatar">ליס</div>
+      <div class="info"><div class="name">ליסה אבידן</div><div class="sub">מסלול 4</div></div>
+      <div class="actions">
+        <button class="act yes" onclick="setRow(this,'here')"><svg class="icon icon-lg"><use href="#i-check"/></svg></button>
+        <button class="act no" onclick="setRow(this,'out')"><svg class="icon icon-lg"><use href="#i-x"/></svg></button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom">
+    <button class="btn-secondary" title="תוכן האימון">
+      <svg class="icon"><use href="#i-clipboard"/></svg>
+    </button>
+    <button class="btn-primary" id="saveBtn" onclick="updateSave()">
+      <svg class="icon"><use href="#i-save"/></svg>
+      שמירה
+    </button>
+  </div>
+
+</div>
+
+<div class="popup-bg" id="popup" onclick="closePopup(event)">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <h4 id="popupName"></h4>
+    <div class="hint">הפתק נשמר בפרופיל של הספורטאי/ת</div>
+    <textarea rows="2" placeholder="למשל: כאב בברך, עשתה רק רגליים..."></textarea>
+    <div class="row-actions">
+      <button class="cancel" onclick="closeNote()">ביטול</button>
+      <button class="save" onclick="closeNote()">שמירה</button>
+    </div>
+  </div>
+</div>
+
+<div class="wf">WIREFRAME v4 — BLUE FITNESS · Lucide Icons · No Emoji</div>
+
+<script>
+  function setRow(btn, status) {
+    const row = btn.closest('.row');
+    const other = row.querySelector(status === 'here' ? '.act.no' : '.act.yes');
+    if (row.classList.contains(status)) {
+      row.classList.remove('here','out');
+      btn.classList.remove('active');
+      other.classList.remove('active');
+    } else {
+      row.classList.remove('here','out');
+      row.classList.add(status);
+      btn.classList.add('active');
+      other.classList.remove('active');
+    }
+    updateSave();
+  }
+
+  function markAll(status) {
+    document.querySelectorAll('.row').forEach(row => {
+      row.classList.remove('here','out');
+      row.classList.add(status);
+      row.querySelector('.act.yes').classList.toggle('active', status === 'here');
+      row.querySelector('.act.no').classList.toggle('active', status === 'out');
+    });
+    updateSave();
+  }
+
+  function updateSave() {
+    const total = document.querySelectorAll('.row').length;
+    const marked = document.querySelectorAll('.row.here, .row.out').length;
+    document.getElementById('saveBtn').innerHTML = `
+      <svg class="icon"><use href="#i-save"/></svg>
+      שמירה (${marked}/${total})`;
+  }
+  updateSave();
+
+  document.querySelectorAll('.row').forEach(row => {
+    let timer;
+    row.addEventListener('pointerdown', () => {
+      timer = setTimeout(() => {
+        document.getElementById('popupName').textContent = `פתק מהיר — ${row.dataset.name}`;
+        document.getElementById('popup').classList.add('open');
+      }, 400);
+    });
+    row.addEventListener('pointerup', () => clearTimeout(timer));
+    row.addEventListener('pointerleave', () => clearTimeout(timer));
+    row.addEventListener('contextmenu', e => {
+      e.preventDefault();
+      document.getElementById('popupName').textContent = `פתק מהיר — ${row.dataset.name}`;
+      document.getElementById('popup').classList.add('open');
+    });
+  });
+
+  function closePopup(e) { if (e.target === e.currentTarget) closeNote(); }
+  function closeNote() { document.getElementById('popup').classList.remove('open'); }
+
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.dataset.theme === 'dark';
+    html.dataset.theme = isDark ? '' : 'dark';
+    document.getElementById('themeBtn').innerHTML = isDark
+      ? '<svg class="icon icon-sm"><use href="#i-moon"/></svg> Dark'
+      : '<svg class="icon icon-sm"><use href="#i-sun"/></svg> Light';
+  }
+</script>
+</body>
+</html>
