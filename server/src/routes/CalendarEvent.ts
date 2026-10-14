@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { listDocs, getDoc, upsertDoc, deleteDoc, query, getTenantId } from "../db";
+import { validate } from "../validation/middleware";
+import { eventCreateSchema, eventOverrideSchema } from "../validation/schemas";
 import { logger } from "../utils/logger";
 import { TrainingAssignment, EventOverride, TrainingTime, Group, Training, CalendarEvent } from "@shared/types";
 
@@ -317,7 +319,7 @@ router.get("/athlete/:athleteId", async (req, res) => {
 // =========================
 // CREATE manual event
 // =========================
-router.post("/", async (req, res) => {
+router.post("/", validate(eventCreateSchema), async (req, res) => {
   const newEvent: CalendarEvent = {
     id: crypto.randomUUID(),
     title: req.body.title,
@@ -421,28 +423,39 @@ router.put("/:id", async (req, res) => {
 });
 
 // =========================
-// DELETE event
-// =========================
+// DELETE event — F0.3: 404 when not found (fix 4.15)
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
   logger.info(`DELETE event ${id}`);
 
-  await deleteDoc("events", id);
+  const existing = await getDoc("events", id);
+  if (!existing) {
+    return res.status(404).json({
+      message: "Event not found",
+      error: { code: "NOT_FOUND" },
+    });
+  }
 
+  await deleteDoc("events", id);
   res.json({ message: "Event deleted" });
 });
 
-// =========================
-// DELETE event override
-// =========================
+// DELETE event override — F0.3: 404 when not found
 router.delete("/override/:id", async (req, res) => {
   const { id } = req.params;
 
   logger.info(`DELETE event override ${id}`);
 
-  await deleteDoc("event_overrides", id);
+  const existing = await getDoc("event_overrides", id);
+  if (!existing) {
+    return res.status(404).json({
+      message: "Event override not found",
+      error: { code: "NOT_FOUND" },
+    });
+  }
 
+  await deleteDoc("event_overrides", id);
   res.json({ message: "Event override deleted" });
 });
 

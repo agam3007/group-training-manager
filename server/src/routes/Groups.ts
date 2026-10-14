@@ -1,12 +1,14 @@
 import { Router } from "express";
 import { listDocs, getDoc, upsertDoc, deleteDoc } from "../db";
+import { validate } from "../validation/middleware";
+import { groupCreateSchema, groupUpdateSchema } from "../validation/schemas";
 import { logger } from "../utils/logger";
 
 const router = Router();
 
 // GET group by ID
 router.get("/:id", async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params as { id: string };
 
   const group = await getDoc("groups", id);
 
@@ -26,7 +28,7 @@ router.get("/", async (_req, res) => {
 });
 
 // CREATE group
-router.post("/", async (req, res) => {
+router.post("/", validate(groupCreateSchema), async (req, res) => {
   const newGroup = {
     id: Date.now().toString(),
     name: req.body.name,
@@ -44,8 +46,8 @@ router.post("/", async (req, res) => {
 });
 
 // UPDATE group
-router.put("/:id", async (req, res) => {
-  const { id } = req.params;
+router.put("/:id", validate(groupUpdateSchema), async (req, res) => {
+  const { id } = req.params as { id: string };
 
   const existing = await getDoc("groups", id);
 
@@ -65,7 +67,7 @@ router.put("/:id", async (req, res) => {
 
 // DELETE group (memberships cascade via FK)
 router.delete("/:id", async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params as { id: string };
 
   const existing = await getDoc("groups", id);
 
