@@ -686,13 +686,9 @@
 
         <!-- ACTIONS -->
         <div class="plan-actions">
-          <button class="btn-copy" id="applyWeekBtn" onclick="openApplyDialog()">
-            <svg class="icon icon-sm"><use href="#i-users"/></svg>
-            החל על קבוצות...
-          </button>
           <button class="btn-copy" id="copyHubBtn" onclick="openCopyDialog()">
             <svg class="icon icon-sm"><use href="#i-copy"/></svg>
-            העתקה...
+            העתקה / החלה...
           </button>
           <button class="btn-publish" id="publishBtn" onclick="publish()">
             <svg class="icon"><use href="#i-send"/></svg>
@@ -796,33 +792,9 @@
   </div>
 </div>
 
-<!-- APPLY WEEK TO MULTIPLE GROUPS -->
-<div class="overlay" id="applyOverlay" onclick="if(event.target===this)hideOverlay('applyOverlay')">
-  <div class="confirm-card" style="max-width:470px">
-    <h3><svg class="icon"><use href="#i-copy"/></svg> <span id="applyTitle"></span></h3>
-    <div class="ev-field">
-      <span class="ev-label">לאילו קבוצות להחיל (אפשר כמה)</span>
-      <div class="picker-search" style="margin-bottom:6px">
-        <svg class="icon icon-sm"><use href="#i-search"/></svg>
-        <input id="applySearch" placeholder="חיפוש קבוצה..." oninput="buildApplyList()">
-      </div>
-      <div class="ev-list" id="applyList"></div>
-    </div>
-    <div class="ev-field">
-      <span class="ev-label">התאמת נפח</span>
-      <div class="ev-scale" id="applyScale"></div>
-    </div>
-    <div class="cf-stats" id="applySummary"></div>
-    <div class="confirm-actions">
-      <button class="btn-copy" onclick="hideOverlay('applyOverlay')">ביטול</button>
-      <button class="btn-publish" style="padding:12px 24px;font-size:14px" id="applyBtn" onclick="confirmApply()"><svg class="icon"><use href="#i-check"/></svg> החל</button>
-    </div>
-  </div>
-</div>
-
-<!-- COPY HUB — source × destination in one dialog -->
+<!-- COPY HUB — unified: source × destination (weeks + groups) -->
 <div class="overlay" id="copyOverlay" onclick="if(event.target===this)hideOverlay('copyOverlay')">
-  <div class="confirm-card" style="max-width:450px">
+  <div class="confirm-card" style="max-width:480px">
     <h3><svg class="icon"><use href="#i-copy"/></svg> <span id="copyTitle"></span></h3>
     <div class="ev-field">
       <span class="ev-label">מקור</span>
@@ -833,17 +805,26 @@
       </button>
     </div>
     <div class="ev-field">
-      <span class="ev-label">יעד</span>
-      <label class="ev-tog"><input type="checkbox" id="copyToCurrent" checked onchange="renderCopySummary()"> השבוע הנוכחי (<span id="copyCurWeek"></span>)</label>
+      <span class="ev-label">יעד (אפשר לסמן כמה)</span>
+      <label class="ev-tog"><input type="checkbox" id="copyToCurrent" onchange="renderCopySummary()"> השבוע הנוכחי (<span id="copyCurWeek"></span>)</label>
       <label class="ev-tog">
         <input type="checkbox" id="copyFwd" onchange="renderCopySummary()">
         גם <input type="number" id="copyFwdN" value="2" min="1" max="8" style="width:52px;padding:4px 8px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-family:inherit" onchange="renderCopySummary()"> שבועות קדימה
       </label>
+      <label class="ev-tog"><input type="checkbox" id="copyToGroups" onchange="renderCopyGroups()"> קבוצות אחרות (עם התאמת נפח)</label>
+      <div id="copyGroupsBox" style="display:none">
+        <div class="picker-search" style="margin:8px 0 6px">
+          <svg class="icon icon-sm"><use href="#i-search"/></svg>
+          <input id="copyGroupSearch" placeholder="חיפוש קבוצה..." oninput="renderCopyGroupList()">
+        </div>
+        <div class="ev-list" id="copyGroupList"></div>
+        <div class="ev-scale" id="copyScaleBtns" style="margin-top:8px"></div>
+      </div>
     </div>
     <div class="cf-stats" id="copySummary"></div>
     <div class="confirm-actions">
       <button class="btn-copy" onclick="hideOverlay('copyOverlay')">ביטול</button>
-      <button class="btn-publish" style="padding:12px 24px;font-size:14px" onclick="confirmCopy()"><svg class="icon"><use href="#i-check"/></svg> העתק</button>
+      <button class="btn-publish" style="padding:12px 24px;font-size:14px" onclick="confirmCopy()"><svg class="icon"><use href="#i-check"/></svg> העתק / החל</button>
     </div>
   </div>
 </div>
@@ -855,6 +836,13 @@
     <div class="ev-field">
       <span class="ev-label">לאיזה יום בשבוע</span>
       <div id="cwDays" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+    </div>
+    <div class="ev-field">
+      <span class="ev-label">או לקבוצה אחרת (באותו יום)</span>
+      <div style="display:flex;gap:8px">
+        <select class="ev-select" id="cwGroup" style="flex:1"></select>
+        <button class="btn-copy" onclick="copyWorkoutToGroup()"><svg class="icon-sm"><use href="#i-copy"/></svg> העתק לקבוצה</button>
+      </div>
     </div>
     <button class="btn-copy" style="width:100%;justify-content:center" onclick="saveWorkoutToLib()">
       <svg class="icon icon-sm"><use href="#i-lib"/></svg> שמור כפריט בספריית האימונים
@@ -903,7 +891,7 @@
   <button onclick="undo()">בטל</button>
 </div>
 
-<div class="wf">WIREFRAME v12 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
+<div class="wf">WIREFRAME v13 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -1237,7 +1225,7 @@ function removeFromDay(map, day, wid){
 let undoSnapshot = null;
 let undoTimer = null;
 function snapshotState(){
-  return JSON.parse(JSON.stringify({ SCHEDULE, OVERRIDES, PERSONAL, WEEK_PLANS, weekState, pendingMap, EVENTS, WORKOUTS, TEMPLATES }));
+  return JSON.parse(JSON.stringify({ SCHEDULE, OVERRIDES, PERSONAL, WEEK_PLANS, weekState, pendingMap, EVENTS, WORKOUTS, TEMPLATES, WEEK_APPLY_META }));
 }
 function withUndo(label, fn){
   undoSnapshot = snapshotState();
@@ -1250,7 +1238,7 @@ function withUndo(label, fn){
 }
 function undo(){
   if (!undoSnapshot) return;
-  const cur = { SCHEDULE, OVERRIDES, PERSONAL, WEEK_PLANS, weekState, pendingMap, EVENTS, WORKOUTS, TEMPLATES };
+  const cur = { SCHEDULE, OVERRIDES, PERSONAL, WEEK_PLANS, weekState, pendingMap, EVENTS, WORKOUTS, TEMPLATES, WEEK_APPLY_META };
   Object.keys(cur).forEach(k=>{
     Object.keys(cur[k]).forEach(key=>delete cur[k][key]);
     Object.assign(cur[k], undoSnapshot[k]);
@@ -1973,7 +1961,6 @@ function openSessMenu(e, targetId, dayIdx, wid, kind){
     if (kind==='group') items.push(`<div class="sm-item" onclick="closeSessMenu();cancelSession('${targetId}',${dayIdx})"><svg class="icon-xs"><use href="#i-x"/></svg> בטל אימון</div>`);
     items.push(`<div class="sm-item" onclick="closeSessMenu();alert('WIREFRAME — גרור את האימון ליום אחר בלוח')"><svg class="icon-xs"><use href="#i-repeat"/></svg> העבר ליום אחר (גרור)</div>`);
     items.push(`<div class="sm-item" onclick="closeSessMenu();openCopyWorkoutDialog('${targetId}',${dayIdx},'${wid}','${kind}')"><svg class="icon-xs"><use href="#i-copy"/></svg> העתק אימון...</div>`);
-    if (t.type==='group') items.push(`<div class="sm-item" onclick="closeSessMenu();alert('WIREFRAME — שכפול לקבוצה אחרת עם התאמת סקאלה — אפשר דרך החל על קבוצות')"><svg class="icon-xs"><use href="#i-users"/></svg> שכפל לקבוצה אחרת</div>`);
     items.push(`<div class="sm-item danger" onclick="closeSessMenu();deleteSession('${targetId}',${dayIdx},'${kind}','${wid}')"><svg class="icon-xs"><use href="#i-x"/></svg> מחק</div>`);
   }
   sessMenuEl = document.createElement('div');
@@ -2222,7 +2209,6 @@ function updateActions(){
   pub.classList.remove('published','dirty');
   const showPub = editableWeek && (t.type==='group' || t.type==='personal');
   pub.style.display = showPub ? '' : 'none';
-  $('applyWeekBtn').style.display = (editableWeek && t.type==='group') ? '' : 'none';
   $('copyHubBtn').style.display = (editableWeek && t.type!=='all') ? '' : 'none';
 
   const note = $('publishNote');
@@ -2434,68 +2420,6 @@ function addEvent(){
   });
 }
 
-/* ==================== APPLY WEEK TO MULTIPLE GROUPS ==================== */
-let applySel = new Set();
-let applyScale = 1;
-
-function openApplyDialog(){
-  const t = TARGET_MAP[mode];
-  applySel = new Set();
-  applyScale = 1;
-  $('applyTitle').innerHTML = `החלת תוכנית שבוע ${selectedWeek} — ${t.name}`;
-  $('applySearch').value = '';
-  buildApplyList();
-  renderApplyScale();
-  updateApplySummary();
-  showOverlay('applyOverlay');
-}
-function buildApplyList(){
-  const q = ($('applySearch').value||'').trim();
-  $('applyList').innerHTML = TARGETS
-    .filter(x=>x.type==='group' && x.id!==mode && (!q || x.name.includes(q)))
-    .map(x=>`
-      <label class="ev-tog">
-        <input type="checkbox" ${applySel.has(x.id)?'checked':''} onchange="toggleApply('${x.id}')">
-        <span class="gdot" style="background:${x.color}"></span> ${x.name}
-        <span class="staff-hours" style="margin-inline-start:auto">${x.athletes} אתלטים</span>
-      </label>`).join('')
-    || `<div style="text-align:center;color:var(--text-faint);font-size:12px;padding:14px">אין תוצאות</div>`;
-}
-function toggleApply(id){ applySel.has(id) ? applySel.delete(id) : applySel.add(id); updateApplySummary(); }
-function renderApplyScale(){
-  $('applyScale').innerHTML = [
-    { v:1,   l:'זהה — 100%' },
-    { v:0.8, l:'מותאם — 80% נפח' },
-    { v:0.6, l:'קל — 60% נפח' },
-  ].map(o=>`<button class="${applyScale===o.v?'active':''}" onclick="setApplyScale(${o.v})">${o.l}</button>`).join('');
-}
-function setApplyScale(v){ applyScale=v; renderApplyScale(); updateApplySummary(); }
-function updateApplySummary(){
-  const src = planForWeek()[mode] || {};
-  const n = Object.keys(src).length;
-  const sel = applySel.size;
-  $('applySummary').innerHTML = `
-    <span class="cf-stat">אימונים להעתקה: <b>${n}</b></span>
-    <span class="cf-stat">קבוצות נבחרו: <b>${sel}</b></span>
-    <span class="cf-stat">התאמה: <b>${applyScale*100}%</b></span>`;
-  $('applyBtn').innerHTML = `<svg class="icon"><use href="#i-check"/></svg> החל על ${sel} קבוצות`;
-}
-function confirmApply(){
-  if (!applySel.size){ alert('WIREFRAME — בחר לפחות קבוצה אחת'); return; }
-  const n = applySel.size;
-  withUndo(`השבוע הוחל על ${n} קבוצות`, ()=>{
-    const src = planForWeek()[mode] || {};
-    applySel.forEach(g=>{
-      planForWeek()[g] = Object.assign({}, src);
-      WEEK_APPLY_META[stKey(selectedWeek, g)] = { from: mode, scale: applyScale };
-      const k = stKey(selectedWeek, g);
-      if (weekState[k]==='published'){ weekState[k]='dirty'; pendingMap[k]=(pendingMap[k]||0)+1; }
-    });
-    hideOverlay('applyOverlay');
-    renderReadiness(); renderDays(); renderWeekStateChip();
-  });
-}
-
 function deleteEvent(day, ei){
   withUndo('האירוע נמחק', ()=>{
     if (EVENTS[day]) EVENTS[day].splice(ei,1);
@@ -2505,23 +2429,37 @@ function deleteEvent(day, ei){
   });
 }
 
-/* ==================== COPY HUB — one dialog: source × destination ==================== */
+/* ==================== COPY HUB — unified: source × destination (weeks + groups) ==================== */
 let copyCtx = { src:'prev', week:41, tpl:0 };
+let copyGroups = new Set();
+let copyScale = 1;
 
 function openCopyDialog(){
   copyCtx = { src:'prev', week:Math.max(1, selectedWeek-1), tpl:0 };
-  $('copyTitle').innerHTML = `העתקת שבוע — ${TARGET_MAP[mode].name}`;
+  copyGroups = new Set();
+  copyScale = 1;
+  $('copyTitle').innerHTML = `העתקה / החלה — ${TARGET_MAP[mode].name} · שבוע ${selectedWeek}`;
   $('copyCurWeek').innerHTML = selectedWeek;
   $('copyFwdN').value = 2;
   $('copyToCurrent').checked = true;
   $('copyFwd').checked = false;
+  $('copyToGroups').checked = false;
+  $('copyGroupsBox').style.display = 'none';
+  $('copyGroupSearch').value = '';
   renderCopySrc();
+  renderCopyScale();
   renderCopySummary();
   showOverlay('copyOverlay');
 }
-function setCopySrc(s){ copyCtx.src = s; renderCopySrc(); renderCopySummary(); }
+function setCopySrc(s){
+  copyCtx.src = s;
+  if (s==='cur') $('copyToCurrent').checked = false;
+  renderCopySrc();
+  renderCopySummary();
+}
 function renderCopySrc(){
   const opts = [
+    { id:'cur',  label:`השבוע הנוכחי (${selectedWeek})` },
     { id:'prev', label:`שבוע קודם (${selectedWeek-1})` },
     { id:'week', label:'שבוע אחר...' },
     { id:'tpl',  label:'תבנית...' },
@@ -2538,27 +2476,58 @@ function renderCopySrc(){
     extra = `<span style="font-size:12px;color:var(--text-muted)">${Object.keys(getCopySource()).length} אימונים במקור</span>`;
   }
   $('copySrcExtra').innerHTML = extra;
+  $('copyToCurrent').disabled = (copyCtx.src==='cur');
 }
 function getCopySource(){
+  if (copyCtx.src === 'cur')  return (planForWeek()[mode] || {});
   if (copyCtx.src === 'prev') return (planForWeekAt(selectedWeek-1)[mode] || {});
   if (copyCtx.src === 'week') return (planForWeekAt(Math.max(1, Math.min(52, copyCtx.week || 1)))[mode] || {});
   return TEMPLATES[copyCtx.tpl] ? TEMPLATES[copyCtx.tpl].days : {};
 }
+function renderCopyGroups(){
+  $('copyGroupsBox').style.display = $('copyToGroups').checked ? '' : 'none';
+  if ($('copyToGroups').checked) renderCopyGroupList();
+  renderCopySummary();
+}
+function renderCopyGroupList(){
+  const q = ($('copyGroupSearch').value||'').trim();
+  $('copyGroupList').innerHTML = TARGETS
+    .filter(x=>x.type==='group' && x.id!==mode && (!q || x.name.includes(q)))
+    .map(x=>`
+      <label class="ev-tog">
+        <input type="checkbox" ${copyGroups.has(x.id)?'checked':''} onchange="toggleCopyGroup('${x.id}')">
+        <span class="gdot" style="background:${x.color}"></span> ${x.name}
+        <span class="staff-hours" style="margin-inline-start:auto">${x.athletes} אתלטים</span>
+      </label>`).join('')
+    || `<div style="text-align:center;color:var(--text-faint);font-size:12px;padding:14px">אין תוצאות</div>`;
+}
+function toggleCopyGroup(id){ copyGroups.has(id) ? copyGroups.delete(id) : copyGroups.add(id); renderCopySummary(); }
+function renderCopyScale(){
+  $('copyScaleBtns').innerHTML = [
+    { v:1,   l:'זהה — 100%' },
+    { v:0.8, l:'מותאם — 80%' },
+    { v:0.6, l:'קל — 60%' },
+  ].map(o=>`<button class="${copyScale===o.v?'active':''}" onclick="setCopyScale(${o.v})">${o.l}</button>`).join('');
+}
+function setCopyScale(v){ copyScale=v; renderCopyScale(); renderCopySummary(); }
 function renderCopySummary(){
   const n = Object.keys(getCopySource()).length;
-  const cur = $('copyToCurrent').checked;
+  const cur = $('copyToCurrent').checked && copyCtx.src!=='cur';
   const fwd = $('copyFwd').checked ? Math.max(0, Math.min(8, +$('copyFwdN').value || 0)) : 0;
+  const groups = $('copyToGroups').checked ? copyGroups.size : 0;
   $('copySummary').innerHTML = `
     <span class="cf-stat">אימונים במקור: <b>${n}</b></span>
-    <span class="cf-stat">יעדים: <b>${(cur?1:0) + fwd}</b></span>`;
+    <span class="cf-stat">יעדים: <b>${(cur?1:0) + fwd + groups}</b></span>
+    ${groups ? `<span class="cf-stat">התאמה לקבוצות: <b>${copyScale*100}%</b></span>` : ''}`;
 }
 function confirmCopy(){
-  const cur = $('copyToCurrent').checked;
+  const cur = $('copyToCurrent').checked && copyCtx.src!=='cur';
   const fwd = $('copyFwd').checked ? Math.max(0, Math.min(8, +$('copyFwdN').value || 0)) : 0;
-  if (!cur && !fwd){ alert('WIREFRAME — בחר יעד אחד לפחות'); return; }
+  const groups = $('copyToGroups').checked ? Array.from(copyGroups) : [];
+  if (!cur && !fwd && !groups.length){ alert('WIREFRAME — בחר יעד אחד לפחות'); return; }
   const src = Object.assign({}, getCopySource());
   const isTpl = copyCtx.src === 'tpl';
-  withUndo('השבוע הועתק', ()=>{
+  withUndo('ההעתקה בוצעה', ()=>{
     if (cur){
       planForWeek()[mode] = Object.assign({}, src);
       if (isTpl) WEEK_APPLY_META[stKey(selectedWeek, mode)] = { tplName: TEMPLATES[copyCtx.tpl].name };
@@ -2567,8 +2536,14 @@ function confirmCopy(){
     for (let k=1;k<=fwd;k++){
       const w = Math.min(52, selectedWeek + k);
       planForWeekAt(w)[mode] = Object.assign({}, src);
-      WEEK_APPLY_META[stKey(w, mode)] = { from: mode, scale: 1 };
+      WEEK_APPLY_META[stKey(w, mode)] = isTpl ? { tplName: TEMPLATES[copyCtx.tpl].name } : { from: mode, scale: 1 };
     }
+    groups.forEach(g=>{
+      planForWeek()[g] = Object.assign({}, src);
+      WEEK_APPLY_META[stKey(selectedWeek, g)] = isTpl ? { tplName: TEMPLATES[copyCtx.tpl].name } : { from: mode, scale: copyScale };
+      const k = stKey(selectedWeek, g);
+      if (weekState[k]==='published'){ weekState[k]='dirty'; pendingMap[k]=(pendingMap[k]||0)+1; }
+    });
     hideOverlay('copyOverlay');
     renderDays(); renderReadiness(); renderWeekStateChip();
   });
@@ -2592,7 +2567,19 @@ function openCopyWorkoutDialog(targetId, dayIdx, wid, kind){
   $('cwDays').innerHTML = DAYS.map((d,i)=>
     `<button class="sf-chip" style="${i===dayIdx?'opacity:.35;pointer-events:none':''}" onclick="copyWorkoutTo(${i})">${d.l}׳</button>`
   ).join('');
+  $('cwGroup').innerHTML = TARGETS
+    .filter(x=>x.type==='group' && x.id!==targetId)
+    .map(x=>`<option value="${x.id}">${x.name}</option>`).join('');
   showOverlay('copyWorkoutOverlay');
+}
+function copyWorkoutToGroup(){
+  const g = $('cwGroup').value;
+  if (!g){ alert('WIREFRAME — בחר קבוצה'); return; }
+  withUndo('האימון הועתק לקבוצה', ()=>{
+    addToDay(planForWeek()[g], cwCtx.dayIdx, cwCtx.wid);
+    hideOverlay('copyWorkoutOverlay');
+    markDirty(); renderDays();
+  });
 }
 function copyWorkoutTo(day){
   const t = TARGET_MAP[cwCtx.targetId];
