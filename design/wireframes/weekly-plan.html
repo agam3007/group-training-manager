@@ -343,6 +343,19 @@
   .ev-kind button.active{border-color:var(--accent);background:var(--accent-dim);color:var(--accent);}
   .ev-kind button svg{width:13px;height:13px;}
 
+  /* ==================== MULTI-TARGET (events + apply week) ==================== */
+  .ev-list{max-height:150px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;padding:4px;background:var(--bg);}
+  .ev-tog{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;font-size:12.5px;font-weight:700;color:var(--text-muted);cursor:pointer;}
+  .ev-tog:hover{background:var(--surface-hover);}
+  .ev-tog input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer;flex-shrink:0;}
+  .ev-scale{display:flex;gap:6px;}
+  .ev-scale button{flex:1;padding:8px 4px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text-muted);font-size:12px;font-weight:700;cursor:pointer;}
+  .ev-scale button.active{border-color:var(--accent);background:var(--accent-dim);color:var(--accent);}
+  .mb-groups{display:flex;gap:6px;flex-wrap:wrap;}
+  .mb-group{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--border);border-radius:20px;background:var(--surface);font-size:11.5px;font-weight:700;color:var(--text-muted);cursor:pointer;transition:all .15s;}
+  .mb-group:hover{border-color:var(--accent);}
+  .mb-gsub{color:var(--text-faint);font-weight:600;font-size:10.5px;}
+
   /* ==================== STAFF ==================== */
   .coach-chip{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--text-muted);}
   .coach-chip svg{width:10px;height:10px;}
@@ -666,6 +679,10 @@
 
         <!-- ACTIONS -->
         <div class="plan-actions">
+          <button class="btn-copy" id="applyWeekBtn" onclick="openApplyDialog()">
+            <svg class="icon icon-sm"><use href="#i-users"/></svg>
+            החל על קבוצות...
+          </button>
           <button class="btn-copy" id="templateBtn" onclick="alert('WIREFRAME — בחירת שבוע מתוכנית / תבנית תוכנית')">
             <svg class="icon icon-sm"><use href="#i-folder"/></svg>
             מתוכנית...
@@ -755,15 +772,17 @@
       <span class="ev-label">כותרת</span>
       <input class="ev-input" id="evTitle" type="text" placeholder="למשל: תחרות אזורית — נערים">
     </div>
-    <div style="display:flex;gap:10px">
-      <div class="ev-field" style="flex:1">
-        <span class="ev-label">שעה</span>
-        <input class="ev-input" id="evTime" type="time" value="09:00">
+    <div class="ev-field">
+      <span class="ev-label">שעה</span>
+      <input class="ev-input" id="evTime" type="time" value="09:00" style="width:110px">
+    </div>
+    <div class="ev-field">
+      <span class="ev-label">למי (אפשר לבחור כמה)</span>
+      <div class="picker-search" style="margin-bottom:6px">
+        <svg class="icon icon-sm"><use href="#i-search"/></svg>
+        <input id="evTargetSearch" placeholder="חיפוש קבוצה / מתאמן..." oninput="buildEvTargetList()">
       </div>
-      <div class="ev-field" style="flex:2">
-        <span class="ev-label">למי</span>
-        <select class="ev-select" id="evTarget"></select>
-      </div>
+      <div class="ev-list" id="evTargetList"></div>
     </div>
     <div class="confirm-actions">
       <button class="btn-copy" onclick="hideOverlay('eventOverlay')">ביטול</button>
@@ -774,7 +793,31 @@
   </div>
 </div>
 
-<div class="wf">WIREFRAME v8 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
+<!-- APPLY WEEK TO MULTIPLE GROUPS -->
+<div class="overlay" id="applyOverlay" onclick="if(event.target===this)hideOverlay('applyOverlay')">
+  <div class="confirm-card" style="max-width:470px">
+    <h3><svg class="icon"><use href="#i-copy"/></svg> <span id="applyTitle"></span></h3>
+    <div class="ev-field">
+      <span class="ev-label">לאילו קבוצות להחיל (אפשר כמה)</span>
+      <div class="picker-search" style="margin-bottom:6px">
+        <svg class="icon icon-sm"><use href="#i-search"/></svg>
+        <input id="applySearch" placeholder="חיפוש קבוצה..." oninput="buildApplyList()">
+      </div>
+      <div class="ev-list" id="applyList"></div>
+    </div>
+    <div class="ev-field">
+      <span class="ev-label">התאמת נפח</span>
+      <div class="ev-scale" id="applyScale"></div>
+    </div>
+    <div class="cf-stats" id="applySummary"></div>
+    <div class="confirm-actions">
+      <button class="btn-copy" onclick="hideOverlay('applyOverlay')">ביטול</button>
+      <button class="btn-publish" style="padding:12px 24px;font-size:14px" id="applyBtn" onclick="confirmApply()"><svg class="icon"><use href="#i-check"/></svg> החל</button>
+    </div>
+  </div>
+</div>
+
+<div class="wf">WIREFRAME v9 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -896,6 +939,23 @@ const WEEKS = [
 ];
 const BLOCK = 'מסו-בלוק: בסיס אירובי (שבועות 39–44)';
 
+/* per-target periodization context — each group is at a different phase */
+const MESO_BY_TARGET = {
+  dagig:  { block:'בסיס אירובי', goal:'בסיס אירובי + טכניקה · פריקה בשבוע 43 · שיא בשבוע 44', from:39, to:44, pos:4, deload:43, peak:44,
+            loads:{ 39:320, 40:450, 41:590, 42:410, 43:260, 44:470 } },
+  neorim: { block:'בנייה — כוח ומהירות', goal:'אינטנסיביות + עבודה ספציפית · עלייה שבועית', from:41, to:44, pos:2,
+            note:'תחרות-A בשבוע 42', loads:{ 41:280, 42:520, 43:580, 44:640 } },
+  bogarim:{ block:'פריקה לאליפות', goal:'טייפר — נפח יורד, אינטנסיביות נשמרת', from:42, to:44, pos:1, peak:44,
+            note:'אליפות בשבוע 44', loads:{ 42:180, 43:140, 44:90 } },
+  maya:   { block:'בסיס — מאיה', goal:'שחייה עם הקבוצה + השלמות כוח וריצה', from:39, to:44, pos:4,
+            loads:{ 39:120, 40:150, 41:180, 42:162, 43:110, 44:170 } },
+  noam:   { block:'הכנה לחצי איש', goal:'בסיס ריצה — רמפה שבועית ארוכה', from:36, to:47, pos:7,
+            loads:{ 39:200, 40:210, 41:230, 42:245, 43:255, 44:270 } },
+  me:     { block:'עונת טריאתלון', goal:'בסיס רב-ענפי', from:38, to:49, pos:5,
+            loads:{ 39:280, 40:300, 41:330, 42:335, 43:290, 44:340 } },
+};
+const MESO_EMPTY = { block:'אין תוכנית עונתית', goal:'הגדר תוכנית מהמבנה שלמעלה, או החל מקבוצה אחרת', from:39, to:44, pos:0, loads:{} };
+
 /* weekly load target per target */
 const LOAD_TARGET = { all:null, dagig:240, neorim:300, bogarim:300, maya:200, noam:290, me:380 };
 
@@ -991,6 +1051,8 @@ const WEEK_PLANS = {};
 /* publish state per week+target: draft | published | dirty | empty (computed) */
 const weekState = { '42:neorim':'published', '42:maya':'published' };
 const pendingMap = {};
+/* provenance when a week was applied from another group: { '42:<target>': {from, scale} } */
+const WEEK_APPLY_META = {};
 /* scale demo states — mixed readiness across the 24 demo groups */
 ['sg0','sg1','sg2','sg3','sg4','sg5','sg6','sg7'].forEach(id=>weekState['42:'+id]='published');
 weekState['42:sg8']='dirty'; pendingMap['42:sg8']=2;
@@ -1145,28 +1207,68 @@ function renderMeta(){
 }
 
 /* ==================== MESO BLOCK PANEL + WEEK STATE ==================== */
+const relColor = pct => pct>.85 ? '#DC2626' : pct>.6 ? '#F87171' : pct>.4 ? '#FBBF24' : '#84CC16';
+
 function renderMeso(){
-  const maxL = Math.max(...WEEKS.map(w=>w.load||0));
+  if (mode==='all'){ renderMesoAll(); return; }
+  const m = MESO_BY_TARGET[mode] || MESO_EMPTY;
+  const loads = Object.values(m.loads);
+  const maxL = Math.max(...loads, 1);
+  const t = TARGET_MAP[mode];
+  const bars = WEEKS.map(w=>{
+    const load = m.loads[w.n];
+    const inBlock = w.n>=m.from && w.n<=m.to;
+    const planned = w.n>=42 ? ' planned' : '';
+    const sel = w.n===selectedWeek ? ' selected' : '';
+    const pct = load ? load/maxL : 0;
+    const h = load ? Math.max(8, Math.round(pct*48)) : 6;
+    const style = load
+      ? `height:${h}px;background:${relColor(pct)};${inBlock?'':'opacity:.25;'}`
+      : `height:6px;border:1px dashed var(--border);background:transparent;`;
+    const mark = m.deload===w.n
+      ? `<svg class="icon-xs mb-rec" style="margin-bottom:2px"><use href="#i-trend-down"/></svg>`
+      : m.peak===w.n
+      ? `<svg class="icon-xs" style="color:var(--danger);margin-bottom:2px"><use href="#i-trophy"/></svg>` : '';
+    return `<div class="mb-col${planned}${sel}" onclick="selectWeek(${w.n})" title="שבוע ${w.n}${load?` · ${load} נק׳`:''}">
+      ${mark}
+      <div class="mb-bar" style="${style}"></div>
+      <div class="mb-n">${w.n}</div>
+      <div class="mb-status">${w.n<42 ? 'בוצע' : (w.n===42 ? 'נוכחי' : 'מתוכנן')}</div>
+    </div>`;
+  }).join('');
   $('mesoPanel').innerHTML = `
     <div class="meso-head">
       <svg class="icon"><use href="#i-chart"/></svg>
       <div style="flex:1">
-        <div class="meso-name">מסו-בלוק: בסיס אירובי <span class="meso-pos">· שבוע 4 מתוך 6</span></div>
-        <div class="meso-goal">מטרה: בסיס אירובי + טכניקה · פריקה מתוכננת בשבוע 43 · שיא בשבוע 44</div>
+        <div class="meso-name">${m.block} <span class="meso-pos">· שבוע ${m.pos} מתוך ${m.to-m.from+1}</span></div>
+        <div class="meso-goal">${m.goal}${m.note?` · <b style="color:var(--warning)">${m.note}</b>`:''}</div>
+      </div>
+      <span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;flex-shrink:0">
+        <span class="gdot" style="background:${t.color}"></span>${t.name}
+      </span>
+    </div>
+    <div class="meso-bars">${bars}</div>`;
+}
+function renderMesoAll(){
+  const mains = ['dagig','neorim','bogarim','maya','noam','me'];
+  const chips = mains.map(id=>{
+    const t = TARGET_MAP[id], m = MESO_BY_TARGET[id];
+    return `<button class="mb-group" onclick="setMode('${id}')">
+      <span class="gdot" style="background:${t.color}"></span> ${t.name}
+      <span class="mb-gsub">${m.block} · ${m.pos}/${m.to-m.from+1}</span>
+    </button>`;
+  }).join('');
+  const rest = TARGETS.filter(t=>t.type==='group' && !mains.includes(t.id)).length;
+  $('mesoPanel').innerHTML = `
+    <div class="meso-head">
+      <svg class="icon"><use href="#i-chart"/></svg>
+      <div style="flex:1">
+        <div class="meso-name">כל קבוצה בשלב אחר בעונה</div>
+        <div class="meso-goal">סה"כ עומס מתוכנן לשבוע 42: 1,414 נק׳ · שיא בנערים (בנייה) · פריקה בבוגרים (טייפר לאליפות)</div>
       </div>
     </div>
-    <div class="meso-bars">
-      ${WEEKS.map(w=>{
-        const h = Math.max(8, Math.round(((w.load||60)/maxL)*48));
-        const planned = w.n >= 42 ? ' planned' : '';
-        const sel = w.n===selectedWeek ? ' selected' : '';
-        return `<div class="mb-col${planned}${sel}" onclick="selectWeek(${w.n})" title="שבוע ${w.n} · ${w.level}">
-          ${w.recovery ? `<svg class="icon-xs mb-rec" style="margin-bottom:2px"><use href="#i-trend-down"/></svg>` : ''}
-          <div class="mb-bar" style="height:${h}px;background:${w.bar||'var(--border)'}"></div>
-          <div class="mb-n">${w.n}</div>
-          <div class="mb-status ${w.st}">${w.status}</div>
-        </div>`;
-      }).join('')}
+    <div class="mb-groups">${chips}
+      ${rest ? `<button class="mb-group" onclick="document.getElementById('picker').classList.add('open')">+ ${rest} קבוצות נוספות</button>` : ''}
     </div>`;
 }
 function renderWeekStateChip(){
@@ -1535,6 +1637,9 @@ function renderDays(){
           ? `<button class="sess-menu-btn" title="פעולות" onclick="event.stopPropagation();openSessMenu(event,'${mode}',${i},'${s.wid}','${s.kind}')"><svg class="icon-xs"><use href="#i-more"/></svg></button>` : '';
         const varBadge = (t.type==='group' && w.variants)
           ? `<span class="badge b-personal"><svg><use href="#i-users"/></svg> ${w.variants.length} התאמות אישיות</span>` : '';
+        const applyMeta = (t.type==='group') ? WEEK_APPLY_META[stKey(selectedWeek, mode)] : null;
+        const srcBadge = applyMeta
+          ? `<span class="badge b-fixed"><svg><use href="#i-copy"/></svg> מ${TARGET_MAP[applyMeta.from].name} · ${applyMeta.scale*100}%</span>` : '';
         const confBadge = (confHit(mode, s.wid) || (gid && confHit(gid, s.wid)))
           ? `<span class="badge b-cancel"><svg><use href="#i-alert"/></svg> חפיפה</span>` : '';
         const coachBadge = (t.type==='group')
@@ -1548,7 +1653,7 @@ function renderDays(){
               ${menuBtn}
             </div>
             <div class="session-name"><svg class="icon-xs"><use href="#${sportIcon(w)}"/></svg>${w.name}</div>
-            <div class="session-badges">${badge(s.kind, gid, ov)}${varBadge}${confBadge}${coachBadge}</div>
+            <div class="session-badges">${badge(s.kind, gid, ov)}${varBadge}${confBadge}${coachBadge}${srcBadge}</div>
             <div class="session-sub">${w.sub}</div>
             <div class="session-zones">${zonesHTML(w.zones)}</div>
             <div>${loadChip(w)}${actual ? ` <span class="actual-line ${actual.done?'ok':'miss'}" style="display:inline-flex;margin-inline-start:6px"><svg><use href="#${actual.done?'i-check':'i-x'}"/></svg> ${actual.done?`בוצע${actual.att?` · נוכחות ${actual.att}`:(actual.note?` · ${actual.note}`:'')}`:`לא בוצע${actual.note?` · ${actual.note}`:''}`}</span>` : ''}</div>
@@ -1950,6 +2055,7 @@ function updateActions(){
   pub.style.display = showPub ? '' : 'none';
   $('copyBtn').style.display = (editableWeek && (t.type==='group' || t.type==='all')) ? '' : 'none';
   $('templateBtn').style.display = (editableWeek && t.type!=='all') ? '' : 'none';
+  $('applyWeekBtn').style.display = (editableWeek && t.type==='group') ? '' : 'none';
 
   const note = $('publishNote');
   if (!showPub){ note.innerHTML=''; return; }
@@ -2087,6 +2193,7 @@ function toggleTheme(){
 
 /* ==================== ADD EVENT (competition / test / personal) ==================== */
 let evCtx = { day:0, kind:'competition' };
+let evTargets = new Set();
 const EV_KINDS = [
   { id:'competition', label:'תחרות', icon:'i-trophy' },
   { id:'test',        label:'מבחן',   icon:'i-clipboard' },
@@ -2097,14 +2204,28 @@ const EV_PREFIX = { competition:'תחרות — ', test:'מבחן — ', persona
 function openEventDialog(dayIdx){
   const t = TARGET_MAP[mode];
   evCtx = { day:dayIdx, kind:'competition' };
+  evTargets = new Set([mode]);
   $('evDayLabel').innerHTML = `${DAYS[dayIdx].l}׳ · ${DAYS[dayIdx].d}.10`;
   $('evTitle').value = 'תחרות — ' + t.name;
   $('evTime').value = '09:00';
-  $('evTarget').innerHTML = `<option value="all">כללי — כל הלוח</option>` +
-    TARGETS.filter(x=>x.type==='group'||x.type==='personal'||x.type==='me')
-      .map(x=>`<option value="${x.id}" ${x.id===mode?'selected':''}>${x.name}</option>`).join('');
+  $('evTargetSearch').value = '';
+  buildEvTargetList();
   renderEvKinds();
   showOverlay('eventOverlay');
+}
+function buildEvTargetList(){
+  const q = ($('evTargetSearch').value||'').trim();
+  const rows = [{ id:'all', name:'כללי — כל הלוח' }]
+    .concat(TARGETS.filter(t=>t.type==='group'||t.type==='personal'||t.type==='me'))
+    .filter(t=>!q || t.name.includes(q) || (t.id==='all' && 'כללי'.includes(q)));
+  $('evTargetList').innerHTML = rows.map(t=>`
+    <label class="ev-tog">
+      <input type="checkbox" ${evTargets.has(t.id)?'checked':''} onchange="toggleEvTarget('${t.id}')">
+      ${t.color && t.id!=='all' ? `<span class="gdot" style="background:${t.color}"></span>` : ''} ${t.name}
+    </label>`).join('') || `<div style="text-align:center;color:var(--text-faint);font-size:12px;padding:14px">אין תוצאות</div>`;
+}
+function toggleEvTarget(id){
+  if (evTargets.has(id)) evTargets.delete(id); else evTargets.add(id);
 }
 function setEvKind(k){
   const oldPrefix = EV_PREFIX[evCtx.kind] || '';
@@ -2124,17 +2245,82 @@ function renderEvKinds(){
 function addEvent(){
   const title = $('evTitle').value.trim();
   if (!title){ alert('WIREFRAME — נדרשת כותרת לאירוע'); return; }
-  const target = $('evTarget').value;
-  const ev = { title, time: $('evTime').value || '09:00', kind: evCtx.kind };
-  if (target !== 'all'){
-    const t = TARGET_MAP[target];
-    if (t && t.type==='group') ev.group = target;
-    else ev.athlete = target;
+  if (!evTargets.size){ alert('WIREFRAME — בחר לפחות יעד אחד'); return; }
+  const time = $('evTime').value || '09:00';
+  const general = evTargets.has('all');
+  const targets = general ? [] : Array.from(evTargets);
+  if (general){
+    (EVENTS[evCtx.day] = EVENTS[evCtx.day] || []).push({ title, time, kind: evCtx.kind });
+  } else {
+    targets.forEach(id=>{
+      const t = TARGET_MAP[id];
+      const ev = { title, time, kind: evCtx.kind };
+      if (t.type==='group') ev.group = id; else ev.athlete = id;
+      (EVENTS[evCtx.day] = EVENTS[evCtx.day] || []).push(ev);
+    });
   }
-  (EVENTS[evCtx.day] = EVENTS[evCtx.day] || []).push(ev);
   hideOverlay('eventOverlay');
   markDirty();
   renderDays();
+}
+
+/* ==================== APPLY WEEK TO MULTIPLE GROUPS ==================== */
+let applySel = new Set();
+let applyScale = 1;
+
+function openApplyDialog(){
+  const t = TARGET_MAP[mode];
+  applySel = new Set();
+  applyScale = 1;
+  $('applyTitle').innerHTML = `החלת תוכנית שבוע ${selectedWeek} — ${t.name}`;
+  $('applySearch').value = '';
+  buildApplyList();
+  renderApplyScale();
+  updateApplySummary();
+  showOverlay('applyOverlay');
+}
+function buildApplyList(){
+  const q = ($('applySearch').value||'').trim();
+  $('applyList').innerHTML = TARGETS
+    .filter(x=>x.type==='group' && x.id!==mode && (!q || x.name.includes(q)))
+    .map(x=>`
+      <label class="ev-tog">
+        <input type="checkbox" ${applySel.has(x.id)?'checked':''} onchange="toggleApply('${x.id}')">
+        <span class="gdot" style="background:${x.color}"></span> ${x.name}
+        <span class="staff-hours" style="margin-inline-start:auto">${x.athletes} אתלטים</span>
+      </label>`).join('')
+    || `<div style="text-align:center;color:var(--text-faint);font-size:12px;padding:14px">אין תוצאות</div>`;
+}
+function toggleApply(id){ applySel.has(id) ? applySel.delete(id) : applySel.add(id); updateApplySummary(); }
+function renderApplyScale(){
+  $('applyScale').innerHTML = [
+    { v:1,   l:'זהה — 100%' },
+    { v:0.8, l:'מותאם — 80% נפח' },
+    { v:0.6, l:'קל — 60% נפח' },
+  ].map(o=>`<button class="${applyScale===o.v?'active':''}" onclick="setApplyScale(${o.v})">${o.l}</button>`).join('');
+}
+function setApplyScale(v){ applyScale=v; renderApplyScale(); updateApplySummary(); }
+function updateApplySummary(){
+  const src = planForWeek()[mode] || {};
+  const n = Object.keys(src).length;
+  const sel = applySel.size;
+  $('applySummary').innerHTML = `
+    <span class="cf-stat">אימונים להעתקה: <b>${n}</b></span>
+    <span class="cf-stat">קבוצות נבחרו: <b>${sel}</b></span>
+    <span class="cf-stat">התאמה: <b>${applyScale*100}%</b></span>`;
+  $('applyBtn').innerHTML = `<svg class="icon"><use href="#i-check"/></svg> החל על ${sel} קבוצות`;
+}
+function confirmApply(){
+  if (!applySel.size){ alert('WIREFRAME — בחר לפחות קבוצה אחת'); return; }
+  const src = planForWeek()[mode] || {};
+  applySel.forEach(g=>{
+    planForWeek()[g] = Object.assign({}, src);
+    WEEK_APPLY_META[stKey(selectedWeek, g)] = { from: mode, scale: applyScale };
+    const k = stKey(selectedWeek, g);
+    if (weekState[k]==='published'){ weekState[k]='dirty'; pendingMap[k]=(pendingMap[k]||0)+1; }
+  });
+  hideOverlay('applyOverlay');
+  renderReadiness(); renderDays(); renderWeekStateChip();
 }
 
 /* ==================== INIT ==================== */
