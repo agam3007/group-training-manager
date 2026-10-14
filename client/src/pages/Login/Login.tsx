@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
+import { useLang } from "../../i18n/LanguageContext";
 import "./Login.css";
 
 export default function Login() {
   const { login } = useAuth();
+  const { t, lang, toggle } = useLang();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -21,7 +23,7 @@ export default function Login() {
 
     setBusy(false);
     if (err) {
-      setError(err);
+      setError(t("login.invalid"));
       return;
     }
     navigate("/");
@@ -29,13 +31,17 @@ export default function Login() {
 
   return (
     <div className="login-page">
+      <button className="login-lang-toggle" onClick={toggle} type="button">
+        {lang === "he" ? "EN" : "עב"}
+      </button>
+
       <form className="login-card" onSubmit={submit}>
         <div className="login-logo">🏋️</div>
-        <h1>Group Training Manager</h1>
+        <h1>{t("login.title")}</h1>
 
         <input
           type="email"
-          placeholder="Email"
+          placeholder={t("login.email")}
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -43,7 +49,7 @@ export default function Login() {
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder={t("login.password")}
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -53,7 +59,7 @@ export default function Login() {
         {error && <div className="login-error">{error}</div>}
 
         <button type="submit" disabled={busy}>
-          {busy ? "Signing in…" : "Sign In"}
+          {busy ? t("login.signingIn") : t("login.submit")}
         </button>
       </form>
     </div>

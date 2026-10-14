@@ -54,13 +54,14 @@
 .tooltip {
   position: absolute;
 
-  left: 55px;
+  inset-inline-start: 55px;
 
   background: #333;
   color: white;
 
   padding: 4px 8px;
   border-radius: 6px;
+  white-space: nowrap;
 
   font-size: 12px;
 
@@ -72,6 +73,13 @@
 
 .sidebar-item:hover .tooltip {
   opacity: 1;
+}
+
+.sidebar-lang {
+  background: transparent;
+  border: none;
+  width: 40px;
+  height: 40px;
 }
 
 .sidebar-user {

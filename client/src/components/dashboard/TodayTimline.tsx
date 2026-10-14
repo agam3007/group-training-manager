@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { CalendarEvent } from "@/shared/types";
 import AddEventModal from "./AddEventModal";
+import { useLang } from "@/i18n/LanguageContext";
 import "./TodayTimline.css";
 
 interface Props {
@@ -25,6 +26,7 @@ export default function TodayTimelineSchedule({
   onToggleDone,
 }: Props) {
   const [open, setOpen] = useState(false);
+  const { t } = useLang();
 
   const [editing, setEditing] = useState<CalendarEvent | null>(null);
 
@@ -48,7 +50,7 @@ export default function TodayTimelineSchedule({
   return (
     <div className="timeline-card">
       <div className="timeline-header">
-        <h3>Today's Schedule</h3>
+        <h3>{t("dash.todaySchedule")}</h3>
 
         <button className="add-btn" onClick={() => setOpen(true)}>
           +

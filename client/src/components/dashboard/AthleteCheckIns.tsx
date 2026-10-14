@@ -5,6 +5,7 @@ import CheckInResolveModal from "./CheckInResolveModal";
 import { resolveCheckIn } from "@/api/attendance";
 import "./AthleteCheckIns.css";
 import { getNotesByTarget } from "@/api/notes";
+import { useLang } from "@/i18n/LanguageContext";
 
 interface Props {
   athletes: AthleteCheckInStatus[];
@@ -18,6 +19,7 @@ export default function AthleteCheckins({
   const [athletes, setAthletes] = useState(initialAthletes);
   const [selectedAthlete, setSelectedAthlete] = useState<AthleteCheckInStatus | null>(null);
   const [recentNotes, setRecentNotes] = useState<Note[]>([]);
+  const { t } = useLang();
 
   const handleAthleteClick = useCallback(
     async (athlete: AthleteCheckInStatus) => {
@@ -95,7 +97,7 @@ export default function AthleteCheckins({
   if (athletes.length === 0) {
     return (
       <div className="athlete-checkins-card">
-        <h3>At-Risk Athletes</h3>
+        <h3>{t("dash.atRisk")}</h3>
         <div className="empty-state">
           <p>No athletes at risk</p>
         </div>
@@ -106,7 +108,7 @@ export default function AthleteCheckins({
   return (
     <>
       <div className="athlete-checkins-card">
-        <h3>At-Risk Athletes ({athletes.length})</h3>
+        <h3>{t("dash.atRisk")} ({athletes.length})</h3>
         <div className="athlete-list">
           {athletes.map((athlete) => (
             <div
