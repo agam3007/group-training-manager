@@ -688,17 +688,9 @@
             <svg class="icon icon-sm"><use href="#i-users"/></svg>
             החל על קבוצות...
           </button>
-          <button class="btn-copy" id="templateBtn" onclick="openTemplateDialog()">
-            <svg class="icon icon-sm"><use href="#i-folder"/></svg>
-            מתוכנית...
-          </button>
-          <button class="btn-copy" id="repeatBtn" onclick="openRepeatDialog()">
-            <svg class="icon icon-sm"><use href="#i-repeat"/></svg>
-            חזור על...
-          </button>
-          <button class="btn-copy" id="copyBtn" onclick="copyPrevWeek()">
+          <button class="btn-copy" id="copyHubBtn" onclick="openCopyDialog()">
             <svg class="icon icon-sm"><use href="#i-copy"/></svg>
-            העתק משבוע 41
+            העתקה...
           </button>
           <button class="btn-publish" id="publishBtn" onclick="publish()">
             <svg class="icon"><use href="#i-send"/></svg>
@@ -826,34 +818,47 @@
   </div>
 </div>
 
-<!-- TEMPLATES / PROGRAM -->
-<div class="overlay" id="tplOverlay" onclick="if(event.target===this)hideOverlay('tplOverlay')">
-  <div class="confirm-card" style="max-width:430px">
-    <h3><svg class="icon"><use href="#i-folder"/></svg> מתוכנית / תבניות</h3>
-    <div class="ev-tog" style="border:1px dashed var(--border);margin-bottom:10px" onclick="saveWeekTemplate()">
-      <svg class="icon-sm" style="color:var(--accent)"><use href="#i-plus"/></svg>
-      <span id="tplSaveLabel">שמור את השבוע הנוכחי כתבנית</span>
+<!-- COPY HUB — source × destination in one dialog -->
+<div class="overlay" id="copyOverlay" onclick="if(event.target===this)hideOverlay('copyOverlay')">
+  <div class="confirm-card" style="max-width:450px">
+    <h3><svg class="icon"><use href="#i-copy"/></svg> <span id="copyTitle"></span></h3>
+    <div class="ev-field">
+      <span class="ev-label">מקור</span>
+      <div class="ev-scale" id="copySrcBtns"></div>
+      <div id="copySrcExtra" style="margin-top:8px"></div>
+      <button class="btn-copy" style="width:100%;justify-content:center;margin-top:10px;padding:9px" onclick="saveWeekTemplate()">
+        <svg class="icon-sm"><use href="#i-plus"/></svg> שמור את השבוע הנוכחי כתבנית
+      </button>
     </div>
-    <span class="ev-label">תבניות להחלה על השבוע הנוכחי</span>
-    <div class="ev-list" id="tplList"></div>
+    <div class="ev-field">
+      <span class="ev-label">יעד</span>
+      <label class="ev-tog"><input type="checkbox" id="copyToCurrent" checked onchange="renderCopySummary()"> השבוע הנוכחי (<span id="copyCurWeek"></span>)</label>
+      <label class="ev-tog">
+        <input type="checkbox" id="copyFwd" onchange="renderCopySummary()">
+        גם <input type="number" id="copyFwdN" value="2" min="1" max="8" style="width:52px;padding:4px 8px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-family:inherit" onchange="renderCopySummary()"> שבועות קדימה
+      </label>
+    </div>
+    <div class="cf-stats" id="copySummary"></div>
     <div class="confirm-actions">
-      <button class="btn-copy" onclick="hideOverlay('tplOverlay')">סגור</button>
+      <button class="btn-copy" onclick="hideOverlay('copyOverlay')">ביטול</button>
+      <button class="btn-publish" style="padding:12px 24px;font-size:14px" onclick="confirmCopy()"><svg class="icon"><use href="#i-check"/></svg> העתק</button>
     </div>
   </div>
 </div>
 
-<!-- REPEAT WEEK -->
-<div class="overlay" id="repeatOverlay" onclick="if(event.target===this)hideOverlay('repeatOverlay')">
-  <div class="confirm-card" style="max-width:380px">
-    <h3><svg class="icon"><use href="#i-repeat"/></svg> <span id="repeatTitle"></span></h3>
-    <p>השבוע הנוכחי יועתק גם לשבועות הבאים. אפשר לערוך כל שבוע בנפרד אחר כך — כל עותק יישא תג מקור.</p>
+<!-- COPY SINGLE WORKOUT -->
+<div class="overlay" id="copyWorkoutOverlay" onclick="if(event.target===this)hideOverlay('copyWorkoutOverlay')">
+  <div class="confirm-card" style="max-width:420px">
+    <h3><svg class="icon"><use href="#i-copy"/></svg> <span id="cwTitle"></span></h3>
     <div class="ev-field">
-      <span class="ev-label">לכמה שבועות קדימה</span>
-      <input type="number" id="repeatN" class="ev-input" value="2" min="1" max="8">
+      <span class="ev-label">לאיזה יום בשבוע</span>
+      <div id="cwDays" style="display:flex;gap:6px;flex-wrap:wrap"></div>
     </div>
+    <button class="btn-copy" style="width:100%;justify-content:center" onclick="saveWorkoutToLib()">
+      <svg class="icon icon-sm"><use href="#i-lib"/></svg> שמור כפריט בספריית האימונים
+    </button>
     <div class="confirm-actions">
-      <button class="btn-copy" onclick="hideOverlay('repeatOverlay')">ביטול</button>
-      <button class="btn-publish" style="padding:12px 24px;font-size:14px" onclick="repeatWeek()"><svg class="icon"><use href="#i-repeat"/></svg> חזור על השבוע</button>
+      <button class="btn-copy" onclick="hideOverlay('copyWorkoutOverlay')">ביטול</button>
     </div>
   </div>
 </div>
@@ -880,7 +885,7 @@
   <button onclick="undo()">בטל</button>
 </div>
 
-<div class="wf">WIREFRAME v10 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
+<div class="wf">WIREFRAME v11 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -1761,8 +1766,9 @@ function renderDays(){
         const varBadge = (t.type==='group' && w.variants)
           ? `<span class="badge b-personal"><svg><use href="#i-users"/></svg> ${w.variants.length} התאמות אישיות</span>` : '';
         const applyMeta = (t.type==='group') ? WEEK_APPLY_META[stKey(selectedWeek, mode)] : null;
-        const srcBadge = applyMeta
-          ? `<span class="badge b-fixed"><svg><use href="#i-copy"/></svg> מ${TARGET_MAP[applyMeta.from].name} · ${applyMeta.scale*100}%</span>` : '';
+        const srcBadge = applyMeta ? (applyMeta.tplName
+          ? `<span class="badge b-fixed"><svg><use href="#i-copy"/></svg> מתבנית: ${applyMeta.tplName}</span>`
+          : `<span class="badge b-fixed"><svg><use href="#i-copy"/></svg> מ${TARGET_MAP[applyMeta.from].name} · ${applyMeta.scale*100}%</span>`) : '';
         const confBadge = (confHit(mode, s.wid) || (gid && confHit(gid, s.wid)))
           ? `<span class="badge b-cancel"><svg><use href="#i-alert"/></svg> חפיפה</span>` : '';
         const coachBadge = (t.type==='group')
@@ -1933,7 +1939,7 @@ function openSessMenu(e, targetId, dayIdx, wid, kind){
     items.push(`<div class="sm-item" onclick="closeSessMenu();openTimeDialog('${targetId}',${dayIdx},'${wid}','${kind}')"><svg class="icon-xs"><use href="#i-clock"/></svg> שנה שעה</div>`);
     if (kind==='group') items.push(`<div class="sm-item" onclick="closeSessMenu();cancelSession('${targetId}',${dayIdx})"><svg class="icon-xs"><use href="#i-x"/></svg> בטל אימון</div>`);
     items.push(`<div class="sm-item" onclick="closeSessMenu();alert('WIREFRAME — גרור את האימון ליום אחר בלוח')"><svg class="icon-xs"><use href="#i-repeat"/></svg> העבר ליום אחר (גרור)</div>`);
-    items.push(`<div class="sm-item" onclick="closeSessMenu();duplicateSession('${targetId}',${dayIdx},'${wid}','${kind}')"><svg class="icon-xs"><use href="#i-copy"/></svg> שכפל ליום הבא</div>`);
+    items.push(`<div class="sm-item" onclick="closeSessMenu();openCopyWorkoutDialog('${targetId}',${dayIdx},'${wid}','${kind}')"><svg class="icon-xs"><use href="#i-copy"/></svg> העתק אימון...</div>`);
     if (t.type==='group') items.push(`<div class="sm-item" onclick="closeSessMenu();alert('WIREFRAME — שכפול לקבוצה אחרת עם התאמת סקאלה — אפשר דרך החל על קבוצות')"><svg class="icon-xs"><use href="#i-users"/></svg> שכפל לקבוצה אחרת</div>`);
     items.push(`<div class="sm-item danger" onclick="closeSessMenu();deleteSession('${targetId}',${dayIdx},'${kind}','${wid}')"><svg class="icon-xs"><use href="#i-x"/></svg> מחק</div>`);
   }
@@ -1970,17 +1976,6 @@ function deleteSession(targetId, day, kind, wid){
     markDirty(); renderDays(); closeDetail();
   });
 }
-function duplicateSession(targetId, day, wid, kind){
-  if (day >= 6){ alert('WIREFRAME — אין יום נוסף בשבוע'); return; }
-  if (kind==='add'){ alert('WIREFRAME — שכפול אימון נוסף'); return; }
-  const t = TARGET_MAP[targetId];
-  withUndo('האימון שוכפל ליום הבא', ()=>{
-    const dst = t.type==='group' ? planForWeek()[targetId] : PERSONAL[targetId];
-    addToDay(dst, day+1, wid);
-    markDirty(); renderDays();
-  });
-}
-
 /* change session time — group sessions create a time override (EventOverride) */
 function openTimeDialog(targetId, dayIdx, wid, kind){
   timeCtx = { targetId, dayIdx, wid, kind };
@@ -2186,28 +2181,6 @@ function applyParsed(){
   setEditor('structured');
 }
 
-/* ==================== COPY PREVIOUS WEEK ==================== */
-function copyPrevWeek(){
-  const t = TARGET_MAP[mode];
-  if (!isCurrentWeek()) return;
-  if (t.type !== 'all' && t.type !== 'group'){
-    alert('WIREFRAME — העתקת שבוע קודם לתוכנית אישית');
-    return;
-  }
-  withUndo('הועתק משבוע 41', ()=>{
-    if (t.type === 'all'){
-      TARGETS.filter(x=>x.type==='group').forEach(g=>{ SCHEDULE[g.id] = Object.assign({}, PAST_41[g.id]); });
-    } else {
-      SCHEDULE[mode] = Object.assign({}, PAST_41[mode]);
-    }
-    renderDays();
-    markDirty();
-  });
-  const btn = $('copyBtn');
-  btn.innerHTML = '<svg class="icon icon-sm"><use href="#i-check"/></svg> הועתק משבוע 41';
-  setTimeout(()=>{ btn.innerHTML = '<svg class="icon icon-sm"><use href="#i-copy"/></svg> העתק משבוע 41'; }, 1800);
-}
-
 /* ==================== ACTIONS PER TARGET + PUBLISH (confirm + preview) ==================== */
 function updateActions(){
   const t = TARGET_MAP[mode];
@@ -2216,10 +2189,8 @@ function updateActions(){
   pub.classList.remove('published','dirty');
   const showPub = editableWeek && (t.type==='group' || t.type==='personal');
   pub.style.display = showPub ? '' : 'none';
-  $('copyBtn').style.display = (editableWeek && (t.type==='group' || t.type==='all')) ? '' : 'none';
-  $('templateBtn').style.display = (editableWeek && t.type!=='all') ? '' : 'none';
   $('applyWeekBtn').style.display = (editableWeek && t.type==='group') ? '' : 'none';
-  $('repeatBtn').style.display = (editableWeek && t.type!=='all' && targetState(selectedWeek, mode)!=='empty') ? '' : 'none';
+  $('copyHubBtn').style.display = (editableWeek && t.type!=='all') ? '' : 'none';
 
   const note = $('publishNote');
   if (!showPub){ note.innerHTML=''; return; }
@@ -2492,54 +2463,110 @@ function confirmApply(){
   });
 }
 
-/* ==================== TEMPLATES + REPEAT WEEK ==================== */
-function openTemplateDialog(){
-  $('tplSaveLabel').innerHTML = `שמור את שבוע ${selectedWeek} — ${TARGET_MAP[mode].name} כתבנית`;
-  renderTplList();
-  showOverlay('tplOverlay');
+/* ==================== COPY HUB — one dialog: source × destination ==================== */
+let copyCtx = { src:'prev', week:41, tpl:0 };
+
+function openCopyDialog(){
+  copyCtx = { src:'prev', week:Math.max(1, selectedWeek-1), tpl:0 };
+  $('copyTitle').innerHTML = `העתקת שבוע — ${TARGET_MAP[mode].name}`;
+  $('copyCurWeek').innerHTML = selectedWeek;
+  $('copyFwdN').value = 2;
+  $('copyToCurrent').checked = true;
+  $('copyFwd').checked = false;
+  renderCopySrc();
+  renderCopySummary();
+  showOverlay('copyOverlay');
 }
-function renderTplList(){
-  $('tplList').innerHTML = TEMPLATES.map((tpl,i)=>`
-    <div class="ev-tog" onclick="applyTemplate(${i})">
-      <svg class="icon-sm" style="color:var(--accent)"><use href="#i-folder"/></svg>
-      <span style="flex:1">${tpl.name}</span>
-      <span class="staff-hours">${Object.keys(tpl.days).length} אימונים</span>
-      <svg class="icon-sm"><use href="#i-chevron-left"/></svg>
-    </div>`).join('');
+function setCopySrc(s){ copyCtx.src = s; renderCopySrc(); renderCopySummary(); }
+function renderCopySrc(){
+  const opts = [
+    { id:'prev', label:`שבוע קודם (${selectedWeek-1})` },
+    { id:'week', label:'שבוע אחר...' },
+    { id:'tpl',  label:'תבנית...' },
+  ];
+  $('copySrcBtns').innerHTML = opts.map(o=>
+    `<button class="${copyCtx.src===o.id?'active':''}" onclick="setCopySrc('${o.id}')">${o.label}</button>`).join('');
+  let extra = '';
+  if (copyCtx.src === 'week'){
+    extra = `<input type="number" value="${copyCtx.week}" min="1" max="52" style="width:90px" class="ev-input" onchange="copyCtx.week=+this.value;renderCopySummary()"> שבוע מקור`;
+  } else if (copyCtx.src === 'tpl'){
+    extra = `<select class="ev-select" onchange="copyCtx.tpl=+this.value;renderCopySummary()">
+      ${TEMPLATES.map((t,i)=>`<option value="${i}" ${i===copyCtx.tpl?'selected':''}>${t.name}</option>`).join('')}</select>`;
+  } else {
+    extra = `<span style="font-size:12px;color:var(--text-muted)">${Object.keys(getCopySource()).length} אימונים במקור</span>`;
+  }
+  $('copySrcExtra').innerHTML = extra;
+}
+function getCopySource(){
+  if (copyCtx.src === 'prev') return (planForWeekAt(selectedWeek-1)[mode] || {});
+  if (copyCtx.src === 'week') return (planForWeekAt(Math.max(1, Math.min(52, copyCtx.week || 1)))[mode] || {});
+  return TEMPLATES[copyCtx.tpl] ? TEMPLATES[copyCtx.tpl].days : {};
+}
+function renderCopySummary(){
+  const n = Object.keys(getCopySource()).length;
+  const cur = $('copyToCurrent').checked;
+  const fwd = $('copyFwd').checked ? Math.max(0, Math.min(8, +$('copyFwdN').value || 0)) : 0;
+  $('copySummary').innerHTML = `
+    <span class="cf-stat">אימונים במקור: <b>${n}</b></span>
+    <span class="cf-stat">יעדים: <b>${(cur?1:0) + fwd}</b></span>`;
+}
+function confirmCopy(){
+  const cur = $('copyToCurrent').checked;
+  const fwd = $('copyFwd').checked ? Math.max(0, Math.min(8, +$('copyFwdN').value || 0)) : 0;
+  if (!cur && !fwd){ alert('WIREFRAME — בחר יעד אחד לפחות'); return; }
+  const src = Object.assign({}, getCopySource());
+  const isTpl = copyCtx.src === 'tpl';
+  withUndo('השבוע הועתק', ()=>{
+    if (cur){
+      planForWeek()[mode] = Object.assign({}, src);
+      if (isTpl) WEEK_APPLY_META[stKey(selectedWeek, mode)] = { tplName: TEMPLATES[copyCtx.tpl].name };
+      markDirty();
+    }
+    for (let k=1;k<=fwd;k++){
+      const w = Math.min(52, selectedWeek + k);
+      planForWeekAt(w)[mode] = Object.assign({}, src);
+      WEEK_APPLY_META[stKey(w, mode)] = { from: mode, scale: 1 };
+    }
+    hideOverlay('copyOverlay');
+    renderDays(); renderReadiness(); renderWeekStateChip();
+  });
 }
 function saveWeekTemplate(){
   const name = `שבוע ${selectedWeek} — ${TARGET_MAP[mode].name}`;
   withUndo('השבוע נשמר כתבנית', ()=>{
     TEMPLATES.unshift({ name, days: Object.assign({}, planForWeek()[mode] || {}) });
-    renderTplList();
-    hideOverlay('tplOverlay');
+    copyCtx.src = 'tpl';
+    copyCtx.tpl = 0;
+    renderCopySrc();
+    renderCopySummary();
   });
 }
-function applyTemplate(i){
-  const tpl = TEMPLATES[i];
-  withUndo(`התבנית "${tpl.name}" הוחלה`, ()=>{
-    planForWeek()[mode] = Object.assign({}, tpl.days);
-    hideOverlay('tplOverlay');
+
+/* ==================== COPY SINGLE WORKOUT ==================== */
+let cwCtx = null;
+function openCopyWorkoutDialog(targetId, dayIdx, wid, kind){
+  cwCtx = { targetId, dayIdx, wid, kind };
+  $('cwTitle').innerHTML = `העתקת אימון — ${WORKOUTS[wid].name}`;
+  $('cwDays').innerHTML = DAYS.map((d,i)=>
+    `<button class="sf-chip" style="${i===dayIdx?'opacity:.35;pointer-events:none':''}" onclick="copyWorkoutTo(${i})">${d.l}׳</button>`
+  ).join('');
+  showOverlay('copyWorkoutOverlay');
+}
+function copyWorkoutTo(day){
+  const t = TARGET_MAP[cwCtx.targetId];
+  const dst = t.type==='group' ? planForWeek()[t.id] : PERSONAL[t.id];
+  withUndo('האימון הועתק', ()=>{
+    addToDay(dst, day, cwCtx.wid);
+    hideOverlay('copyWorkoutOverlay');
     markDirty(); renderDays();
   });
 }
-function openRepeatDialog(){
-  $('repeatTitle').innerHTML = `חזרה על שבוע ${selectedWeek} — ${TARGET_MAP[mode].name}`;
-  $('repeatN').value = 2;
-  showOverlay('repeatOverlay');
-}
-function repeatWeek(){
-  const n = Math.max(1, Math.min(8, +$('repeatN').value || 2));
-  withUndo(`השבוע חזר על עצמו ל-${n} שבועות`, ()=>{
-    const src = Object.assign({}, planForWeek()[mode] || {});
-    for (let k=1;k<=n;k++){
-      const w = selectedWeek + k;
-      if (w > 52) break;
-      planForWeekAt(w)[mode] = Object.assign({}, src);
-      WEEK_APPLY_META[stKey(w, mode)] = { from: mode, scale: 1 };
-    }
-    hideOverlay('repeatOverlay');
-    renderDays();
+function saveWorkoutToLib(){
+  const w = WORKOUTS[cwCtx.wid];
+  withUndo('נשמר לספריית האימונים', ()=>{
+    LIBRARY.push({ name: w.name, cat:'טכניקה', sub: w.sub, zones: w.zones, sport: w.sport || 'swim' });
+    renderLibrary();
+    hideOverlay('copyWorkoutOverlay');
   });
 }
 
