@@ -290,6 +290,19 @@
   .nutr-what{flex:1;border:1px solid var(--border);border-radius:8px;padding:6px 8px;background:var(--bg);color:var(--text);font-family:inherit;font-size:11px;outline:none;}
   .nutr-x{border:none;background:transparent;color:var(--text-faint);cursor:pointer;padding:4px;}
   .nutr-x:hover{color:var(--danger);}
+  /* ==================== FLEXIBLE LISTS — drag reorder, custom sections, precision ==================== */
+  .gear-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px dashed var(--border);}
+  .gear-item:last-of-type{border-bottom:none;}
+  .grip-dots{cursor:grab;color:var(--text-faint);flex-shrink:0;}
+  .grip-dots:active{cursor:grabbing;}
+  .drag-over{outline:2px dashed var(--accent);outline-offset:2px;border-radius:6px;}
+  .plan-row[draggable="true"]{cursor:grab;}
+  .rblock-label{border:none;background:transparent;color:inherit;font-size:inherit;font-weight:inherit;font-family:inherit;width:100%;outline:none;padding:0;}
+  .rblock-label:focus{border-bottom:1px dashed var(--accent);}
+  .precise-toggle{margin-inline-start:auto;border:1px solid var(--border);background:transparent;color:var(--text-muted);border-radius:16px;padding:2px 10px;font-size:9.5px;font-weight:800;cursor:pointer;font-family:inherit;flex-shrink:0;}
+  .precise-toggle.on{border-color:var(--accent);background:var(--accent-dim);color:var(--accent);}
+  .nutr-qty{width:100%;margin-top:4px;border:1px dashed var(--border);border-radius:8px;padding:5px 8px;background:var(--bg);color:var(--text);font-family:inherit;font-size:10px;font-weight:700;outline:none;}
+  .nutr-qty:focus{border-color:var(--accent);}
 
   .wf{font-size:10px;color:#94A3B8;font-weight:700;}
 </style>
@@ -322,6 +335,7 @@
   <symbol id="i-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="14" height="14" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2v2"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+  <symbol id="i-grip" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="9" cy="5" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="9" cy="19" r="1.6"/><circle cx="15" cy="5" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="15" cy="19" r="1.6"/></symbol>
 </svg>
 </head>
 <body>
@@ -345,7 +359,7 @@
   <div class="sheet" id="sheetBox"></div>
 </div>
 
-<div class="wf">WIREFRAME v7 — BLUE FITNESS · Athlete App · WPLAN-19</div>
+<div class="wf">WIREFRAME v8 — BLUE FITNESS · Athlete App · WPLAN-19</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -402,11 +416,12 @@ const ATH = {
       {
         id:'alifut', kind:'competition',
         name:'אליפות אזורית — נערות ב׳', date:'שבת · 17.10 · 09:00', place:'בריכת הים',
+        gearCats:['שחייה','כללי','ארוחות'],
         gear:[
-          { x:'משקפות רזרביות', on:true },
-          { x:'2 מכנסי תחרות', on:true },
-          { x:'מגבת + כובע', on:false },
-          { x:'חטיפים + בקבוק מים', on:true },
+          { x:'משקפות רזרביות', on:true, cat:'שחייה' },
+          { x:'2 מכנסי תחרות', on:true, cat:'שחייה' },
+          { x:'מגבת + כובע', on:false, cat:'כללי' },
+          { x:'חטיפים + בקבוק מים', on:true, cat:'ארוחות' },
         ],
         timeline:[
           { t:'08:30', x:'התאמה במים — 600 מ׳ קל' },
@@ -414,19 +429,18 @@ const ATH = {
           { t:'10:40', x:'50 חתירה — מקצה שני' },
           { t:'12:00', x:'סיום · פיקניק קבוצתי' },
         ],
-        routine:{
-          evening:[
+        routine:{ blocks:[
+          { label:'ערב לפני', items:[
             { x:'ארוחת ערב פחמימתית עד 19:00 — פסטה / אורז', on:true },
             { x:'להכין תיק: משקפות, 2 מכנסיים, מגבת, כובע, חטיפים', on:false },
             { x:'לישון מוקדם — עד 22:00, טלפון מחוץ לחדר', on:false },
-          ],
-          dayLabel:'בוקר התחרות',
-          day:[
+          ]},
+          { label:'בוקר התחרות', items:[
             { x:'ארוחת בוקר 3 שעות לפני המקצה — 06:30', on:false },
             { x:'לכתוב על היד מספר מקצה + מסלול (נמסר בכניסה)', on:false },
             { x:'להתאים גומיית משקפות — בדיקה אחרונה', on:true },
-          ],
-        },
+          ]},
+        ]},
         nutrition:{
           evening:'פסטה עם רוטב קל + שתייה מרובה', morning:'טוסט + גבינה + בננה', midday:'',
           duringPlan:[
@@ -455,24 +469,24 @@ const ATH = {
       {
         id:'mivhan', kind:'test',
         name:'מבחן ביומטרי — 7×100', date:'שישי · 16.10 · 16:30', place:'בריכת הים',
+        gearCats:['כללי'],
         gear:[
-          { x:'משקפות', on:true },
-          { x:'בקבוק מים + חטיף אחרי המבחן', on:true },
+          { x:'משקפות', on:true, cat:'כללי' },
+          { x:'בקבוק מים + חטיף אחרי המבחן', on:true, cat:'כללי' },
         ],
         timeline:[
           { t:'16:00', x:'התאמה קלה — 400 מ׳' },
           { t:'16:30', x:'סדרת מבחן: 7×100 חתירה, מנוחה 45 שנ׳' },
           { t:'17:15', x:'סיום · דופק חוזר + תיעוד תוצאות' },
         ],
-        routine:{
-          evening:[ { x:'לא להתאמן קשה ביום חמישי בערב', on:false } ],
-          dayLabel:'צהרי המבחן',
-          day:[
+        routine:{ blocks:[
+          { label:'ערב לפני', items:[ { x:'לא להתאמן קשה ביום חמישי בערב', on:false } ]},
+          { label:'צהרי המבחן', items:[
             { x:'ארוחה קלה 2 שעות לפני — עד 14:30', on:false },
             { x:'מנוחה בצהריים · לא להתאמן בבוקר', on:true },
             { x:'להגיע 30 דק׳ לפני להתאמה', on:false },
-          ],
-        },
+          ]},
+        ]},
         nutrition:{ evening:'ארוחה רגילה', morning:'ארוחת בוקר קלה', midday:'ארוחה קלה עד 14:30',
           duringPlan:[ { when:'בהפסקות בין ה-100ים', what:'2–3 לגימות מים' } ] },
         races:[
@@ -491,19 +505,19 @@ const ATH = {
         { k:'100 ח׳', plan:'1:36', val:'1:38', diff:'+2 שנ׳', good:false },
         { k:'50 ח׳', plan:'30.5', val:'29.9', diff:'שיא אישי!', good:true },
       ],
+      gearCats:['שחייה'],
       gear:[
-        { x:'מכנס תחרות אחד בלבד', on:true, prob:'היה רטוב מהמקצה הראשון — היה קר. להביא 2' },
+        { x:'מכנס תחרות אחד בלבד', on:true, cat:'שחייה', prob:'היה רטוב מהמקצה הראשון — היה קר. להביא 2' },
       ],
       timeline:[
         { t:'08:00', x:'התאמה' },
         { t:'08:40', x:'100 חתירה' },
         { t:'10:00', x:'50 חתירה' },
       ],
-      routine:{
-        evening:[ { x:'אכלתי פיצה כבדה + קינוח בערב', on:true } ],
-        dayLabel:'בוקר התחרות',
-        day:[ { x:'רק קפה בבוקר — בלי אוכל', on:true } ],
-      },
+      routine:{ blocks:[
+        { label:'ערב לפני', items:[ { x:'אכלתי פיצה כבדה + קינוח בערב', on:true } ]},
+        { label:'בוקר התחרות', items:[ { x:'רק קפה בבוקר — בלי אוכל', on:true } ]},
+      ]},
       nutrition:{
         evening:'פיצה כבדה + קינוח', eveningProb:'ארוחה כבדה מדי — הרגשתי כבדה במים למחרת',
         morning:'קפה בלבד', morningProb:'בלי אוכל — חוסר אנרגיה בסוף המקצה',
@@ -555,10 +569,13 @@ const ATH = {
       {
         id:'half', kind:'competition',
         name:'חצי איש — מכבי תל אביב', date:'שבת · 21.11 · 06:45', place:'גלילות',
+        gearCats:['שחייה','אופניים','שטח חלופה','ריצה','ארוחות'],
         gear:[
-          { x:'חליפה + משקפות רזרביים', on:true },
-          { x:'מגפיים לריצה + כובע', on:false },
-          { x:'4 ג\'לים + 2 בקבוקים לאופניים', on:true },
+          { x:'חליפה + משקפות רזרביים', on:true, cat:'שחייה' },
+          { x:'4 ג\'לים + 2 בקבוקים למתחם האופניים', on:true, cat:'אופניים' },
+          { x:'מגבת + סנדלים למתחם החלופה', on:false, cat:'שטח חלופה' },
+          { x:'מגפיים לריצה + כובע', on:false, cat:'ריצה' },
+          { x:'בננות + חטיפים להתאוששות', on:true, cat:'ארוחות' },
         ],
         timeline:[
           { t:'04:30', x:'התעוררות + ארוחה' },
@@ -568,25 +585,24 @@ const ATH = {
           { t:'11:15', x:'חלופה T2 → ריצה 21.1 ק"מ' },
           { t:'13:30', x:'קו סיום' },
         ],
-        routine:{
-          evening:[
+        routine:{ blocks:[
+          { label:'ערב לפני', items:[
             { x:'ציוד מסודר על הדלת + בקבוקים במקפיא', on:false },
             { x:'שינה מוקדמת — 21:30', on:false },
-          ],
-          dayLabel:'בוקר התחרות',
-          day:[
+          ]},
+          { label:'בוקר התחרות', items:[
             { x:'ארוחה 3 שעות לפני — 03:45', on:false },
             { x:'ג\'ל 15 דק׳ לפני זינוק', on:true },
-          ],
-        },
+          ]},
+        ]},
         nutrition:{
-          evening:'אורז + עוף — קל', morning:'שיבולת שיבולת + קפה + בננה', midday:'',
+          evening:'אורז + עוף — קל', morning:'שיבולת שיבולת + קפה + בננה', midday:'', precise:true,
           duringPlan:[
-            { when:'1 שעה לפני זינוק', what:'מלחים + חצי ליטר מים' },
-            { when:'15 דק׳ לפני זינוק', what:'ג\'ל עם קפאין' },
-            { when:'רכיבה', what:'איזוטוני — לגמור בקבוק תוך כדי' },
-            { when:'ריצה · 2 ק"מ', what:'ג\'ל' },
-            { when:'ריצה · 7 ק"מ', what:'ג\'ל' },
+            { when:'1 שעה לפני זינוק', what:'מלחים + חצי ליטר מים', qty:'1 שקיק מלח · 500 מ"ל' },
+            { when:'15 דק׳ לפני זינוק', what:'ג\'ל עם קפאין', qty:'25 גרם פחמימה' },
+            { when:'רכיבה', what:'איזוטוני — לגמור בקבוק תוך כדי', qty:'750 מ"ל' },
+            { when:'ריצה · 2 ק"מ', what:'ג\'ל', qty:'25 גרם פחמימה' },
+            { when:'ריצה · 7 ק"מ', what:'ג\'ל', qty:'25 גרם פחמימה' },
           ],
         },
         races:[
@@ -980,13 +996,16 @@ function openComp(id){ wiz = { comp:id, step:1 }; renderJournal(); }
 function setWizStep(n){ wiz.step = n; renderJournal(); }
 function finishWizard(){ const c = getComp(wiz.comp); if (c) c.submitted = true; wiz.comp = null; renderJournal(); }
 function toggleWiz(i){ const c = getComp(wiz.comp); if (c) c.gear[i].on = !c.gear[i].on; renderJournal(); }
-function toggleWizRoutine(kind, i){ const c = getComp(wiz.comp); if (c) c.routine[kind][i].on = !c.routine[kind][i].on; renderJournal(); }
+function toggleWizRoutine(bi, ii){ const c = getComp(wiz.comp); if (c) c.routine.blocks[bi].items[ii].on = !c.routine.blocks[bi].items[ii].on; renderJournal(); }
 
 function nutritionRow(c, key, label){
   const v = c.nutrition[key] || '';
   const prob = c.nutrition[key+'Prob'];
+  const qty = c.nutrition.precise ? `
+    <input class="nutr-qty" value="${c.nutrition[key+'Qty']||''}" placeholder='כמות וערכים — למשל: 100 גרם פחמימה · 500 מ"ל' oninput="getComp('${wiz.comp}').nutrition['${key}Qty']=this.value">` : '';
   return `<div class="nut-label"><svg><use href="#i-activity"/></svg> ${label}</div>
     <input class="feel-input" value="${v}" placeholder="מה ומתי? למשל: פסטה עד 19:00" oninput="getComp('${wiz.comp}').nutrition['${key}']=this.value">
+    ${qty}
     ${prob?`<div class="prob-note"><svg><use href="#i-alert"/></svg> מהפעם הקודמת: ${prob}</div>`:''}`;
 }
 
@@ -1002,28 +1021,45 @@ function renderWizard(){
   let body = '';
 
   if (wiz.step===1){
-    body = `<div class="routine-sec"><svg><use href="#i-clipboard"/></svg> מה צריך להכין — סמני מה שארזת</div>` +
-      c.gear.map((g,i)=>`<div class="ck-row" onclick="toggleWiz(${i})">
-        <span class="ck ${g.on?'on':''}">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>
-        <span style="flex:1">${g.x}${g.prob?`<span class="prob-note"><svg><use href="#i-alert"/></svg> בעיה מהפעם הקודמת: ${g.prob}</span>`:''}</span>
-      </div>`).join('') +
-      `<button class="add-mini" onclick="openAddItem('gear')"><svg><use href="#i-plus"/></svg> הוסף פריט ציוד</button>`;
+    /* gear — custom sections + drag to reorder */
+    const cats = c.gearCats || ['כללי'];
+    body = `<div class="routine-sec"><svg><use href="#i-clipboard"/></svg> מה צריך להכין — לפי מחלקות · גרירה לשינוי סדר</div>`;
+    cats.forEach(cat=>{
+      body += `<div class="routine-sec" style="margin-top:10px;"><svg><use href="#i-folder"/></svg> ${cat}</div>` +
+        c.gear.map((g,gi)=>({g,gi})).filter(x=>x.g.cat===cat).map(({g,gi})=>`
+          <div class="gear-item" draggable="true"
+               ondragstart="dragStart(event,'gear',${gi})"
+               ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="dropOn(event,'gear',${gi})">
+            <svg class="icon-xs grip-dots"><use href="#i-grip"/></svg>
+            <span class="ck ${g.on?'on':''}" onclick="event.stopPropagation();toggleWiz(${gi})">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>
+            <span style="flex:1">${g.x}${g.prob?`<span class="prob-note"><svg><use href="#i-alert"/></svg> בעיה מהפעם הקודמת: ${g.prob}</span>`:''}</span>
+          </div>`).join('') +
+        `<button class="add-mini" onclick="openAddItem('gear',0,'${cat}')"><svg><use href="#i-plus"/></svg> הוסף ל${cat}</button>`;
+    });
+    body += `<button class="add-mini" onclick="openCatAdd()"><svg><use href="#i-plus"/></svg> מחלקה חדשה (קוסטום)</button>`;
   }
   if (wiz.step===2){
-    body = `<div class="routine-sec"><svg><use href="#i-clock"/></svg> לוז יום ה${c.kind==='test'?'מבחן':'תחרות'}</div>` +
-      c.timeline.map(t=>`<div class="tl-row"><span class="tl-t">${t.t}</span><span>${t.x}</span></div>`).join('') +
-      `<button class="add-mini" onclick="openAddItem('timeline')"><svg><use href="#i-plus"/></svg> הוסף שעה</button>`;
+    /* timeline — always chronological by hour */
+    const sorted = sortedTimeline(c);
+    body = `<div class="routine-sec"><svg><use href="#i-clock"/></svg> לוז יום ה${c.kind==='test'?'מבחן':'תחרות'} — מסודר לפי שעה</div>` +
+      sorted.map(t=>`<div class="tl-row"><span class="tl-t">${t.t}</span><span>${t.x}</span></div>`).join('') +
+      `<button class="add-mini" onclick="openAddItem('timeline')"><svg><use href="#i-plus"/></svg> הוסף שעה — תשובץ אוטומטית לפי הזמן</button>`;
   }
   if (wiz.step===3){
-    body = `<div class="routine-sec"><svg><use href="#i-moon"/></svg> ערב לפני</div>` +
-      c.routine.evening.map((g,i)=>`<div class="ck-row" onclick="toggleWizRoutine('evening',${i})">
-        <span class="ck ${g.on?'on':''}">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>${g.x}</div>`).join('') +
-      `<button class="add-mini" onclick="openAddItem('evening')"><svg><use href="#i-plus"/></svg> הוסף פעולת ערב</button>` +
-      `<div class="routine-sec"><svg><use href="#i-sun"/></svg> ${c.routine.dayLabel}</div>` +
-      c.routine.day.map((g,i)=>`<div class="ck-row" onclick="toggleWizRoutine('day',${i})">
-        <span class="ck ${g.on?'on':''}">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>${g.x}</div>`).join('') +
-      `<button class="add-mini" onclick="openAddItem('day')"><svg><use href="#i-plus"/></svg> הוסף פעולת יום</button>` +
-      `<div class="routine-sec" style="margin-top:12px;"><svg><use href="#i-activity"/></svg> תזונה</div>` +
+    /* routine — custom blocks */
+    body = `<div class="routine-sec"><svg><use href="#i-sun"/></svg> שגרת הכנה — בלוקים (אפשר להוסיף בלוקים משלך)</div>` +
+      c.routine.blocks.map((blk,bi)=>`
+        <div style="margin-top:10px;">
+          <div class="routine-sec"><input class="rblock-label" value="${blk.label}" oninput="getComp('${wiz.comp}').routine.blocks[${bi}].label=this.value"></div>
+          ${blk.items.map((g,ii)=>`<div class="ck-row" onclick="toggleWizRoutine(${bi},${ii})">
+            <span class="ck ${g.on?'on':''}">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>${g.x}</div>`).join('')}
+          <button class="add-mini" onclick="openAddItem('routine',${bi})"><svg><use href="#i-plus"/></svg> הוסף לבלוק</button>
+        </div>`).join('') +
+      `<button class="add-mini" onclick="addRoutineBlock()"><svg><use href="#i-plus"/></svg> בלוק שגרה חדש (למשל: צהריים)</button>`;
+    /* nutrition — simple + precise mode */
+    body += `<div class="routine-sec" style="margin-top:14px;"><svg><use href="#i-activity"/></svg> תזונה
+      <button class="precise-toggle ${c.nutrition.precise?'on':''}" onclick="togglePrecise()">${c.nutrition.precise?'מדויק — גרם · מ"ל':'מצב מדויק'}</button>
+    </div>` +
       nutritionRow(c,'evening','ארוחת ערב לפני') +
       nutritionRow(c,'morning','ארוחת בוקר') +
       nutritionRow(c,'midday','ארוחת צהריים (אם האירוע אחה"צ)') +
@@ -1035,6 +1071,7 @@ function renderWizard(){
             <input class="nutr-what" value="${n.what}" placeholder="מה? למשל: ג'ל" oninput="getComp('${wiz.comp}').nutrition.duringPlan[${ni}].what=this.value">
             <button class="nutr-x" onclick="delNutrRow(${ni})"><svg class="icon-xs"><use href="#i-x"/></svg></button>
           </div>
+          ${c.nutrition.precise ? `<input class="nutr-qty" value="${n.qty||''}" placeholder='כמות וערכים — למשל: 25 גרם פחמימה · 200 מ"ל' oninput="getComp('${wiz.comp}').nutrition.duringPlan[${ni}].qty=this.value">` : ''}
           ${n.prob?`<div class="prob-note"><svg><use href="#i-alert"/></svg> מהפעם הקודמת: ${n.prob}</div>`:''}
         </div>`).join('') +
       `<button class="add-mini" onclick="addNutrRow()"><svg><use href="#i-plus"/></svg> הוסף בלוק תזונה</button>`;
@@ -1051,7 +1088,10 @@ function renderWizard(){
           </div>
           <div class="race-status ${r.status && r.status.startsWith('המאמנת') ? 'ok':''}">${r.status}</div>
           ${r.plan.map((p,pi)=>`
-            <div class="plan-row">
+            <div class="plan-row" draggable="true"
+                 ondragstart="dragStart(event,'plan',${pi},${ri})"
+                 ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="dropOn(event,'plan',${pi},${ri})">
+              <svg class="icon-xs grip-dots"><use href="#i-grip"/></svg>
               <span class="plan-ph">${p.ph}</span>
               <span class="plan-tx">
                 ${p.ath
@@ -1164,23 +1204,25 @@ function copyRacePlan(ri){
 }
 
 /* ==================== FLEXIBLE ADD — items anywhere ==================== */
-let addCtx = { kind:'', ri:0 };
-function openAddItem(kind, ri){
-  addCtx = { kind, ri: ri||0 };
-  const titles = { gear:'פריט ציוד חדש', timeline:'שעה חדשה בלוז', evening:'פעולת ערב חדשה', day:'פעולת יום חדשה', phase:'שלב חדש במהלך' };
+let addCtx = { kind:'', ri:0, bi:0, cat:'' };
+function openAddItem(kind, ri, cat){
+  addCtx = { kind, ri: ri||0, bi: ri||0, cat: cat||'' };
+  const titles = { gear:'פריט ציוד חדש', timeline:'שעה חדשה בלוז', routine:'פעולה חדשה בשגרה', phase:'שלב חדש במהלך' };
   let fields = '';
   if (kind==='timeline'){
-    fields = `<input class="feel-input" id="adTime" placeholder="שעה — למשל 09:45" style="margin-bottom:8px">
+    fields = `<input class="feel-input" id="adTime" placeholder="שעה — למשל 06:00" style="margin-bottom:8px">
       <input class="feel-input" id="adWhat" placeholder="מה קורה — למשל: חימום יבש">`;
   } else if (kind==='phase'){
     fields = `<input class="feel-input" id="adWhat" placeholder="שם השלב — למשל: T2 חלופה" style="margin-bottom:8px">
       <textarea class="jtextarea" id="adText" rows="2" placeholder="מה אני עושה בשלב הזה?"></textarea>`;
   } else {
-    fields = `<input class="feel-input" id="adWhat" placeholder="למשל: משקפות ברזרבי / לכתוב מספרים על היד">`;
+    fields = `<input class="feel-input" id="adWhat" placeholder="למשל: משקפות ברזרבי / מנוחת צהריים">`;
   }
+  const catNote = addCtx.cat ? `<div class="sh-sub"><span>מחלקה: ${addCtx.cat}</span></div>` : '';
   openSheet(`
     <div class="sh-grip"></div>
     <div class="sh-title"><svg class="icon"><use href="#i-plus"/></svg> ${titles[kind]}</div>
+    ${catNote}
     <div style="margin-top:10px;">${fields}</div>
     <button class="rp-save" onclick="commitAdd()"><svg class="icon-sm" style="vertical-align:-3px"><use href="#i-check"/></svg> הוסף</button>
     <button class="sh-close" onclick="closeSheet()">ביטול</button>
@@ -1191,24 +1233,85 @@ function commitAdd(){
   if (!c) return;
   const what = ($('adWhat') && $('adWhat').value.trim()) || '';
   const kind = addCtx.kind;
-  if (kind==='gear' && what) c.gear.push({ x:what, on:false });
+  if (kind==='gear' && what) c.gear.push({ x:what, on:false, cat:addCtx.cat || 'כללי' });
   if (kind==='timeline' && what) c.timeline.push({ t:($('adTime') && $('adTime').value.trim()) || '—', x:what });
-  if (kind==='evening' && what) c.routine.evening.push({ x:what, on:false });
-  if (kind==='day' && what) c.routine.day.push({ x:what, on:false });
+  if (kind==='routine' && what) c.routine.blocks[addCtx.bi].items.push({ x:what, on:false });
   if (kind==='phase' && what) c.races[addCtx.ri].plan.push({ ph:what, ath:($('adText') && $('adText').value.trim()) || '' });
   closeSheet();
+  renderJournal();
+}
+function openCatAdd(){
+  openSheet(`
+    <div class="sh-grip"></div>
+    <div class="sh-title"><svg class="icon"><use href="#i-plus"/></svg> מחלקת ציוד חדשה</div>
+    <div class="sh-sub"><span>קוסטום לפי האירוע שלך — שחייה, אופניים, שטח חלופה, בוקר, ערב לפני...</span></div>
+    <input class="feel-input" id="adWhat" placeholder="שם המחלקה" style="margin-top:10px">
+    <button class="rp-save" onclick="commitCat()"><svg class="icon-sm" style="vertical-align:-3px"><use href="#i-check"/></svg> הוסף מחלקה</button>
+    <button class="sh-close" onclick="closeSheet()">ביטול</button>
+  `);
+}
+function commitCat(){
+  const c = getComp(wiz.comp);
+  const name = ($('adWhat').value||'').trim();
+  if (name){ c.gearCats = c.gearCats || []; c.gearCats.push(name); }
+  closeSheet();
+  renderJournal();
+}
+function addRoutineBlock(){
+  const c = getComp(wiz.comp);
+  c.routine.blocks.push({ label:'בלוק חדש', items:[] });
+  renderJournal();
+}
+function togglePrecise(){
+  const c = getComp(wiz.comp);
+  c.nutrition.precise = !c.nutrition.precise;
   renderJournal();
 }
 function addNutrRow(){
   const c = getComp(wiz.comp);
   c.nutrition.duringPlan = c.nutrition.duringPlan || [];
-  c.nutrition.duringPlan.push({ when:'מתי?', what:'מה?' });
+  c.nutrition.duringPlan.push({ when:'מתי?', what:'מה?', qty:'' });
   renderJournal();
 }
 function delNutrRow(ni){
   const c = getComp(wiz.comp);
   if (c.nutrition.duringPlan) c.nutrition.duringPlan.splice(ni,1);
   renderJournal();
+}
+
+/* ==================== DRAG REORDER — gear + race phases ==================== */
+let dragInfo = null;
+function dragStart(e, list, a, ri){
+  dragInfo = { list, a, ri: ri||0 };
+  e.dataTransfer.setData('text/plain','reorder');
+  e.stopPropagation();
+}
+function allowDrop(e){ e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+function dragLeave(e){ e.currentTarget.classList.remove('drag-over'); }
+function dropOn(e, list, b, ri){
+  e.preventDefault(); e.currentTarget.classList.remove('drag-over');
+  if (!dragInfo || dragInfo.list!==list || dragInfo.a===b) { dragInfo=null; return; }
+  const c = getComp(wiz.comp);
+  if (list==='gear'){
+    const it = c.gear.splice(dragInfo.a,1)[0];
+    c.gear.splice(b,0,it);
+  }
+  if (list==='plan'){
+    const plan = c.races[dragInfo.ri].plan;
+    const it = plan.splice(dragInfo.a,1)[0];
+    plan.splice(b,0,it);
+  }
+  dragInfo = null;
+  renderJournal();
+}
+
+/* timeline — sorted chronologically */
+function tToMin(t){
+  const m = (t||'').match(/^(\d{1,2}):(\d{2})$/);
+  return m ? (+m[1])*60+(+m[2]) : 99999;
+}
+function sortedTimeline(c){
+  return c.timeline.slice().sort((a,b)=>tToMin(a.t)-tToMin(b.t));
 }
 
 /* ==================== PROGRESS VIEW ==================== */
