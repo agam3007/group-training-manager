@@ -262,6 +262,25 @@
   .plan-tip svg{width:10px;height:10px;flex-shrink:0;margin-top:2px;}
   .race-status{font-size:10px;font-weight:800;color:var(--text-faint);margin:3px 0 6px;}
   .race-status.ok{color:var(--accent);}
+  .prob-note{margin-top:2px;font-size:10px;font-weight:800;color:var(--danger);display:flex;gap:4px;align-items:flex-start;line-height:1.5;}
+  .prob-note svg{width:10px;height:10px;flex-shrink:0;margin-top:2px;}
+
+  /* ==================== COMPETITION WIZARD ==================== */
+  .wiz-back{border:none;background:transparent;color:var(--text-muted);cursor:pointer;padding:4px;display:flex;align-items:center;gap:4px;font-size:11.5px;font-weight:800;font-family:inherit;}
+  .wiz-steps{display:flex;gap:5px;margin:10px 0 14px;}
+  .wiz-step{flex:1;padding:7px 4px;border-radius:10px;border:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;font-weight:800;color:var(--text-faint);cursor:pointer;transition:all .15s;}
+  .wiz-step svg{width:14px;height:14px;}
+  .wiz-step.active{border-color:var(--accent);background:var(--accent-dim);color:var(--accent);}
+  .wiz-step.done{color:var(--success);border-color:var(--success);}
+  .wiz-body{min-height:340px;}
+  .wiz-nav{display:flex;gap:8px;margin-top:14px;}
+  .wiz-copy{flex:1;padding:11px;border:1px dashed var(--border);border-radius:14px;background:transparent;color:var(--text-muted);font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;}
+  .wiz-copy:hover{border-color:var(--accent);color:var(--accent);}
+  .wiz-copy.done{border-color:var(--success);color:var(--success);}
+  .wiz-next{flex:1;border:none;border-radius:14px;padding:12px;background:var(--accent);color:#fff;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 14px rgba(37,99,235,.3);}
+  .nut-label{font-size:11px;font-weight:800;color:var(--text-muted);margin:9px 0 4px;display:flex;align-items:center;gap:5px;}
+  .nut-label svg{width:12px;height:12px;color:var(--accent);}
+  .comp-list-card{cursor:pointer;}
 
   .wf{font-size:10px;color:#94A3B8;font-weight:700;}
 </style>
@@ -316,7 +335,7 @@
   <div class="sheet" id="sheetBox"></div>
 </div>
 
-<div class="wf">WIREFRAME v5 — BLUE FITNESS · Athlete App · WPLAN-19</div>
+<div class="wf">WIREFRAME v6 — BLUE FITNESS · Athlete App · WPLAN-19</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -369,86 +388,110 @@ const ATH = {
         feel:[ {k:'קושי',t:'לא אכלתי צהריים לפני האימון'} ],
         txt:'הכתף מרגישה טוב אחרי הטיפול אצל הפיזיו' },
     ],
-    compUp:{
-      kind:'competition',
-      name:'אליפות אזורית — נערות ב׳', date:'שבת · 17.10 · 09:00', place:'בריכת הים',
-      timeline:[
-        { t:'08:30', x:'התאמה במים — 600 מ׳ קל' },
-        { t:'09:20', x:'100 חתירה — מקצה ראשי' },
-        { t:'10:40', x:'50 חתירה — מקצה שני' },
-        { t:'12:00', x:'סיום · פיקניק קבוצתי' },
-      ],
-      races:[
-        { name:'100 חתירה · 09:20', status:'המאמנת הגיבה · 1 הערה', copied:'גביע פתיחת העונה',
-          plan:[
-            { ph:'פתיחה', ath:'לצאת חזק מהזינוק + 10 מ׳ ראשונים בלי נשימה' },
-            { ph:'0–50', ath:'לשמור 31 חתירות למסלול',
-              coach:'מה חסר: מתי לנשום — כל 3 או 5 חתירות?' },
-            { ph:'פניות', ath:'יציאה חזקה מהקיר + לספור חתירות מיד אחרי',
-              tip:'~2 שנ׳ לכל פנייה — שיניתי את הדגש מהגביע' },
-            { ph:'50–100', ath:'לא לקצר חתירה, רגליים חזקות ב-25 האחרונים' },
-            { ph:'סיום', ath:'לגעת במקסימום בלי להרים ראש מהמים' },
-        ]},
-        { name:'50 חתירה · 10:40', status:'טרם נכתב — כתוב או העתק מתחרות קודמת',
-          plan:[
-            { ph:'פתיחה', ath:'' },
-            { ph:'סיום', ath:'' },
-        ]},
-      ],
-      evening:[
-        { x:'ארוחת ערב פחמימתית עד 19:00 — פסטה / אורז + שתייה', on:true },
-        { x:'להכין תיק: משקפות, 2 מכנסיים, מגבת, כובע, חטיפים', on:false },
-        { x:'לישון מוקדם — עד 22:00, טלפון מחוץ לחדר', on:false },
-      ],
-      dayLabel:'בוקר התחרות',
-      morning:[
-        { x:'ארוחת בוקר 3 שעות לפני המקצה — 06:30', on:false },
-        { x:'לכתוב על היד מספר מקצה + מסלול (מספרים נמסרים בכניסה)', on:false },
-        { x:'להתאים גומיית משקפות — בדיקה אחרונה', on:true },
-      ],
-      gear:[
-        { x:'משקפות רזרביות', on:true },
-        { x:'2 מכנסי תחרות', on:true },
-        { x:'מגבת + כובע', on:false },
-        { x:'חטיפים + בקבוק מים', on:true },
-      ],
-    },
-    testUp:{
-      kind:'test',
-      name:'מבחן ביומטרי — 7×100', date:'שישי · 16.10 · 16:30', place:'בריכת הים',
-      timeline:[
-        { t:'16:00', x:'התאמה קלה — 400 מ׳' },
-        { t:'16:30', x:'סדרת מבחן: 7×100 חתירה, מנוחה 45 שנ׳' },
-        { t:'17:15', x:'סיום · דופק חוזר + תיעוד תוצאות' },
-      ],
-      races:[
-        { name:'סדרת המבחן 7×100', status:'טרם נבדק על ידי המאמנת',
-          plan:[
-            { ph:'100 ראשון', ath:'לא לצאת מהר מדי — זה לא מקצה' },
-            { ph:'אמצע', ath:'' },
-            { ph:'100 אחרון', ath:'לתת הכל — הנתון האמיתי נמדד פה' },
-        ]},
-      ],
-      evening:[
-        { x:'לא להתאמן קשה ביום חמישי בערב', on:false },
-      ],
-      dayLabel:'צהרי המבחן',
-      morning:[
-        { x:'ארוחה קלה 2 שעות לפני — עד 14:30', on:false },
-        { x:'מנוחה בשעות הצהריים · לא להתאמן בבוקר', on:true },
-        { x:'להגיע 30 דק׳ לפני להתאמה', on:false },
-      ],
-      gear:[
-        { x:'משקפות', on:true },
-        { x:'בקבוק מים + חטיף אחרי המבחן', on:true },
-      ],
-    },
+    comps:[
+      {
+        id:'alifut', kind:'competition',
+        name:'אליפות אזורית — נערות ב׳', date:'שבת · 17.10 · 09:00', place:'בריכת הים',
+        gear:[
+          { x:'משקפות רזרביות', on:true },
+          { x:'2 מכנסי תחרות', on:true },
+          { x:'מגבת + כובע', on:false },
+          { x:'חטיפים + בקבוק מים', on:true },
+        ],
+        timeline:[
+          { t:'08:30', x:'התאמה במים — 600 מ׳ קל' },
+          { t:'09:20', x:'100 חתירה — מקצה ראשי' },
+          { t:'10:40', x:'50 חתירה — מקצה שני' },
+          { t:'12:00', x:'סיום · פיקניק קבוצתי' },
+        ],
+        routine:{
+          evening:[
+            { x:'ארוחת ערב פחמימתית עד 19:00 — פסטה / אורז', on:true },
+            { x:'להכין תיק: משקפות, 2 מכנסיים, מגבת, כובע, חטיפים', on:false },
+            { x:'לישון מוקדם — עד 22:00, טלפון מחוץ לחדר', on:false },
+          ],
+          dayLabel:'בוקר התחרות',
+          day:[
+            { x:'ארוחת בוקר 3 שעות לפני המקצה — 06:30', on:false },
+            { x:'לכתוב על היד מספר מקצה + מסלול (נמסר בכניסה)', on:false },
+            { x:'להתאים גומיית משקפות — בדיקה אחרונה', on:true },
+          ],
+        },
+        nutrition:{ evening:'פסטה עם רוטב קל + שתייה מרובה', morning:'טוסט + גבינה + בננה', midday:'', during:'איזוטוני בכל הפסקה בין מקצים' },
+        races:[
+          { name:'100 חתירה · 09:20', status:'המאמנת הגיבה · 1 הערה', copied:'גביע פתיחת העונה',
+            plan:[
+              { ph:'פתיחה', ath:'לצאת חזק מהזינוק + 10 מ׳ ראשונים בלי נשימה' },
+              { ph:'0–50', ath:'לשמור 31 חתירות למסלול',
+                coach:'מה חסר: מתי לנשום — כל 3 או 5 חתירות?' },
+              { ph:'פניות', ath:'יציאה חזקה מהקיר + לספור חתירות מיד אחרי',
+                tip:'~2 שנ׳ לכל פנייה — שיניתי את הדגש מהגביע' },
+              { ph:'50–100', ath:'לא לקצר חתירה, רגליים חזקות ב-25 האחרונים' },
+              { ph:'סיום', ath:'לגעת במקסימום בלי להרים ראש מהמים' },
+          ]},
+          { name:'50 חתירה · 10:40', status:'טרם נכתב — כתוב או העתק',
+            plan:[
+              { ph:'פתיחה', ath:'' },
+              { ph:'סיום', ath:'' },
+          ]},
+        ],
+      },
+      {
+        id:'mivhan', kind:'test',
+        name:'מבחן ביומטרי — 7×100', date:'שישי · 16.10 · 16:30', place:'בריכת הים',
+        gear:[
+          { x:'משקפות', on:true },
+          { x:'בקבוק מים + חטיף אחרי המבחן', on:true },
+        ],
+        timeline:[
+          { t:'16:00', x:'התאמה קלה — 400 מ׳' },
+          { t:'16:30', x:'סדרת מבחן: 7×100 חתירה, מנוחה 45 שנ׳' },
+          { t:'17:15', x:'סיום · דופק חוזר + תיעוד תוצאות' },
+        ],
+        routine:{
+          evening:[ { x:'לא להתאמן קשה ביום חמישי בערב', on:false } ],
+          dayLabel:'צהרי המבחן',
+          day:[
+            { x:'ארוחה קלה 2 שעות לפני — עד 14:30', on:false },
+            { x:'מנוחה בצהריים · לא להתאמן בבוקר', on:true },
+            { x:'להגיע 30 דק׳ לפני להתאמה', on:false },
+          ],
+        },
+        nutrition:{ evening:'ארוחה רגילה', morning:'ארוחת בוקר קלה', midday:'ארוחה קלה עד 14:30', during:'מים בהפסקות בין ה-100ים' },
+        races:[
+          { name:'סדרת המבחן 7×100', status:'טרם נבדק על ידי המאמנת',
+            plan:[
+              { ph:'100 ראשון', ath:'לא לצאת מהר מדי — זה לא מקצה' },
+              { ph:'אמצע', ath:'' },
+              { ph:'100 אחרון', ath:'לתת הכל — הנתון האמיתי נמדד פה' },
+          ]},
+        ],
+      },
+    ],
     compPast:{
-      name:'גביע פתיחת העונה', date:'3.10',
+      name:'גביע פתיחת העונה', date:'3.10', place:'בריכת הים',
       results:[
         { k:'100 ח׳', plan:'1:36', val:'1:38', diff:'+2 שנ׳', good:false },
         { k:'50 ח׳', plan:'30.5', val:'29.9', diff:'שיא אישי!', good:true },
       ],
+      gear:[
+        { x:'מכנס תחרות אחד בלבד', on:true, prob:'היה רטוב מהמקצה הראשון — היה קר. להביא 2' },
+      ],
+      timeline:[
+        { t:'08:00', x:'התאמה' },
+        { t:'08:40', x:'100 חתירה' },
+        { t:'10:00', x:'50 חתירה' },
+      ],
+      routine:{
+        evening:[ { x:'אכלתי פיצה כבדה + קינוח בערב', on:true } ],
+        dayLabel:'בוקר התחרות',
+        day:[ { x:'רק קפה בבוקר — בלי אוכל', on:true } ],
+      },
+      nutrition:{
+        evening:'פיצה כבדה + קינוח', eveningProb:'ארוחה כבדה מדי — הרגשתי כבדה במים למחרת',
+        morning:'קפה בלבד', morningProb:'בלי אוכל — חוסר אנרגיה בסוף המקצה',
+        midday:'', during:'לא לקחתי כלום', duringProb:'התייבשתי בין המקצים',
+      },
       races:[
         { name:'100 חתירה — מה שכתבתי ומה המאמנת הגיבה', plan:[
           { ph:'פתיחה', tx:'זינוק חזק + 10 מ׳ בלי נשימה', ath:'יצאתי הכי טוב שלי אי פעם', coach:'נכון — הזינוק היה מעולה' },
@@ -488,7 +531,47 @@ const ATH = {
         feel:[ {k:'שיפור',t:'קצב ממוצע עלה ל-31 קמ"ש'} ],
         txt:'רכיבה חזקה — לשמור על תזונה ברכיבות ארוכות' },
     ],
-    compUp:null,
+    comps:[
+      {
+        id:'half', kind:'competition',
+        name:'חצי איש — מכבי תל אביב', date:'שבת · 21.11 · 06:45', place:'גלילות',
+        gear:[
+          { x:'חליפה + משקפות רזרביים', on:true },
+          { x:'מגפיים לריצה + כובע', on:false },
+          { x:'4 ג\'לים + 2 בקבוקים לאופניים', on:true },
+        ],
+        timeline:[
+          { t:'04:30', x:'התעוררות + ארוחה' },
+          { t:'05:40', x:'העברת ציוד למתחמי החלופה (T1/T2)' },
+          { t:'06:45', x:'זינוק שחייה — 1.9 ק"מ' },
+          { t:'08:00', x:'חלופה T1 → אופניים 90 ק"מ' },
+          { t:'11:15', x:'חלופה T2 → ריצה 21.1 ק"מ' },
+          { t:'13:30', x:'קו סיום' },
+        ],
+        routine:{
+          evening:[
+            { x:'ציוד מסודר על הדלת + בקבוקים במקפיא', on:false },
+            { x:'שינה מוקדמת — 21:30', on:false },
+          ],
+          dayLabel:'בוקר התחרות',
+          day:[
+            { x:'ארוחה 3 שעות לפני — 03:45', on:false },
+            { x:'ג\'ל 15 דק׳ לפני זינוק', on:true },
+          ],
+        },
+        nutrition:{ evening:'אורז + עוף — קל', morning:'שיבולת שיבולת + קפה + בננה', midday:'', during:'ג\'ל כל 45 דק׳ על האופניים + איזוטוני' },
+        races:[
+          { name:'מהלך המירוץ — 3 ענפים + 2 חלופות', status:'טרם נבדק על ידי המאמנת',
+            plan:[
+              { ph:'שחייה', ath:'לצאת מימין לגל — שטח פתוח יותר; לא להתמקם באמצע החבילה' },
+              { ph:'T1', ath:'' },
+              { ph:'אופניים', ath:'כיכר חלוקה א׳ — לקחת בקבוק ולזרוק; ג\'ל כל 45 דק׳' },
+              { ph:'T2', ath:'' },
+              { ph:'ריצה', ath:'קצב 5:30/ק"מ — לא לצאת מהר עם ההרגשה הטובה' },
+          ]},
+        ],
+      },
+    ],
     compPast:{
       name:'מבחן סף לקסי', date:'5.10',
       results:[
@@ -781,54 +864,22 @@ function renderJournal(){
     });
   } else {
     /* competition journal */
-    /* upcoming: competition + test — the athlete authors the plan, the coach responds */
-    const ups = [a.compUp, a.testUp].filter(Boolean);
-    ups.forEach((c,ci)=>{
-      const kindIcon = c.kind==='test' ? 'i-clipboard' : 'i-trophy';
-      html += `
-        <div class="comp-card up">
-          <div class="comp-head">
-            <svg class="icon" style="${c.kind==='test'?'color:var(--warning)':'color:var(--danger)'}"><use href="#${kindIcon}"/></svg>
-            <div class="comp-name">${c.name}<div class="comp-sub">${c.date} · ${c.place}</div></div>
-          </div>
-          <div class="routine-sec"><svg><use href="#i-moon"/></svg> ערב לפני (סמני מה שעשית)</div>
-          ${c.evening.map((g,i)=>`<div class="ck-row" onclick="toggleRoutine(${ci},'evening',${i})">
-            <span class="ck ${g.on?'on':''}">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>${g.x}</div>`).join('')}
-          <div class="routine-sec"><svg><use href="#i-sun"/></svg> ${c.dayLabel}</div>
-          ${c.morning.map((g,i)=>`<div class="ck-row" onclick="toggleRoutine(${ci},'morning',${i})">
-            <span class="ck ${g.on?'on':''}">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>${g.x}</div>`).join('')}
-          <div class="comp-sec" style="margin-top:12px;">לוז היום</div>
-          ${c.timeline.map(t=>`<div class="tl-row"><span class="tl-t">${t.t}</span><span>${t.x}</span></div>`).join('')}
-          <div class="comp-sec" style="margin-top:12px;">${c.kind==='test'?'תכנית המבחן — אתה כותב':'תוכנית מקצה — אתה כותב את התוכנית, המאמנת תגיב מה חסר'}</div>
-          ${c.races.map((r,ri)=>`
-            <div class="race-block">
-              <div class="race-h">
-                <svg class="icon-sm"><use href="#i-activity"/></svg> ${r.name}
-                ${c.kind!=='test' ? (r.copied
-                  ? `<span class="copied-chip">הועתק מ${r.copied}</span>`
-                  : `<button class="copy-btn" onclick="copyRace(${ri})"><svg><use href="#i-copy"/></svg> העתק מתחרות קודמת</button>`) : ''}
-              </div>
-              <div class="race-status ${r.status && r.status.startsWith('המאמנת') ? 'ok':''}">${r.status}</div>
-              ${r.plan.map((p,pi)=>`
-                <div class="plan-row">
-                  <span class="plan-ph">${p.ph}</span>
-                  <span class="plan-tx">
-                    ${p.ath
-                      ? `<span class="plan-mine">${p.ath}</span>`
-                      : `<span class="plan-empty">עדיין לא נכתב — מה אתה עושה בשלב הזה?</span>`}
-                    ${p.tip ? `<div class="plan-tip"><svg><use href="#i-alert"/></svg> מסקנה מהתחרות הקודמת: ${p.tip}</div>` : ''}
-                    ${p.coach ? `<div class="plan-coach"><svg><use href="#i-msg"/></svg> מה חסר (המאמנת): ${p.coach}</div>` : ''}
-                    <button class="plan-edit" onclick="openPhaseEdit(${ri},${pi})">
-                      <svg><use href="#i-pencil"/></svg> ${p.ath ? 'עריכה' : 'כתוב את שלב ה'+p.ph}
-                    </button>
-                  </span>
-                </div>`).join('')}
-            </div>`).join('')}
-          <div class="comp-sec">ציוד להכין — סמני מה שכבר ארזת</div>
-          ${c.gear.map((g,i)=>`<div class="ck-row" onclick="toggleGear(${ci},${i})">
-            <span class="ck ${g.on?'on':''}">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>${g.x}</div>`).join('')}
-        </div>`;
-    });
+    /* competition journal: wizard flow — pick an event, then step by step */
+    if (wiz.comp){
+      html += renderWizard();
+    } else {
+      (a.comps||[]).forEach(c=>{
+        html += `
+          <div class="comp-card up comp-list-card" onclick="openComp('${c.id}')">
+            <div class="comp-head">
+              <svg class="icon" style="${c.kind==='test'?'color:var(--warning)':'color:var(--danger)'}"><use href="#${c.kind==='test'?'i-clipboard':'i-trophy'}"/></svg>
+              <div class="comp-name">${c.name}<div class="comp-sub">${c.date} · ${c.place}</div></div>
+              <svg class="icon" style="color:var(--text-faint)"><use href="#i-chevron-left"/></svg>
+            </div>
+            <div class="race-status ${c.submitted?'ok':''}">${c.submitted ? 'הוכן ונשלח למאמנת לתגובה' : 'לחץ להכנה שלב אחר שלב: ציוד · לוז · שגרה ותזונה · מהלך'}</div>
+          </div>`;
+      });
+    }
     if (a.compPast){
       const c = a.compPast;
       html += `
@@ -868,24 +919,12 @@ function renderJournal(){
           <div class="focus-box"><svg class="icon-sm"><use href="#i-flame"/></svg> מיקוד להמשך: ${c.focus}</div>
         </div>`;
     }
-    if (!a.compUp && !a.compPast) html += `<div style="text-align:center;color:var(--text-faint);font-size:12px;padding:20px">אין תחרויות להצגה</div>`;
+    if ((!a.comps || !a.comps.length) && !a.compPast) html += `<div style="text-align:center;color:var(--text-faint);font-size:12px;padding:20px">אין תחרויות להצגה</div>`;
   }
   $('phBody').innerHTML = html;
 }
 function toggleMeal(m){
   if (jd.meals.has(m)) jd.meals.delete(m); else jd.meals.add(m);
-  renderJournal();
-}
-function toggleGear(ci, i){
-  const a = A();
-  const c = [a.compUp, a.testUp].filter(Boolean)[ci];
-  if (c) c.gear[i].on = !c.gear[i].on;
-  renderJournal();
-}
-function toggleRoutine(ci, kind, i){
-  const a = A();
-  const c = [a.compUp, a.testUp].filter(Boolean)[ci];
-  if (c && c[kind]) c[kind][i].on = !c[kind][i].on;
   renderJournal();
 }
 function saveJournalDay(){
@@ -898,11 +937,157 @@ function saveJournalDay(){
   renderJournal();
 }
 
-/* ==================== RACE PLAN — the athlete authors; copy carries conclusions ==================== */
+/* ==================== COMPETITION WIZARD — step flow; copy-per-step with problems in red ==================== */
+let wiz = { comp:null, step:1 };
 let peCtx = { r:0, p:0 };
-function openPhaseEdit(ri, pi){
+const WIZ_STEPS = [
+  { n:1, l:'ציוד', i:'i-clipboard' },
+  { n:2, l:'לוז יום', i:'i-clock' },
+  { n:3, l:'שגרה ותזונה', i:'i-sun' },
+  { n:4, l:'מהלך', i:'i-activity' },
+];
+function getComp(id){ return (A().comps||[]).find(c=>c.id===id); }
+function openComp(id){ wiz = { comp:id, step:1 }; renderJournal(); }
+function setWizStep(n){ wiz.step = n; renderJournal(); }
+function finishWizard(){ const c = getComp(wiz.comp); if (c) c.submitted = true; wiz.comp = null; renderJournal(); }
+function toggleWiz(i){ const c = getComp(wiz.comp); if (c) c.gear[i].on = !c.gear[i].on; renderJournal(); }
+function toggleWizRoutine(kind, i){ const c = getComp(wiz.comp); if (c) c.routine[kind][i].on = !c.routine[kind][i].on; renderJournal(); }
+
+function nutritionRow(c, key, label){
+  const v = c.nutrition[key] || '';
+  const prob = c.nutrition[key+'Prob'];
+  return `<div class="nut-label"><svg><use href="#i-activity"/></svg> ${label}</div>
+    <input class="feel-input" value="${v}" placeholder="מה ומתי? למשל: פסטה עד 19:00" oninput="getComp('${wiz.comp}').nutrition['${key}']=this.value">
+    ${prob?`<div class="prob-note"><svg><use href="#i-alert"/></svg> מהפעם הקודמת: ${prob}</div>`:''}`;
+}
+
+function renderWizard(){
+  const c = getComp(wiz.comp);
+  if (!c) return '';
+  const s4 = c.kind==='test' ? 'תכנית המבחן' : 'מהלך';
+  const steps = WIZ_STEPS.map(s=>`
+    <button class="wiz-step ${wiz.step===s.n?'active':''} ${wiz.step>s.n?'done':''}" onclick="setWizStep(${s.n})">
+      <svg><use href="#${s.i}"/></svg> ${s.n===4 ? s4 : s.l}
+    </button>`).join('');
+  const copied = c.copiedSteps && c.copiedSteps[wiz.step];
+  let body = '';
+
+  if (wiz.step===1){
+    body = `<div class="routine-sec"><svg><use href="#i-clipboard"/></svg> מה צריך להכין — סמני מה שארזת</div>` +
+      c.gear.map((g,i)=>`<div class="ck-row" onclick="toggleWiz(${i})">
+        <span class="ck ${g.on?'on':''}">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>
+        <span style="flex:1">${g.x}${g.prob?`<span class="prob-note"><svg><use href="#i-alert"/></svg> בעיה מהפעם הקודמת: ${g.prob}</span>`:''}</span>
+      </div>`).join('');
+  }
+  if (wiz.step===2){
+    body = `<div class="routine-sec"><svg><use href="#i-clock"/></svg> לוז יום ה${c.kind==='test'?'מבחן':'תחרות'}</div>` +
+      c.timeline.map(t=>`<div class="tl-row"><span class="tl-t">${t.t}</span><span>${t.x}</span></div>`).join('');
+  }
+  if (wiz.step===3){
+    body = `<div class="routine-sec"><svg><use href="#i-moon"/></svg> ערב לפני</div>` +
+      c.routine.evening.map((g,i)=>`<div class="ck-row" onclick="toggleWizRoutine('evening',${i})">
+        <span class="ck ${g.on?'on':''}">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>${g.x}</div>`).join('') +
+      `<div class="routine-sec"><svg><use href="#i-sun"/></svg> ${c.routine.dayLabel}</div>` +
+      c.routine.day.map((g,i)=>`<div class="ck-row" onclick="toggleWizRoutine('day',${i})">
+        <span class="ck ${g.on?'on':''}">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>${g.x}</div>`).join('') +
+      `<div class="routine-sec" style="margin-top:12px;"><svg><use href="#i-activity"/></svg> תזונה — מה ומתי</div>` +
+      nutritionRow(c,'evening','ארוחת ערב לפני') +
+      nutritionRow(c,'morning','ארוחת בוקר') +
+      nutritionRow(c,'midday','ארוחת צהריים (אם התחרות אחה"צ)') +
+      nutritionRow(c,'during','במהלם — איזוטוני / ג\'ל / חטיף');
+  }
+  if (wiz.step===4){
+    body = `<div class="comp-sec">${c.kind==='test'?'תכנית המבחן':'מהלך התחרות'} — אתה כותב, המאמנת תגיב מה חסר</div>` +
+      c.races.map((r,ri)=>`
+        <div class="race-block">
+          <div class="race-h">
+            <svg class="icon-sm"><use href="#i-activity"/></svg> ${r.name}
+            ${r.copied
+              ? `<span class="copied-chip">הועתק מ${r.copied}</span>`
+              : `<button class="copy-btn" onclick="copyRacePlan(${ri})"><svg><use href="#i-copy"/></svg> העתק מקטע קודם</button>`}
+          </div>
+          <div class="race-status ${r.status && r.status.startsWith('המאמנת') ? 'ok':''}">${r.status}</div>
+          ${r.plan.map((p,pi)=>`
+            <div class="plan-row">
+              <span class="plan-ph">${p.ph}</span>
+              <span class="plan-tx">
+                ${p.ath
+                  ? `<span class="plan-mine">${p.ath}</span>`
+                  : `<span class="plan-empty">עדיין לא נכתב — מה אתה עושה בשלב הזה?</span>`}
+                ${p.tip ? `<div class="plan-tip"><svg><use href="#i-alert"/></svg> מסקנה מהתחרות הקודמת: ${p.tip}</div>` : ''}
+                ${p.coach ? `<div class="plan-coach"><svg><use href="#i-msg"/></svg> מה חסר (המאמנת): ${p.coach}</div>` : ''}
+                <button class="plan-edit" onclick="openPhaseEdit(${ri},${pi})">
+                  <svg><use href="#i-pencil"/></svg> ${p.ath ? 'עריכה' : 'כתוב'}
+                </button>
+              </span>
+            </div>`).join('')}
+        </div>`).join('');
+  }
+
+  const nextLabel = wiz.step<4 ? 'המשך' : 'סיום — שליחה למאמנת';
+  const nextAction = wiz.step<4 ? `setWizStep(${wiz.step+1})` : 'finishWizard()';
+  return `
+    <button class="wiz-back" onclick="wiz.comp=null;renderJournal()"><svg class="icon-xs"><use href="#i-chevron-right"/></svg> חזרה לרשימת האירועים</button>
+    <div class="comp-head" style="margin-top:8px;">
+      <svg class="icon" style="${c.kind==='test'?'color:var(--warning)':'color:var(--danger)'}"><use href="#${c.kind==='test'?'i-clipboard':'i-trophy'}"/></svg>
+      <div class="comp-name">${c.name}<div class="comp-sub">${c.date} · ${c.place}</div></div>
+    </div>
+    <div class="wiz-steps">${steps}</div>
+    <div class="wiz-body">${body}</div>
+    <div class="wiz-nav">
+      <button class="wiz-copy ${copied?'done':''}" onclick="openWizCopy()">
+        <svg class="icon-sm"><use href="#i-copy"/></svg> ${copied ? 'הועתק מ'+copied : 'העתק מתחרות קודמת'}
+      </button>
+      <button class="wiz-next" onclick="${nextAction}">${nextLabel} <svg class="icon-sm"><use href="#i-chevron-left"/></svg></button>
+    </div>`;
+}
+
+/* copy the current step from a previous competition — problems arrive in red */
+function openWizCopy(){
   const a = A();
-  const race = a.compUp.races[ri];
+  const stepLabels = { 1:'ציוד', 2:'לוז יום', 3:'שגרה ותזונה', 4:'מהלך' };
+  openSheet(`
+    <div class="sh-grip"></div>
+    <div class="sh-title"><svg class="icon"><use href="#i-copy"/></svg> העתקת שלב: ${stepLabels[wiz.step]}</div>
+    <div class="sh-sub"><span>הבעיות מהתחרות הקודמת יופיעו באדום — תעדכן אותן למשהו יותר טוב</span></div>
+    <div style="margin-top:12px;">
+      <div class="lib-pick-item" onclick="applyWizCopy()">
+        <svg class="icon-sm" style="color:var(--accent)"><use href="#i-trophy"/></svg>
+        <span style="flex:1">${a.compPast.name} · ${a.compPast.date}<br><span class="staff-hours">יש מסקנות, בעיות מסומנות ותגובות מאמנת</span></span>
+        <svg class="icon-xs"><use href="#i-chevron-left"/></svg>
+      </div>
+    </div>
+    <button class="sh-close" onclick="closeSheet()">ביטול</button>
+  `);
+}
+function applyWizCopy(){
+  const src = A().compPast;
+  const c = getComp(wiz.comp);
+  if (!c) return;
+  if (wiz.step===1) c.gear = src.gear.map(g=>({ x:g.x, on:g.on, prob:g.prob||null }));
+  if (wiz.step===2) c.timeline = src.timeline.map(t=>({ t:t.t, x:t.x }));
+  if (wiz.step===3){
+    c.routine = JSON.parse(JSON.stringify(src.routine));
+    c.nutrition = Object.assign({}, src.nutrition);
+  }
+  if (wiz.step===4){
+    c.races.forEach((r,ri)=>{
+      const past = (src.races && (src.races[ri] || src.races[0])) || null;
+      if (!past) return;
+      r.plan = past.plan.map(p=>({ ph:p.ph, ath:p.ath||'', tip:p.coach||null }));
+      r.copied = src.name;
+      r.status = 'הועתק מ'+src.name+' — ערוך לפי המסקנות';
+    });
+  }
+  c.copiedSteps = c.copiedSteps || {};
+  c.copiedSteps[wiz.step] = src.name;
+  closeSheet();
+  renderJournal();
+}
+
+function openPhaseEdit(ri, pi){
+  const c = getComp(wiz.comp);
+  const race = c.races[ri];
   const ph = race.plan[pi];
   peCtx = { r:ri, p:pi };
   openSheet(`
@@ -916,21 +1101,21 @@ function openPhaseEdit(ri, pi){
   `);
 }
 function savePhaseNote(){
-  const race = A().compUp.races[peCtx.r];
+  const c = getComp(wiz.comp);
+  const race = c.races[peCtx.r];
   race.plan[peCtx.p].ath = $('peText').value.trim();
   race.status = 'טרם נבדק על ידי המאמנת';
   closeSheet();
   renderJournal();
 }
-function copyRace(ri){
+function copyRacePlan(ri){
   const a = A();
-  const past = a.compPast && a.compPast.races && a.compPast.races[0];
+  const past = a.compPast && a.compPast.races && (a.compPast.races[ri] || a.compPast.races[0]);
   if (!past) return;
-  const race = a.compUp.races[ri];
-  /* copy the athlete's own phases; problematic phases carry the conclusion as a tip to change */
+  const race = getComp(wiz.comp).races[ri];
   race.plan = past.plan.map(p => ({ ph:p.ph, ath:p.ath||'', tip: p.coach ? p.coach : null }));
   race.copied = a.compPast.name;
-  race.status = 'הועתק מ' + a.compPast.name + ' — ערכי לפי המסקנות, המאמנת תגיב';
+  race.status = 'הועתק מ'+a.compPast.name+' — ערוך לפי המסקנות';
   renderJournal();
 }
 
