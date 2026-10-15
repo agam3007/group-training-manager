@@ -227,6 +227,17 @@
   .focus-box{background:var(--surface-ocean);border-radius:12px;padding:10px 12px;font-size:11.5px;font-weight:700;margin-top:8px;display:flex;gap:7px;align-items:center;}
   .focus-box .icon-sm{color:var(--accent);}
 
+  /* ==================== RACE PLAN + PRE-RACE ROUTINE ==================== */
+  .race-block{background:var(--surface-hover);border-radius:14px;padding:12px 13px;margin-top:10px;}
+  .race-h{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:800;}
+  .race-h svg{color:var(--danger);}
+  .plan-row{display:flex;gap:9px;padding:7px 0;border-bottom:1px dashed var(--border);align-items:flex-start;}
+  .plan-row:last-child{border-bottom:none;}
+  .plan-ph{min-width:54px;padding:4px 6px;border-radius:8px;font-size:9.5px;font-weight:800;background:var(--accent-dim);color:var(--accent);text-align:center;flex-shrink:0;margin-top:1px;}
+  .plan-tx{font-size:11.5px;font-weight:600;color:var(--text-muted);line-height:1.55;flex:1;}
+  .routine-sec{font-size:10.5px;font-weight:800;color:var(--text-faint);letter-spacing:.3px;margin:11px 0 3px;display:flex;align-items:center;gap:5px;}
+  .routine-sec svg{width:12px;height:12px;}
+
   .wf{font-size:10px;color:#94A3B8;font-weight:700;}
 </style>
 
@@ -278,7 +289,7 @@
   <div class="sheet" id="sheetBox"></div>
 </div>
 
-<div class="wf">WIREFRAME v2 — BLUE FITNESS · Athlete App · WPLAN-19</div>
+<div class="wf">WIREFRAME v3 — BLUE FITNESS · Athlete App · WPLAN-19</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -328,12 +339,35 @@ const ATH = {
       { d:'12.10 · שבת', wake:'08:00', sleep:'23:10', meals:2, feel:'שימור', txt:'הכתף מרגישה טוב אחרי הטיפול אצל הפיזיו.' },
     ],
     compUp:{
-      name:'אליפות אזורית — נערים/נערות', date:'שבת · 17.10 · 09:00', place:'בריכת הים',
+      name:'אליפות אזורית — נערות ב׳', date:'שבת · 17.10 · 09:00', place:'בריכת הים',
       timeline:[
         { t:'08:30', x:'התאמה במים — 600 מ׳ קל' },
         { t:'09:20', x:'100 חתירה — מקצה ראשי' },
         { t:'10:40', x:'50 חתירה — מקצה שני' },
         { t:'12:00', x:'סיום · פיקניק קבוצתי' },
+      ],
+      races:[
+        { name:'100 חתירה · 09:20', plan:[
+          { ph:'פתיחה', tx:'זינוק חזק + 10 מ׳ ראשונים בלי נשימה' },
+          { ph:'0–50', tx:'קצב מטרה — לשמור 31 חתירות למסלול, נשימה כל 3' },
+          { ph:'פניות', tx:'יציאה חזקה מהקיר — זה הדגש שלנו מהגביע הקודם' },
+          { ph:'50–100', tx:'לא לקצר חתירה; רגליים חזקות ב-25 האחרונים' },
+          { ph:'סיום', tx:'לגעת במקסימום — בלי להרים את הראש מהמים' },
+        ]},
+        { name:'50 חתירה · 10:40', plan:[
+          { ph:'פתיחה', tx:'זינוק + 15 מ׳ תת-מימיים עד הגל' },
+          { ph:'סיום', tx:'להאריך עד הקיר — שיא אישי בהישג יד (29.9)' },
+        ]},
+      ],
+      evening:[
+        { x:'ארוחת ערב פחמימתית עד 19:00 — פסטה / אורז + שתייה', on:true },
+        { x:'להכין תיק: משקפות, 2 מכנסיים, מגבת, כובע, חטיפים', on:false },
+        { x:'לישון מוקדם — עד 22:00, טלפון מחוץ לחדר', on:false },
+      ],
+      morning:[
+        { x:'ארוחת בוקר 3 שעות לפני המקצה — 06:30', on:false },
+        { x:'לכתוב על היד מספר מקצה + מסלול (מספרים נמסרים בכניסה)', on:false },
+        { x:'להתאים גומיית משקפות — בדיקה אחרונה', on:true },
       ],
       gear:[
         { x:'משקפות רזרביות', on:true },
@@ -614,7 +648,7 @@ function saveAvail(){
 
 /* ==================== JOURNAL VIEW ==================== */
 let jTab = 'daily';
-let jd = { wake:'07:00', sleep:'22:30', meals:new Set(['בוקר','ערב']), feel:'שיפור', text:'' };
+let jd = { wake:'07:00', sleep:'22:30', meals:new Set(['בוקר','ערב']), feels:new Set(['שיפור']), text:'' };
 function setJTab(t){ jTab = t; renderJournal(); }
 
 function renderJournal(){
@@ -637,9 +671,9 @@ function renderJournal(){
         </div>
         <div class="jrow"><span class="k">איך היה באימון</span>
           <div class="jchips">
-            <button class="jchip ${jd.feel==='שיפור'?'on ok':''}" onclick="jd.feel='שיפור';renderJournal()">שיפור</button>
-            <button class="jchip ${jd.feel==='שימור'?'on':''}" onclick="jd.feel='שימור';renderJournal()">שימור</button>
-            <button class="jchip ${jd.feel==='קושי'?'on bad':''}" onclick="jd.feel='קושי';renderJournal()">קושי</button>
+            <button class="jchip ${jd.feels.has('שיפור')?'on ok':''}" onclick="toggleFeel('שיפור')">שיפור</button>
+            <button class="jchip ${jd.feels.has('שימור')?'on':''}" onclick="toggleFeel('שימור')">שימור</button>
+            <button class="jchip ${jd.feels.has('קושי')?'on bad':''}" onclick="toggleFeel('קושי')">קושי</button>
           </div>
         </div>
         <textarea class="jtextarea" rows="2" placeholder="על מה אני רוצה לעבוד בהמשך?" oninput="jd.text=this.value">${jd.text}</textarea>
@@ -647,10 +681,11 @@ function renderJournal(){
       </div>
       <div class="sec"><svg class="icon-sm"><use href="#i-calendar"/></svg> יומנים קודמים</div>`;
     a.journal.forEach(j=>{
+      const feels = Array.isArray(j.feel) ? j.feel : [j.feel];
       html += `
         <div class="jentry">
           <div class="hd"><span>${j.d}</span><span>קמה ${j.wake} · ישנה ${j.sleep} · ארוחות ${j.meals}/3</span></div>
-          <div class="tx"><span class="feel">${j.feel}</span> ${j.txt}</div>
+          <div class="tx">${feels.map(f=>`<span class="feel">${f}</span>`).join(' ')} ${j.txt}</div>
         </div>`;
     });
   } else {
@@ -663,8 +698,20 @@ function renderJournal(){
             <svg class="icon"><use href="#i-trophy"/></svg>
             <div class="comp-name">${c.name}<div class="comp-sub">${c.date} · ${c.place}</div></div>
           </div>
-          <div class="comp-sec">לוז יום התחרות</div>
+          <div class="routine-sec"><svg><use href="#i-moon"/></svg> ערב לפני — שגרת הכנה (סמני מה שעשית)</div>
+          ${c.evening.map((g,i)=>`<div class="ck-row" onclick="toggleRoutine('evening',${i})">
+            <span class="ck ${g.on?'on':''}">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>${g.x}</div>`).join('')}
+          <div class="routine-sec"><svg><use href="#i-sun"/></svg> בוקר התחרות</div>
+          ${c.morning.map((g,i)=>`<div class="ck-row" onclick="toggleRoutine('morning',${i})">
+            <span class="ck ${g.on?'on':''}">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>${g.x}</div>`).join('')}
+          <div class="comp-sec" style="margin-top:12px;">לוז יום התחרות</div>
           ${c.timeline.map(t=>`<div class="tl-row"><span class="tl-t">${t.t}</span><span>${t.x}</span></div>`).join('')}
+          <div class="comp-sec" style="margin-top:12px;">תוכנית מקצה — מה לעשות בכל שלב</div>
+          ${c.races.map(r=>`
+            <div class="race-block">
+              <div class="race-h"><svg class="icon-sm"><use href="#i-activity"/></svg> ${r.name}</div>
+              ${r.plan.map(p=>`<div class="plan-row"><span class="plan-ph">${p.ph}</span><span class="plan-tx">${p.tx}</span></div>`).join('')}
+            </div>`).join('')}
           <div class="comp-sec">ציוד להכין — סמני מה שכבר ארזת</div>
           ${c.gear.map((g,i)=>`<div class="ck-row" onclick="toggleGear(${i})">
             <span class="ck ${g.on?'on':''}">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>${g.x}</div>`).join('')}
@@ -707,10 +754,19 @@ function toggleGear(i){
   if (a.compUp) a.compUp.gear[i].on = !a.compUp.gear[i].on;
   renderJournal();
 }
+function toggleRoutine(kind, i){
+  const a = A();
+  if (a.compUp && a.compUp[kind]) a.compUp[kind][i].on = !a.compUp[kind][i].on;
+  renderJournal();
+}
+function toggleFeel(v){
+  if (jd.feels.has(v)) jd.feels.delete(v); else jd.feels.add(v);
+  renderJournal();
+}
 function saveJournalDay(){
   const a = A();
-  a.journal.unshift({ d:'14.10 · היום', wake:jd.wake, sleep:jd.sleep, meals:jd.meals.size, feel:jd.feel, txt:jd.text || '—' });
-  jd = { wake:'07:00', sleep:'22:30', meals:new Set(), feel:'שיפור', text:'' };
+  a.journal.unshift({ d:'14.10 · היום', wake:jd.wake, sleep:jd.sleep, meals:jd.meals.size, feel:Array.from(jd.feels), txt:jd.text || '—' });
+  jd = { wake:'07:00', sleep:'22:30', meals:new Set(), feels:new Set(), text:'' };
   renderJournal();
 }
 
