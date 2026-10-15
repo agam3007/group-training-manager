@@ -439,6 +439,41 @@
   .meso-sk{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);}
   .sk-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;border:1px dashed var(--accent);background:var(--accent-dim);color:var(--accent);font-size:10.5px;font-weight:800;}
 
+  /* ==================== TYPOGRAPHY FLOOR — nothing below 11px ==================== */
+  .badge,.mb-status,.sk-badge{font-size:11px;}
+  .badge svg{width:10px;height:10px;}
+  .session-sub,.gs-sub,.gs-gline,.wc-range,.wc-level,.wc-status,.event-chip,.load-chip,.coach-chip,.actual-line,.lib-sub,.picker-sub,.staff-hours,.mb-gsub,.mb-n{font-size:11px;}
+
+  /* ==================== EXPANDABLE SUMMARY ==================== */
+  .week-summary{cursor:pointer;}
+  .sum-chevron{transition:transform .2s;color:var(--text-faint);}
+  .week-summary.expanded .sum-chevron{transform:rotate(180deg);}
+  .summary-extra{display:none;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;width:100%;margin-top:14px;}
+  .week-summary.expanded .summary-extra{display:grid;}
+  .sum-tile{background:var(--surface-hover);border-radius:12px;padding:12px 14px;}
+  .sum-tile h4{font-size:11.5px;font-weight:800;color:var(--text-faint);margin-bottom:8px;letter-spacing:.3px;display:flex;align-items:center;gap:6px;}
+  .sum-tile h4 svg{width:13px;height:13px;}
+  .zone-line{display:flex;align-items:center;gap:6px;margin-bottom:5px;font-size:11px;font-weight:700;}
+  .zone-line .bar{flex:1;height:6px;border-radius:3px;background:var(--border);overflow:hidden;}
+  .zone-line .bar span{display:block;height:100%;border-radius:3px;}
+  .zone-line .pct{min-width:32px;color:var(--text-muted);}
+  .daybar-row{display:flex;gap:4px;align-items:flex-end;height:52px;}
+  .daybar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;font-size:11px;color:var(--text-faint);}
+  .daybar .b{width:100%;max-width:26px;background:var(--accent);border-radius:3px 3px 0 0;min-height:2px;}
+  .delta-pos{color:var(--success);font-weight:800;}
+  .delta-neg{color:var(--danger);font-weight:800;}
+  .sum-note{font-size:11.5px;color:var(--text-muted);line-height:1.7;}
+
+  /* ==================== UNIFIED DAY ADD ==================== */
+  .day-card.clickable{cursor:pointer;}
+  .day-add-hint{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:var(--accent);border:1.5px dashed var(--border);border-radius:12px;padding:14px 6px;font-size:12px;font-weight:800;transition:all .15s;}
+  .day-card:hover .day-add-hint{border-color:var(--accent);background:var(--accent-dim);}
+  .day-add-hint svg{width:18px;height:18px;}
+  .lib-pick-list{max-height:280px;overflow-y:auto;}
+  .lib-pick-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;font-size:12.5px;font-weight:700;}
+  .lib-pick-item:hover{background:var(--surface-hover);}
+  .lib-pick-item svg{color:var(--text-faint);}
+
   /* Zone colors — intensity ladder, no purple */
   .z1{background:#84CC16;} .z2{background:#38BDF8;} .z3{background:#FBBF24;} .z4{background:#F87171;} .z5{background:#DC2626;}
 </style>
@@ -604,6 +639,7 @@
           </div>
           <button title="שבוע הבא" onclick="shiftWeek(1)"><svg class="icon icon-sm"><use href="#i-chevron-left"/></svg></button>
         </div>
+        <div class="seg" id="viewSeg" title="מצב תצוגה"></div>
       </div>
     </div>
 
@@ -622,7 +658,7 @@
     <div class="insight" id="insight">
       <svg class="icon"><use href="#i-bulb"/></svg>
       <span>עומס שבוע 42: 1,414 נק׳ · 23% מתחת לשבוע 41 · ACWR 0.90 — פריקה נמשכת אחרי שבועיים בעומס גבוה (40–41) · שבוע 43 מתוכנן כפריקה מלאה</span>
-      <button class="insight-x" onclick="document.getElementById('insight').style.display='none'">
+      <button class="insight-x" onclick="document.getElementById('insight').style.display='none';document.getElementById('insight').dataset.hidden=1">
         <svg class="icon icon-sm"><use href="#i-x"/></svg>
       </button>
     </div>
@@ -675,10 +711,10 @@
           </div>
         </div>
 
-        <!-- WEEK SUMMARY -->
-        <div class="week-summary">
+        <!-- WEEK SUMMARY — click to expand -->
+        <div class="week-summary" onclick="toggleSummary()">
           <div class="summary-left">
-            <h3><svg class="icon icon-sm"><use href="#i-chart"/></svg> סיכום שבוע</h3>
+            <h3><svg class="icon icon-sm"><use href="#i-chart"/></svg> סיכום שבוע <svg class="icon-sm sum-chevron"><use href="#i-chevron-down"/></svg></h3>
             <div class="zone-bars">
               <span class="z1" style="flex:3"></span>
               <span class="z2" style="flex:4"></span>
@@ -687,6 +723,7 @@
             </div>
           </div>
           <div class="summary-stats" id="summaryStats"></div>
+          <div class="summary-extra" id="summaryExtra"></div>
         </div>
 
         <!-- ACTIONS -->
@@ -946,13 +983,39 @@
   </div>
 </div>
 
+<!-- MOVE SESSION (click alternative to drag) -->
+<div class="overlay" id="moveOverlay" onclick="if(event.target===this)hideOverlay('moveOverlay')">
+  <div class="confirm-card" style="max-width:380px">
+    <h3><svg class="icon"><use href="#i-repeat"/></svg> <span id="mvTitle"></span></h3>
+    <div class="ev-field">
+      <span class="ev-label">לאיזה יום להעביר</span>
+      <div id="mvDays" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+    </div>
+    <div class="confirm-actions">
+      <button class="btn-copy" onclick="hideOverlay('moveOverlay')">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIBRARY PICKER (from unified day add) -->
+<div class="overlay" id="libPickerOverlay" onclick="if(event.target===this)hideOverlay('libPickerOverlay')">
+  <div class="confirm-card" style="max-width:400px">
+    <h3><svg class="icon"><use href="#i-lib"/></svg> הוספת אימון מהספרייה — <span id="libPickTitle"></span></h3>
+    <div class="picker-search" style="margin-bottom:8px">
+      <svg class="icon icon-sm"><use href="#i-search"/></svg>
+      <input id="libPickSearch" placeholder="חיפוש אימון..." oninput="renderLibPickList()">
+    </div>
+    <div class="lib-pick-list" id="libPickList"></div>
+  </div>
+</div>
+
 <!-- UNDO TOAST -->
 <div class="toast" id="toast">
   <span id="toastLabel"></span>
   <button onclick="undo()">בטל</button>
 </div>
 
-<div class="wf">WIREFRAME v15 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
+<div class="wf">WIREFRAME v16 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -1209,9 +1272,25 @@ let sportFilter = 'all';
 let staffFilter = 'all';
 let sidebarTab = 'library';
 let publishMode = 'single';
+let viewMode = 'pro';       /* 'pro' | 'simple' — progressive disclosure */
+let summaryExpanded = false;
 let detailCtx = null;
 let parsedSteps = null;
 const WEEK_PLANS = {};
+const isPro = () => viewMode === 'pro';
+
+/* view mode — simple hides the depth (WPLAN-17) */
+function renderViewSeg(){
+  $('viewSeg').innerHTML = `
+    <button class="${viewMode==='simple'?'active':''}" onclick="setViewMode('simple')">פשוט</button>
+    <button class="${viewMode==='pro'?'active':''}" onclick="setViewMode('pro')">מקצועי</button>`;
+}
+function setViewMode(v){
+  viewMode = v;
+  renderViewSeg();
+  $('insight').style.display = (isPro() && !$('insight').dataset.hidden) ? '' : 'none';
+  renderMeso(); renderSportFilter(); renderStaffFilter(); renderDays(); updateSummary();
+}
 
 /* publish state per week+target: draft | published | dirty | empty (computed) */
 const weekState = { '42:neorim':'published', '42:maya':'published' };
@@ -1464,6 +1543,18 @@ const relColor = pct => pct>.85 ? '#DC2626' : pct>.6 ? '#F87171' : pct>.4 ? '#FB
 
 function renderMeso(){
   if (mode==='all'){ renderMesoAll(); return; }
+  if (!isPro()){
+    /* simple mode — one line, no periodization depth */
+    const m = MESO_BY_TARGET[mode] || MESO_EMPTY;
+    $('mesoPanel').innerHTML = `
+      <div class="meso-head" style="margin-bottom:0">
+        <svg class="icon"><use href="#i-chart"/></svg>
+        <div style="flex:1">
+          <div class="meso-name">${m.block} <span class="meso-pos">· שבוע ${m.pos} מתוך ${m.to-m.from+1}</span></div>
+        </div>
+      </div>`;
+    return;
+  }
   const m = MESO_BY_TARGET[mode] || MESO_EMPTY;
   const loads = Object.values(m.loads);
   const maxL = Math.max(...loads, 1);
@@ -1595,6 +1686,7 @@ function jumpWeek(v){
 
 /* ==================== SPORT FILTER ==================== */
 function renderSportFilter(){
+  $('sportFilter').style.display = isPro() ? '' : 'none';
   const chips = [`<button class="sf-chip ${sportFilter==='all'?'active':''}" onclick="setSportFilter('all')">הכל</button>`]
     .concat(Object.keys(SPORTS).map(k=>{
       const s = SPORTS[k];
@@ -1678,7 +1770,7 @@ function renderRdPanel(){
 /* ==================== STAFF PICKER (scales to 10-20 instructors) ==================== */
 function renderStaffFilter(){
   const t = TARGET_MAP[mode];
-  $('staffFilter').style.display = (t.type==='group'||t.type==='all') ? '' : 'none';
+  $('staffFilter').style.display = (t.type==='group'||t.type==='all') && isPro() ? '' : 'none';
   if (t.type!=='group' && t.type!=='all') return;
   const cur = STAFF.find(s=>s.id===staffFilter);
   $('staffFilter').innerHTML = `
@@ -1831,7 +1923,9 @@ function badge(kind, group, ov){
   if (ov && ov.type === 'time')   b.push(`<span class="badge b-time"><svg><use href="#i-clock"/></svg> שעה שונתה</span>`);
   return b.join('');
 }
-function aggSport(w){
+let zonesAgg = {};   /* per-zone flex sums — expanded summary */
+let dayLoad = [];    /* per-day load sums — expanded summary */
+function aggSport(w, dayIdx){
   if (!w) return;
   const k = w.sport || 'swim';
   sportAgg[k] = sportAgg[k] || { count:0, meters:0, mins:0, load:0 };
@@ -1839,6 +1933,8 @@ function aggSport(w){
   sportAgg[k].meters += subMeters(w.sub);
   sportAgg[k].mins += subMins(w.sub);
   sportAgg[k].load += w.load || 0;
+  (w.zones||[]).forEach(([f,c])=>{ zonesAgg[c] = (zonesAgg[c]||0) + f; });
+  dayLoad[dayIdx] = (dayLoad[dayIdx]||0) + (w.load||0);
 }
 
 function renderDays(){
@@ -1847,6 +1943,8 @@ function renderDays(){
   const isPast = !editableWeek;
   activeCount = 0;
   sportAgg = {};
+  zonesAgg = {};
+  dayLoad = [0,0,0,0,0,0,0];
   let html = '';
 
   DAYS.forEach((day,i)=>{
@@ -1865,7 +1963,7 @@ function renderDays(){
           const ov = (s.kind==='group') ? ovFor(g.id, i) : null;
           const canceled = ov && ov.type==='cancel';
           const time = (ov && ov.type==='time') ? ov.time : w.time;
-          if (!canceled){ activeCount++; aggSport(w); }
+          if (!canceled){ activeCount++; aggSport(w, i); }
           if (!passes(w) || !coachOk(g.id)) return;
           shown++;
           const actual = isPast && PAST_ACTUAL[g.id] ? PAST_ACTUAL[g.id][i] : null;
@@ -1884,7 +1982,7 @@ function renderDays(){
         if (staffFilter!=='all') return;
         sessionAt(p.id, i).filter(s=>s.kind==='personal').forEach(s=>{
           const w = WORKOUTS[s.wid];
-          activeCount++; aggSport(w);
+          activeCount++; aggSport(w, i);
           if (!passes(w)) return;
           shown++;
           inner += `
@@ -1907,7 +2005,7 @@ function renderDays(){
         const ov = (s.kind==='group' || s.kind==='groupRef') ? ovFor(gid, i) : null;
         const canceled = ov && ov.type==='cancel';
         const time = (ov && ov.type==='time') ? ov.time : w.time;
-        if (!canceled){ activeCount++; aggSport(w); }
+        if (!canceled){ activeCount++; aggSport(w, i); }
         if (!passes(w)) return;
         if (t.type==='group' && !coachOk(mode)) return;
         if (t.type!=='group' && staffFilter!=='all') return;
@@ -1918,13 +2016,13 @@ function renderDays(){
           ? `<button class="sess-menu-btn" title="פעולות" onclick="event.stopPropagation();openSessMenu(event,'${mode}',${i},'${s.wid}','${s.kind}')"><svg class="icon-xs"><use href="#i-more"/></svg></button>` : '';
         const varBadge = (t.type==='group' && w.variants)
           ? `<span class="badge b-personal"><svg><use href="#i-users"/></svg> ${w.variants.length} התאמות אישיות</span>` : '';
-        const applyMeta = (t.type==='group') ? WEEK_APPLY_META[stKey(selectedWeek, mode)] : null;
+        const applyMeta = (t.type==='group' && isPro()) ? WEEK_APPLY_META[stKey(selectedWeek, mode)] : null;
         const srcBadge = applyMeta ? (applyMeta.tplName
           ? `<span class="badge b-fixed"><svg><use href="#i-copy"/></svg> מתבנית: ${applyMeta.tplName}</span>`
           : `<span class="badge b-fixed"><svg><use href="#i-copy"/></svg> מ${TARGET_MAP[applyMeta.from].name} · ${applyMeta.scale*100}%</span>`) : '';
         const confBadge = (confHit(mode, s.wid) || (gid && confHit(gid, s.wid)))
           ? `<span class="badge b-cancel"><svg><use href="#i-alert"/></svg> חפיפה</span>` : '';
-        const coachBadge = (t.type==='group')
+        const coachBadge = (t.type==='group' && isPro())
           ? `<span class="coach-chip"><svg><use href="#i-user"/></svg> מדריך: ${staffName(coachOf(mode,i))}</span>` : '';
         const actual = (isPast && t.type==='group' && PAST_ACTUAL[mode]) ? PAST_ACTUAL[mode][i]
           : (isPast && PAST_ACTUAL_PERSONAL[mode]) ? PAST_ACTUAL_PERSONAL[mode][i] : null;
@@ -1937,8 +2035,8 @@ function renderDays(){
             <div class="session-name"><svg class="icon-xs"><use href="#${sportIcon(w)}"/></svg>${w.name}</div>
             <div class="session-badges">${badge(s.kind, gid, ov)}${varBadge}${confBadge}${coachBadge}${srcBadge}</div>
             <div class="session-sub">${w.sub}</div>
-            <div class="session-zones">${zonesHTML(w.zones)}</div>
-            <div>${loadChip(w)}${actual ? ` <span class="actual-line ${actual.done?'ok':'miss'}" style="display:inline-flex;margin-inline-start:6px"><svg><use href="#${actual.done?'i-check':'i-x'}"/></svg> ${actual.done?`בוצע${actual.att?` · נוכחות ${actual.att}`:(actual.note?` · ${actual.note}`:'')}`:`לא בוצע${actual.note?` · ${actual.note}`:''}`}</span>` : ''}</div>
+            ${isPro() ? `<div class="session-zones">${zonesHTML(w.zones)}</div>` : ''}
+            <div>${isPro() ? loadChip(w) : ''}${actual ? ` <span class="actual-line ${actual.done?'ok':'miss'}" style="display:inline-flex;margin-inline-start:6px"><svg><use href="#${actual.done?'i-check':'i-x'}"/></svg> ${actual.done?`בוצע${actual.att?` · נוכחות ${actual.att}`:(actual.note?` · ${actual.note}`:'')}`:`לא בוצע${actual.note?` · ${actual.note}`:''}`}</span>` : ''}</div>
           </div>`;
       });
 
@@ -1974,22 +2072,15 @@ function renderDays(){
       }
     });
 
-    const canAddEvent = !isPast && mode!=='all';
-    const canAddWorkout = canAddEvent && sportFilter==='all' && staffFilter==='all';
+    /* unified day add — click the day card itself */
+    const canAdd = !isPast && mode!=='all';
     if (!shown){
-      if (canAddEvent){
-        inner = `<div class="day-adds">
-          ${canAddWorkout ? `<button class="day-add" style="flex:1" onclick="quickAdd(${i})"><svg class="icon icon-xs"><use href="#i-plus"/></svg> אימון</button>` : ''}
-          <button class="day-evadd" onclick="openEventDialog(${i})"><svg class="icon-xs"><use href="#i-calendar"/></svg> אירוע</button>
-        </div>`;
-      } else {
-        inner = inner || `<div class="day-empty">—</div>`;
-      }
-    } else if (canAddEvent){
-      inner += `<button class="day-evadd" style="margin-top:auto" onclick="openEventDialog(${i})"><svg class="icon-xs"><use href="#i-calendar"/></svg> אירוע</button>`;
+      inner = canAdd
+        ? `<div class="day-add-hint"><svg><use href="#i-plus"/></svg>הוסף אימון או אירוע</div>`
+        : (inner || `<div class="day-empty">—</div>`);
     }
     html += `
-      <div class="day-card${today}" data-day="${i}">
+      <div class="day-card${today}${canAdd?' clickable':''}" data-day="${i}"${canAdd?` onclick="openDayAdd(event,${i})"`:''}>
         <div class="day-head"><span class="day-name">${day.l}</span><span class="day-num">${day.d}.10</span></div>
         ${inner}
       </div>`;
@@ -2014,6 +2105,7 @@ function updateSummary(){
   const totalLoad = keys.reduce((sum,k)=>sum + sportAgg[k].load, 0);
   const target = LOAD_TARGET[mode];
   const isPast = !isCurrentWeek() && !isFutureWeek();
+  const pro = isPro();
 
   let loadHtml = '';
   if (isPast){
@@ -2026,22 +2118,22 @@ function updateSummary(){
       doneCount = Object.values(PAST_ACTUAL[mode]).filter(a=>a.done).length;
     }
     loadHtml = `<span class="target-chip"><svg style="color:var(--text-faint)"><use href="#i-chart"/></svg> תוכנן <b>${activeCount}</b> · בוצע <b>${doneCount}</b></span>`;
-  } else if (target){
+  } else if (target && pro){
     const pct = Math.min(100, Math.round(totalLoad/target*100));
     const m = MESO_BY_TARGET[mode];
     const srcTxt = m ? ` title="מקור היעד: ${m.block} · שבוע ${m.pos} מתוך ${m.to-m.from+1} (מחושב מנפח הפתיחה וקצב העלייה)"` : '';
     loadHtml = `<span class="target-chip"${srcTxt}><svg style="color:var(--accent)"><use href="#i-zap"/></svg> עומס <b>${totalLoad}</b> / יעד ${target} <span class="target-bar"><span style="width:${pct}%"></span></span></span>`;
     if (m) loadHtml += ` <span class="sport-chip" style="padding:4px 10px;font-size:11px"><svg style="color:var(--text-faint)"><use href="#i-chart"/></svg> מקור: ${m.block} · ${m.pos}/${m.to-m.from+1}</span>`;
-  } else {
+  } else if (pro){
     loadHtml = `<span class="target-chip"><svg style="color:var(--accent)"><use href="#i-zap"/></svg> עומס כולל <b>${totalLoad}</b></span>`;
   }
 
-  const compareHtml = isPast ? '' :
+  const compareHtml = (isPast || !pro) ? '' :
     `<span class="sport-chip"><svg style="color:var(--text-faint)"><use href="#i-chart"/></svg> מול שבוע 33 (בלוח קודם): עומס +9%</span>`;
 
   const t = TARGET_MAP[mode];
   let hoursHtml = '';
-  if (t.type==='group' || t.type==='all'){
+  if (pro && (t.type==='group' || t.type==='all')){
     const h = staffHours();
     const parts = Object.keys(h).map(id=>`${staffName(id)} <b>${h[id].toFixed(1)}</b>`).join(' · ');
     hoursHtml = `<span class="hours-chip"><svg><use href="#i-clock"/></svg> שעות הוראה: ${parts}</span>`;
@@ -2049,6 +2141,54 @@ function updateSummary(){
 
   $('summaryStats').innerHTML =
     loadHtml + chips + compareHtml + hoursHtml + `<span class="summary-stat"><b>${activeCount}</b> אימונים</span>`;
+
+  if (summaryExpanded) renderSummaryExtra();
+}
+
+/* ==================== EXPANDED SUMMARY — click for deep analysis ==================== */
+function toggleSummary(){
+  summaryExpanded = !summaryExpanded;
+  renderSummaryExtra();
+}
+function renderSummaryExtra(){
+  const card = document.querySelector('.week-summary');
+  const el = $('summaryExtra');
+  if (!summaryExpanded){ card.classList.remove('expanded'); el.innerHTML = ''; return; }
+  card.classList.add('expanded');
+
+  /* zone distribution with percentages */
+  const zt = Object.values(zonesAgg).reduce((a,b)=>a+b, 0) || 1;
+  const zoneRows = ['z1','z2','z3','z4','z5'].map(z=>{
+    if (!zonesAgg[z]) return '';
+    const pct = Math.round(zonesAgg[z]/zt*100);
+    return `<div class="zone-line"><span style="min-width:24px">${z.toUpperCase()}</span>
+      <span class="bar"><span class="${z}" style="width:${pct}%"></span></span>
+      <span class="pct">${pct}%</span></div>`;
+  }).join('');
+
+  /* load per day */
+  const maxL = Math.max(...dayLoad, 1);
+  const dayBars = dayLoad.map((v,i)=>
+    `<div class="daybar"><div class="b" style="height:${Math.max(2, Math.round(v/maxL*44))}px;opacity:${v?1:.25}"></div>${DAYS[i].l}</div>`).join('');
+
+  /* vs previous week — from the block's load plan */
+  const m = MESO_BY_TARGET[mode];
+  let vsPrev = '<div class="sum-note">אין נתוני השוואה לשבוע הקודם</div>';
+  if (m && m.loads && m.loads[selectedWeek-1] && m.loads[selectedWeek]){
+    const d = Math.round((m.loads[selectedWeek]-m.loads[selectedWeek-1])/m.loads[selectedWeek-1]*100);
+    vsPrev = `<div class="sum-note">עומס מתוכנן: <span class="${d<=0?'delta-pos':'delta-neg'}">${d>0?'+':''}${d}%</span> מול שבוע ${selectedWeek-1}<br>מטרת הבלוק: ${m.goal}</div>`;
+  }
+
+  /* intensity balance */
+  let q=0, md=0, l=0;
+  dayLoad.forEach(v=>{ if (v>=100) q++; else if (v>=60) md++; else if (v>0) l++; });
+  const bal = `<div class="sum-note">איכות: <b>${q}</b> · בינוני: <b>${md}</b> · קל: <b>${l}</b><br>${q>l ? 'רוב האימונים בעומס גבוה — שקול עוד אימוני בסיס קלים (80/20)' : 'איזון תקין — רוב האימונים קלים (80/20)'}</div>`;
+
+  el.innerHTML = `
+    <div class="sum-tile"><h4><svg><use href="#i-chart"/></svg> פילוח אזורי עוצמה</h4>${zoneRows || '<div class="sum-note">אין נתוני אזורים</div>'}</div>
+    <div class="sum-tile"><h4><svg><use href="#i-zap"/></svg> עומס לפי יום</h4><div class="daybar-row">${dayBars}</div></div>
+    <div class="sum-tile"><h4><svg><use href="#i-calendar"/></svg> מול שבוע קודם</h4>${vsPrev}</div>
+    <div class="sum-tile"><h4><svg><use href="#i-bulb"/></svg> איזון אינטנסיביות</h4>${bal}</div>`;
 }
 
 /* ==================== DROP TARGETS ==================== */
@@ -2112,7 +2252,7 @@ function openSessMenu(e, targetId, dayIdx, wid, kind){
   if (canEdit){
     items.push(`<div class="sm-item" onclick="closeSessMenu();openTimeDialog('${targetId}',${dayIdx},'${wid}','${kind}')"><svg class="icon-xs"><use href="#i-clock"/></svg> שנה שעה</div>`);
     if (kind==='group') items.push(`<div class="sm-item" onclick="closeSessMenu();cancelSession('${targetId}',${dayIdx})"><svg class="icon-xs"><use href="#i-x"/></svg> בטל אימון</div>`);
-    items.push(`<div class="sm-item" onclick="closeSessMenu();alert('WIREFRAME — גרור את האימון ליום אחר בלוח')"><svg class="icon-xs"><use href="#i-repeat"/></svg> העבר ליום אחר (גרור)</div>`);
+    items.push(`<div class="sm-item" onclick="closeSessMenu();openMoveDialog('${targetId}',${dayIdx},'${wid}')"><svg class="icon-xs"><use href="#i-repeat"/></svg> העבר ליום אחר</div>`);
     items.push(`<div class="sm-item" onclick="closeSessMenu();openCopyWorkoutDialog('${targetId}',${dayIdx},'${wid}','${kind}')"><svg class="icon-xs"><use href="#i-copy"/></svg> העתק אימון...</div>`);
     items.push(`<div class="sm-item danger" onclick="closeSessMenu();deleteSession('${targetId}',${dayIdx},'${kind}','${wid}')"><svg class="icon-xs"><use href="#i-x"/></svg> מחק</div>`);
   }
@@ -2871,7 +3011,83 @@ function saveSkeleton(){
   });
 }
 
+/* ==================== UNIFIED DAY ADD — click the day card ==================== */
+let dayAddEl = null;
+function openDayAdd(e, day){
+  if (e.target.closest && e.target.closest('.day-session,.event-chip,.skel,.sess-menu-btn')) return;
+  closeDayAdd();
+  dayAddEl = document.createElement('div');
+  dayAddEl.className = 'sess-menu';
+  dayAddEl.innerHTML = `
+    <div class="sm-item" onclick="closeDayAdd();quickAdd(${day})"><svg class="icon-xs"><use href="#i-waves"/></svg> אימון — כתיבה מהירה</div>
+    <div class="sm-item" onclick="closeDayAdd();openLibPicker(${day})"><svg class="icon-xs"><use href="#i-lib"/></svg> אימון מהספרייה</div>
+    <div class="sm-item" onclick="closeDayAdd();openEventDialog(${day})"><svg class="icon-xs"><use href="#i-calendar"/></svg> אירוע — תחרות / מבחן / אישי</div>`;
+  document.body.appendChild(dayAddEl);
+  const r = e.currentTarget.getBoundingClientRect();
+  dayAddEl.style.top = (r.top + 34) + 'px';
+  dayAddEl.style.left = Math.max(8, r.right - 210) + 'px';
+  e.stopPropagation();
+}
+function closeDayAdd(){ if (dayAddEl){ dayAddEl.remove(); dayAddEl = null; } }
+document.addEventListener('click', e=>{
+  if (dayAddEl && (!e.target.closest || !e.target.closest('.sess-menu'))) closeDayAdd();
+});
+
+/* library picker — click-to-add (no drag required) */
+let libPickDay = 0;
+function openLibPicker(day){
+  libPickDay = day;
+  $('libPickTitle').innerHTML = `${DAYS[day].l}׳ · ${DAYS[day].d}.10`;
+  $('libPickSearch').value = '';
+  renderLibPickList();
+  showOverlay('libPickerOverlay');
+}
+function renderLibPickList(){
+  const q = ($('libPickSearch').value||'').trim();
+  const items = LIBRARY.filter(l=>!q || l.name.includes(q) || l.sub.includes(q));
+  $('libPickList').innerHTML = items.map(l=>`
+    <div class="lib-pick-item" onclick="pickLib(this.dataset.name)" data-name="${l.name}">
+      <svg class="icon-sm"><use href="#${(SPORTS[l.sport]||SPORTS.swim).icon}"/></svg>
+      <span style="flex:1">${l.name} <span class="staff-hours">${l.sub}</span></span>
+    </div>`).join('')
+    || `<div style="text-align:center;color:var(--text-faint);padding:14px">אין תוצאות</div>`;
+}
+function pickLib(name){
+  const lib = LIBRARY.find(l=>l.name===name);
+  if (!lib) return;
+  const t = TARGET_MAP[mode];
+  withUndo('האימון נוסף ליום', ()=>{
+    const id = 'c' + Date.now();
+    WORKOUTS[id] = { name:lib.name, time:'18:00', sub:lib.sub, zones:lib.zones, steps:S_GEN, sport:lib.sport||'swim', text:'', load:75 };
+    if (t.type==='group') addToDay(planForWeek()[mode], libPickDay, id);
+    else addToDay(PERSONAL[mode], libPickDay, id);
+    hideOverlay('libPickerOverlay');
+    markDirty(); renderDays();
+  });
+}
+
+/* ==================== MOVE BY CLICK (drag alternative) ==================== */
+let mvCtx = null;
+function openMoveDialog(targetId, dayIdx, wid){
+  mvCtx = { targetId, dayIdx, wid };
+  $('mvTitle').innerHTML = `העברת אימון — ${WORKOUTS[wid].name}`;
+  $('mvDays').innerHTML = DAYS.map((d,i)=>
+    `<button class="sf-chip" style="${i===dayIdx?'opacity:.35;pointer-events:none':''}" onclick="moveSessionTo(${i})">${d.l}׳</button>`).join('');
+  showOverlay('moveOverlay');
+}
+function moveSessionTo(day){
+  const t = TARGET_MAP[mvCtx.targetId];
+  const src = t.type==='group' ? planForWeek()[t.id] : PERSONAL[t.id];
+  withUndo('האימון הועבר בין ימים', ()=>{
+    removeFromDay(src, mvCtx.dayIdx, mvCtx.wid);
+    addToDay(src, day, mvCtx.wid);
+    hideOverlay('moveOverlay');
+    markDirty(); renderDays();
+  });
+}
+
 /* ==================== INIT ==================== */
+renderViewSeg();
 renderPickerBtn();
 renderCats();
 renderLibrary();
