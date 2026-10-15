@@ -303,6 +303,19 @@
   .precise-toggle.on{border-color:var(--accent);background:var(--accent-dim);color:var(--accent);}
   .nutr-qty{width:100%;margin-top:4px;border:1px dashed var(--border);border-radius:8px;padding:5px 8px;background:var(--bg);color:var(--text);font-family:inherit;font-size:10px;font-weight:700;outline:none;}
   .nutr-qty:focus{border-color:var(--accent);}
+  /* ==================== PRECISE NUTRITION — food items, photos, totals ==================== */
+  .meal-item{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px dashed var(--border);}
+  .meal-item:last-of-type{border-bottom:none;}
+  .meal-n{flex:1;font-size:11px;font-weight:700;line-height:1.3;min-width:0;}
+  .meal-q{width:52px;border:1px solid var(--border);border-radius:8px;padding:4px 6px;background:var(--bg);color:var(--text);font-family:inherit;font-size:10.5px;outline:none;text-align:center;flex-shrink:0;}
+  .meal-u{font-size:9.5px;color:var(--text-faint);font-weight:800;flex-shrink:0;}
+  .meal-m{font-size:9.5px;color:var(--text-muted);font-weight:700;flex-shrink:0;text-align:left;}
+  .meal-x{border:none;background:transparent;color:var(--text-faint);cursor:pointer;padding:2px;flex-shrink:0;}
+  .meal-x:hover{color:var(--danger);}
+  .meal-tot{display:flex;justify-content:space-between;align-items:center;background:var(--accent-dim);color:var(--accent);border-radius:8px;padding:6px 10px;font-size:10.5px;font-weight:800;margin-top:6px;gap:8px;flex-wrap:wrap;}
+  .photo-btn{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;padding:7px;border:1px dashed var(--border);border-radius:10px;background:transparent;color:var(--text-muted);font-size:10.5px;font-weight:800;cursor:pointer;margin-top:6px;font-family:inherit;}
+  .photo-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .meal-photo{width:100%;max-height:120px;object-fit:cover;border-radius:10px;margin-top:6px;display:block;}
 
   .wf{font-size:10px;color:#94A3B8;font-weight:700;}
 </style>
@@ -359,7 +372,7 @@
   <div class="sheet" id="sheetBox"></div>
 </div>
 
-<div class="wf">WIREFRAME v9 — BLUE FITNESS · Athlete App · WPLAN-19</div>
+<div class="wf">WIREFRAME v10 — BLUE FITNESS · Athlete App · WPLAN-19</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -605,14 +618,34 @@ const ATH = {
         nutrition:{
           precise:true,
           blocks:[
-            { when:'ערב לפני · ארוחה', what:'אורז + עוף — קל', qty:'120 גרם פחמימה' },
-            { when:'בוקר · ארוחה', what:'שיבולת שיבולת + קפה + בננה', qty:'80 גרם פחמימה' },
-            { when:'1 שעה לפני זינוק', what:'מלחים + חצי ליטר מים', qty:'1 שקיק מלח · 500 מ"ל' },
-            { when:'15 דק׳ לפני זינוק', what:'ג\'ל עם קפאין', qty:'25 גרם פחמימה' },
-            { when:'רכיבה', what:'איזוטוני — לגמור בקבוק תוך כדי', qty:'750 מ"ל' },
-            { when:'ריצה · 2 ק"מ', what:'ג\'ל', qty:'25 גרם פחמימה' },
-            { when:'ריצה · 7 ק"מ', what:'ג\'ל', qty:'25 גרם פחמימה' },
-            { when:'אחרי · התאוששות', what:'חטיף חלבון + קולה', qty:'20 גרם חלבון' },
+            { when:'ערב לפני · ארוחה', what:'אורז + עוף', items:[
+              { n:'אורז לבן מבושל', qty:250, u:'גרם', m:{k:1.30,c:0.28,p:0.03,f:0.003} },
+              { n:'חזה עוף מבושל', qty:150, u:'גרם', m:{k:1.65,c:0,p:0.31,f:0.04} },
+            ]},
+            { when:'בוקר · ארוחה', what:'שיבולת + בננה + קפה', items:[
+              { n:'שיבולת שיבולת (גרם)', qty:80, u:'גרם', m:{k:3.67,c:0.61,p:0.13,f:0.07} },
+              { n:'בננה', qty:1, u:'יחידה', m:{k:105,c:27,p:1.3,f:0.4} },
+            ]},
+            { when:'1 שעה לפני זינוק', what:'מלחים + חצי ליטר מים', items:[
+              { n:'שקיק מלחים', qty:1, u:'יחידה', m:{k:0,c:0,p:0,f:0} },
+              { n:'מים', qty:500, u:'מ"ל', m:{k:0,c:0,p:0,f:0} },
+            ]},
+            { when:'15 דק׳ לפני זינוק', what:'ג\'ל עם קפאין', items:[
+              { n:'ג\'ל SIS GO + קפאין', qty:1, u:'יחידה', m:{k:87,c:22,p:0,f:0} },
+            ]},
+            { when:'רכיבה', what:'איזוטוני — לגמור בקבוק תוך כדי', items:[
+              { n:'איזוטוני ISOSTAR', qty:750, u:'מ"ל', m:{k:0.24,c:0.06,p:0,f:0} },
+            ]},
+            { when:'ריצה · 2 ק"מ', what:'ג\'ל', items:[
+              { n:'ג\'ל SIS GO Energy', qty:1, u:'יחידה', m:{k:87,c:22,p:0,f:0} },
+            ]},
+            { when:'ריצה · 7 ק"מ', what:'ג\'ל', items:[
+              { n:'ג\'ל SIS GO Energy', qty:1, u:'יחידה', m:{k:87,c:22,p:0,f:0} },
+            ]},
+            { when:'אחרי · התאוששות', what:'חטיף חלבון + קולה', items:[
+              { n:'חטיף חלבון', qty:1, u:'יחידה', m:{k:200,c:16,p:20,f:6} },
+              { n:'קולה', qty:330, u:'מ"ל', m:{k:0.42,c:0.106,p:0,f:0} },
+            ]},
           ],
         },
         races:[
@@ -1070,7 +1103,23 @@ function renderWizard(){
             <input class="nutr-what" value="${n.what}" placeholder="מה? למשל: פסטה / ג'ל / איזוטוני" oninput="getComp('${wiz.comp}').nutrition.blocks[${ni}].what=this.value">
             <button class="nutr-x" onclick="delNutrRow(${ni})"><svg class="icon-xs"><use href="#i-x"/></svg></button>
           </div>
-          ${c.nutrition.precise ? `<input class="nutr-qty" value="${n.qty||''}" placeholder='כמות וערכים — למשל: 25 גרם פחמימה · 500 מ"ל' oninput="getComp('${wiz.comp}').nutrition.blocks[${ni}].qty=this.value">` : ''}
+          ${c.nutrition.precise ? `
+            ${(n.items||[]).map((it,ii)=>`
+              <div class="meal-item">
+                <span class="meal-n">${it.n}</span>
+                <input class="meal-q" value="${it.qty}" onchange="setMealQty(${ni},${ii},this.value)">
+                <span class="meal-u">${it.u}</span>
+                <span class="meal-m">${itemMacros(it)}</span>
+                <button class="meal-x" onclick="delMealItem(${ni},${ii})"><svg class="icon-xs"><use href="#i-x"/></svg></button>
+              </div>`).join('')}
+            ${(n.items && n.items.length) ? `<div class="meal-tot"><span>סה"כ ארוחה</span><span>${mealTotals(n)}</span></div>` : ''}
+            ${n.photo ? `<img class="meal-photo" src="${n.photo}">` : ''}
+            <button class="photo-btn" onclick="document.getElementById('ph-${ni}').click()">
+              <svg class="icon-xs"><use href="#i-plus"/></svg> ${n.photo ? 'החלפת תמונה' : 'צרף תמונת ארוחה — לזיהוי אוטומטי'}
+            </button>
+            <input type="file" accept="image/*" id="ph-${ni}" style="display:none" onchange="addPhoto(${ni},this)">
+            <button class="add-mini" style="margin-top:6px" onclick="openFoodAdd(${ni})"><svg><use href="#i-plus"/></svg> הוסף מזון / מוצר (גרם · מותג)</button>
+          ` : ''}
           ${n.prob?`<div class="prob-note"><svg><use href="#i-alert"/></svg> מהפעם הקודמת: ${n.prob}</div>`:''}
         </div>`).join('') +
       `<button class="add-mini" onclick="addNutrRow()"><svg><use href="#i-plus"/></svg> הוסף בלוק — ארוחה / ג'ל / נוזלים / התאוששות</button>`;
@@ -1264,10 +1313,83 @@ function togglePrecise(){
   c.nutrition.precise = !c.nutrition.precise;
   renderJournal();
 }
+
+/* ==================== PRECISE NUTRITION — MyFitnessPal-style ==================== */
+const FOOD_DB = [
+  { n:'פסטה מבושלת', u:'גרם', m:{k:1.58,c:0.31,p:0.06,f:0.01} },
+  { n:'אורז לבן מבושל', u:'גרם', m:{k:1.30,c:0.28,p:0.03,f:0.003} },
+  { n:'חזה עוף מבושל', u:'גרם', m:{k:1.65,c:0,p:0.31,f:0.04} },
+  { n:'בננה', u:'יחידה', m:{k:105,c:27,p:1.3,f:0.4} },
+  { n:'שיבולת שיבולת (גרם)', u:'גרם', m:{k:3.67,c:0.61,p:0.13,f:0.07} },
+  { n:'טוסט קמח מלא (פרוסה)', u:'יחידה', m:{k:80,c:13,p:4,f:1} },
+  { n:'גבינה לבנה 5%', u:'גרם', m:{k:0.96,c:0.035,p:0.12,f:0.05} },
+  { n:'ג\'ל SIS GO Energy', u:'יחידה', m:{k:87,c:22,p:0,f:0} },
+  { n:'ג\'ל SIS GO + קפאין', u:'יחידה', m:{k:87,c:22,p:0,f:0} },
+  { n:'איזוטוני ISOSTAR', u:'מ"ל', m:{k:0.24,c:0.06,p:0,f:0} },
+  { n:'שקיק מלחים', u:'יחידה', m:{k:0,c:0,p:0,f:0} },
+  { n:'מים', u:'מ"ל', m:{k:0,c:0,p:0,f:0} },
+  { n:'חטיף חלבון', u:'יחידה', m:{k:200,c:16,p:20,f:6} },
+  { n:'קולה', u:'מ"ל', m:{k:0.42,c:0.106,p:0,f:0} },
+];
+function itemMacros(it){
+  const k=Math.round(it.qty*it.m.k), c=Math.round(it.qty*it.m.c), p=Math.round(it.qty*it.m.p);
+  const parts = [];
+  if (c) parts.push(c+' ג\' פח\'');
+  if (p) parts.push(p+' ג\' חל\'');
+  if (k) parts.push(k+' קל\'');
+  return parts.join(' · ') || '—';
+}
+function mealTotals(n){
+  let k=0,c=0,p=0;
+  (n.items||[]).forEach(it=>{ k+=it.qty*it.m.k; c+=it.qty*it.m.c; p+=it.qty*it.m.p; });
+  return `${Math.round(k)} קל' · ${Math.round(c)} ג' פחמימה · ${Math.round(p)} ג' חלבון`;
+}
+function setMealQty(ni,ii,v){ const c=getComp(wiz.comp); const it=c.nutrition.blocks[ni].items[ii]; it.qty=+v||0; renderJournal(); }
+function delMealItem(ni,ii){ const c=getComp(wiz.comp); c.nutrition.blocks[ni].items.splice(ii,1); renderJournal(); }
+function addPhoto(ni,el){
+  const f = el.files && el.files[0];
+  if (!f) return;
+  const rd = new FileReader();
+  rd.onload = e => { getComp(wiz.comp).nutrition.blocks[ni].photo = e.target.result; renderJournal(); };
+  rd.readAsDataURL(f);
+}
+let foodCtx = 0;
+function openFoodAdd(ni){
+  foodCtx = ni;
+  openSheet(`
+    <div class="sh-grip"></div>
+    <div class="sh-title"><svg class="icon"><use href="#i-plus"/></svg> הוספת מזון / מוצר לארוחה</div>
+    <div class="picker-search" style="margin:10px 0 8px;">
+      <svg class="icon icon-sm"><use href="#i-search"/></svg>
+      <input id="foodQ" placeholder="חיפוש — פסטה, עוף, ג'ל SIS..." oninput="renderFoodList()">
+    </div>
+    <div class="lib-pick-list" id="foodList" style="max-height:240px;"></div>
+    <button class="sh-close" onclick="closeSheet()">סגור</button>
+  `);
+  renderFoodList();
+}
+function renderFoodList(){
+  const q = ($('foodQ').value||'').trim();
+  $('foodList').innerHTML = FOOD_DB.map((f,i)=>({f,i})).filter(({f})=>!q || f.n.includes(q)).map(({f,i})=>`
+    <div class="lib-pick-item" onclick="pickFood(${i})">
+      <svg class="icon-sm" style="color:var(--accent)"><use href="#i-plus"/></svg>
+      <span style="flex:1">${f.n}<br><span class="staff-hours">${f.u==='יחידה' ? 'ליחידה' : 'לפי 100 '+f.u}: ${Math.round(f.m.c*(f.u==='יחידה'?1:100))} ג' פח' · ${Math.round(f.m.p*(f.u==='יחידה'?1:100))} ג' חל' · ${Math.round(f.m.k*(f.u==='יחידה'?1:100))} קל'</span></span>
+    </div>`).join('') || `<div style="text-align:center;color:var(--text-faint);font-size:12px;padding:14px">אין תוצאות</div>`;
+}
+function pickFood(idx){
+  const f = FOOD_DB[idx];
+  const c = getComp(wiz.comp);
+  const blk = c.nutrition.blocks[foodCtx];
+  blk.items = blk.items || [];
+  const qty = f.u==='יחידה' ? 1 : 100;
+  blk.items.push({ n:f.n, qty, u:f.u, m:Object.assign({},f.m) });
+  closeSheet();
+  renderJournal();
+}
 function addNutrRow(){
   const c = getComp(wiz.comp);
   c.nutrition.blocks = c.nutrition.blocks || [];
-  c.nutrition.blocks.push({ when:'מתי?', what:'מה?', qty:'' });
+  c.nutrition.blocks.push({ when:'מתי?', what:'מה?', items: c.nutrition.precise ? [] : undefined });
   renderJournal();
 }
 function delNutrRow(ni){
