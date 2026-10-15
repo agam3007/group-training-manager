@@ -474,6 +474,29 @@
   .lib-pick-item:hover{background:var(--surface-hover);}
   .lib-pick-item svg{color:var(--text-faint);}
 
+  /* ==================== VIEW MODE TOGGLE (sliding) ==================== */
+  .vm-toggle{position:relative;display:inline-flex;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:3px;box-shadow:var(--shadow-md);}
+  .vm-slider{position:absolute;top:3px;bottom:3px;inset-inline-start:3px;width:calc(50% - 4px);background:var(--accent);border-radius:11px;transition:transform .25s cubic-bezier(.4,0,.2,1);}
+  .vm-toggle.pro .vm-slider{transform:translateX(-100%);}
+  .vm-opt{position:relative;z-index:1;border:none;background:transparent;padding:8px 14px;font-size:12.5px;font-weight:800;color:var(--text-muted);cursor:pointer;min-width:78px;font-family:inherit;transition:color .2s;display:flex;align-items:center;justify-content:center;gap:5px;}
+  .vm-toggle.simple .vm-opt[data-v="simple"]{color:var(--accent-text);}
+  .vm-toggle.pro .vm-opt[data-v="pro"]{color:var(--accent-text);}
+  .vm-opt svg{width:13px;height:13px;}
+
+  /* simple mode — bigger, calmer, fewer choices */
+  body.simple .session-name{font-size:14px;}
+  body.simple .session-time{font-size:12px;}
+  body.simple .day-name{font-size:15px;}
+  body.simple .day-num{font-size:12px;}
+  body.simple .day-card{min-height:172px;}
+  body.simple .day-add-hint{font-size:13px;}
+  body.simple .sport-chip,body.simple .summary-stat{font-size:13px;}
+  body.simple .sched-meta,body.simple .week-note{font-size:13.5px;}
+  .beginner-hint{display:none;background:var(--accent-dim);border:1px solid var(--accent);border-radius:14px;padding:12px 16px;margin-bottom:14px;font-size:13px;font-weight:700;color:var(--accent);align-items:center;gap:14px;flex-wrap:wrap;}
+  body.simple .beginner-hint.show{display:flex;}
+  .beginner-hint .step{display:flex;align-items:center;gap:7px;}
+  .beginner-hint .n{width:20px;height:20px;border-radius:50%;background:var(--accent);color:var(--accent-text);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+
   /* Zone colors — intensity ladder, no purple */
   .z1{background:#84CC16;} .z2{background:#38BDF8;} .z3{background:#FBBF24;} .z4{background:#F87171;} .z5{background:#DC2626;}
 </style>
@@ -639,11 +662,19 @@
           </div>
           <button title="שבוע הבא" onclick="shiftWeek(1)"><svg class="icon icon-sm"><use href="#i-chevron-left"/></svg></button>
         </div>
-        <div class="seg" id="viewSeg" title="מצב תצוגה"></div>
+        <div class="vm-toggle simple" id="viewSeg" title="מצב תצוגה"></div>
       </div>
     </div>
 
     <div class="sched-meta" id="schedMeta"></div>
+
+    <!-- BEGINNER HINT — simple mode, empty week -->
+    <div class="beginner-hint" id="beginnerHint">
+      <span style="display:flex;align-items:center;gap:6px"><svg class="icon-sm"><use href="#i-bulb"/></svg> מתחילים?</span>
+      <span class="step"><span class="n">1</span> הגדירי לוז קבוע</span>
+      <span class="step"><span class="n">2</span> הוסיפי אימונים — לחיצה על יום</span>
+      <span class="step"><span class="n">3</span> פרסמי לקבוצה</span>
+    </div>
 
     <div class="week-note" id="weekNoteBox"></div>
 
@@ -728,6 +759,10 @@
 
         <!-- ACTIONS -->
         <div class="plan-actions">
+          <button class="btn-copy" id="copyPrevBtn" onclick="copyPrevSimple()">
+            <svg class="icon icon-sm"><use href="#i-copy"/></svg>
+            העתק משבוע קודם
+          </button>
           <button class="btn-copy" id="copyHubBtn" onclick="openCopyDialog()">
             <svg class="icon icon-sm"><use href="#i-copy"/></svg>
             העתקה / החלה...
@@ -1015,7 +1050,7 @@
   <button onclick="undo()">בטל</button>
 </div>
 
-<div class="wf">WIREFRAME v16 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
+<div class="wf">WIREFRAME v17 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -1279,17 +1314,35 @@ let parsedSteps = null;
 const WEEK_PLANS = {};
 const isPro = () => viewMode === 'pro';
 
-/* view mode — simple hides the depth (WPLAN-17) */
+/* view mode — simple is a different board, not just a hidden one (WPLAN-17) */
 function renderViewSeg(){
-  $('viewSeg').innerHTML = `
-    <button class="${viewMode==='simple'?'active':''}" onclick="setViewMode('simple')">פשוט</button>
-    <button class="${viewMode==='pro'?'active':''}" onclick="setViewMode('pro')">מקצועי</button>`;
+  const seg = $('viewSeg');
+  seg.className = 'vm-toggle ' + viewMode;
+  seg.innerHTML = `
+    <div class="vm-slider"></div>
+    <button class="vm-opt" data-v="simple" onclick="setViewMode('simple')"><svg><use href="#i-user"/></svg> פשוט</button>
+    <button class="vm-opt" data-v="pro" onclick="setViewMode('pro')"><svg><use href="#i-chart"/></svg> מקצועי</button>`;
 }
 function setViewMode(v){
   viewMode = v;
+  document.body.classList.toggle('simple', v==='simple');
   renderViewSeg();
   $('insight').style.display = (isPro() && !$('insight').dataset.hidden) ? '' : 'none';
-  renderMeso(); renderSportFilter(); renderStaffFilter(); renderDays(); updateSummary();
+  renderMeso(); renderSportFilter(); renderStaffFilter(); renderDays(); updateSummary(); updateActions();
+}
+function renderBeginnerHint(){
+  const show = !isPro() && selectedWeek>=42 && mode!=='all' && targetState(selectedWeek, mode)==='empty';
+  $('beginnerHint').classList.toggle('show', show);
+}
+/* simple mode — one-click copy from previous week, no hub */
+function copyPrevSimple(){
+  const t = TARGET_MAP[mode];
+  if (t.type !== 'group'){ alert('WIREFRAME — העתקה פשוטה זמינה לקבוצות'); return; }
+  withUndo('הועתק משבוע קודם', ()=>{
+    planForWeek()[mode] = Object.assign({}, planForWeekAt(selectedWeek-1)[mode] || {});
+    renderDays();
+    markDirty();
+  });
 }
 
 /* publish state per week+target: draft | published | dirty | empty (computed) */
@@ -1723,7 +1776,7 @@ function renderReadiness(){
     ${chip('draft','טיוטה','rs-draft')}
     ${chip('published','פורסם','rs-published')}
     <button class="rd-sum" onclick="toggleRdPanel('all')">כל היעדים <b>${total}</b></button>
-    ${ready ? `<button class="btn-bulk" onclick="bulkPublish()"><svg class="icon-xs"><use href="#i-send"/></svg> פרסם הכל שמוכן (${ready})</button>` : ''}`;
+    ${ready && isPro() ? `<button class="btn-bulk" onclick="bulkPublish()"><svg class="icon-xs"><use href="#i-send"/></svg> פרסם הכל שמוכן (${ready})</button>` : ''}`;
   ensureRdPanel();
   renderRdPanel();
 }
@@ -2088,6 +2141,7 @@ function renderDays(){
   $('days').innerHTML = html;
   bindDrop();
   updateSummary();
+  renderBeginnerHint();
 }
 
 /* ==================== SUMMARY — load target, sports, compare, actual ==================== */
@@ -2531,7 +2585,8 @@ function updateActions(){
   pub.classList.remove('published','dirty');
   const showPub = editableWeek && (t.type==='group' || t.type==='personal');
   pub.style.display = showPub ? '' : 'none';
-  $('copyHubBtn').style.display = (editableWeek && t.type!=='all') ? '' : 'none';
+  $('copyHubBtn').style.display = (editableWeek && t.type!=='all' && isPro()) ? '' : 'none';
+  $('copyPrevBtn').style.display = (editableWeek && t.type==='group' && !isPro()) ? '' : 'none';
 
   const note = $('publishNote');
   if (!showPub){ note.innerHTML=''; return; }
