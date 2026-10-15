@@ -238,6 +238,25 @@
   .routine-sec{font-size:10.5px;font-weight:800;color:var(--text-faint);letter-spacing:.3px;margin:11px 0 3px;display:flex;align-items:center;gap:5px;}
   .routine-sec svg{width:12px;height:12px;}
 
+  /* ==================== RACE PLAN — athlete edits + coach annotations ==================== */
+  .plan-ath{margin-top:4px;font-size:10.5px;font-weight:700;color:var(--teal);display:flex;gap:4px;align-items:flex-start;line-height:1.5;}
+  .plan-coach{margin-top:3px;font-size:10.5px;font-weight:700;color:var(--accent);display:flex;gap:4px;align-items:flex-start;line-height:1.5;}
+  .plan-ath svg,.plan-coach svg{width:10px;height:10px;flex-shrink:0;margin-top:2px;}
+  .plan-edit{border:none;background:transparent;color:var(--accent);font-size:10px;font-weight:800;cursor:pointer;display:inline-flex;gap:3px;align-items:center;margin-top:4px;padding:2px 0;font-family:inherit;}
+  .plan-edit svg{width:10px;height:10px;}
+  .copy-btn{border:1px dashed var(--border);background:transparent;border-radius:16px;padding:3px 10px;font-size:10px;font-weight:800;color:var(--text-muted);cursor:pointer;display:inline-flex;align-items:center;gap:4px;margin-inline-start:auto;font-family:inherit;flex-shrink:0;}
+  .copy-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .copy-btn svg{width:10px;height:10px;}
+  .copied-chip{background:var(--accent-dim);color:var(--accent);border-radius:16px;padding:3px 10px;font-size:9.5px;font-weight:800;margin-inline-start:auto;flex-shrink:0;}
+  .feel-row{display:flex;gap:8px;align-items:center;padding:7px 0;border-bottom:1px dashed var(--border);}
+  .feel-row:last-of-type{border-bottom:none;}
+  .feel-k{min-width:44px;padding:4px 8px;border-radius:8px;font-size:10.5px;font-weight:800;text-align:center;flex-shrink:0;}
+  .fk-ok{background:var(--success-bg);color:var(--success);}
+  .fk-mid{background:var(--surface-hover);color:var(--text-muted);}
+  .fk-bad{background:var(--danger-bg);color:var(--danger);}
+  .feel-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:6px 10px;background:var(--bg);color:var(--text);font-family:inherit;font-size:11.5px;outline:none;}
+  .feel-input:focus{border-color:var(--accent);}
+
   .wf{font-size:10px;color:#94A3B8;font-weight:700;}
 </style>
 
@@ -266,6 +285,8 @@
   <symbol id="i-battery" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2"/><line x1="22" y1="11" x2="22" y2="13"/></symbol>
   <symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
   <symbol id="i-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="14" height="14" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2v2"/></symbol>
 </svg>
 </head>
 <body>
@@ -289,7 +310,7 @@
   <div class="sheet" id="sheetBox"></div>
 </div>
 
-<div class="wf">WIREFRAME v3 — BLUE FITNESS · Athlete App · WPLAN-19</div>
+<div class="wf">WIREFRAME v4 — BLUE FITNESS · Athlete App · WPLAN-19</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -335,8 +356,12 @@ const ATH = {
       { type:'מחוץ לארץ', from:'20.10', to:'26.10', full:true, note:'טיול משפחתי — יש מכון כושר במלון', status:'המאמנת קיבלה ותכננה תוכנית נסיעה' },
     ],
     journal:[
-      { d:'13.10 · א׳', wake:'06:50', sleep:'22:00', meals:3, feel:'שיפור', txt:'סיימתי את כל הסטים. רוצה לעבוד על הפניות.' },
-      { d:'12.10 · שבת', wake:'08:00', sleep:'23:10', meals:2, feel:'שימור', txt:'הכתף מרגישה טוב אחרי הטיפול אצל הפיזיו.' },
+      { d:'13.10 · א׳', wake:'06:50', sleep:'22:00', meals:3,
+        feel:[ {k:'שיפור',t:'היה קשה בפניות אבל סיימתי את כל הסטים'}, {k:'שימור',t:'הצלחתי להחזיק עם מאיה בכל המקצים'} ],
+        txt:'רוצה לעבוד על הפניות בכל אימון' },
+      { d:'12.10 · שבת', wake:'08:00', sleep:'23:10', meals:2,
+        feel:[ {k:'קושי',t:'לא אכלתי צהריים לפני האימון'} ],
+        txt:'הכתף מרגישה טוב אחרי הטיפול אצל הפיזיו' },
     ],
     compUp:{
       name:'אליפות אזורית — נערות ב׳', date:'שבת · 17.10 · 09:00', place:'בריכת הים',
@@ -350,7 +375,7 @@ const ATH = {
         { name:'100 חתירה · 09:20', plan:[
           { ph:'פתיחה', tx:'זינוק חזק + 10 מ׳ ראשונים בלי נשימה' },
           { ph:'0–50', tx:'קצב מטרה — לשמור 31 חתירות למסלול, נשימה כל 3' },
-          { ph:'פניות', tx:'יציאה חזקה מהקיר — זה הדגש שלנו מהגביע הקודם' },
+          { ph:'פניות', tx:'יציאה חזקה מהקיר — זה הדגש שלנו מהגביע הקודם', ath:'לספור חתירות מיד אחרי היציאה מהקיר' },
           { ph:'50–100', tx:'לא לקצר חתירה; רגליים חזקות ב-25 האחרונים' },
           { ph:'סיום', tx:'לגעת במקסימום — בלי להרים את הראש מהמים' },
         ]},
@@ -382,6 +407,12 @@ const ATH = {
         { k:'100 ח׳', plan:'1:36', val:'1:38', diff:'+2 שנ׳', good:false },
         { k:'50 ח׳', plan:'30.5', val:'29.9', diff:'שיא אישי!', good:true },
       ],
+      races:[
+        { name:'100 חתירה — מה שכתבתי ומה המאמנת הגיבה', plan:[
+          { ph:'פתיחה', tx:'זינוק חזק + 10 מ׳ בלי נשימה', ath:'יצאתי הכי טוב שלי אי פעם', coach:'נכון — הזינוק היה מעולה' },
+          { ph:'פניות', tx:'יציאה חזקה מהקיר', ath:'הרגשתי שאני מאבדת מהירות בפניות', coach:'כן — ~2 שנ׳ לכל פנייה. זה המיקוד שלנו עכשיו' },
+        ]},
+      ],
       ath:'הרגשתי חזקה במים, הזינוק היה הכי טוב שלי אי פעם.',
       coach:'הזינוק מצוין, אבל עדיין מאבדת ~2 שנ׳ ביציאות מהפניות.',
       focus:'להתמקד ביציאות מהפניות + תנועה אחרי הפנייה',
@@ -408,7 +439,9 @@ const ATH = {
     lastWeekAtt:null,
     avail:[],
     journal:[
-      { d:'13.10 · א׳', wake:'06:30', sleep:'22:40', meals:3, feel:'שיפור', txt:'רכיבה חזקה — קצב ממוצע עלה ל-31 קמ"ש.' },
+      { d:'13.10 · א׳', wake:'06:30', sleep:'22:40', meals:3,
+        feel:[ {k:'שיפור',t:'קצב ממוצע עלה ל-31 קמ"ש'} ],
+        txt:'רכיבה חזקה — לשמור על תזונה ברכיבות ארוכות' },
     ],
     compUp:null,
     compPast:{
@@ -648,7 +681,7 @@ function saveAvail(){
 
 /* ==================== JOURNAL VIEW ==================== */
 let jTab = 'daily';
-let jd = { wake:'07:00', sleep:'22:30', meals:new Set(['בוקר','ערב']), feels:new Set(['שיפור']), text:'' };
+let jd = { wake:'07:00', sleep:'22:30', meals:new Set(['בוקר','ערב']), feels:{ 'שיפור':'', 'שימור':'', 'קושי':'' }, text:'' };
 function setJTab(t){ jTab = t; renderJournal(); }
 
 function renderJournal(){
@@ -669,12 +702,18 @@ function renderJournal(){
           <div class="jchips">${['בוקר','צהריים','ערב'].map(m=>
             `<button class="jchip ${jd.meals.has(m)?'on ok':''}" onclick="toggleMeal('${m}')">${m}</button>`).join('')}</div>
         </div>
-        <div class="jrow"><span class="k">איך היה באימון</span>
-          <div class="jchips">
-            <button class="jchip ${jd.feels.has('שיפור')?'on ok':''}" onclick="toggleFeel('שיפור')">שיפור</button>
-            <button class="jchip ${jd.feels.has('שימור')?'on':''}" onclick="toggleFeel('שימור')">שימור</button>
-            <button class="jchip ${jd.feels.has('קושי')?'on bad':''}" onclick="toggleFeel('קושי')">קושי</button>
-          </div>
+        <div class="jrow"><span class="k">באימון — מה כתוב:</span></div>
+        <div class="feel-row">
+          <span class="feel-k fk-ok">שיפור</span>
+          <input class="feel-input" value="${jd.feels['שיפור']}" placeholder="למשל: היה קשה בפניות אבל סיימתי הכל" oninput="jd.feels['שיפור']=this.value">
+        </div>
+        <div class="feel-row">
+          <span class="feel-k fk-mid">שימור</span>
+          <input class="feel-input" value="${jd.feels['שימור']}" placeholder="למשל: הצלחתי להחזיק עם מאיה" oninput="jd.feels['שימור']=this.value">
+        </div>
+        <div class="feel-row">
+          <span class="feel-k fk-bad">קושי</span>
+          <input class="feel-input" value="${jd.feels['קושי']}" placeholder="למשל: לא אכלתי צהריים לפני האימון" oninput="jd.feels['קושי']=this.value">
         </div>
         <textarea class="jtextarea" rows="2" placeholder="על מה אני רוצה לעבוד בהמשך?" oninput="jd.text=this.value">${jd.text}</textarea>
         <button class="jsave" onclick="saveJournalDay()"><svg class="icon-sm" style="vertical-align:-3px"><use href="#i-check"/></svg> שמור יומן להיום</button>
@@ -685,7 +724,14 @@ function renderJournal(){
       html += `
         <div class="jentry">
           <div class="hd"><span>${j.d}</span><span>קמה ${j.wake} · ישנה ${j.sleep} · ארוחות ${j.meals}/3</span></div>
-          <div class="tx">${feels.map(f=>`<span class="feel">${f}</span>`).join(' ')} ${j.txt}</div>
+          ${feels.map(f=>{
+            const fk = (typeof f === 'string') ? { k:f, t:'' } : f;
+            const cls = fk.k==='שיפור' ? 'fk-ok' : fk.k==='קושי' ? 'fk-bad' : 'fk-mid';
+            return `<div class="tx" style="margin-bottom:3px"><span class="feel-k ${cls}" style="margin-inline-end:6px">${fk.k}</span>${fk.t}</div>`;
+          }).join('')}
+          <div class="tx" style="color:var(--text);font-weight:800;margin-top:4px;display:flex;gap:5px;align-items:center;">
+            <svg class="icon-xs" style="color:var(--accent)"><use href="#i-flame"/></svg> ${j.txt}
+          </div>
         </div>`;
     });
   } else {
@@ -706,11 +752,26 @@ function renderJournal(){
             <span class="ck ${g.on?'on':''}">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>${g.x}</div>`).join('')}
           <div class="comp-sec" style="margin-top:12px;">לוז יום התחרות</div>
           ${c.timeline.map(t=>`<div class="tl-row"><span class="tl-t">${t.t}</span><span>${t.x}</span></div>`).join('')}
-          <div class="comp-sec" style="margin-top:12px;">תוכנית מקצה — מה לעשות בכל שלב</div>
-          ${c.races.map(r=>`
+          <div class="comp-sec" style="margin-top:12px;">תוכנית מקצה — מה לעשות בכל שלב · לחצי להוספת ההערה שלך</div>
+          ${c.races.map((r,ri)=>`
             <div class="race-block">
-              <div class="race-h"><svg class="icon-sm"><use href="#i-activity"/></svg> ${r.name}</div>
-              ${r.plan.map(p=>`<div class="plan-row"><span class="plan-ph">${p.ph}</span><span class="plan-tx">${p.tx}</span></div>`).join('')}
+              <div class="race-h">
+                <svg class="icon-sm"><use href="#i-activity"/></svg> ${r.name}
+                ${r.copied
+                  ? `<span class="copied-chip">הועתק מ${r.copied} — ערכי שינויים קטנים</span>`
+                  : `<button class="copy-btn" onclick="copyRace(${ri})"><svg><use href="#i-copy"/></svg> העתק מתחרות קודמת</button>`}
+              </div>
+              ${r.plan.map((p,pi)=>`
+                <div class="plan-row">
+                  <span class="plan-ph">${p.ph}</span>
+                  <span class="plan-tx">
+                    ${p.tx}
+                    ${p.ath ? `<div class="plan-ath"><svg><use href="#i-user"/></svg> אני: ${p.ath}</div>` : ''}
+                    <button class="plan-edit" onclick="openPhaseEdit(${ri},${pi})">
+                      <svg><use href="#i-pencil"/></svg> ${p.ath ? 'עריכת ההערה שלי' : 'הערה שלי'}
+                    </button>
+                  </span>
+                </div>`).join('')}
             </div>`).join('')}
           <div class="comp-sec">ציוד להכין — סמני מה שכבר ארזת</div>
           ${c.gear.map((g,i)=>`<div class="ck-row" onclick="toggleGear(${i})">
@@ -733,6 +794,21 @@ function renderJournal(){
             <span class="res-v">${r.val}</span>
             <span class="res-d ${r.good?'good':'bad'}">${r.diff}</span>
           </div>`).join('')}
+          ${c.races ? `
+          <div class="comp-sec" style="margin-top:10px;">מה שכתבתי בכל שלב — וההערות של המאמנת</div>
+          ${c.races.map(r=>`
+            <div class="race-block" style="background:var(--surface-hover);">
+              <div class="race-h"><svg class="icon-sm" style="color:var(--text-muted)"><use href="#i-activity"/></svg> ${r.name}</div>
+              ${r.plan.map(p=>`
+                <div class="plan-row">
+                  <span class="plan-ph">${p.ph}</span>
+                  <span class="plan-tx">
+                    ${p.tx}
+                    ${p.ath ? `<div class="plan-ath"><svg><use href="#i-user"/></svg> אני כתבתי: ${p.ath}</div>` : ''}
+                    ${p.coach ? `<div class="plan-coach"><svg><use href="#i-msg"/></svg> הערת מאמנת: ${p.coach}</div>` : ''}
+                  </span>
+                </div>`).join('')}
+            </div>`).join('')}` : ''}
           <div class="comp-sec" style="margin-top:10px;">התחושה שלי מול הצפייה של המאמנת</div>
           <div class="gap-box">
             <div class="gap-side gap-ath"><div class="gap-l">אני הרגשתי</div>${c.ath}</div>
@@ -759,14 +835,46 @@ function toggleRoutine(kind, i){
   if (a.compUp && a.compUp[kind]) a.compUp[kind][i].on = !a.compUp[kind][i].on;
   renderJournal();
 }
-function toggleFeel(v){
-  if (jd.feels.has(v)) jd.feels.delete(v); else jd.feels.add(v);
-  renderJournal();
-}
 function saveJournalDay(){
   const a = A();
-  a.journal.unshift({ d:'14.10 · היום', wake:jd.wake, sleep:jd.sleep, meals:jd.meals.size, feel:Array.from(jd.feels), txt:jd.text || '—' });
-  jd = { wake:'07:00', sleep:'22:30', meals:new Set(), feels:new Set(), text:'' };
+  const feels = ['שיפור','שימור','קושי']
+    .filter(k => jd.feels[k] && jd.feels[k].trim())
+    .map(k => ({ k, t: jd.feels[k].trim() }));
+  a.journal.unshift({ d:'14.10 · היום', wake:jd.wake, sleep:jd.sleep, meals:jd.meals.size, feel:feels, txt:jd.text || '—' });
+  jd = { wake:'07:00', sleep:'22:30', meals:new Set(), feels:{ 'שיפור':'', 'שימור':'', 'קושי':'' }, text:'' };
+  renderJournal();
+}
+
+/* ==================== RACE PLAN — athlete edits + copy from previous ==================== */
+let peCtx = { r:0, p:0 };
+function openPhaseEdit(ri, pi){
+  const a = A();
+  const race = a.compUp.races[ri];
+  const ph = race.plan[pi];
+  peCtx = { r:ri, p:pi };
+  openSheet(`
+    <div class="sh-grip"></div>
+    <div class="sh-title"><svg class="icon"><use href="#i-pencil"/></svg> ההערה שלי — ${race.name}</div>
+    <div class="sh-sub"><span>${ph.ph}</span><span>המאמנת: ${ph.tx}</span></div>
+    <textarea class="jtextarea" id="peText" rows="3" style="margin-top:10px" placeholder="מה אני אעשה בשלב הזה? למשל: לספור חתירות מיד אחרי היציאה מהקיר">${ph.ath||''}</textarea>
+    <button class="rp-save" onclick="savePhaseNote()"><svg class="icon-sm" style="vertical-align:-3px"><use href="#i-check"/></svg> שמור הערה</button>
+    <button class="sh-close" onclick="closeSheet()">ביטול</button>
+  `);
+}
+function savePhaseNote(){
+  const race = A().compUp.races[peCtx.r];
+  race.plan[peCtx.p].ath = $('peText').value.trim();
+  closeSheet();
+  renderJournal();
+}
+function copyRace(ri){
+  const a = A();
+  const past = a.compPast && a.compPast.races && a.compPast.races[0];
+  if (!past) return;
+  const race = a.compUp.races[ri];
+  /* copy the coach's phase structure from the previous competition, keep athlete edits on top */
+  race.plan = past.plan.map(p => ({ ph:p.ph, tx:p.tx }));
+  race.copied = a.compPast.name;
   renderJournal();
 }
 
