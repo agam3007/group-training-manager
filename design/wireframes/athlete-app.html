@@ -359,7 +359,7 @@
   <div class="sheet" id="sheetBox"></div>
 </div>
 
-<div class="wf">WIREFRAME v8 — BLUE FITNESS · Athlete App · WPLAN-19</div>
+<div class="wf">WIREFRAME v9 — BLUE FITNESS · Athlete App · WPLAN-19</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -442,10 +442,12 @@ const ATH = {
           ]},
         ]},
         nutrition:{
-          evening:'פסטה עם רוטב קל + שתייה מרובה', morning:'טוסט + גבינה + בננה', midday:'',
-          duringPlan:[
+          blocks:[
+            { when:'ערב לפני · ארוחה', what:'פסטה עם רוטב קל + שתייה מרובה' },
+            { when:'בוקר · ארוחה', what:'טוסט + גבינה + בננה' },
             { when:'1 שעה לפני', what:'חצי ליטר מים + מלחים' },
             { when:'בין מקצה 1 ל-2', what:'איזוטוני + חצי חטיף' },
+            { when:'אחרי · התאוששות', what:'שוקו + חטיף' },
           ],
         },
         races:[
@@ -487,8 +489,14 @@ const ATH = {
             { x:'להגיע 30 דק׳ לפני להתאמה', on:false },
           ]},
         ]},
-        nutrition:{ evening:'ארוחה רגילה', morning:'ארוחת בוקר קלה', midday:'ארוחה קלה עד 14:30',
-          duringPlan:[ { when:'בהפסקות בין ה-100ים', what:'2–3 לגימות מים' } ] },
+        nutrition:{
+          blocks:[
+            { when:'ערב לפני · ארוחה', what:'ארוחה רגילה' },
+            { when:'בוקר · ארוחה', what:'ארוחת בוקר קלה' },
+            { when:'צהריים · ארוחה', what:'ארוחה קלה עד 14:30' },
+            { when:'בהפסקות בין ה-100ים', what:'2–3 לגימות מים' },
+          ],
+        },
         races:[
           { name:'סדרת המבחן 7×100', status:'טרם נבדק על ידי המאמנת',
             plan:[
@@ -519,10 +527,9 @@ const ATH = {
         { label:'בוקר התחרות', items:[ { x:'רק קפה בבוקר — בלי אוכל', on:true } ]},
       ]},
       nutrition:{
-        evening:'פיצה כבדה + קינוח', eveningProb:'ארוחה כבדה מדי — הרגשתי כבדה במים למחרת',
-        morning:'קפה בלבד', morningProb:'בלי אוכל — חוסר אנרגיה בסוף המקצה',
-        midday:'',
-        duringPlan:[
+        blocks:[
+          { when:'ערב לפני · ארוחה', what:'פיצה כבדה + קינוח', prob:'ארוחה כבדה מדי — הרגשתי כבדה במים למחרת' },
+          { when:'בוקר · ארוחה', what:'קפה בלבד', prob:'בלי אוכל — חוסר אנרגיה בסוף המקצה' },
           { when:'בין המקצים', what:'לא לקחתי כלום', prob:'התייבשתי — לא שתיתי מספיק' },
         ],
       },
@@ -596,13 +603,16 @@ const ATH = {
           ]},
         ]},
         nutrition:{
-          evening:'אורז + עוף — קל', morning:'שיבולת שיבולת + קפה + בננה', midday:'', precise:true,
-          duringPlan:[
+          precise:true,
+          blocks:[
+            { when:'ערב לפני · ארוחה', what:'אורז + עוף — קל', qty:'120 גרם פחמימה' },
+            { when:'בוקר · ארוחה', what:'שיבולת שיבולת + קפה + בננה', qty:'80 גרם פחמימה' },
             { when:'1 שעה לפני זינוק', what:'מלחים + חצי ליטר מים', qty:'1 שקיק מלח · 500 מ"ל' },
             { when:'15 דק׳ לפני זינוק', what:'ג\'ל עם קפאין', qty:'25 גרם פחמימה' },
             { when:'רכיבה', what:'איזוטוני — לגמור בקבוק תוך כדי', qty:'750 מ"ל' },
             { when:'ריצה · 2 ק"מ', what:'ג\'ל', qty:'25 גרם פחמימה' },
             { when:'ריצה · 7 ק"מ', what:'ג\'ל', qty:'25 גרם פחמימה' },
+            { when:'אחרי · התאוששות', what:'חטיף חלבון + קולה', qty:'20 גרם חלבון' },
           ],
         },
         races:[
@@ -988,8 +998,9 @@ let peCtx = { r:0, p:0 };
 const WIZ_STEPS = [
   { n:1, l:'ציוד', i:'i-clipboard' },
   { n:2, l:'לוז יום', i:'i-clock' },
-  { n:3, l:'שגרה ותזונה', i:'i-sun' },
-  { n:4, l:'מהלך', i:'i-activity' },
+  { n:3, l:'שגרה', i:'i-sun' },
+  { n:4, l:'תזונה', i:'i-activity' },
+  { n:5, l:'מהלך', i:'i-waves' },
 ];
 function getComp(id){ return (A().comps||[]).find(c=>c.id===id); }
 function openComp(id){ wiz = { comp:id, step:1 }; renderJournal(); }
@@ -997,17 +1008,6 @@ function setWizStep(n){ wiz.step = n; renderJournal(); }
 function finishWizard(){ const c = getComp(wiz.comp); if (c) c.submitted = true; wiz.comp = null; renderJournal(); }
 function toggleWiz(i){ const c = getComp(wiz.comp); if (c) c.gear[i].on = !c.gear[i].on; renderJournal(); }
 function toggleWizRoutine(bi, ii){ const c = getComp(wiz.comp); if (c) c.routine.blocks[bi].items[ii].on = !c.routine.blocks[bi].items[ii].on; renderJournal(); }
-
-function nutritionRow(c, key, label){
-  const v = c.nutrition[key] || '';
-  const prob = c.nutrition[key+'Prob'];
-  const qty = c.nutrition.precise ? `
-    <input class="nutr-qty" value="${c.nutrition[key+'Qty']||''}" placeholder='כמות וערכים — למשל: 100 גרם פחמימה · 500 מ"ל' oninput="getComp('${wiz.comp}').nutrition['${key}Qty']=this.value">` : '';
-  return `<div class="nut-label"><svg><use href="#i-activity"/></svg> ${label}</div>
-    <input class="feel-input" value="${v}" placeholder="מה ומתי? למשל: פסטה עד 19:00" oninput="getComp('${wiz.comp}').nutrition['${key}']=this.value">
-    ${qty}
-    ${prob?`<div class="prob-note"><svg><use href="#i-alert"/></svg> מהפעם הקודמת: ${prob}</div>`:''}`;
-}
 
 function renderWizard(){
   const c = getComp(wiz.comp);
@@ -1046,7 +1046,7 @@ function renderWizard(){
       `<button class="add-mini" onclick="openAddItem('timeline')"><svg><use href="#i-plus"/></svg> הוסף שעה — תשובץ אוטומטית לפי הזמן</button>`;
   }
   if (wiz.step===3){
-    /* routine — custom blocks */
+    /* routine — actions only, custom blocks */
     body = `<div class="routine-sec"><svg><use href="#i-sun"/></svg> שגרת הכנה — בלוקים (אפשר להוסיף בלוקים משלך)</div>` +
       c.routine.blocks.map((blk,bi)=>`
         <div style="margin-top:10px;">
@@ -1056,27 +1056,26 @@ function renderWizard(){
           <button class="add-mini" onclick="openAddItem('routine',${bi})"><svg><use href="#i-plus"/></svg> הוסף לבלוק</button>
         </div>`).join('') +
       `<button class="add-mini" onclick="addRoutineBlock()"><svg><use href="#i-plus"/></svg> בלוק שגרה חדש (למשל: צהריים)</button>`;
-    /* nutrition — simple + precise mode */
-    body += `<div class="routine-sec" style="margin-top:14px;"><svg><use href="#i-activity"/></svg> תזונה
-      <button class="precise-toggle ${c.nutrition.precise?'on':''}" onclick="togglePrecise()">${c.nutrition.precise?'מדויק — גרם · מ"ל':'מצב מדויק'}</button>
-    </div>` +
-      nutritionRow(c,'evening','ארוחת ערב לפני') +
-      nutritionRow(c,'morning','ארוחת בוקר') +
-      nutritionRow(c,'midday','ארוחת צהריים (אם האירוע אחה"צ)') +
-      `<div class="nut-label"><svg><use href="#i-activity"/></svg> במהלם — בלוקים לפי זמן / מרחק</div>` +
-      (c.nutrition.duringPlan||[]).map((n,ni)=>`
-        <div class="nutr-block">
-          <div class="nutr-row">
-            <input class="nutr-when" value="${n.when}" placeholder="מתי? למשל: ריצה · 5 ק\"מ" oninput="getComp('${wiz.comp}').nutrition.duringPlan[${ni}].when=this.value">
-            <input class="nutr-what" value="${n.what}" placeholder="מה? למשל: ג'ל" oninput="getComp('${wiz.comp}').nutrition.duringPlan[${ni}].what=this.value">
-            <button class="nutr-x" onclick="delNutrRow(${ni})"><svg class="icon-xs"><use href="#i-x"/></svg></button>
-          </div>
-          ${c.nutrition.precise ? `<input class="nutr-qty" value="${n.qty||''}" placeholder='כמות וערכים — למשל: 25 גרם פחמימה · 200 מ"ל' oninput="getComp('${wiz.comp}').nutrition.duringPlan[${ni}].qty=this.value">` : ''}
-          ${n.prob?`<div class="prob-note"><svg><use href="#i-alert"/></svg> מהפעם הקודמת: ${n.prob}</div>`:''}
-        </div>`).join('') +
-      `<button class="add-mini" onclick="addNutrRow()"><svg><use href="#i-plus"/></svg> הוסף בלוק תזונה</button>`;
   }
   if (wiz.step===4){
+    /* nutrition — one fueling plan: meals + gels + fluids, as time blocks */
+    body = `<div class="routine-sec"><svg><use href="#i-activity"/></svg> תזונת תחרות — ארוחות + דלק במהלם
+      <button class="precise-toggle ${c.nutrition.precise?'on':''}" onclick="togglePrecise()">${c.nutrition.precise?'מדויק — גרם · מ"ל':'מצב מדויק'}</button>
+    </div>
+    <div class="sh-sub" style="margin:6px 0 10px;"><span>הכל בבלוקים לפי זמן: ארוחות לפני, דלק במהלם, התאוששות אחרי</span></div>` +
+      (c.nutrition.blocks||[]).map((n,ni)=>`
+        <div class="nutr-block">
+          <div class="nutr-row">
+            <input class="nutr-when" value="${n.when}" placeholder='מתי? למשל: בוקר · ארוחה או ריצה · 5 ק"מ' oninput="getComp('${wiz.comp}').nutrition.blocks[${ni}].when=this.value">
+            <input class="nutr-what" value="${n.what}" placeholder="מה? למשל: פסטה / ג'ל / איזוטוני" oninput="getComp('${wiz.comp}').nutrition.blocks[${ni}].what=this.value">
+            <button class="nutr-x" onclick="delNutrRow(${ni})"><svg class="icon-xs"><use href="#i-x"/></svg></button>
+          </div>
+          ${c.nutrition.precise ? `<input class="nutr-qty" value="${n.qty||''}" placeholder='כמות וערכים — למשל: 25 גרם פחמימה · 500 מ"ל' oninput="getComp('${wiz.comp}').nutrition.blocks[${ni}].qty=this.value">` : ''}
+          ${n.prob?`<div class="prob-note"><svg><use href="#i-alert"/></svg> מהפעם הקודמת: ${n.prob}</div>`:''}
+        </div>`).join('') +
+      `<button class="add-mini" onclick="addNutrRow()"><svg><use href="#i-plus"/></svg> הוסף בלוק — ארוחה / ג'ל / נוזלים / התאוששות</button>`;
+  }
+  if (wiz.step===5){
     body = `<div class="comp-sec">${c.kind==='test'?'תכנית המבחן':'מהלך התחרות'} — אתה כותב, המאמנת תגיב מה חסר</div>` +
       c.races.map((r,ri)=>`
         <div class="race-block">
@@ -1108,7 +1107,7 @@ function renderWizard(){
         </div>`).join('');
   }
 
-  const nextLabel = wiz.step<4 ? 'המשך' : 'סיום — שליחה למאמנת';
+  const nextLabel = wiz.step<5 ? 'המשך' : 'סיום — שליחה למאמנת';
   const nextAction = wiz.step<4 ? `setWizStep(${wiz.step+1})` : 'finishWizard()';
   return `
     <button class="wiz-back" onclick="wiz.comp=null;renderJournal()"><svg class="icon-xs"><use href="#i-chevron-right"/></svg> חזרה לרשימת האירועים</button>
@@ -1129,7 +1128,7 @@ function renderWizard(){
 /* copy the current step from a previous competition — problems arrive in red */
 function openWizCopy(){
   const a = A();
-  const stepLabels = { 1:'ציוד', 2:'לוז יום', 3:'שגרה ותזונה', 4:'מהלך' };
+  const stepLabels = { 1:'ציוד', 2:'לוז יום', 3:'שגרה', 4:'תזונה', 5:'מהלך' };
   openSheet(`
     <div class="sh-grip"></div>
     <div class="sh-title"><svg class="icon"><use href="#i-copy"/></svg> העתקת שלב: ${stepLabels[wiz.step]}</div>
@@ -1150,11 +1149,9 @@ function applyWizCopy(){
   if (!c) return;
   if (wiz.step===1) c.gear = src.gear.map(g=>({ x:g.x, on:g.on, prob:g.prob||null }));
   if (wiz.step===2) c.timeline = src.timeline.map(t=>({ t:t.t, x:t.x }));
-  if (wiz.step===3){
-    c.routine = JSON.parse(JSON.stringify(src.routine));
-    c.nutrition = JSON.parse(JSON.stringify(src.nutrition));
-  }
-  if (wiz.step===4){
+  if (wiz.step===3) c.routine = JSON.parse(JSON.stringify(src.routine));
+  if (wiz.step===4) c.nutrition = JSON.parse(JSON.stringify(src.nutrition));
+  if (wiz.step===5){
     c.races.forEach((r,ri)=>{
       const past = (src.races && (src.races[ri] || src.races[0])) || null;
       if (!past) return;
@@ -1269,13 +1266,13 @@ function togglePrecise(){
 }
 function addNutrRow(){
   const c = getComp(wiz.comp);
-  c.nutrition.duringPlan = c.nutrition.duringPlan || [];
-  c.nutrition.duringPlan.push({ when:'מתי?', what:'מה?', qty:'' });
+  c.nutrition.blocks = c.nutrition.blocks || [];
+  c.nutrition.blocks.push({ when:'מתי?', what:'מה?', qty:'' });
   renderJournal();
 }
 function delNutrRow(ni){
   const c = getComp(wiz.comp);
-  if (c.nutrition.duringPlan) c.nutrition.duringPlan.splice(ni,1);
+  if (c.nutrition.blocks) c.nutrition.blocks.splice(ni,1);
   renderJournal();
 }
 
