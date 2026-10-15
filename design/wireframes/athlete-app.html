@@ -281,6 +281,15 @@
   .nut-label{font-size:11px;font-weight:800;color:var(--text-muted);margin:9px 0 4px;display:flex;align-items:center;gap:5px;}
   .nut-label svg{width:12px;height:12px;color:var(--accent);}
   .comp-list-card{cursor:pointer;}
+  .add-mini{width:100%;padding:9px;border:1.5px dashed var(--border);border-radius:12px;background:transparent;color:var(--text-muted);font-size:11.5px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;margin-top:8px;font-family:inherit;}
+  .add-mini:hover{border-color:var(--accent);color:var(--accent);}
+  .add-mini svg{width:12px;height:12px;}
+  .nutr-block{margin-bottom:8px;}
+  .nutr-row{display:flex;gap:6px;align-items:stretch;}
+  .nutr-when{width:40%;border:1px solid var(--accent);border-radius:8px;padding:6px 8px;background:var(--accent-dim);color:var(--accent);font-family:inherit;font-size:10.5px;font-weight:800;outline:none;}
+  .nutr-what{flex:1;border:1px solid var(--border);border-radius:8px;padding:6px 8px;background:var(--bg);color:var(--text);font-family:inherit;font-size:11px;outline:none;}
+  .nutr-x{border:none;background:transparent;color:var(--text-faint);cursor:pointer;padding:4px;}
+  .nutr-x:hover{color:var(--danger);}
 
   .wf{font-size:10px;color:#94A3B8;font-weight:700;}
 </style>
@@ -312,6 +321,7 @@
   <symbol id="i-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></symbol>
   <symbol id="i-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="14" height="14" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2v2"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
 </svg>
 </head>
 <body>
@@ -335,7 +345,7 @@
   <div class="sheet" id="sheetBox"></div>
 </div>
 
-<div class="wf">WIREFRAME v6 — BLUE FITNESS · Athlete App · WPLAN-19</div>
+<div class="wf">WIREFRAME v7 — BLUE FITNESS · Athlete App · WPLAN-19</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -417,7 +427,13 @@ const ATH = {
             { x:'להתאים גומיית משקפות — בדיקה אחרונה', on:true },
           ],
         },
-        nutrition:{ evening:'פסטה עם רוטב קל + שתייה מרובה', morning:'טוסט + גבינה + בננה', midday:'', during:'איזוטוני בכל הפסקה בין מקצים' },
+        nutrition:{
+          evening:'פסטה עם רוטב קל + שתייה מרובה', morning:'טוסט + גבינה + בננה', midday:'',
+          duringPlan:[
+            { when:'1 שעה לפני', what:'חצי ליטר מים + מלחים' },
+            { when:'בין מקצה 1 ל-2', what:'איזוטוני + חצי חטיף' },
+          ],
+        },
         races:[
           { name:'100 חתירה · 09:20', status:'המאמנת הגיבה · 1 הערה', copied:'גביע פתיחת העונה',
             plan:[
@@ -457,7 +473,8 @@ const ATH = {
             { x:'להגיע 30 דק׳ לפני להתאמה', on:false },
           ],
         },
-        nutrition:{ evening:'ארוחה רגילה', morning:'ארוחת בוקר קלה', midday:'ארוחה קלה עד 14:30', during:'מים בהפסקות בין ה-100ים' },
+        nutrition:{ evening:'ארוחה רגילה', morning:'ארוחת בוקר קלה', midday:'ארוחה קלה עד 14:30',
+          duringPlan:[ { when:'בהפסקות בין ה-100ים', what:'2–3 לגימות מים' } ] },
         races:[
           { name:'סדרת המבחן 7×100', status:'טרם נבדק על ידי המאמנת',
             plan:[
@@ -490,7 +507,10 @@ const ATH = {
       nutrition:{
         evening:'פיצה כבדה + קינוח', eveningProb:'ארוחה כבדה מדי — הרגשתי כבדה במים למחרת',
         morning:'קפה בלבד', morningProb:'בלי אוכל — חוסר אנרגיה בסוף המקצה',
-        midday:'', during:'לא לקחתי כלום', duringProb:'התייבשתי בין המקצים',
+        midday:'',
+        duringPlan:[
+          { when:'בין המקצים', what:'לא לקחתי כלום', prob:'התייבשתי — לא שתיתי מספיק' },
+        ],
       },
       races:[
         { name:'100 חתירה — מה שכתבתי ומה המאמנת הגיבה', plan:[
@@ -559,7 +579,16 @@ const ATH = {
             { x:'ג\'ל 15 דק׳ לפני זינוק', on:true },
           ],
         },
-        nutrition:{ evening:'אורז + עוף — קל', morning:'שיבולת שיבולת + קפה + בננה', midday:'', during:'ג\'ל כל 45 דק׳ על האופניים + איזוטוני' },
+        nutrition:{
+          evening:'אורז + עוף — קל', morning:'שיבולת שיבולת + קפה + בננה', midday:'',
+          duringPlan:[
+            { when:'1 שעה לפני זינוק', what:'מלחים + חצי ליטר מים' },
+            { when:'15 דק׳ לפני זינוק', what:'ג\'ל עם קפאין' },
+            { when:'רכיבה', what:'איזוטוני — לגמור בקבוק תוך כדי' },
+            { when:'ריצה · 2 ק"מ', what:'ג\'ל' },
+            { when:'ריצה · 7 ק"מ', what:'ג\'ל' },
+          ],
+        },
         races:[
           { name:'מהלך המירוץ — 3 ענפים + 2 חלופות', status:'טרם נבדק על ידי המאמנת',
             plan:[
@@ -977,24 +1006,38 @@ function renderWizard(){
       c.gear.map((g,i)=>`<div class="ck-row" onclick="toggleWiz(${i})">
         <span class="ck ${g.on?'on':''}">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>
         <span style="flex:1">${g.x}${g.prob?`<span class="prob-note"><svg><use href="#i-alert"/></svg> בעיה מהפעם הקודמת: ${g.prob}</span>`:''}</span>
-      </div>`).join('');
+      </div>`).join('') +
+      `<button class="add-mini" onclick="openAddItem('gear')"><svg><use href="#i-plus"/></svg> הוסף פריט ציוד</button>`;
   }
   if (wiz.step===2){
     body = `<div class="routine-sec"><svg><use href="#i-clock"/></svg> לוז יום ה${c.kind==='test'?'מבחן':'תחרות'}</div>` +
-      c.timeline.map(t=>`<div class="tl-row"><span class="tl-t">${t.t}</span><span>${t.x}</span></div>`).join('');
+      c.timeline.map(t=>`<div class="tl-row"><span class="tl-t">${t.t}</span><span>${t.x}</span></div>`).join('') +
+      `<button class="add-mini" onclick="openAddItem('timeline')"><svg><use href="#i-plus"/></svg> הוסף שעה</button>`;
   }
   if (wiz.step===3){
     body = `<div class="routine-sec"><svg><use href="#i-moon"/></svg> ערב לפני</div>` +
       c.routine.evening.map((g,i)=>`<div class="ck-row" onclick="toggleWizRoutine('evening',${i})">
         <span class="ck ${g.on?'on':''}">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>${g.x}</div>`).join('') +
+      `<button class="add-mini" onclick="openAddItem('evening')"><svg><use href="#i-plus"/></svg> הוסף פעולת ערב</button>` +
       `<div class="routine-sec"><svg><use href="#i-sun"/></svg> ${c.routine.dayLabel}</div>` +
       c.routine.day.map((g,i)=>`<div class="ck-row" onclick="toggleWizRoutine('day',${i})">
         <span class="ck ${g.on?'on':''}">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>${g.x}</div>`).join('') +
-      `<div class="routine-sec" style="margin-top:12px;"><svg><use href="#i-activity"/></svg> תזונה — מה ומתי</div>` +
+      `<button class="add-mini" onclick="openAddItem('day')"><svg><use href="#i-plus"/></svg> הוסף פעולת יום</button>` +
+      `<div class="routine-sec" style="margin-top:12px;"><svg><use href="#i-activity"/></svg> תזונה</div>` +
       nutritionRow(c,'evening','ארוחת ערב לפני') +
       nutritionRow(c,'morning','ארוחת בוקר') +
-      nutritionRow(c,'midday','ארוחת צהריים (אם התחרות אחה"צ)') +
-      nutritionRow(c,'during','במהלם — איזוטוני / ג\'ל / חטיף');
+      nutritionRow(c,'midday','ארוחת צהריים (אם האירוע אחה"צ)') +
+      `<div class="nut-label"><svg><use href="#i-activity"/></svg> במהלם — בלוקים לפי זמן / מרחק</div>` +
+      (c.nutrition.duringPlan||[]).map((n,ni)=>`
+        <div class="nutr-block">
+          <div class="nutr-row">
+            <input class="nutr-when" value="${n.when}" placeholder="מתי? למשל: ריצה · 5 ק\"מ" oninput="getComp('${wiz.comp}').nutrition.duringPlan[${ni}].when=this.value">
+            <input class="nutr-what" value="${n.what}" placeholder="מה? למשל: ג'ל" oninput="getComp('${wiz.comp}').nutrition.duringPlan[${ni}].what=this.value">
+            <button class="nutr-x" onclick="delNutrRow(${ni})"><svg class="icon-xs"><use href="#i-x"/></svg></button>
+          </div>
+          ${n.prob?`<div class="prob-note"><svg><use href="#i-alert"/></svg> מהפעם הקודמת: ${n.prob}</div>`:''}
+        </div>`).join('') +
+      `<button class="add-mini" onclick="addNutrRow()"><svg><use href="#i-plus"/></svg> הוסף בלוק תזונה</button>`;
   }
   if (wiz.step===4){
     body = `<div class="comp-sec">${c.kind==='test'?'תכנית המבחן':'מהלך התחרות'} — אתה כותב, המאמנת תגיב מה חסר</div>` +
@@ -1021,6 +1064,7 @@ function renderWizard(){
                 </button>
               </span>
             </div>`).join('')}
+          <button class="add-mini" onclick="openAddItem('phase',${ri})"><svg><use href="#i-plus"/></svg> הוסף שלב</button>
         </div>`).join('');
   }
 
@@ -1068,7 +1112,7 @@ function applyWizCopy(){
   if (wiz.step===2) c.timeline = src.timeline.map(t=>({ t:t.t, x:t.x }));
   if (wiz.step===3){
     c.routine = JSON.parse(JSON.stringify(src.routine));
-    c.nutrition = Object.assign({}, src.nutrition);
+    c.nutrition = JSON.parse(JSON.stringify(src.nutrition));
   }
   if (wiz.step===4){
     c.races.forEach((r,ri)=>{
@@ -1116,6 +1160,54 @@ function copyRacePlan(ri){
   race.plan = past.plan.map(p => ({ ph:p.ph, ath:p.ath||'', tip: p.coach ? p.coach : null }));
   race.copied = a.compPast.name;
   race.status = 'הועתק מ'+a.compPast.name+' — ערוך לפי המסקנות';
+  renderJournal();
+}
+
+/* ==================== FLEXIBLE ADD — items anywhere ==================== */
+let addCtx = { kind:'', ri:0 };
+function openAddItem(kind, ri){
+  addCtx = { kind, ri: ri||0 };
+  const titles = { gear:'פריט ציוד חדש', timeline:'שעה חדשה בלוז', evening:'פעולת ערב חדשה', day:'פעולת יום חדשה', phase:'שלב חדש במהלך' };
+  let fields = '';
+  if (kind==='timeline'){
+    fields = `<input class="feel-input" id="adTime" placeholder="שעה — למשל 09:45" style="margin-bottom:8px">
+      <input class="feel-input" id="adWhat" placeholder="מה קורה — למשל: חימום יבש">`;
+  } else if (kind==='phase'){
+    fields = `<input class="feel-input" id="adWhat" placeholder="שם השלב — למשל: T2 חלופה" style="margin-bottom:8px">
+      <textarea class="jtextarea" id="adText" rows="2" placeholder="מה אני עושה בשלב הזה?"></textarea>`;
+  } else {
+    fields = `<input class="feel-input" id="adWhat" placeholder="למשל: משקפות ברזרבי / לכתוב מספרים על היד">`;
+  }
+  openSheet(`
+    <div class="sh-grip"></div>
+    <div class="sh-title"><svg class="icon"><use href="#i-plus"/></svg> ${titles[kind]}</div>
+    <div style="margin-top:10px;">${fields}</div>
+    <button class="rp-save" onclick="commitAdd()"><svg class="icon-sm" style="vertical-align:-3px"><use href="#i-check"/></svg> הוסף</button>
+    <button class="sh-close" onclick="closeSheet()">ביטול</button>
+  `);
+}
+function commitAdd(){
+  const c = getComp(wiz.comp);
+  if (!c) return;
+  const what = ($('adWhat') && $('adWhat').value.trim()) || '';
+  const kind = addCtx.kind;
+  if (kind==='gear' && what) c.gear.push({ x:what, on:false });
+  if (kind==='timeline' && what) c.timeline.push({ t:($('adTime') && $('adTime').value.trim()) || '—', x:what });
+  if (kind==='evening' && what) c.routine.evening.push({ x:what, on:false });
+  if (kind==='day' && what) c.routine.day.push({ x:what, on:false });
+  if (kind==='phase' && what) c.races[addCtx.ri].plan.push({ ph:what, ath:($('adText') && $('adText').value.trim()) || '' });
+  closeSheet();
+  renderJournal();
+}
+function addNutrRow(){
+  const c = getComp(wiz.comp);
+  c.nutrition.duringPlan = c.nutrition.duringPlan || [];
+  c.nutrition.duringPlan.push({ when:'מתי?', what:'מה?' });
+  renderJournal();
+}
+function delNutrRow(ni){
+  const c = getComp(wiz.comp);
+  if (c.nutrition.duringPlan) c.nutrition.duringPlan.splice(ni,1);
   renderJournal();
 }
 
