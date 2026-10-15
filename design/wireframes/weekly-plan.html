@@ -474,26 +474,9 @@
   .lib-pick-item:hover{background:var(--surface-hover);}
   .lib-pick-item svg{color:var(--text-faint);}
 
-  /* ==================== VIEW MODE TOGGLE (sliding) ==================== */
-  .vm-toggle{position:relative;display:inline-flex;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:3px;box-shadow:var(--shadow-md);}
-  .vm-slider{position:absolute;top:3px;bottom:3px;inset-inline-start:3px;width:calc(50% - 4px);background:var(--accent);border-radius:11px;transition:transform .25s cubic-bezier(.4,0,.2,1);}
-  .vm-toggle.pro .vm-slider{transform:translateX(-100%);}
-  .vm-opt{position:relative;z-index:1;border:none;background:transparent;padding:8px 14px;font-size:12.5px;font-weight:800;color:var(--text-muted);cursor:pointer;min-width:78px;font-family:inherit;transition:color .2s;display:flex;align-items:center;justify-content:center;gap:5px;}
-  .vm-toggle.simple .vm-opt[data-v="simple"]{color:var(--accent-text);}
-  .vm-toggle.pro .vm-opt[data-v="pro"]{color:var(--accent-text);}
-  .vm-opt svg{width:13px;height:13px;}
-
-  /* simple mode — bigger, calmer, fewer choices */
-  body.simple .session-name{font-size:14px;}
-  body.simple .session-time{font-size:12px;}
-  body.simple .day-name{font-size:15px;}
-  body.simple .day-num{font-size:12px;}
-  body.simple .day-card{min-height:172px;}
-  body.simple .day-add-hint{font-size:13px;}
-  body.simple .sport-chip,body.simple .summary-stat{font-size:13px;}
-  body.simple .sched-meta,body.simple .week-note{font-size:13.5px;}
+  /* ==================== BEGINNER HINT — empty-week guidance (single board) ==================== */
   .beginner-hint{display:none;background:var(--accent-dim);border:1px solid var(--accent);border-radius:14px;padding:12px 16px;margin-bottom:14px;font-size:13px;font-weight:700;color:var(--accent);align-items:center;gap:14px;flex-wrap:wrap;}
-  body.simple .beginner-hint.show{display:flex;}
+  .beginner-hint.show{display:flex;}
   .beginner-hint .step{display:flex;align-items:center;gap:7px;}
   .beginner-hint .n{width:20px;height:20px;border-radius:50%;background:var(--accent);color:var(--accent-text);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
 
@@ -662,7 +645,6 @@
           </div>
           <button title="שבוע הבא" onclick="shiftWeek(1)"><svg class="icon icon-sm"><use href="#i-chevron-left"/></svg></button>
         </div>
-        <div class="vm-toggle simple" id="viewSeg" title="מצב תצוגה"></div>
       </div>
     </div>
 
@@ -759,10 +741,6 @@
 
         <!-- ACTIONS -->
         <div class="plan-actions">
-          <button class="btn-copy" id="copyPrevBtn" onclick="copyPrevSimple()">
-            <svg class="icon icon-sm"><use href="#i-copy"/></svg>
-            העתק משבוע קודם
-          </button>
           <button class="btn-copy" id="copyHubBtn" onclick="openCopyDialog()">
             <svg class="icon icon-sm"><use href="#i-copy"/></svg>
             העתקה / החלה...
@@ -1050,7 +1028,7 @@
   <button onclick="undo()">בטל</button>
 </div>
 
-<div class="wf">WIREFRAME v17 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
+<div class="wf">WIREFRAME v18 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -1307,42 +1285,15 @@ let sportFilter = 'all';
 let staffFilter = 'all';
 let sidebarTab = 'library';
 let publishMode = 'single';
-let viewMode = 'pro';       /* 'pro' | 'simple' — progressive disclosure */
 let summaryExpanded = false;
 let detailCtx = null;
 let parsedSteps = null;
 const WEEK_PLANS = {};
-const isPro = () => viewMode === 'pro';
 
-/* view mode — simple is a different board, not just a hidden one (WPLAN-17) */
-function renderViewSeg(){
-  const seg = $('viewSeg');
-  seg.className = 'vm-toggle ' + viewMode;
-  seg.innerHTML = `
-    <div class="vm-slider"></div>
-    <button class="vm-opt" data-v="simple" onclick="setViewMode('simple')"><svg><use href="#i-user"/></svg> פשוט</button>
-    <button class="vm-opt" data-v="pro" onclick="setViewMode('pro')"><svg><use href="#i-chart"/></svg> מקצועי</button>`;
-}
-function setViewMode(v){
-  viewMode = v;
-  document.body.classList.toggle('simple', v==='simple');
-  renderViewSeg();
-  $('insight').style.display = (isPro() && !$('insight').dataset.hidden) ? '' : 'none';
-  renderMeso(); renderSportFilter(); renderStaffFilter(); renderDays(); updateSummary(); updateActions();
-}
+/* one board for everyone — the AI (D17) is the beginner's helper, not a mini-UI */
 function renderBeginnerHint(){
-  const show = !isPro() && selectedWeek>=42 && mode!=='all' && targetState(selectedWeek, mode)==='empty';
+  const show = selectedWeek>=42 && mode!=='all' && targetState(selectedWeek, mode)==='empty';
   $('beginnerHint').classList.toggle('show', show);
-}
-/* simple mode — one-click copy from previous week, no hub */
-function copyPrevSimple(){
-  const t = TARGET_MAP[mode];
-  if (t.type !== 'group'){ alert('WIREFRAME — העתקה פשוטה זמינה לקבוצות'); return; }
-  withUndo('הועתק משבוע קודם', ()=>{
-    planForWeek()[mode] = Object.assign({}, planForWeekAt(selectedWeek-1)[mode] || {});
-    renderDays();
-    markDirty();
-  });
 }
 
 /* publish state per week+target: draft | published | dirty | empty (computed) */
@@ -1596,18 +1547,6 @@ const relColor = pct => pct>.85 ? '#DC2626' : pct>.6 ? '#F87171' : pct>.4 ? '#FB
 
 function renderMeso(){
   if (mode==='all'){ renderMesoAll(); return; }
-  if (!isPro()){
-    /* simple mode — one line, no periodization depth */
-    const m = MESO_BY_TARGET[mode] || MESO_EMPTY;
-    $('mesoPanel').innerHTML = `
-      <div class="meso-head" style="margin-bottom:0">
-        <svg class="icon"><use href="#i-chart"/></svg>
-        <div style="flex:1">
-          <div class="meso-name">${m.block} <span class="meso-pos">· שבוע ${m.pos} מתוך ${m.to-m.from+1}</span></div>
-        </div>
-      </div>`;
-    return;
-  }
   const m = MESO_BY_TARGET[mode] || MESO_EMPTY;
   const loads = Object.values(m.loads);
   const maxL = Math.max(...loads, 1);
@@ -1739,7 +1678,6 @@ function jumpWeek(v){
 
 /* ==================== SPORT FILTER ==================== */
 function renderSportFilter(){
-  $('sportFilter').style.display = isPro() ? '' : 'none';
   const chips = [`<button class="sf-chip ${sportFilter==='all'?'active':''}" onclick="setSportFilter('all')">הכל</button>`]
     .concat(Object.keys(SPORTS).map(k=>{
       const s = SPORTS[k];
@@ -1776,7 +1714,7 @@ function renderReadiness(){
     ${chip('draft','טיוטה','rs-draft')}
     ${chip('published','פורסם','rs-published')}
     <button class="rd-sum" onclick="toggleRdPanel('all')">כל היעדים <b>${total}</b></button>
-    ${ready && isPro() ? `<button class="btn-bulk" onclick="bulkPublish()"><svg class="icon-xs"><use href="#i-send"/></svg> פרסם הכל שמוכן (${ready})</button>` : ''}`;
+    ${ready ? `<button class="btn-bulk" onclick="bulkPublish()"><svg class="icon-xs"><use href="#i-send"/></svg> פרסם הכל שמוכן (${ready})</button>` : ''}`;
   ensureRdPanel();
   renderRdPanel();
 }
@@ -1823,7 +1761,7 @@ function renderRdPanel(){
 /* ==================== STAFF PICKER (scales to 10-20 instructors) ==================== */
 function renderStaffFilter(){
   const t = TARGET_MAP[mode];
-  $('staffFilter').style.display = (t.type==='group'||t.type==='all') && isPro() ? '' : 'none';
+  $('staffFilter').style.display = (t.type==='group'||t.type==='all') ? '' : 'none';
   if (t.type!=='group' && t.type!=='all') return;
   const cur = STAFF.find(s=>s.id===staffFilter);
   $('staffFilter').innerHTML = `
@@ -2069,13 +2007,13 @@ function renderDays(){
           ? `<button class="sess-menu-btn" title="פעולות" onclick="event.stopPropagation();openSessMenu(event,'${mode}',${i},'${s.wid}','${s.kind}')"><svg class="icon-xs"><use href="#i-more"/></svg></button>` : '';
         const varBadge = (t.type==='group' && w.variants)
           ? `<span class="badge b-personal"><svg><use href="#i-users"/></svg> ${w.variants.length} התאמות אישיות</span>` : '';
-        const applyMeta = (t.type==='group' && isPro()) ? WEEK_APPLY_META[stKey(selectedWeek, mode)] : null;
+        const applyMeta = (t.type==='group') ? WEEK_APPLY_META[stKey(selectedWeek, mode)] : null;
         const srcBadge = applyMeta ? (applyMeta.tplName
           ? `<span class="badge b-fixed"><svg><use href="#i-copy"/></svg> מתבנית: ${applyMeta.tplName}</span>`
           : `<span class="badge b-fixed"><svg><use href="#i-copy"/></svg> מ${TARGET_MAP[applyMeta.from].name} · ${applyMeta.scale*100}%</span>`) : '';
         const confBadge = (confHit(mode, s.wid) || (gid && confHit(gid, s.wid)))
           ? `<span class="badge b-cancel"><svg><use href="#i-alert"/></svg> חפיפה</span>` : '';
-        const coachBadge = (t.type==='group' && isPro())
+        const coachBadge = (t.type==='group')
           ? `<span class="coach-chip"><svg><use href="#i-user"/></svg> מדריך: ${staffName(coachOf(mode,i))}</span>` : '';
         const actual = (isPast && t.type==='group' && PAST_ACTUAL[mode]) ? PAST_ACTUAL[mode][i]
           : (isPast && PAST_ACTUAL_PERSONAL[mode]) ? PAST_ACTUAL_PERSONAL[mode][i] : null;
@@ -2088,8 +2026,8 @@ function renderDays(){
             <div class="session-name"><svg class="icon-xs"><use href="#${sportIcon(w)}"/></svg>${w.name}</div>
             <div class="session-badges">${badge(s.kind, gid, ov)}${varBadge}${confBadge}${coachBadge}${srcBadge}</div>
             <div class="session-sub">${w.sub}</div>
-            ${isPro() ? `<div class="session-zones">${zonesHTML(w.zones)}</div>` : ''}
-            <div>${isPro() ? loadChip(w) : ''}${actual ? ` <span class="actual-line ${actual.done?'ok':'miss'}" style="display:inline-flex;margin-inline-start:6px"><svg><use href="#${actual.done?'i-check':'i-x'}"/></svg> ${actual.done?`בוצע${actual.att?` · נוכחות ${actual.att}`:(actual.note?` · ${actual.note}`:'')}`:`לא בוצע${actual.note?` · ${actual.note}`:''}`}</span>` : ''}</div>
+            <div class="session-zones">${zonesHTML(w.zones)}</div>
+            <div>${loadChip(w)}${actual ? ` <span class="actual-line ${actual.done?'ok':'miss'}" style="display:inline-flex;margin-inline-start:6px"><svg><use href="#${actual.done?'i-check':'i-x'}"/></svg> ${actual.done?`בוצע${actual.att?` · נוכחות ${actual.att}`:(actual.note?` · ${actual.note}`:'')}`:`לא בוצע${actual.note?` · ${actual.note}`:''}`}</span>` : ''}</div>
           </div>`;
       });
 
@@ -2159,7 +2097,6 @@ function updateSummary(){
   const totalLoad = keys.reduce((sum,k)=>sum + sportAgg[k].load, 0);
   const target = LOAD_TARGET[mode];
   const isPast = !isCurrentWeek() && !isFutureWeek();
-  const pro = isPro();
 
   let loadHtml = '';
   if (isPast){
@@ -2172,22 +2109,22 @@ function updateSummary(){
       doneCount = Object.values(PAST_ACTUAL[mode]).filter(a=>a.done).length;
     }
     loadHtml = `<span class="target-chip"><svg style="color:var(--text-faint)"><use href="#i-chart"/></svg> תוכנן <b>${activeCount}</b> · בוצע <b>${doneCount}</b></span>`;
-  } else if (target && pro){
+  } else if (target){
     const pct = Math.min(100, Math.round(totalLoad/target*100));
     const m = MESO_BY_TARGET[mode];
     const srcTxt = m ? ` title="מקור היעד: ${m.block} · שבוע ${m.pos} מתוך ${m.to-m.from+1} (מחושב מנפח הפתיחה וקצב העלייה)"` : '';
     loadHtml = `<span class="target-chip"${srcTxt}><svg style="color:var(--accent)"><use href="#i-zap"/></svg> עומס <b>${totalLoad}</b> / יעד ${target} <span class="target-bar"><span style="width:${pct}%"></span></span></span>`;
     if (m) loadHtml += ` <span class="sport-chip" style="padding:4px 10px;font-size:11px"><svg style="color:var(--text-faint)"><use href="#i-chart"/></svg> מקור: ${m.block} · ${m.pos}/${m.to-m.from+1}</span>`;
-  } else if (pro){
+  } else {
     loadHtml = `<span class="target-chip"><svg style="color:var(--accent)"><use href="#i-zap"/></svg> עומס כולל <b>${totalLoad}</b></span>`;
   }
 
-  const compareHtml = (isPast || !pro) ? '' :
+  const compareHtml = isPast ? '' :
     `<span class="sport-chip"><svg style="color:var(--text-faint)"><use href="#i-chart"/></svg> מול שבוע 33 (בלוח קודם): עומס +9%</span>`;
 
   const t = TARGET_MAP[mode];
   let hoursHtml = '';
-  if (pro && (t.type==='group' || t.type==='all')){
+  if (t.type==='group' || t.type==='all'){
     const h = staffHours();
     const parts = Object.keys(h).map(id=>`${staffName(id)} <b>${h[id].toFixed(1)}</b>`).join(' · ');
     hoursHtml = `<span class="hours-chip"><svg><use href="#i-clock"/></svg> שעות הוראה: ${parts}</span>`;
@@ -2585,8 +2522,7 @@ function updateActions(){
   pub.classList.remove('published','dirty');
   const showPub = editableWeek && (t.type==='group' || t.type==='personal');
   pub.style.display = showPub ? '' : 'none';
-  $('copyHubBtn').style.display = (editableWeek && t.type!=='all' && isPro()) ? '' : 'none';
-  $('copyPrevBtn').style.display = (editableWeek && t.type==='group' && !isPro()) ? '' : 'none';
+  $('copyHubBtn').style.display = (editableWeek && t.type!=='all') ? '' : 'none';
 
   const note = $('publishNote');
   if (!showPub){ note.innerHTML=''; return; }
@@ -3142,7 +3078,6 @@ function moveSessionTo(day){
 }
 
 /* ==================== INIT ==================== */
-renderViewSeg();
 renderPickerBtn();
 renderCats();
 renderLibrary();
