@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Athlete App — Blue Fitness</title>
+<style>
+  :root{--bg:#F8FAFC;--surface:#FFF;--surface-ocean:#E0F2FE;--surface-hover:#F1F5F9;--border:#CBD5E1;--text:#0F172A;--text-muted:#475569;--text-faint:#94A3B8;--accent:#2563EB;--accent-dim:rgba(37,99,235,.08);--accent-text:#FFF;--success:#16A34A;--success-bg:#DCFCE7;--danger:#DC2626;--danger-bg:#FEE2E2;--warning:#D97706;--warning-bg:#FEF3C7;--teal:#0D9488;--teal-bg:rgba(13,148,136,.12);--shadow-md:0 4px 12px rgba(15,23,42,.06);--shadow-lg:0 8px 32px rgba(15,23,42,.12);}
+  :root[data-theme="dark"]{--bg:#0F172A;--surface:#1E293B;--surface-ocean:#25334A;--surface-hover:#334155;--border:#334155;--text:#F8FAFC;--text-muted:#94A3B8;--text-faint:#64748B;--accent:#3B82F6;--accent-dim:rgba(59,130,246,.15);--accent-text:#FFF;--success:#22C55E;--success-bg:rgba(34,197,94,.2);--danger:#EF4444;--danger-bg:rgba(239,68,68,.2);--warning:#FBBF24;--warning-bg:rgba(251,191,36,.2);--teal:#2DD4BF;--teal-bg:rgba(45,212,191,.15);--shadow-md:0 4px 12px rgba(0,0,0,.25);--shadow-lg:0 8px 32px rgba(0,0,0,.4);}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:#E2E8F0;color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;gap:18px;padding:28px 16px 60px;}
+  body.rtl-body{direction:rtl;}
+  .icon{width:20px;height:20px;stroke-width:2;flex-shrink:0;}
+  .icon-sm{width:16px;height:16px;}
+  .icon-xs{width:13px;height:13px;}
+  button{font-family:inherit;}
+
+  .demo-bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center;}
+  .demo-note{font-size:11px;color:#64748B;font-weight:700;}
+  .seg{display:flex;background:#FFF;border:1px solid #CBD5E1;border-radius:14px;padding:4px;gap:4px;box-shadow:var(--shadow-md);}
+  .seg button{padding:8px 18px;border:none;border-radius:10px;background:transparent;color:#475569;font-size:13px;font-weight:800;cursor:pointer;}
+  .seg button.active{background:var(--accent);color:#FFF;}
+
+  /* ==================== PHONE ==================== */
+  .phone{position:relative;width:400px;max-width:100%;background:var(--bg);border-radius:40px;border:10px solid #0F172A;box-shadow:0 24px 60px rgba(15,23,42,.35);overflow:hidden;min-height:780px;}
+  .ph-status{display:flex;align-items:center;justify-content:space-between;padding:16px 26px 4px;font-size:13px;font-weight:800;}
+  .ph-status .icons{display:flex;gap:5px;color:var(--text-muted);}
+  .ph-status .icons svg{width:13px;height:13px;}
+
+  .ph-head{display:flex;align-items:center;gap:12px;padding:14px 20px 14px;}
+  .avatar{width:46px;height:46px;border-radius:50%;background:var(--surface-ocean);display:flex;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0;}
+  .ph-hname{font-size:17px;font-weight:800;}
+  .ph-hsub{font-size:11.5px;color:var(--text-muted);margin-top:1px;display:flex;align-items:center;gap:4px;}
+  .week-chip{margin-inline-start:auto;background:var(--accent-dim);color:var(--accent);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:800;white-space:nowrap;}
+
+  .ph-body{padding:4px 18px 90px;height:640px;overflow-y:auto;}
+  .ph-body::-webkit-scrollbar{width:0;}
+
+  /* tabs */
+  .ph-tabs{position:absolute;bottom:0;inset-inline:0;height:74px;background:var(--surface);border-top:1px solid var(--border);display:flex;padding:8px 8px 16px;z-index:20;}
+  .ptab{flex:1;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text-faint);font-size:10.5px;font-weight:800;cursor:pointer;border-radius:12px;position:relative;}
+  .ptab.active{color:var(--accent);}
+  .ptab .dot{position:absolute;top:8px;inset-inline-end:26%;width:8px;height:8px;border-radius:50%;background:var(--danger);}
+
+  /* week strip */
+  .wstrip{display:flex;gap:6px;padding:10px 2px 6px;}
+  .ws-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0;border-radius:12px;cursor:pointer;transition:all .15s;}
+  .ws-col.today{background:var(--accent);color:var(--accent-text);box-shadow:0 4px 14px rgba(37,99,235,.35);}
+  .ws-col.sel{outline:2px solid var(--accent);}
+  .ws-day{font-size:12px;font-weight:800;}
+  .ws-dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.25;}
+  .ws-col.has .ws-dot{opacity:1;}
+  .ws-dot.canceled{background:var(--danger);opacity:1;}
+
+  /* hero (today) */
+  .hero{background:linear-gradient(135deg,var(--accent) 0%,#1D4ED8 100%);border-radius:20px;padding:18px;color:#FFF;margin:10px 0 6px;box-shadow:0 10px 28px rgba(37,99,235,.35);}
+  .hero-top{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;opacity:.9;}
+  .hero-name{font-size:19px;font-weight:800;margin-top:8px;line-height:1.3;}
+  .hero-meta{display:flex;gap:12px;margin-top:8px;font-size:11.5px;font-weight:700;opacity:.92;flex-wrap:wrap;}
+  .hero-meta span{display:flex;align-items:center;gap:4px;}
+  .hero-cta{margin-top:14px;width:100%;border:none;border-radius:14px;padding:13px;background:#FFF;color:var(--accent);font-size:14px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+
+  /* section titles */
+  .sec{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:800;color:var(--text-muted);margin:18px 4px 8px;}
+  .sec svg{color:var(--accent);}
+
+  /* session card */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:13px 14px;margin-bottom:8px;display:flex;gap:12px;align-items:center;cursor:pointer;transition:all .15s;box-shadow:var(--shadow-md);}
+  .card:hover{border-color:var(--accent);}
+  .card.canceled{opacity:.55;}
+  .card.today-card{border-color:var(--accent);background:var(--surface);}
+  .c-icon{width:40px;height:40px;border-radius:12px;background:var(--surface-ocean);display:flex;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0;}
+  .c-body{flex:1;min-width:0;}
+  .c-time{font-size:10.5px;font-weight:800;color:var(--accent);display:flex;gap:5px;align-items:center;}
+  .c-name{font-size:13.5px;font-weight:800;line-height:1.3;margin-top:1px;display:flex;align-items:center;gap:6px;}
+  .c-sub{font-size:11px;color:var(--text-muted);margin-top:2px;}
+  .c-sub s{color:var(--danger);}
+  .c-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;}
+  .tag{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:20px;font-size:9.5px;font-weight:800;}
+  .tag svg{width:9px;height:9px;}
+  .t-group{background:var(--surface-hover);color:var(--text-muted);}
+  .t-personal{background:var(--teal-bg);color:var(--teal);}
+  .t-adapt{background:var(--accent-dim);color:var(--accent);}
+  .t-add{background:var(--success-bg);color:var(--success);}
+  .t-cancel{background:var(--danger-bg);color:var(--danger);}
+  .t-done{background:var(--success-bg);color:var(--success);}
+  .t-att{background:var(--surface-hover);color:var(--text-muted);}
+  .c-report{border:none;border-radius:10px;padding:7px 12px;background:var(--accent);color:#FFF;font-size:11px;font-weight:800;cursor:pointer;flex-shrink:0;}
+
+  /* event card */
+  .ev-card{border:1px dashed var(--border);border-radius:14px;padding:10px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:center;background:var(--surface);}
+  .ev-card .icon-xs{color:var(--warning);}
+  .ev-card.comp .icon-xs{color:var(--danger);}
+  .ev-card.pers .icon-xs{color:var(--teal);}
+  .ev-name{font-size:12px;font-weight:800;flex:1;}
+  .ev-time{font-size:10.5px;font-weight:800;color:var(--text-muted);}
+
+  /* coach note */
+  .note-card{background:var(--surface-ocean);border-radius:16px;padding:13px 15px;margin:14px 0 4px;display:flex;gap:10px;align-items:flex-start;}
+  .note-card .icon-sm{color:var(--warning);flex-shrink:0;margin-top:1px;}
+  .note-card b{font-size:12px;font-weight:800;}
+  .note-card p{font-size:12px;color:var(--text-muted);margin-top:2px;line-height:1.6;}
+
+  /* progress view */
+  .pv-hero{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:16px;margin-top:12px;text-align:center;box-shadow:var(--shadow-md);}
+  .pv-ring{width:120px;height:120px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;position:relative;background:conic-gradient(var(--success) 0% 92%, var(--border) 92% 100%);}
+  .pv-ring .inner{width:92px;height:92px;border-radius:50%;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .pv-ring .v{font-size:24px;font-weight:800;color:var(--success);}
+  .pv-ring .l{font-size:10px;color:var(--text-faint);font-weight:700;}
+  .pv-sub{font-size:11.5px;color:var(--text-muted);font-weight:700;}
+  .pv-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+  .pv-tile{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px;}
+  .pv-tile h4{font-size:10.5px;font-weight:800;color:var(--text-faint);letter-spacing:.3px;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+  .pv-tile h4 svg{width:12px;height:12px;color:var(--accent);}
+  .pv-big{font-size:16px;font-weight:800;}
+  .pv-small{font-size:10.5px;color:var(--text-muted);margin-top:2px;}
+  .zone-row{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:11.5px;font-weight:700;}
+  .zone-tag{width:26px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex-shrink:0;}
+
+  /* messages */
+  .msg{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px 14px;margin-bottom:8px;display:flex;gap:11px;align-items:flex-start;position:relative;}
+  .msg.unread{border-color:var(--accent);background:var(--surface);}
+  .msg .unread-dot{position:absolute;top:10px;inset-inline-end:10px;width:8px;height:8px;border-radius:50%;background:var(--danger);}
+  .m-icon{width:36px;height:36px;border-radius:10px;background:var(--surface-ocean);color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .m-title{font-size:12.5px;font-weight:800;}
+  .m-body{font-size:11.5px;color:var(--text-muted);margin-top:2px;line-height:1.55;}
+  .m-time{font-size:10px;color:var(--text-faint);font-weight:700;margin-top:4px;}
+
+  /* profile */
+  .pf-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:8px;}
+  .pf-row{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:12.5px;font-weight:700;}
+  .pf-row .k{color:var(--text-muted);min-width:74px;}
+  .pf-row .v{flex:1;font-weight:800;}
+  .pf-btn{width:100%;border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:11px;color:var(--text-muted);font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:6px;}
+  .pf-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .pf-btn.danger{color:var(--danger);border-color:var(--danger);}
+
+  /* sheets (workout detail + report) */
+  .sheet-bg{position:absolute;inset:0;background:rgba(15,23,42,.45);z-index:40;display:none;}
+  .sheet-bg.open{display:block;}
+  .sheet{position:absolute;bottom:0;inset-inline:0;background:var(--surface);border-radius:26px 26px 0 0;padding:18px 20px 24px;z-index:50;max-height:78%;overflow-y:auto;transform:translateY(100%);transition:transform .25s;display:none;}
+  .sheet.open{display:block;animation:slideUp .25s forwards;}
+  @keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+  .sh-grip{width:36px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 12px;}
+  .sh-title{font-size:15px;font-weight:800;display:flex;align-items:center;gap:8px;}
+  .sh-title .icon{color:var(--accent);}
+  .sh-sub{font-size:11px;color:var(--text-muted);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap;font-weight:700;}
+  .sh-adapt{background:var(--accent-dim);color:var(--accent);border-radius:10px;padding:8px 12px;font-size:11.5px;font-weight:800;margin-top:10px;display:flex;align-items:center;gap:6px;}
+  .step{background:var(--surface-hover);border-radius:12px;padding:11px 13px;margin-top:8px;display:flex;gap:10px;align-items:flex-start;}
+  .step-type{min-width:46px;text-align:center;padding:5px 4px;border-radius:8px;font-size:10px;font-weight:800;flex-shrink:0;}
+  .st-warmup{background:var(--success-bg);color:var(--success);}
+  .st-main{background:var(--accent);color:#fff;}
+  .st-cool{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);}
+  .step-title{font-size:12.5px;font-weight:800;}
+  .step-zone{font-size:11px;color:var(--accent);font-weight:800;margin-top:3px;display:flex;align-items:center;gap:4px;}
+  .step-note{font-size:10.5px;color:var(--text-muted);margin-top:2px;}
+  .sh-close{width:100%;border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:11px;color:var(--text-muted);font-size:12.5px;font-weight:800;cursor:pointer;margin-top:14px;}
+
+  /* report sheet */
+  .rp-row{display:flex;gap:8px;margin:12px 0 6px;}
+  .rp-opt{flex:1;padding:12px;border:1.5px solid var(--border);border-radius:14px;background:var(--surface);font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;color:var(--text-muted);}
+  .rp-opt.sel-done{border-color:var(--success);background:var(--success-bg);color:var(--success);}
+  .rp-opt.sel-miss{border-color:var(--danger);background:var(--danger-bg);color:var(--danger);}
+  .rpe-chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;}
+  .rpe{width:34px;height:34px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);font-size:12px;font-weight:800;cursor:pointer;color:var(--text-muted);}
+  .rpe.sel{border-color:var(--accent);background:var(--accent);color:#fff;}
+  .rp-input{width:100%;border:1px solid var(--border);border-radius:12px;padding:10px 12px;background:var(--bg);color:var(--text);font-size:12.5px;font-family:inherit;outline:none;margin-top:10px;resize:none;}
+  .rp-save{width:100%;border:none;border-radius:14px;padding:13px;background:var(--accent);color:#fff;font-size:14px;font-weight:800;cursor:pointer;margin-top:12px;box-shadow:0 4px 16px rgba(37,99,235,.3);}
+
+  .wf{font-size:10px;color:#94A3B8;font-weight:700;}
+</style>
+
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-waves" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16c.6.5 1.2 1 2.5 1C7 17 7 15 9.5 15c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1C7 13 7 11 9.5 11c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/><path d="M2 8c.6.5 1.2 1 2.5 1C7 9 7 7 9.5 7c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/></symbol>
+  <symbol id="i-activity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></symbol>
+  <symbol id="i-dumbbell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.4 14.4 9.6 9.6"/><path d="M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l1.767-1.768a2 2 0 1 1 2.828 2.828z"/><path d="M21.5 21.5l-1.4-1.4"/><path d="M3.9 3.9 2.5 2.5"/><path d="M6.494 8.985a2 2 0 1 1-2.829-2.828L1.897 4.926A2 2 0 1 1 4.726 2.1l6.364 6.364a2 2 0 1 1-2.829 2.828z"/></symbol>
+  <symbol id="i-bike" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></symbol>
+  <symbol id="i-msg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+  <symbol id="i-wifi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><path d="M2 8.82a15 15 0 0 1 20 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></symbol>
+  <symbol id="i-battery" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2"/><line x1="22" y1="11" x2="22" y2="13"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+</svg>
+</head>
+<body>
+
+<div class="demo-bar">
+  <span class="demo-note">מסך האתלט — הצד שמקבל את מה שפורסם בלוח המאמן</span>
+  <div class="seg" id="athSeg"></div>
+  <button class="seg" style="padding:4px" onclick="toggleTheme()"><span id="themeBtn" style="padding:8px 16px;display:flex;align-items:center;gap:6px;font-size:12px"><svg class="icon-sm"><use href="#i-moon"/></svg> Dark</button></button>
+</div>
+
+<div class="phone">
+  <div class="ph-status">
+    <span>18:02</span>
+    <div class="icons"><svg><use href="#i-wifi"/></svg><svg><use href="#i-battery"/></svg></div>
+  </div>
+  <div class="ph-head" id="phHead"></div>
+  <div class="ph-body" id="phBody"></div>
+  <div class="ph-tabs" id="phTabs"></div>
+
+  <div class="sheet-bg" id="sheetBg" onclick="closeSheet()"></div>
+  <div class="sheet" id="sheetBox"></div>
+</div>
+
+<div class="wf">WIREFRAME v1 — BLUE FITNESS · Athlete App · WPLAN-19</div>
+
+<script>
+/* ==================== DATA ==================== */
+const DAYS = [
+  { l:'א', d:11 }, { l:'ב', d:12 }, { l:'ג', d:13 }, { l:'ד', d:14 },
+  { l:'ה', d:15 }, { l:'ו', d:16 }, { l:'ש', d:17 },
+];
+const TODAY = 3; /* ד = 14.10 */
+
+const STEPS_MAYA = [
+  { t:'warmup',  type:'חימום', title:'200 מ׳ חתירה קלה + 4×50 drill', zone:'z1', zoneTxt:'Z1 שלך: 2:10–2:25 / 100מ׳', note:'עם סנפירים — אסור לפי ההתאמה שלך (כתף)' },
+  { t:'main',    type:'עיקרי', title:'5×100 מ׳ טכניקה (80% נפח — במקום 6)', zone:'z2', zoneTxt:'Z2 שלך: 1:55–2:10 / 100מ׳', note:'מנוחה 15 שנ׳ · דגש תנועת ידיים' },
+  { t:'cooldown',type:'קירור', title:'200 מ׳ רגליים עם לוח', zone:'z1', zoneTxt:'Z1 שלך: 2:10–2:25 / 100מ׳', note:'' },
+];
+
+const ATH = {
+  maya: {
+    id:'maya', name:'מאיה', full:'מאיה כהן', sub:'דגיגונים + תוכנית אישית',
+    coach:'אגם',
+    note:'שבת — תחרות אזורית לנערים. ביום ד׳ נפח נמוך יותר מהרגיל.',
+    zones:[ { t:'Z1', r:'2:10–2:25 / 100מ׳', c:'#84CC16' }, { t:'Z2', r:'1:55–2:10 / 100מ׳', c:'#38BDF8' }, { t:'Z3', r:'1:40–1:55 / 100מ׳', c:'#FBBF24' }, { t:'Z4', r:'1:25–1:40 / 100מ׳', c:'#F87171' } ],
+    compliance:92, streak:5,
+    vol:[ { label:'שחייה', v:'1,800 מ׳', icon:'i-waves' }, { label:'כוח', v:'45 דק׳', icon:'i-dumbbell' } ],
+    lastTest:{ name:'7×100 חתירה', date:'2 באוקטובר', result:'1:38 / 100מ׳' },
+    sessions:[
+      { id:'m1', d:1, name:'חדר כושר — כוח', time:'20:00', icon:'i-dumbbell', src:'personal', sub:'45 דק׳ · פרטני', state:'past', reported:null },
+      { id:'m2', d:3, name:'טכניקה + אירובי', time:'18:00', icon:'i-waves', src:'group', sub:'60 דק׳ · בריכת הים · מאמנת: אגם', state:'today', steps:STEPS_MAYA, adapt:'התאמה שלך: 80% נפח · Z2 במקום Z3 · בלי סנפירים (כתף)' },
+      { id:'m3', d:4, name:'אינטרוולים', time:'18:00', icon:'i-waves', src:'group', canceled:true, cancelNote:'המאמנת ביטלה — סופת רעמים' },
+      { id:'m4', d:5, name:'אימון מפצה — בריכה', time:'17:30', icon:'i-waves', src:'group', added:true, sub:'במקום האימון שבוטל בה׳' },
+      { id:'m5', d:5, name:'ריצת בוקר', time:'08:00', icon:'i-activity', src:'personal', sub:'30 דק׳ · Z2 שלך' },
+    ],
+    events:[
+      { d:1, name:'טיול שנתי בית ספר', time:'08:00', kind:'pers', icon:'i-user' },
+      { d:5, name:'מבחן ביומטרי — לפני האימון', time:'16:30', kind:'test', icon:'i-clipboard' },
+    ],
+    msgs:[
+      { icon:'i-send', title:'פורסם שבוע 42', body:'השבוע שלך עודכן — אימון מפצה ביום שישי 17:30 במקום חמישי.', time:'היום · 09:12', unread:true },
+      { icon:'i-x', title:'האימון ביום ה׳ בוטל', body:'סופת רעמים צפויה — נשלים בשישי. נודיע אם יש שינוי.', time:'אתמול · 18:40', unread:true },
+      { icon:'i-clipboard', title:'תזכורת: מבחן ביומטרי', body:'יום שישי 16:30, לפני האימון. להגיע עם משקפות ומגבת.', time:'לפני יומיים', unread:false },
+    ],
+    lastWeekAtt:'נוכחות נרשמה — 3 מתוך 3 אימוני קבוצה',
+  },
+  noam: {
+    id:'noam', name:'נועם', full:'נועם חץ', sub:'תוכנית אישית · הכנה לחצי איש',
+    coach:'אגם',
+    note:'שבוע 7 מתוך 12 בהכנה — רמפה קלה, שמור על קצב Z2.',
+    zones:[ { t:'Z1', r:'5:50–6:20 / ק"מ', c:'#84CC16' }, { t:'Z2', r:'5:10–5:50 / ק"מ', c:'#38BDF8' }, { t:'Z3', r:'4:35–5:10 / ק"מ', c:'#FBBF24' }, { t:'Z4', r:'מתחת ל-4:35 / ק"מ', c:'#F87171' } ],
+    compliance:78, streak:2,
+    vol:[ { label:'שחייה', v:'2,200 מ׳', icon:'i-waves' }, { label:'רכיבה', v:'90 דק׳', icon:'i-bike' }, { label:'ריצה', v:'45 דק׳', icon:'i-activity' } ],
+    lastTest:{ name:'מבחן סף לקסי', date:'5 באוקטובר', result:'4:12 / ק"מ' },
+    sessions:[
+      { id:'n1', d:0, name:'שחיית טכניקה', time:'07:00', icon:'i-waves', src:'personal', sub:'60 דק׳ · 2,200 מ׳', state:'past', reported:{ done:true, rpe:7 } },
+      { id:'n2', d:2, name:'אופניים — כביש', time:'06:00', icon:'i-bike', src:'personal', sub:'90 דק׳ · Z2-Z3', state:'past', reported:null },
+      { id:'n3', d:4, name:'ריצת אינטרוולים', time:'18:30', icon:'i-activity', src:'personal', sub:'45 דק׳ · 6×2 דק ב-Z4 שלך' },
+    ],
+    events:[],
+    msgs:[
+      { icon:'i-send', title:'פורסם שבוע 42', body:'אימוני השחייה והרכיבה נשמרו — הריצה עברה ליום ה׳ ערב.', time:'היום · 09:12', unread:true },
+      { icon:'i-note', title:'הערת מאמן לשבוע', body:'נפח עולה ב-5% משבוע שעבר — לשמור על קצב המטרה בכל הסטים.', time:'היום · 09:12', unread:false },
+    ],
+    lastWeekAtt:null,
+  },
+};
+
+const TABS = [
+  { id:'week',   label:'השבוע',  icon:'i-calendar' },
+  { id:'progress', label:'התקדמות', icon:'i-chart' },
+  { id:'msgs',   label:'הודעות', icon:'i-msg' },
+  { id:'profile', label:'פרופיל', icon:'i-user' },
+];
+
+/* ==================== STATE ==================== */
+let ath = 'maya';
+let tab = 'week';
+let selectedDay = TODAY;
+let sheetOpen = false;
+const $ = id => document.getElementById(id);
+const A = () => ATH[ath];
+
+/* ==================== DEMO CONTROLS ==================== */
+function renderAthSeg(){
+  $('athSeg').innerHTML = ['maya','noam'].map(id=>
+    `<button class="${ath===id?'active':''}" onclick="setAth('${id}')">${ATH[id].full}</button>`).join('');
+}
+function setAth(id){ ath = id; selectedDay = TODAY; renderAthSeg(); renderAll(); }
+function toggleTheme(){
+  const html = document.documentElement;
+  const isDark = html.dataset.theme === 'dark';
+  html.dataset.theme = isDark ? '' : 'dark';
+  $('themeBtn').innerHTML = isDark
+    ? '<svg class="icon-sm"><use href="#i-moon"/></svg> Dark'
+    : '<svg class="icon-sm"><use href="#i-sun"/></svg> Light';
+}
+
+/* ==================== RENDER ==================== */
+function renderAll(){
+  renderHead();
+  renderTabs();
+  if (tab==='week') renderWeek();
+  if (tab==='progress') renderProgress();
+  if (tab==='msgs') renderMsgs();
+  if (tab==='profile') renderProfile();
+}
+function renderHead(){
+  const a = A();
+  $('phHead').innerHTML = `
+    <div class="avatar"><svg class="icon"><use href="#i-user"/></svg></div>
+    <div>
+      <div class="ph-hname">שלום ${a.name}</div>
+      <div class="ph-hsub"><svg class="icon-xs"><use href="#i-users"/></svg> ${a.sub}</div>
+    </div>
+    <div class="week-chip">שבוע 42 · 11–17.10</div>`;
+}
+function renderTabs(){
+  const unread = A().msgs.filter(m=>m.unread).length;
+  $('phTabs').innerHTML = TABS.map(t=>`
+    <button class="ptab ${tab===t.id?'active':''}" onclick="setTab('${t.id}')">
+      ${t.id==='msgs' && unread ? `<span class="dot"></span>` : ''}
+      <svg class="icon"><use href="#${t.icon}"/></svg>
+      ${t.label}
+    </button>`).join('');
+}
+function setTab(t){ tab = t; renderAll(); }
+
+/* ==================== WEEK VIEW ==================== */
+function renderWeek(){
+  const a = A();
+  let html = `
+    <div class="wstrip">
+      ${DAYS.map((d,i)=>{
+        const has = a.sessions.some(s=>s.d===i && !s.canceled);
+        const canceled = a.sessions.some(s=>s.d===i && s.canceled);
+        const cls = `${i===TODAY?'today':''} ${has?'has':''} ${i===selectedDay?'sel':''}`;
+        return `<div class="ws-col ${cls}" onclick="selectDay(${i})">
+          <span class="ws-day">${d.l}</span>
+          <span class="ws-dot ${canceled?'canceled':''}"></span>
+        </div>`;
+      }).join('')}
+    </div>`;
+
+  /* today hero */
+  const todaySess = a.sessions.filter(s=>s.d===TODAY && !s.canceled);
+  if (todaySess.length){
+    const s = todaySess[0];
+    html += `
+      <div class="hero" onclick="openWorkout('${s.id}')">
+        <div class="hero-top"><svg class="icon-sm"><use href="#i-clock"/></svg> היום · ${s.time}</div>
+        <div class="hero-name">${s.name}</div>
+        <div class="hero-meta">
+          ${s.sub ? `<span><svg class="icon-xs"><use href="#i-pin"/></svg> ${s.sub}</span>` : ''}
+          ${s.src==='group' ? `<span><svg class="icon-xs"><use href="#i-users"/></svg> אימון קבוצה</span>` : `<span><svg class="icon-xs"><use href="#i-user"/></svg> אישי</span>`}
+        </div>
+        ${s.adapt ? `<div class="hero-top" style="margin-top:8px"><svg class="icon-sm"><use href="#i-user"/></svg> ${s.adapt}</div>` : ''}
+        <button class="hero-cta" onclick="event.stopPropagation();openWorkout('${s.id}')">
+          <svg class="icon-sm"><use href="#i-waves"/></svg> פתח אימון
+        </button>
+      </div>`;
+  }
+
+  /* sessions grouped: past → report, upcoming */
+  const past = a.sessions.filter(s=>s.d < TODAY || (s.d===TODAY && s.state==='past'));
+  const rest = a.sessions.filter(s=>!past.includes(s));
+
+  html += `<div class="sec"><svg class="icon-sm"><use href="#i-check"/></svg> מחכה לדיווח שלך</div>`;
+  const toReport = past.filter(s=>!s.canceled && !s.reported);
+  const reported = past.filter(s=>s.reported);
+  if (!toReport.length && !reported.length) html += `<div style="font-size:11.5px;color:var(--text-faint);padding:6px 4px">אין אימונים לדיווח</div>`;
+  toReport.forEach(s=>{ html += sessionCard(s, { report:true }); });
+  reported.forEach(s=>{ html += sessionCard(s, {}); });
+
+  html += `<div class="sec"><svg class="icon-sm"><use href="#i-calendar"/></svg> שאר השבוע</div>`;
+  rest.forEach(s=>{ html += sessionCard(s, {}); });
+
+  /* events */
+  const evs = a.events || [];
+  if (evs.length){
+    html += `<div class="sec"><svg class="icon-sm"><use href="#i-note"/></svg> לוח האירועים</div>`;
+    evs.forEach(ev=>{
+      html += `
+        <div class="ev-card ${ev.kind}">
+          <svg class="icon-xs"><use href="#${ev.icon}"/></svg>
+          <span class="ev-name">${ev.name}</span>
+          <span class="ev-time">${DAYS[ev.d].l}׳ · ${ev.time}</span>
+        </div>`;
+    });
+  }
+
+  /* coach note */
+  html += `
+    <div class="note-card">
+      <svg class="icon-sm"><use href="#i-note"/></svg>
+      <div>
+        <b>פתק המאמנת לשבוע</b>
+        <p>${a.note}</p>
+      </div>
+    </div>`;
+
+  $('phBody').innerHTML = html;
+}
+
+function sessionCard(s, opt){
+  const a = A();
+  const tags = [];
+  if (s.src==='group') tags.push(`<span class="tag t-group"><svg><use href="#i-users"/></svg> קבוצה</span>`);
+  if (s.src==='personal') tags.push(`<span class="tag t-personal"><svg><use href="#i-user"/></svg> אישי</span>`);
+  if (s.adapt) tags.push(`<span class="tag t-adapt"><svg><use href="#i-user"/></svg> מותאם לך</span>`);
+  if (s.added) tags.push(`<span class="tag t-add"><svg><use href="#i-check"/></svg> נוסף במקום הביטול</span>`);
+  if (s.canceled) tags.push(`<span class="tag t-cancel"><svg><use href="#i-x"/></svg> בוטל</span>`);
+  if (s.reported){
+    tags.push(s.reported.done
+      ? `<span class="tag t-done"><svg><use href="#i-check"/></svg> דיווחת: RPE ${s.reported.rpe}</span>`
+      : `<span class="tag t-cancel"><svg><use href="#i-x"/></svg> לא בוצע</span>`);
+  }
+  const clickable = !s.canceled && (s.steps || s.src==='group');
+  return `
+    <div class="card ${s.canceled?'canceled':''} ${s.state==='today'?'today-card':''}" ${clickable?`onclick="openWorkout('${s.id}')"`:''}>
+      <div class="c-icon"><svg class="icon"><use href="#${s.icon}"/></svg></div>
+      <div class="c-body">
+        <div class="c-time"><svg class="icon-xs"><use href="#i-clock"/></svg> ${DAYS[s.d].l}׳ · ${s.time}</div>
+        <div class="c-name">${s.canceled?`<s>${s.name}</s>`:s.name}</div>
+        <div class="c-sub">${s.canceled ? s.cancelNote : (s.sub||'')}</div>
+        ${tags.length?`<div class="c-tags">${tags.join('')}</div>`:''}
+      </div>
+      ${opt.report ? `<button class="c-report" onclick="event.stopPropagation();openReport('${s.id}')">דווח</button>` : ''}
+    </div>`;
+}
+
+function selectDay(i){ selectedDay = i; renderWeek(); }
+
+/* ==================== PROGRESS VIEW ==================== */
+function renderProgress(){
+  const a = A();
+  $('phBody').innerHTML = `
+    <div class="pv-hero">
+      <div class="pv-ring">
+        <div class="inner">
+          <span class="v">${a.compliance}%</span>
+          <span class="l">עמידה בתוכנית</span>
+        </div>
+      </div>
+      <div class="pv-sub">חודש אחרון · ${a.streak} אימונים ברצף <svg class="icon-xs" style="color:var(--warning)"><use href="#i-flame"/></svg></div>
+    </div>
+    <div class="pv-grid">
+      <div class="pv-tile">
+        <h4><svg><use href="#i-flame"/></svg> רצף נוכחי</h4>
+        <div class="pv-big">${a.streak}</div>
+        <div class="pv-small">אימונים רצופים</div>
+      </div>
+      <div class="pv-tile">
+        <h4><svg><use href="#i-clipboard"/></svg> מבחן אחרון</h4>
+        <div class="pv-big">${a.lastTest.result}</div>
+        <div class="pv-small">${a.lastTest.name} · ${a.lastTest.date}</div>
+      </div>
+    </div>
+    <div class="pv-tile" style="margin-top:8px;border-radius:14px;">
+      <h4><svg><use href="#i-chart"/></svg> נפח השבוע</h4>
+      ${a.vol.map(v=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12px;font-weight:700;">
+        <svg class="icon-sm" style="color:var(--accent)"><use href="#${v.icon}"/></svg>
+        <span style="flex:1;color:var(--text-muted)">${v.label}</span><span>${v.v}</span></div>`).join('')}
+    </div>
+    <div class="pv-tile" style="margin-top:8px;border-radius:14px;">
+      <h4><svg><use href="#i-activity"/></svg> האזורים שלי</h4>
+      ${a.zones.map(z=>`<div class="zone-row"><span class="zone-tag" style="background:${z.c}">${z.t}</span><span style="color:var(--text-muted)">${z.r}</span></div>`).join('')}
+    </div>`;
+}
+
+/* ==================== MESSAGES VIEW ==================== */
+function renderMsgs(){
+  const a = A();
+  $('phBody').innerHTML = a.msgs.map(m=>`
+    <div class="msg ${m.unread?'unread':''}" onclick="this.classList.remove('unread');this.querySelector('.unread-dot')?.remove()">
+      ${m.unread?'<span class="unread-dot"></span>':''}
+      <div class="m-icon"><svg class="icon-sm"><use href="#${m.icon}"/></svg></div>
+      <div style="flex:1">
+        <div class="m-title">${m.title}</div>
+        <div class="m-body">${m.body}</div>
+        <div class="m-time">${m.time}</div>
+      </div>
+    </div>`).join('') + `
+    <div style="text-align:center;font-size:11px;color:var(--text-faint);padding:10px">הודעות ישנות נמחקות אחרי 30 יום</div>`;
+}
+
+/* ==================== PROFILE VIEW ==================== */
+function renderProfile(){
+  const a = A();
+  $('phBody').innerHTML = `
+    <div class="pv-hero">
+      <div class="avatar" style="width:64px;height:64px;margin:0 auto 10px"><svg style="width:30px;height:30px"><use href="#i-user"/></svg></div>
+      <div style="font-size:16px;font-weight:800">${a.full}</div>
+      <div style="font-size:11.5px;color:var(--text-muted);margin-top:3px">${a.sub}</div>
+    </div>
+    <div class="pf-card">
+      <div class="pf-row"><span class="k">מאמנת</span><span class="v">${a.coach}</span></div>
+      <div class="pf-row"><span class="k">נוכחות</span><span class="v" style="font-weight:700;font-size:11.5px;color:var(--text-muted)">${a.lastWeekAtt || 'אין אימוני קבוצה'}</span></div>
+      <button class="pf-btn" onclick="alert('WIREFRAME — פתיחת צ׳אט עם המאמנת')"><svg class="icon-sm"><use href="#i-msg"/></svg> הודעה למאמנת</button>
+    </div>
+    <div class="pf-card">
+      <button class="pf-btn" onclick="toggleTheme()"><svg class="icon-sm"><use href="#i-moon"/></svg> מצב כהה / בהיר</button>
+      <button class="pf-btn" onclick="alert('WIREFRAME — הגדרות שפה HE/EN')"><svg class="icon-sm"><use href="#i-user"/></svg> שפה: עברית</button>
+      <button class="pf-btn danger" onclick="alert('WIREFRAME — התנתקות')"><svg class="icon-sm"><use href="#i-x"/></svg> התנתקות</button>
+    </div>`;
+}
+
+/* ==================== WORKOUT DETAIL SHEET ==================== */
+function openWorkout(sid){
+  const s = A().sessions.find(x=>x.id===sid);
+  if (!s) return;
+  let html = `
+    <div class="sh-grip"></div>
+    <div class="sh-title"><svg class="icon"><use href="#${s.icon}"/></svg> ${s.name}</div>
+    <div class="sh-sub">
+      <span>${DAYS[s.d].l}׳ · ${s.time}</span>
+      ${s.sub?`<span>${s.sub}</span>`:''}
+    </div>`;
+  if (s.adapt) html += `<div class="sh-adapt"><svg class="icon-sm"><use href="#i-user"/></svg> ${s.adapt}</div>`;
+  if (s.steps){
+    html += s.steps.map(st=>`
+      <div class="step">
+        <div class="step-type st-${st.t}">${st.type}</div>
+        <div style="flex:1">
+          <div class="step-title">${st.title}</div>
+          <div class="step-zone"><svg class="icon-xs"><use href="#i-activity"/></svg> ${st.zoneTxt}</div>
+          ${st.note?`<div class="step-note">${st.note}</div>`:''}
+        </div>
+      </div>`).join('');
+  } else {
+    html += `<div class="sh-adapt" style="background:var(--surface-hover);color:var(--text-muted)"><svg class="icon-sm"><use href="#i-note"/></svg> פירוט הסטים יתווסף בגרסה הבאה של הווירפריים</div>`;
+  }
+  html += `<button class="sh-close" onclick="closeSheet()">סגור</button>`;
+  openSheet(html);
+}
+
+/* ==================== REPORT SHEET ==================== */
+let rpCtx = { id:null, done:true, rpe:6 };
+function openReport(sid){
+  const s = A().sessions.find(x=>x.id===sid);
+  if (!s) return;
+  rpCtx = { id:sid, done:true, rpe:6 };
+  openSheet(`
+    <div class="sh-grip"></div>
+    <div class="sh-title"><svg class="icon"><use href="#i-check"/></svg> דיווח אימון — ${s.name}</div>
+    <div class="sh-sub"><span>${DAYS[s.d].l}׳ · ${s.time}</span></div>
+    <div class="rp-row">
+      <button class="rp-opt sel-done" id="rpDone" onclick="setRpDone(true)"><svg class="icon-sm"><use href="#i-check"/></svg> בוצע</button>
+      <button class="rp-opt" id="rpMiss" onclick="setRpDone(false)"><svg class="icon-sm"><use href="#i-x"/></svg> לא בוצע</button>
+    </div>
+    <div style="font-size:11.5px;font-weight:800;color:var(--text-muted);margin-top:10px;">מאמץ מורגש (RPE 1–10)</div>
+    <div class="rpe-chips" id="rpeChips"></div>
+    <textarea class="rp-input" id="rpNote" rows="2" placeholder="הערה למאמנת (רשות) — למשל: כתף כאבה בסוף"></textarea>
+    <button class="rp-save" onclick="saveReport()"><svg class="icon-sm" style="vertical-align:-3px"><use href="#i-send"/></svg> שמור דיווח</button>
+  `);
+  renderRpe();
+}
+function setRpDone(v){
+  rpCtx.done = v;
+  $('rpDone').className = 'rp-opt' + (v?' sel-done':'');
+  $('rpMiss').className = 'rp-opt' + (!v?' sel-miss':'');
+}
+function renderRpe(){
+  $('rpeChips').innerHTML = Array.from({length:10},(_,i)=>i+1).map(n=>
+    `<button class="rpe ${rpCtx.rpe===n?'sel':''}" onclick="setRpe(${n})">${n}</button>`).join('');
+}
+function setRpe(n){ rpCtx.rpe = n; renderRpe(); }
+function saveReport(){
+  const s = A().sessions.find(x=>x.id===rpCtx.id);
+  if (!s) return;
+  s.reported = { done: rpCtx.done, rpe: rpCtx.rpe, note: $('rpNote').value };
+  closeSheet();
+  renderWeek();
+}
+
+/* ==================== SHEET ==================== */
+function openSheet(html){
+  $('sheetBox').innerHTML = html;
+  $('sheetBox').classList.add('open');
+  $('sheetBg').classList.add('open');
+  sheetOpen = true;
+}
+function closeSheet(){
+  $('sheetBox').classList.remove('open');
+  $('sheetBg').classList.remove('open');
+  sheetOpen = false;
+}
+
+/* ==================== INIT ==================== */
+renderAthSeg();
+renderAll();
+</script>
+</body>
+</html>
