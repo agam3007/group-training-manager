@@ -952,7 +952,7 @@
   <button onclick="undo()">בטל</button>
 </div>
 
-<div class="wf">WIREFRAME v14 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
+<div class="wf">WIREFRAME v15 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -1034,7 +1034,7 @@ const WORKOUTS = {
   p6:{ name:'ריצה קלה', time:'06:30', sub:'45 דק׳ · Z2', zones:[[8,'z2'],[2,'z3']], steps:S_GEN, sport:'run', load:50, text:'' },
   p7:{ name:'אופניים — כביש', time:'06:00', sub:'90 דק׳ · Z2-Z3', zones:[[7,'z2'],[3,'z3']], steps:S_GEN, sport:'bike', load:110, text:'' },
   p8:{ name:'שחיית מאסטרס', time:'20:00', sub:'60 דק׳ · 2,800 מ׳', zones:[[4,'z1'],[5,'z2'],[1,'z4']], steps:S_GEN, sport:'swim', load:95, text:'' },
-  p9:{ name:'ריצה ארוכה', time:'07:00', sub:'75 דק׳ · Z2', zones:[[10,'z2']], steps:S_GEN, sport:'run', load:80, text:'' },
+  p9:{ name:'ריצה ארוכה', time:'09:30', sub:'75 דק׳ · Z2', zones:[[10,'z2']], steps:S_GEN, sport:'run', load:80, text:'' },
 };
 
 /* week 42 — group plans */
@@ -1054,7 +1054,7 @@ const OVERRIDES = {
 const PERSONAL = {
   maya: { 1:'p1', 3:'@dagig', 4:'@dagig', 5:'p2' },
   noam: { 0:'p3', 2:'p7', 4:'p4' },
-  me:   { 1:'p6', 2:'p7', 3:'p8', 5:'p9' },
+  me:   { 1:'p6', 2:'p7', 3:'p8', 6:'p9' },  /* שבת 09:30 — מתנגש עם ליווי התחרות */
 };
 
 /* recurring weekly template per group (Group.schedule) — auto-fills every week */
@@ -1246,7 +1246,7 @@ const endMin = (w, t) => toMin(t || w.time) + (subMins(w.sub) || 60);
 const loadColor = v => v<60 ? '#84CC16' : v<100 ? '#FBBF24' : v<130 ? '#F87171' : '#DC2626';
 const loadChip = w => `<span class="load-chip"><svg><use href="#i-zap"/></svg> ${w.load||0} <span class="load-dot" style="background:${loadColor(w.load||0)}"></span></span>`;
 
-/* staff conflicts — same instructor in two places at once */
+/* staff conflicts — same instructor in two places at once (sessions + accompanied events) */
 function conflictsFor(dayIdx){
   const slots = [];
   TARGETS.filter(t=>t.type==='group').forEach(g=>{
@@ -1255,12 +1255,17 @@ function conflictsFor(dayIdx){
       const ov = (s.kind==='group') ? ovFor(g.id, dayIdx) : null;
       if (ov && ov.type==='cancel') return;
       const st = (ov && ov.type==='time') ? ov.time : w.time;
-      slots.push({ id:g.id, wid:s.wid, coach:coachOf(g.id, dayIdx), st:toMin(st), en:endMin(w, st) });
+      slots.push({ id:g.id, name:g.name, wid:s.wid, coach:coachOf(g.id, dayIdx), st:toMin(st), en:endMin(w, st) });
     });
   });
   sessionAt('me', dayIdx).filter(s=>s.kind==='personal').forEach(s=>{
     const w = WORKOUTS[s.wid];
-    slots.push({ id:'me', wid:s.wid, coach:'me', st:toMin(w.time), en:endMin(w) });
+    slots.push({ id:'me', name:'התוכנית שלי', wid:s.wid, coach:'me', st:toMin(w.time), en:endMin(w) });
+  });
+  (EVENTS[dayIdx]||[]).forEach(ev=>{
+    if (!ev.coach) return;
+    const dur = ev.kind==='competition' ? 180 : 90; /* assumed durations */
+    slots.push({ id:'ev', name:ev.title, wid:null, coach:ev.coach, st:toMin(ev.time), en:toMin(ev.time)+dur, isEvent:true });
   });
   const out = [];
   for (let i=0;i<slots.length;i++) for (let j=i+1;j<slots.length;j++){
@@ -1275,9 +1280,15 @@ function planForWeek(){
   return (WEEK_PLANS[selectedWeek] ||= { dagig:{}, neorim:{}, bogarim:{} });
 }
 function planForWeekAt(w){
-  if (w === 42) return SCHEDULE;
+  if (w === 42){
+    /* ensure a plan map exists for every group (incl. demo scale groups) */
+    TARGETS.filter(t=>t.type==='group').forEach(g=>{ SCHEDULE[g.id] = SCHEDULE[g.id] || {}; });
+    return SCHEDULE;
+  }
   if (w < 42) return PAST_41;
-  return (WEEK_PLANS[w] ||= { dagig:{}, neorim:{}, bogarim:{} });
+  const p = (WEEK_PLANS[w] ||= {});
+  TARGETS.filter(t=>t.type==='group').forEach(g=>{ p[g.id] = p[g.id] || {}; });
+  return p;
 }
 
 /* multi-session per day: day → wid | [wid, ...] */
@@ -1784,7 +1795,7 @@ function renderAthletePanel(id){
     </div>`;
 }
 
-/* staff teaching hours for the viewed week */
+/* staff hours for the viewed week — sessions + accompanied events */
 function staffHours(){
   const hours = {};
   TARGETS.filter(t=>t.type==='group').forEach(g=>{
@@ -1795,6 +1806,12 @@ function staffHours(){
       const w = WORKOUTS[plan[day]]; if (!w) return;
       const c = coachOf(g.id, +day);
       hours[c] = (hours[c]||0) + (subMins(w.sub)||60)/60;
+    });
+  });
+  Object.keys(EVENTS).forEach(day=>{
+    (EVENTS[day]||[]).forEach(ev=>{
+      if (!ev.coach) return;
+      hours[ev.coach] = (hours[ev.coach]||0) + (ev.kind==='competition' ? 3 : 1.5);
     });
   });
   return hours;
@@ -1880,7 +1897,7 @@ function renderDays(){
       });
       if (confs.length){
         shown++;
-        inner += `<div class="conflict-chip"><svg><use href="#i-alert"/></svg> קונפליקט — ${staffName(confs[0][0].coach)}: ${TARGET_MAP[confs[0][0].id].name} ↔ ${TARGET_MAP[confs[0][1].id].name}</div>`;
+        inner += `<div class="conflict-chip"><svg><use href="#i-alert"/></svg> קונפליקט — ${staffName(confs[0][0].coach)}: ${confs[0][0].name} ↔ ${confs[0][1].name}</div>`;
       }
     } else {
       const t = TARGET_MAP[mode];
