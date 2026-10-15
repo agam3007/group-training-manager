@@ -430,6 +430,15 @@
   .toast.show{transform:translateX(50%) translateY(0);}
   .toast button{border:none;background:transparent;color:#60A5FA;font-weight:800;cursor:pointer;font-size:13px;font-family:inherit;}
 
+  /* ==================== WEEK SKELETON — typed placeholders from meso planning ==================== */
+  .day-session.skel{border:1.5px dashed var(--accent);background:var(--accent-dim);}
+  .sk-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:20px;background:var(--surface);color:var(--accent);font-size:9.5px;font-weight:800;border:1px solid var(--accent);}
+  .sk-badge svg{width:9px;height:9px;}
+  .sk-fill{margin-top:6px;padding:6px;border:1px solid var(--accent);border-radius:8px;background:transparent;color:var(--accent);font-size:10.5px;font-weight:800;cursor:pointer;width:100%;}
+  .sk-fill:hover{background:var(--accent);color:var(--accent-text);}
+  .meso-sk{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);}
+  .sk-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;border:1px dashed var(--accent);background:var(--accent-dim);color:var(--accent);font-size:10.5px;font-weight:800;}
+
   /* Zone colors — intensity ladder, no purple */
   .z1{background:#84CC16;} .z2{background:#38BDF8;} .z3{background:#FBBF24;} .z4{background:#F87171;} .z5{background:#DC2626;}
 </style>
@@ -600,11 +609,7 @@
 
     <div class="sched-meta" id="schedMeta"></div>
 
-    <div class="week-note">
-      <svg class="icon-sm"><use href="#i-note"/></svg>
-      <span><b>פתק שבוע:</b> שבת — תחרות אזורית לנערים. להוריד נפח ביום ד׳ לקבוצות.</span>
-      <button class="meta-edit" onclick="alert('WIREFRAME — עריכת פתק שבוע')"><svg class="icon-xs"><use href="#i-pencil"/></svg> עריכה</button>
-    </div>
+    <div class="week-note" id="weekNoteBox"></div>
 
     <!-- WEEK READINESS — aggregated by state, expands to full list -->
     <div class="readiness-wrap" id="readinessWrap">
@@ -648,7 +653,7 @@
 
           <div id="editorStructured">
             <div class="wd-steps" id="wdSteps"></div>
-            <button class="wd-add-step" onclick="alert('WIREFRAME — הוספת סט לאימון')">
+            <button class="wd-add-step" onclick="openStepDialog()">
               <svg class="icon icon-sm"><use href="#i-plus"/></svg> הוסף סט
             </button>
           </div>
@@ -783,6 +788,10 @@
       </div>
       <div class="ev-list" id="evTargetList"></div>
     </div>
+    <div class="ev-field">
+      <span class="ev-label">מדריך נלווה</span>
+      <select class="ev-select" id="evCoach"></select>
+    </div>
     <div class="confirm-actions">
       <button class="btn-copy" onclick="hideOverlay('eventOverlay')">ביטול</button>
       <button class="btn-publish" style="padding:12px 24px;font-size:14px" onclick="addEvent()">
@@ -885,13 +894,65 @@
   </div>
 </div>
 
+<!-- WEEK NOTE EDITOR -->
+<div class="overlay" id="noteOverlay" onclick="if(event.target===this)hideOverlay('noteOverlay')">
+  <div class="confirm-card" style="max-width:430px">
+    <h3><svg class="icon"><use href="#i-note"/></svg> פתק שבוע <span id="noteTitle"></span></h3>
+    <div class="ev-field">
+      <span class="ev-label">טקסט הפתק — מוצג לך ולאתלטים לאחר פרסום</span>
+      <textarea class="ev-input" id="noteText" style="min-height:110px;resize:vertical"></textarea>
+    </div>
+    <div class="confirm-actions">
+      <button class="btn-copy" onclick="hideOverlay('noteOverlay')">ביטול</button>
+      <button class="btn-publish" style="padding:12px 24px;font-size:14px" onclick="saveNote()"><svg class="icon"><use href="#i-check"/></svg> שמור פתק</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD STEP (structured editor) -->
+<div class="overlay" id="stepOverlay" onclick="if(event.target===this)hideOverlay('stepOverlay')">
+  <div class="confirm-card" style="max-width:380px">
+    <h3><svg class="icon"><use href="#i-plus"/></svg> הוספת סט</h3>
+    <div class="ev-field"><span class="ev-label">סוג הסט</span><div class="ev-scale" id="stepTypeBtns"></div></div>
+    <div style="display:flex;gap:10px">
+      <div class="ev-field" style="flex:1">
+        <span class="ev-label">מרחק (מ׳)</span>
+        <input type="number" class="ev-input" id="stepDist" value="200">
+      </div>
+      <div class="ev-field" style="flex:1">
+        <span class="ev-label">אזור</span>
+        <select class="ev-select" id="stepZone">
+          <option>Z1</option><option selected>Z2</option><option>Z3</option><option>Z4</option><option>Z5</option>
+        </select>
+      </div>
+    </div>
+    <div class="confirm-actions">
+      <button class="btn-copy" onclick="hideOverlay('stepOverlay')">ביטול</button>
+      <button class="btn-publish" style="padding:12px 24px;font-size:14px" onclick="addStep()"><svg class="icon"><use href="#i-check"/></svg> הוסף סט</button>
+    </div>
+  </div>
+</div>
+
+<!-- WEEK SKELETON EDITOR — meso → typed placeholders -->
+<div class="overlay" id="skelOverlay" onclick="if(event.target===this)hideOverlay('skelOverlay')">
+  <div class="confirm-card" style="max-width:460px">
+    <h3><svg class="icon"><use href="#i-chart"/></svg> <span id="skelTitle"></span></h3>
+    <p>פלייסהולדרים מהתכנון העונתי: <b>איזה סוג אימון</b> באיזה יום ושעה. הלוח ימלא את השבוע בשלד הזה עד שיומלא תוכן אמיתי. הלוז הקבוע קובע <b>מתי</b>, השלד קובע <b>מה</b>.</p>
+    <div id="skelRows"></div>
+    <div class="confirm-actions">
+      <button class="btn-copy" onclick="hideOverlay('skelOverlay')">ביטול</button>
+      <button class="btn-publish" style="padding:12px 24px;font-size:14px" onclick="saveSkeleton()"><svg class="icon"><use href="#i-check"/></svg> שמור שלד</button>
+    </div>
+  </div>
+</div>
+
 <!-- UNDO TOAST -->
 <div class="toast" id="toast">
   <span id="toastLabel"></span>
   <button onclick="undo()">בטל</button>
 </div>
 
-<div class="wf">WIREFRAME v13 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
+<div class="wf">WIREFRAME v14 — BLUE FITNESS · Weekly Plan Workspace · Golden Flow 3</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -1041,11 +1102,25 @@ const MESO_EMPTY = { block:'אין תוכנית עונתית', goal:'הגדר ת
 /* weekly load target per target */
 const LOAD_TARGET = { all:null, dagig:240, neorim:300, bogarim:300, maya:200, noam:290, me:380 };
 
-/* events on the board — multiple events per day supported */
+/* events on the board — multiple events per day supported; coach = accompanying instructor */
 const EVENTS = {
   1: [ { title:'טיול שנתי בית ספר — מאיה', time:'08:00', kind:'personal', athlete:'maya' } ],
-  5: [ { title:'מבחן ביומטרי — דגיגונים', time:'16:30', kind:'test', group:'dagig' } ],
-  6: [ { title:'תחרות אזורית — נערים', time:'09:00', kind:'competition', group:'neorim' } ],
+  5: [ { title:'מבחן ביומטרי — דגיגונים', time:'16:30', kind:'test', group:'dagig', coach:'yogev' } ],
+  6: [ { title:'תחרות אזורית — נערים', time:'09:00', kind:'competition', group:'neorim', coach:'me' } ],
+};
+
+/* week notes per week */
+const WEEK_NOTE = { 42:'שבת — תחרות אזורית לנערים. להוריד נפח ביום ד׳ לקבוצות.' };
+
+/* week skeletons — typed placeholders from meso planning (day × time × sport × type).
+   The recurring schedule decides WHEN a session happens; the skeleton decides WHAT it is. */
+const SKELETONS = {
+  43: { dagig:  [ { day:2, time:'18:00', sport:'swim', type:'אירובי קל — פריקה' } ],
+        neorim: [ { day:1, time:'17:00', sport:'swim', type:'ספרינטים' },
+                  { day:3, time:'20:00', sport:'swim', type:'אינטרוולים — עלייה' },
+                  { day:4, time:'19:30', sport:'swim', type:'אירובי בסיס' } ] },
+  44: { dagig:  [ { day:3, time:'18:00', sport:'swim', type:'הכנה תחרותית — שיא' } ],
+        neorim: [ { day:1, time:'17:00', sport:'swim', type:'אליפות — פריקה' } ] },
 };
 
 /* week 41 — what actually happened */
@@ -1225,7 +1300,7 @@ function removeFromDay(map, day, wid){
 let undoSnapshot = null;
 let undoTimer = null;
 function snapshotState(){
-  return JSON.parse(JSON.stringify({ SCHEDULE, OVERRIDES, PERSONAL, WEEK_PLANS, weekState, pendingMap, EVENTS, WORKOUTS, TEMPLATES, WEEK_APPLY_META }));
+  return JSON.parse(JSON.stringify({ SCHEDULE, OVERRIDES, PERSONAL, WEEK_PLANS, weekState, pendingMap, EVENTS, WORKOUTS, TEMPLATES, WEEK_APPLY_META, WEEK_NOTE, SKELETONS }));
 }
 function withUndo(label, fn){
   undoSnapshot = snapshotState();
@@ -1238,14 +1313,14 @@ function withUndo(label, fn){
 }
 function undo(){
   if (!undoSnapshot) return;
-  const cur = { SCHEDULE, OVERRIDES, PERSONAL, WEEK_PLANS, weekState, pendingMap, EVENTS, WORKOUTS, TEMPLATES, WEEK_APPLY_META };
+  const cur = { SCHEDULE, OVERRIDES, PERSONAL, WEEK_PLANS, weekState, pendingMap, EVENTS, WORKOUTS, TEMPLATES, WEEK_APPLY_META, WEEK_NOTE, SKELETONS };
   Object.keys(cur).forEach(k=>{
     Object.keys(cur[k]).forEach(key=>delete cur[k][key]);
     Object.assign(cur[k], undoSnapshot[k]);
   });
   undoSnapshot = null;
   $('toast').classList.remove('show');
-  renderDays(); renderReadiness(); renderWeekStateChip(); updateActions();
+  renderDays(); renderReadiness(); renderWeekStateChip(); updateActions(); renderWeekNote(); renderMeso();
 }
 
 function ovFor(groupId, dayIdx){
@@ -1349,6 +1424,30 @@ function renderMeta(){
   $('schedMeta').innerHTML = html;
 }
 
+/* ==================== WEEK NOTE ==================== */
+function renderWeekNote(){
+  const note = WEEK_NOTE[selectedWeek];
+  const empty = !note;
+  $('weekNoteBox').innerHTML = `
+    <svg class="icon-sm"><use href="#i-note"/></svg>
+    <span style="flex:1"><b>פתק שבוע:</b> ${empty ? '<span style="color:var(--text-faint)">אין פתק — הוסף הערה לצוות ולאתלטים</span>' : note}</span>
+    <button class="meta-edit" onclick="openNoteDialog()"><svg class="icon-xs"><use href="#i-pencil"/></svg> ${empty?'הוסף':'עריכה'}</button>`;
+}
+function openNoteDialog(){
+  $('noteTitle').innerHTML = `— שבוע ${selectedWeek}`;
+  $('noteText').value = WEEK_NOTE[selectedWeek] || '';
+  showOverlay('noteOverlay');
+}
+function saveNote(){
+  withUndo('הפתק נשמר', ()=>{
+    const v = $('noteText').value.trim();
+    if (v) WEEK_NOTE[selectedWeek] = v; else delete WEEK_NOTE[selectedWeek];
+    hideOverlay('noteOverlay');
+    renderWeekNote();
+    markDirty();
+  });
+}
+
 /* ==================== MESO BLOCK PANEL + WEEK STATE ==================== */
 const relColor = pct => pct>.85 ? '#DC2626' : pct>.6 ? '#F87171' : pct>.4 ? '#FBBF24' : '#84CC16';
 
@@ -1393,7 +1492,25 @@ function renderMeso(){
         <button class="meta-edit" onclick="alert('WIREFRAME — עריכת התוכנית העונתית במודול התוכניות (Programs)')"><svg class="icon-xs"><use href="#i-pencil"/></svg> ערוך תוכנית</button>
       </span>
     </div>
-    <div class="meso-bars">${bars}</div>`;
+    <div class="meso-bars">${bars}</div>
+    ${renderSkeletonRow()}`;
+}
+function renderSkeletonRow(){
+  if (selectedWeek < 42 || TARGET_MAP[mode].type!=='group') return '';
+  const sk = (SKELETONS[selectedWeek]||{})[mode] || [];
+  if (sk.length){
+    return `
+      <div class="meso-sk">
+        <span class="sf-label">שלד שבוע ${selectedWeek} (מהתוכנון):</span>
+        ${sk.map(s=>`<span class="sk-chip">${DAYS[s.day].l}׳ · ${s.time} · ${s.type}</span>`).join('')}
+        <button class="meta-edit" onclick="openSkelEditor()"><svg class="icon-xs"><use href="#i-pencil"/></svg> ערוך שלד</button>
+      </div>`;
+  }
+  return `
+    <div class="meso-sk">
+      <span class="sf-label">אין שלד לשבוע ${selectedWeek} — השבוע יתמלא רק מהלוז הקבוע</span>
+      <button class="meta-edit" onclick="openSkelEditor()"><svg class="icon-xs"><use href="#i-plus"/></svg> הגדר שלד</button>
+    </div>`;
 }
 function renderMesoAll(){
   const mains = ['dagig','neorim','bogarim','maya','noam','me'];
@@ -1457,6 +1574,7 @@ function selectWeek(n){
   renderDays();
   updateActions();
   renderReadiness();
+  renderWeekNote();
 }
 function shiftWeek(dir){ selectWeek(Math.max(1, Math.min(52, selectedWeek + dir))); }
 function jumpWeek(v){
@@ -1806,6 +1924,21 @@ function renderDays(){
             <div>${loadChip(w)}${actual ? ` <span class="actual-line ${actual.done?'ok':'miss'}" style="display:inline-flex;margin-inline-start:6px"><svg><use href="#${actual.done?'i-check':'i-x'}"/></svg> ${actual.done?`בוצע${actual.att?` · נוכחות ${actual.att}`:(actual.note?` · ${actual.note}`:'')}`:`לא בוצע${actual.note?` · ${actual.note}`:''}`}</span>` : ''}</div>
           </div>`;
       });
+
+      /* typed placeholders from meso planning — the skeleton fills unplanned future days */
+      if (isFutureWeek() && t.type==='group' && !sessionAt(mode,i).length){
+        const ske = ((SKELETONS[selectedWeek]||{})[mode]||[]).find(s=>s.day===i);
+        if (ske && passes({ sport:ske.sport })){
+          shown++;
+          inner += `
+            <div class="day-session skel">
+              <div class="session-time"><svg class="icon icon-xs"><use href="#i-clock"/></svg> ${ske.time}</div>
+              <div class="session-name"><svg class="icon-xs"><use href="#${(SPORTS[ske.sport]||SPORTS.swim).icon}"/></svg>${ske.type}</div>
+              <div class="session-badges"><span class="sk-badge"><svg><use href="#i-chart"/></svg> מהתוכנית</span></div>
+              <button class="sk-fill" onclick="quickAdd(${i})"><svg class="icon-xs"><use href="#i-pencil"/></svg> מלא תוכן</button>
+            </div>`;
+        }
+      }
     }
 
     /* events on the board — planned around, not filtered by sport */
@@ -1818,7 +1951,7 @@ function renderDays(){
         const editable = !isPast && mode!=='all';
         inner += `<div class="event-chip ${ev.kind==='competition'?'comp':''} ${ev.kind==='personal'?'pers':''}" ${editable?`style="cursor:pointer" title="לחיצה מוחקת — ניתן לבטל" onclick="deleteEvent(${i},${ei})"`:''}>
           <svg class="icon-xs"><use href="#${icon}"/></svg>
-          ${ev.title} · ${ev.time}
+          ${ev.title} · ${ev.time}${ev.coach ? ` · ${staffName(ev.coach)}` : ''}
           ${editable ? '<svg class="icon-xs" style="margin-inline-start:auto;opacity:.5"><use href="#i-x"/></svg>' : ''}
         </div>`;
       }
@@ -1878,7 +2011,10 @@ function updateSummary(){
     loadHtml = `<span class="target-chip"><svg style="color:var(--text-faint)"><use href="#i-chart"/></svg> תוכנן <b>${activeCount}</b> · בוצע <b>${doneCount}</b></span>`;
   } else if (target){
     const pct = Math.min(100, Math.round(totalLoad/target*100));
-    loadHtml = `<span class="target-chip"><svg style="color:var(--accent)"><use href="#i-zap"/></svg> עומס <b>${totalLoad}</b> / יעד ${target} <span class="target-bar"><span style="width:${pct}%"></span></span></span>`;
+    const m = MESO_BY_TARGET[mode];
+    const srcTxt = m ? ` title="מקור היעד: ${m.block} · שבוע ${m.pos} מתוך ${m.to-m.from+1} (מחושב מנפח הפתיחה וקצב העלייה)"` : '';
+    loadHtml = `<span class="target-chip"${srcTxt}><svg style="color:var(--accent)"><use href="#i-zap"/></svg> עומס <b>${totalLoad}</b> / יעד ${target} <span class="target-bar"><span style="width:${pct}%"></span></span></span>`;
+    if (m) loadHtml += ` <span class="sport-chip" style="padding:4px 10px;font-size:11px"><svg style="color:var(--text-faint)"><use href="#i-chart"/></svg> מקור: ${m.block} · ${m.pos}/${m.to-m.from+1}</span>`;
   } else {
     loadHtml = `<span class="target-chip"><svg style="color:var(--accent)"><use href="#i-zap"/></svg> עומס כולל <b>${totalLoad}</b></span>`;
   }
@@ -2101,6 +2237,35 @@ function showDetail(w, subtitle, target){
 }
 function closeDetail(){ $('workoutDetail').style.display = 'none'; detailCtx = null; }
 
+/* add step — minimal structured editor (full editor lives in the app) */
+let stepType = 'main';
+const STEP_TYPES = [ { id:'warmup', l:'חימום' }, { id:'main', l:'עיקרי' }, { id:'cooldown', l:'קירור' }, { id:'drill', l:'טכני' } ];
+function openStepDialog(){
+  if (!detailCtx){ alert('WIREFRAME — פתח אימון לעריכה'); return; }
+  stepType = 'main';
+  $('stepDist').value = 200;
+  $('stepZone').value = 'Z2';
+  renderStepTypes();
+  showOverlay('stepOverlay');
+}
+function setStepType(t){ stepType = t; renderStepTypes(); }
+function renderStepTypes(){
+  $('stepTypeBtns').innerHTML = STEP_TYPES.map(x=>
+    `<button class="${stepType===x.id?'active':''}" onclick="setStepType('${x.id}')">${x.l}</button>`).join('');
+}
+function addStep(){
+  if (!detailCtx) return;
+  const dist = +$('stepDist').value || 200;
+  const zone = $('stepZone').value;
+  const wid = detailCtx.wid;
+  withUndo('הסט נוסף לאימון', ()=>{
+    WORKOUTS[wid].steps.push({ t:stepType, title:`${dist} מ׳ · ${zone}`, detail:'', zones:[[10,'z'+zone.slice(1)]] });
+    hideOverlay('stepOverlay');
+    markDirty();
+    showDetail(WORKOUTS[wid], `${TARGET_MAP[detailCtx.targetId].name} · ${DAYS[detailCtx.day].l}׳ ${WORKOUTS[wid].time}`, TARGET_MAP[detailCtx.targetId]);
+  });
+}
+
 function setEditor(which){
   $('tabStructured').classList.toggle('active', which==='structured');
   $('tabText').classList.toggle('active', which==='text');
@@ -2249,11 +2414,13 @@ function publish(){
   $('confirmTitle').innerHTML = `פרסום שבוע ${selectedWeek} — ${t.name}`;
   $('confirmBody').innerHTML = `
     <p>הפרסום יישלח ל<b> ${count} ${count>1?'אתלטים':'מתאמן'}</b>. הם יראו את האימונים, ההתאמות האישיות שלהם ופתק השבוע.</p>
+    ${t.type==='group' ? '<p style="font-size:12px">עבור קטינים — עותק מגיע גם להורים/אפוטרופוסים המחוברים (תפקיד guardian).</p>' : ''}
     <div class="cf-stats">
       <span class="cf-stat">אימונים: <b>${activeCount}</b></span>
       <span class="cf-stat">התאמות אישיות: <b>${vars}</b></span>
       <span class="cf-stat">אירועים: <b>2</b></span>
-      <span class="cf-stat">פתק שבוע: <b>כן</b></span>
+      <span class="cf-stat">פתק שבוע: <b>${WEEK_NOTE[selectedWeek]?'כן':'—'}</b></span>
+      ${t.type==='group' ? '<span class="cf-stat">הורים (קטינים): <b>מקבלים עותק</b></span>' : ''}
     </div>`;
   showOverlay('confirmOverlay');
 }
@@ -2364,6 +2531,8 @@ function openEventDialog(dayIdx){
   $('evTime').value = '09:00';
   $('evTargetSearch').value = '';
   buildEvTargetList();
+  $('evCoach').innerHTML = `<option value="">— ללא מדריך נלווה —</option>` +
+    STAFF.map(s=>`<option value="${s.id}" ${s.id==='me'?'selected':''}>${s.name}</option>`).join('');
   renderEvKinds();
   showOverlay('eventOverlay');
 }
@@ -2404,13 +2573,17 @@ function addEvent(){
   const general = evTargets.has('all');
   const targets = general ? [] : Array.from(evTargets);
   withUndo(general ? 'האירוע נוסף לכל הלוח' : `האירוע נוסף ל-${targets.length} יעדים`, ()=>{
+    const coach = $('evCoach').value;
     if (general){
-      (EVENTS[evCtx.day] = EVENTS[evCtx.day] || []).push({ title, time, kind: evCtx.kind });
+      const ev = { title, time, kind: evCtx.kind };
+      if (coach) ev.coach = coach;
+      (EVENTS[evCtx.day] = EVENTS[evCtx.day] || []).push(ev);
     } else {
       targets.forEach(id=>{
         const t = TARGET_MAP[id];
         const ev = { title, time, kind: evCtx.kind };
         if (t.type==='group') ev.group = id; else ev.athlete = id;
+        if (coach) ev.coach = coach;
         (EVENTS[evCtx.day] = EVENTS[evCtx.day] || []).push(ev);
       });
     }
@@ -2639,6 +2812,44 @@ function saveRecurring(){
     hideOverlay('recOverlay');
     renderMeta();
     markDirty();
+    renderDays();
+  });
+}
+
+/* ==================== WEEK SKELETON EDITOR — meso → typed placeholders ==================== */
+let skelSel = [];
+function openSkelEditor(){
+  if (TARGET_MAP[mode].type !== 'group'){ alert('WIREFRAME — שלד מוגדר לקבוצות'); return; }
+  if (selectedWeek < 42){ alert('WIREFRAME — שלד נכתב לשבועות עתידיים'); return; }
+  skelSel = JSON.parse(JSON.stringify((SKELETONS[selectedWeek]||{})[mode]||[]));
+  $('skelTitle').innerHTML = `שלד שבוע ${selectedWeek} — ${TARGET_MAP[mode].name}`;
+  renderSkelRows();
+  showOverlay('skelOverlay');
+}
+function renderSkelRows(){
+  $('skelRows').innerHTML = DAYS.map((d,i)=>{
+    const row = skelSel.find(s=>s.day===i);
+    return `<div class="rec-row">
+      <button class="sf-chip ${row?'active':''}" onclick="toggleSkelDay(${i})">${d.l}׳</button>
+      <input type="time" class="ev-input" style="width:110px" value="${row?row.time:'18:00'}" ${row?'':'disabled'} onchange="setSkelTime(${i},this.value)">
+      <input type="text" class="ev-input" style="flex:1" placeholder="סוג אימון — למשל: אינטרוולים" value="${row?row.type:''}" ${row?'':'disabled'} onchange="setSkelType(${i},this.value)">
+    </div>`;
+  }).join('');
+}
+function toggleSkelDay(i){
+  const idx = skelSel.findIndex(s=>s.day===i);
+  if (idx >= 0) skelSel.splice(idx,1);
+  else skelSel.push({ day:i, time:'18:00', sport:'swim', type:'אימון כללי' });
+  renderSkelRows();
+}
+function setSkelTime(i,v){ const r = skelSel.find(s=>s.day===i); if (r) r.time = v; }
+function setSkelType(i,v){ const r = skelSel.find(s=>s.day===i); if (r) r.type = v; }
+function saveSkeleton(){
+  withUndo('השלד נשמר', ()=>{
+    SKELETONS[selectedWeek] = SKELETONS[selectedWeek] || {};
+    SKELETONS[selectedWeek][mode] = skelSel;
+    hideOverlay('skelOverlay');
+    renderMeso();
     renderDays();
   });
 }
