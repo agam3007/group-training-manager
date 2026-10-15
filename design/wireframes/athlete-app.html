@@ -167,6 +167,66 @@
   .rp-input{width:100%;border:1px solid var(--border);border-radius:12px;padding:10px 12px;background:var(--bg);color:var(--text);font-size:12.5px;font-family:inherit;outline:none;margin-top:10px;resize:none;}
   .rp-save{width:100%;border:none;border-radius:14px;padding:13px;background:var(--accent);color:#fff;font-size:14px;font-weight:800;cursor:pointer;margin-top:12px;box-shadow:0 4px 16px rgba(37,99,235,.3);}
 
+  /* ==================== AVAILABILITY ==================== */
+  .avail-banner{background:var(--warning-bg);border:1px solid var(--warning);border-radius:14px;padding:11px 13px;margin:12px 0 4px;display:flex;gap:9px;align-items:center;font-size:11.5px;font-weight:800;color:var(--warning);flex-wrap:wrap;}
+  .avail-banner .ok-chip{background:var(--success-bg);color:var(--success);border-radius:20px;padding:2px 10px;font-size:9.5px;}
+  .avail-cta{width:100%;border:1.5px dashed var(--border);background:transparent;border-radius:14px;padding:12px;color:var(--text-muted);font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:12px;}
+  .avail-cta:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* ==================== JOURNAL ==================== */
+  .subtabs{display:flex;background:var(--surface-hover);border-radius:12px;padding:4px;gap:4px;margin:6px 0 12px;}
+  .subtab{flex:1;padding:8px;border:none;border-radius:10px;background:transparent;color:var(--text-muted);font-size:12px;font-weight:800;cursor:pointer;}
+  .subtab.active{background:var(--accent);color:#fff;}
+  .jform{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow-md);}
+  .jform h4{font-size:12.5px;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+  .jform h4 svg{color:var(--accent);}
+  .jrow{display:flex;align-items:center;gap:8px;padding:7px 0;font-size:12px;font-weight:700;border-bottom:1px dashed var(--border);}
+  .jrow:last-of-type{border-bottom:none;}
+  .jrow .k{min-width:86px;color:var(--text-muted);flex-shrink:0;}
+  .jinput{border:1px solid var(--border);border-radius:8px;padding:6px 8px;background:var(--bg);color:var(--text);font-family:inherit;font-size:12px;width:84px;outline:none;}
+  .jchips{display:flex;gap:5px;flex-wrap:wrap;}
+  .jchip{padding:5px 11px;border:1.5px solid var(--border);border-radius:18px;font-size:11px;font-weight:800;color:var(--text-muted);cursor:pointer;background:var(--surface);transition:all .15s;}
+  .jchip.on{border-color:var(--accent);background:var(--accent-dim);color:var(--accent);}
+  .jchip.on.ok{border-color:var(--success);background:var(--success-bg);color:var(--success);}
+  .jchip.on.bad{border-color:var(--danger);background:var(--danger-bg);color:var(--danger);}
+  .jtextarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:9px 11px;background:var(--bg);color:var(--text);font-family:inherit;font-size:12px;outline:none;resize:none;margin-top:9px;}
+  .jsave{width:100%;border:none;border-radius:12px;padding:11px;background:var(--accent);color:#fff;font-size:13px;font-weight:800;cursor:pointer;margin-top:10px;}
+  .streak-chip{display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:9px 13px;font-size:11.5px;font-weight:800;color:var(--text-muted);margin-bottom:10px;}
+  .streak-chip svg{color:var(--warning);}
+  .jentry{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:11px 13px;margin-bottom:8px;}
+  .jentry .hd{display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:var(--text-faint);margin-bottom:4px;}
+  .jentry .tx{font-size:12px;color:var(--text-muted);line-height:1.6;font-weight:600;}
+  .jentry .feel{display:inline-flex;align-items:center;gap:3px;padding:1px 8px;border-radius:20px;font-size:9.5px;font-weight:800;background:var(--success-bg);color:var(--success);}
+
+  /* ==================== COMPETITION JOURNAL ==================== */
+  .comp-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow-md);}
+  .comp-card.up{border-color:var(--accent);}
+  .comp-head{display:flex;align-items:center;gap:9px;}
+  .comp-head .icon{color:var(--danger);}
+  .comp-name{font-size:13px;font-weight:800;flex:1;line-height:1.3;}
+  .comp-sub{font-size:11px;color:var(--text-muted);font-weight:700;margin-top:1px;}
+  .comp-sec{font-size:10.5px;font-weight:800;color:var(--text-faint);letter-spacing:.3px;margin:10px 0 4px;}
+  .tl-row{display:flex;gap:10px;padding:6px 0;font-size:11.5px;font-weight:700;border-bottom:1px dashed var(--border);}
+  .tl-row:last-child{border-bottom:none;}
+  .tl-t{min-width:44px;color:var(--accent);font-weight:800;}
+  .ck-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12px;font-weight:700;cursor:pointer;}
+  .ck{width:18px;height:18px;border-radius:6px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;transition:all .15s;}
+  .ck.on{background:var(--success);border-color:var(--success);}
+  .res-row{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;font-weight:700;border-bottom:1px dashed var(--border);}
+  .res-k{min-width:52px;color:var(--text-muted);}
+  .res-p{color:var(--text-faint);text-decoration:line-through;}
+  .res-v{font-weight:800;}
+  .res-d{font-size:10px;font-weight:800;padding:1px 8px;border-radius:20px;margin-inline-start:auto;}
+  .res-d.good{background:var(--success-bg);color:var(--success);}
+  .res-d.bad{background:var(--danger-bg);color:var(--danger);}
+  .gap-box{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+  .gap-side{border-radius:12px;padding:10px;font-size:11px;line-height:1.55;font-weight:600;}
+  .gap-ath{background:var(--teal-bg);color:var(--teal);}
+  .gap-coach{background:var(--accent-dim);color:var(--accent);}
+  .gap-l{font-size:9.5px;font-weight:800;margin-bottom:3px;opacity:.85;}
+  .focus-box{background:var(--surface-ocean);border-radius:12px;padding:10px 12px;font-size:11.5px;font-weight:700;margin-top:8px;display:flex;gap:7px;align-items:center;}
+  .focus-box .icon-sm{color:var(--accent);}
+
   .wf{font-size:10px;color:#94A3B8;font-weight:700;}
 </style>
 
@@ -194,6 +254,7 @@
   <symbol id="i-wifi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><path d="M2 8.82a15 15 0 0 1 20 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></symbol>
   <symbol id="i-battery" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2"/><line x1="22" y1="11" x2="22" y2="13"/></symbol>
   <symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+  <symbol id="i-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></symbol>
 </svg>
 </head>
 <body>
@@ -217,7 +278,7 @@
   <div class="sheet" id="sheetBox"></div>
 </div>
 
-<div class="wf">WIREFRAME v1 — BLUE FITNESS · Athlete App · WPLAN-19</div>
+<div class="wf">WIREFRAME v2 — BLUE FITNESS · Athlete App · WPLAN-19</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -259,6 +320,38 @@ const ATH = {
       { icon:'i-clipboard', title:'תזכורת: מבחן ביומטרי', body:'יום שישי 16:30, לפני האימון. להגיע עם משקפות ומגבת.', time:'לפני יומיים', unread:false },
     ],
     lastWeekAtt:'נוכחות נרשמה — 3 מתוך 3 אימוני קבוצה',
+    avail:[
+      { type:'מחוץ לארץ', from:'20.10', to:'26.10', full:true, note:'טיול משפחתי — יש מכון כושר במלון', status:'המאמנת קיבלה ותכננה תוכנית נסיעה' },
+    ],
+    journal:[
+      { d:'13.10 · א׳', wake:'06:50', sleep:'22:00', meals:3, feel:'שיפור', txt:'סיימתי את כל הסטים. רוצה לעבוד על הפניות.' },
+      { d:'12.10 · שבת', wake:'08:00', sleep:'23:10', meals:2, feel:'שימור', txt:'הכתף מרגישה טוב אחרי הטיפול אצל הפיזיו.' },
+    ],
+    compUp:{
+      name:'אליפות אזורית — נערים/נערות', date:'שבת · 17.10 · 09:00', place:'בריכת הים',
+      timeline:[
+        { t:'08:30', x:'התאמה במים — 600 מ׳ קל' },
+        { t:'09:20', x:'100 חתירה — מקצה ראשי' },
+        { t:'10:40', x:'50 חתירה — מקצה שני' },
+        { t:'12:00', x:'סיום · פיקניק קבוצתי' },
+      ],
+      gear:[
+        { x:'משקפות רזרביות', on:true },
+        { x:'2 מכנסי תחרות', on:true },
+        { x:'מגבת + כובע', on:false },
+        { x:'חטיפים + בקבוק מים', on:true },
+      ],
+    },
+    compPast:{
+      name:'גביע פתיחת העונה', date:'3.10',
+      results:[
+        { k:'100 ח׳', plan:'1:36', val:'1:38', diff:'+2 שנ׳', good:false },
+        { k:'50 ח׳', plan:'30.5', val:'29.9', diff:'שיא אישי!', good:true },
+      ],
+      ath:'הרגשתי חזקה במים, הזינוק היה הכי טוב שלי אי פעם.',
+      coach:'הזינוק מצוין, אבל עדיין מאבדת ~2 שנ׳ ביציאות מהפניות.',
+      focus:'להתמקד ביציאות מהפניות + תנועה אחרי הפנייה',
+    },
   },
   noam: {
     id:'noam', name:'נועם', full:'נועם חץ', sub:'תוכנית אישית · הכנה לחצי איש',
@@ -279,11 +372,26 @@ const ATH = {
       { icon:'i-note', title:'הערת מאמן לשבוע', body:'נפח עולה ב-5% משבוע שעבר — לשמור על קצב המטרה בכל הסטים.', time:'היום · 09:12', unread:false },
     ],
     lastWeekAtt:null,
+    avail:[],
+    journal:[
+      { d:'13.10 · א׳', wake:'06:30', sleep:'22:40', meals:3, feel:'שיפור', txt:'רכיבה חזקה — קצב ממוצע עלה ל-31 קמ"ש.' },
+    ],
+    compUp:null,
+    compPast:{
+      name:'מבחן סף לקסי', date:'5.10',
+      results:[
+        { k:'1 ק"מ', plan:'4:15', val:'4:12', diff:'שיפור שיא', good:true },
+      ],
+      ath:'הרגשתי שהקצב היה בשליטה מלאה עד הק"מ האחרון.',
+      coach:'השיפור אמיתי — עכשיו להוסיף עבודת איכות ב-Z4.',
+      focus:'אינטרוולים 6×2 דק ב-Z4 ביום ה׳',
+    },
   },
 };
 
 const TABS = [
   { id:'week',   label:'השבוע',  icon:'i-calendar' },
+  { id:'journal', label:'יומן',  icon:'i-note' },
   { id:'progress', label:'התקדמות', icon:'i-chart' },
   { id:'msgs',   label:'הודעות', icon:'i-msg' },
   { id:'profile', label:'פרופיל', icon:'i-user' },
@@ -317,6 +425,7 @@ function renderAll(){
   renderHead();
   renderTabs();
   if (tab==='week') renderWeek();
+  if (tab==='journal') renderJournal();
   if (tab==='progress') renderProgress();
   if (tab==='msgs') renderMsgs();
   if (tab==='profile') renderProfile();
@@ -357,6 +466,16 @@ function renderWeek(){
         </div>`;
       }).join('')}
     </div>`;
+
+  /* availability banners — athlete-reported constraints the coach plans around */
+  (a.avail||[]).forEach(av=>{
+    html += `
+      <div class="avail-banner">
+        <svg class="icon-sm"><use href="#i-clipboard"/></svg>
+        <span style="flex:1">${av.type} · ${av.from}–${av.to} · ${av.full?'לא אוכל להתאמן':'אימון מוגבל'}${av.note?` — ${av.note}`:''}</span>
+        <span class="ok-chip">${av.status||'נשלח למאמנת'}</span>
+      </div>`;
+  });
 
   /* today hero */
   const todaySess = a.sessions.filter(s=>s.d===TODAY && !s.canceled);
@@ -413,7 +532,10 @@ function renderWeek(){
         <b>פתק המאמנת לשבוע</b>
         <p>${a.note}</p>
       </div>
-    </div>`;
+    </div>
+    <button class="avail-cta" onclick="openAvail()">
+      <svg class="icon-sm"><use href="#i-send"/></svg> יש נסיעה / פציעה / מגבלה? הודע למאמנת
+    </button>`;
 
   $('phBody').innerHTML = html;
 }
@@ -446,6 +568,151 @@ function sessionCard(s, opt){
 }
 
 function selectDay(i){ selectedDay = i; renderWeek(); }
+
+/* ==================== AVAILABILITY SHEET (report to coach) ==================== */
+let avCtx = { type:'מחוץ לארץ', full:true };
+function openAvail(){
+  avCtx = { type:'מחוץ לארץ', full:true };
+  openSheet(`
+    <div class="sh-grip"></div>
+    <div class="sh-title"><svg class="icon"><use href="#i-send"/></svg> הודעה על נסיעה / מגבלה</div>
+    <div class="sh-sub"><span>המאמנת תראה את זה לפני שתכנן את השבועות הבאים</span></div>
+    <div style="font-size:11.5px;font-weight:800;color:var(--text-muted);margin-top:12px;">סוג</div>
+    <div class="jchips" id="avType"></div>
+    <div class="jrow" style="margin-top:8px;">
+      <span class="k">תאריכים</span>
+      <input class="jinput" id="avFrom" value="20.10" style="width:70px"> —
+      <input class="jinput" id="avTo" value="26.10" style="width:70px">
+    </div>
+    <div style="font-size:11.5px;font-weight:800;color:var(--text-muted);margin-top:6px;">האימון שלי בתקופה</div>
+    <div class="jchips" id="avFull" style="margin-top:4px;"></div>
+    <textarea class="jtextarea" id="avNote" rows="2" placeholder="הערה למאמנת — למשל: יש מכון כושר במלון / הישבן מתאושש"></textarea>
+    <button class="rp-save" onclick="saveAvail()"><svg class="icon-sm" style="vertical-align:-3px"><use href="#i-send"/></svg> שליחה למאמנת</button>
+  `);
+  renderAvType(); renderAvFull();
+}
+function renderAvType(){
+  const types = ['מחוץ לארץ','פציעה','מחלה','עומס לימודים','אחר'];
+  $('avType').innerHTML = types.map(t=>
+    `<button class="jchip ${avCtx.type===t?'on':''}" onclick="avCtx.type='${t}';renderAvType()">${t}</button>`).join('');
+}
+function renderAvFull(){
+  $('avFull').innerHTML = `
+    <button class="jchip ${avCtx.full?'on bad':''}" onclick="avCtx.full=true;renderAvFull()">לא אוכל להתאמן כלל</button>
+    <button class="jchip ${!avCtx.full?'on ok':''}" onclick="avCtx.full=false;renderAvFull()">מוגבל — אוכל חלקית</button>`;
+}
+function saveAvail(){
+  const a = A();
+  a.avail.push({
+    type: avCtx.type, from: $('avFrom').value, to: $('avTo').value,
+    full: avCtx.full, note: $('avNote').value.trim(), status:'נשלח למאמנת',
+  });
+  a.msgs.unshift({ icon:'i-clipboard', title:'דיווחת על '+avCtx.type, body:`${$('avFrom').value}–${$('avTo').value} · ${avCtx.full?'ללא אימון':'אימון מוגבל'}. המאמנת תעדכן את התוכנית.`, time:'עכשיו', unread:false });
+  closeSheet();
+  renderWeek();
+}
+
+/* ==================== JOURNAL VIEW ==================== */
+let jTab = 'daily';
+let jd = { wake:'07:00', sleep:'22:30', meals:new Set(['בוקר','ערב']), feel:'שיפור', text:'' };
+function setJTab(t){ jTab = t; renderJournal(); }
+
+function renderJournal(){
+  const a = A();
+  let html = `
+    <div class="subtabs">
+      <button class="subtab ${jTab==='daily'?'active':''}" onclick="setJTab('daily')">יומן יומי</button>
+      <button class="subtab ${jTab==='comp'?'active':''}" onclick="setJTab('comp')">יומן תחרויות</button>
+    </div>`;
+  if (jTab==='daily'){
+    html += `
+      <div class="streak-chip"><svg class="icon-sm"><use href="#i-flame"/></svg> ${a.journal.length} ימים אחרונים עם יומן — המשך כך!</div>
+      <div class="jform">
+        <h4><svg class="icon-sm"><use href="#i-note"/></svg> היומן שלי · ד׳ 14.10</h4>
+        <div class="jrow"><span class="k">קמתי ב</span><input class="jinput" type="time" value="${jd.wake}" onchange="jd.wake=this.value"></div>
+        <div class="jrow"><span class="k">הלכתי לישון</span><input class="jinput" type="time" value="${jd.sleep}" onchange="jd.sleep=this.value"></div>
+        <div class="jrow"><span class="k">ארוחות</span>
+          <div class="jchips">${['בוקר','צהריים','ערב'].map(m=>
+            `<button class="jchip ${jd.meals.has(m)?'on ok':''}" onclick="toggleMeal('${m}')">${m}</button>`).join('')}</div>
+        </div>
+        <div class="jrow"><span class="k">איך היה באימון</span>
+          <div class="jchips">
+            <button class="jchip ${jd.feel==='שיפור'?'on ok':''}" onclick="jd.feel='שיפור';renderJournal()">שיפור</button>
+            <button class="jchip ${jd.feel==='שימור'?'on':''}" onclick="jd.feel='שימור';renderJournal()">שימור</button>
+            <button class="jchip ${jd.feel==='קושי'?'on bad':''}" onclick="jd.feel='קושי';renderJournal()">קושי</button>
+          </div>
+        </div>
+        <textarea class="jtextarea" rows="2" placeholder="על מה אני רוצה לעבוד בהמשך?" oninput="jd.text=this.value">${jd.text}</textarea>
+        <button class="jsave" onclick="saveJournalDay()"><svg class="icon-sm" style="vertical-align:-3px"><use href="#i-check"/></svg> שמור יומן להיום</button>
+      </div>
+      <div class="sec"><svg class="icon-sm"><use href="#i-calendar"/></svg> יומנים קודמים</div>`;
+    a.journal.forEach(j=>{
+      html += `
+        <div class="jentry">
+          <div class="hd"><span>${j.d}</span><span>קמה ${j.wake} · ישנה ${j.sleep} · ארוחות ${j.meals}/3</span></div>
+          <div class="tx"><span class="feel">${j.feel}</span> ${j.txt}</div>
+        </div>`;
+    });
+  } else {
+    /* competition journal */
+    if (a.compUp){
+      const c = a.compUp;
+      html += `
+        <div class="comp-card up">
+          <div class="comp-head">
+            <svg class="icon"><use href="#i-trophy"/></svg>
+            <div class="comp-name">${c.name}<div class="comp-sub">${c.date} · ${c.place}</div></div>
+          </div>
+          <div class="comp-sec">לוז יום התחרות</div>
+          ${c.timeline.map(t=>`<div class="tl-row"><span class="tl-t">${t.t}</span><span>${t.x}</span></div>`).join('')}
+          <div class="comp-sec">ציוד להכין — סמני מה שכבר ארזת</div>
+          ${c.gear.map((g,i)=>`<div class="ck-row" onclick="toggleGear(${i})">
+            <span class="ck ${g.on?'on':''}">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>${g.x}</div>`).join('')}
+        </div>`;
+    }
+    if (a.compPast){
+      const c = a.compPast;
+      html += `
+        <div class="comp-card">
+          <div class="comp-head">
+            <svg class="icon" style="color:var(--text-muted)"><use href="#i-trophy"/></svg>
+            <div class="comp-name">${c.name}<div class="comp-sub">${c.date} · סיכום מסקנות</div></div>
+          </div>
+          <div class="comp-sec">תוצאות — מול מה שתוכנן</div>
+          ${c.results.map(r=>`<div class="res-row">
+            <span class="res-k">${r.k}</span>
+            <span class="res-p">${r.plan}</span>
+            <svg class="icon-xs" style="color:var(--text-faint)"><use href="#i-chevron-left"/></svg>
+            <span class="res-v">${r.val}</span>
+            <span class="res-d ${r.good?'good':'bad'}">${r.diff}</span>
+          </div>`).join('')}
+          <div class="comp-sec" style="margin-top:10px;">התחושה שלי מול הצפייה של המאמנת</div>
+          <div class="gap-box">
+            <div class="gap-side gap-ath"><div class="gap-l">אני הרגשתי</div>${c.ath}</div>
+            <div class="gap-side gap-coach"><div class="gap-l">המאמנת ראתה</div>${c.coach}</div>
+          </div>
+          <div class="focus-box"><svg class="icon-sm"><use href="#i-flame"/></svg> מיקוד להמשך: ${c.focus}</div>
+        </div>`;
+    }
+    if (!a.compUp && !a.compPast) html += `<div style="text-align:center;color:var(--text-faint);font-size:12px;padding:20px">אין תחרויות להצגה</div>`;
+  }
+  $('phBody').innerHTML = html;
+}
+function toggleMeal(m){
+  if (jd.meals.has(m)) jd.meals.delete(m); else jd.meals.add(m);
+  renderJournal();
+}
+function toggleGear(i){
+  const a = A();
+  if (a.compUp) a.compUp.gear[i].on = !a.compUp.gear[i].on;
+  renderJournal();
+}
+function saveJournalDay(){
+  const a = A();
+  a.journal.unshift({ d:'14.10 · היום', wake:jd.wake, sleep:jd.sleep, meals:jd.meals.size, feel:jd.feel, txt:jd.text || '—' });
+  jd = { wake:'07:00', sleep:'22:30', meals:new Set(), feel:'שיפור', text:'' };
+  renderJournal();
+}
 
 /* ==================== PROGRESS VIEW ==================== */
 function renderProgress(){

@@ -1242,7 +1242,13 @@ const ATHLETE_CONTEXT = {
     test: { name:'7×100 חתירה', date:'2 אוק׳', result:'1:38 / 100מ׳' },
     zones: [ {t:'Z1',r:'2:10–2:25',c:'#84CC16'}, {t:'Z2',r:'1:55–2:10',c:'#38BDF8'}, {t:'Z3',r:'1:40–1:55',c:'#FBBF24'}, {t:'Z4',r:'1:25–1:40',c:'#F87171'} ],
     compliance: 92, attendance: 88,
+    avail: 'מחוץ לארץ · 20–26.10 (טיול משפחתי) — לתכנן תוכנית נסיעה, יש מכון במלון',
     flags: [ 'כתף ימין — להימנע מסנפירים עד סוף החודש' ],
+    journal: [
+      { d:'13 אוק׳', t:'קמה 06:50 · אימון: שיפור · רוצה לעבוד על הפניות' },
+      { d:'12 אוק׳', t:'כתף מרגישה טוב אחרי הטיפול · ארוחות 2/3' },
+    ],
+    compLog: 'גביע פתיחה 3.10: 100 ח׳ 1:38 מול יעד 1:36 · היא הרגישה חזקה, הפער ביציאות מהפניות · מיקוד: יציאות',
     notes: [
       { d:'1 אוק׳', t:'מגיבה טוב לטיפול פיזיו. להעלות נפח בהדרגה.' },
       { d:'24 ספט׳', t:'ביקשה להוסיף ריצה — לשלב ביום ו׳.' },
@@ -1253,6 +1259,9 @@ const ATHLETE_CONTEXT = {
     zones: [ {t:'Z1',r:'5:50–6:20',c:'#84CC16'}, {t:'Z2',r:'5:10–5:50',c:'#38BDF8'}, {t:'Z3',r:'4:35–5:10',c:'#FBBF24'}, {t:'Z4',r:'<4:35',c:'#F87171'} ],
     compliance: 78, attendance: null,
     flags: [ 'עומס עבודה גבוה — להיזהר מרצפי אינטרוולים' ],
+    journal: [
+      { d:'13 אוק׳', t:'רכיבה חזקה — קצב ממוצע עלה ל-31 קמ"ש · ישן טוב' },
+    ],
     notes: [
       { d:'3 אוק׳', t:'מתכונן לחצי איש בנובמבר — לבנות רמפה.' },
     ],
@@ -1868,6 +1877,21 @@ function renderAthletePanel(id){
       <h4><svg class="icon-xs"><use href="#i-alert"/></svg> דגלים</h4>
       ${a.flags.map(f=>`<div class="ath-flag"><svg class="icon-sm"><use href="#i-alert"/></svg> ${f}</div>`).join('')}
     </div>
+    ${a.avail ? `
+    <div class="ath-section">
+      <h4><svg class="icon-xs"><use href="#i-clipboard"/></svg> זמינות — דווח על ידי האתלטית</h4>
+      <div class="ath-flag"><svg class="icon-sm"><use href="#i-clock"/></svg> ${a.avail}</div>
+    </div>` : ''}
+    ${a.journal ? `
+    <div class="ath-section">
+      <h4><svg class="icon-xs"><use href="#i-note"/></svg> יומן אחרון (מהאפליקציה)</h4>
+      ${a.journal.map(j=>`<div class="ath-note"><b>${j.d}:</b> ${j.t}</div>`).join('')}
+    </div>` : ''}
+    ${a.compLog ? `
+    <div class="ath-section">
+      <h4><svg class="icon-xs"><use href="#i-trophy"/></svg> מסקנות מתחרות</h4>
+      <div class="ath-note">${a.compLog}</div>
+    </div>` : ''}
     <div class="ath-section">
       <h4><svg class="icon-xs"><use href="#i-note"/></svg> פתקים אחרונים</h4>
       ${a.notes.map(n=>`<div class="ath-note"><b>${n.d}:</b> ${n.t}</div>`).join('')}
