@@ -1244,9 +1244,9 @@ const ATHLETE_CONTEXT = {
     compliance: 92, attendance: 88,
     avail: 'מחוץ לארץ · 20–26.10 (טיול משפחתי) — לתכנן תוכנית נסיעה, יש מכון במלון',
     flags: [ 'כתף ימין — להימנע מסנפירים עד סוף החודש' ],
-    journal: [
-      { d:'13 אוק׳', t:'קמה 06:50 · אימון: שיפור · רוצה לעבוד על הפניות' },
-      { d:'12 אוק׳', t:'כתף מרגישה טוב אחרי הטיפול · ארוחות 2/3' },
+    reports: [
+      { d:'13 אוק׳', t:'שחייה — בוצע · RPE 7 · "היה קשה בפניות, סיימתי הכל"' },
+      { d:'12 אוק׳', t:'כוח — בוצע · RPE 5 · הכתף מרגישה טוב אחרי הטיפול' },
     ],
     compLog: 'גביע פתיחה 3.10: 100 ח׳ 1:38 מול יעד 1:36 · היא הרגישה חזקה, הפער ביציאות מהפניות · מיקוד: יציאות',
     notes: [
@@ -1259,8 +1259,8 @@ const ATHLETE_CONTEXT = {
     zones: [ {t:'Z1',r:'5:50–6:20',c:'#84CC16'}, {t:'Z2',r:'5:10–5:50',c:'#38BDF8'}, {t:'Z3',r:'4:35–5:10',c:'#FBBF24'}, {t:'Z4',r:'<4:35',c:'#F87171'} ],
     compliance: 78, attendance: null,
     flags: [ 'עומס עבודה גבוה — להיזהר מרצפי אינטרוולים' ],
-    journal: [
-      { d:'13 אוק׳', t:'רכיבה חזקה — קצב ממוצע עלה ל-31 קמ"ש · ישן טוב' },
+    reports: [
+      { d:'13 אוק׳', t:'רכיבה — בוצע · RPE 6 · קצב ממוצע עלה ל-31 קמ"ש' },
     ],
     notes: [
       { d:'3 אוק׳', t:'מתכונן לחצי איש בנובמבר — לבנות רמפה.' },
@@ -1882,10 +1882,10 @@ function renderAthletePanel(id){
       <h4><svg class="icon-xs"><use href="#i-clipboard"/></svg> זמינות — דווח על ידי האתלטית</h4>
       <div class="ath-flag"><svg class="icon-sm"><use href="#i-clock"/></svg> ${a.avail}</div>
     </div>` : ''}
-    ${a.journal ? `
+    ${a.reports ? `
     <div class="ath-section">
-      <h4><svg class="icon-xs"><use href="#i-note"/></svg> יומן אחרון (מהאפליקציה)</h4>
-      ${a.journal.map(j=>`<div class="ath-note"><b>${j.d}:</b> ${j.t}</div>`).join('')}
+      <h4><svg class="icon-xs"><use href="#i-note"/></svg> דיווחי אימון אחרונים (RPE + הערות) — מהאפליקציה</h4>
+      ${a.reports.map(j=>`<div class="ath-note"><b>${j.d}:</b> ${j.t}</div>`).join('')}
     </div>` : ''}
     ${a.compLog ? `
     <div class="ath-section">

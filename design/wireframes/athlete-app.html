@@ -173,13 +173,7 @@
   .avail-cta{width:100%;border:1.5px dashed var(--border);background:transparent;border-radius:14px;padding:12px;color:var(--text-muted);font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:12px;}
   .avail-cta:hover{border-color:var(--accent);color:var(--accent);}
 
-  /* ==================== JOURNAL ==================== */
-  .subtabs{display:flex;background:var(--surface-hover);border-radius:12px;padding:4px;gap:4px;margin:6px 0 12px;}
-  .subtab{flex:1;padding:8px;border:none;border-radius:10px;background:transparent;color:var(--text-muted);font-size:12px;font-weight:800;cursor:pointer;}
-  .subtab.active{background:var(--accent);color:#fff;}
-  .jform{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow-md);}
-  .jform h4{font-size:12.5px;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
-  .jform h4 svg{color:var(--accent);}
+  /* ==================== SHARED INPUTS (sheets) ==================== */
   .jrow{display:flex;align-items:center;gap:8px;padding:7px 0;font-size:12px;font-weight:700;border-bottom:1px dashed var(--border);}
   .jrow:last-of-type{border-bottom:none;}
   .jrow .k{min-width:86px;color:var(--text-muted);flex-shrink:0;}
@@ -190,13 +184,55 @@
   .jchip.on.ok{border-color:var(--success);background:var(--success-bg);color:var(--success);}
   .jchip.on.bad{border-color:var(--danger);background:var(--danger-bg);color:var(--danger);}
   .jtextarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:9px 11px;background:var(--bg);color:var(--text);font-family:inherit;font-size:12px;outline:none;resize:none;margin-top:9px;}
-  .jsave{width:100%;border:none;border-radius:12px;padding:11px;background:var(--accent);color:#fff;font-size:13px;font-weight:800;cursor:pointer;margin-top:10px;}
-  .streak-chip{display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:9px 13px;font-size:11.5px;font-weight:800;color:var(--text-muted);margin-bottom:10px;}
-  .streak-chip svg{color:var(--warning);}
-  .jentry{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:11px 13px;margin-bottom:8px;}
-  .jentry .hd{display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:var(--text-faint);margin-bottom:4px;}
-  .jentry .tx{font-size:12px;color:var(--text-muted);line-height:1.6;font-weight:600;}
-  .jentry .feel{display:inline-flex;align-items:center;gap:3px;padding:1px 8px;border-radius:20px;font-size:9.5px;font-weight:800;background:var(--success-bg);color:var(--success);}
+
+  /* ==================== COMPETITION JOURNAL v12 — 3 screens ==================== */
+  .comp-state{font-size:9.5px;font-weight:800;padding:3px 10px;border-radius:16px;flex-shrink:0;white-space:nowrap;}
+  .cs-plan{background:var(--surface-hover);color:var(--text-muted);}
+  .cs-sent{background:var(--accent-dim);color:var(--accent);}
+  .cs-done{background:var(--success-bg);color:var(--success);}
+  .cs-new{background:var(--warning-bg);color:var(--warning);}
+  .cd-chip{font-size:9.5px;font-weight:800;color:var(--text-faint);padding:3px 8px;flex-shrink:0;}
+  .resp-badge{background:var(--accent-dim);color:var(--accent);border-radius:16px;padding:3px 10px;font-size:9.5px;font-weight:800;flex-shrink:0;display:inline-flex;align-items:center;gap:3px;}
+  .resp-badge svg{width:10px;height:10px;}
+  .add-comp{width:100%;padding:12px;border:1.5px dashed var(--border);border-radius:14px;background:transparent;color:var(--text-muted);font-size:12.5px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;font-family:inherit;margin-bottom:10px;}
+  .add-comp:hover{border-color:var(--accent);color:var(--accent);}
+  .tpl-pick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+  .tpl-item{border:1.5px solid var(--border);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px;cursor:pointer;background:var(--surface);text-align:start;font-family:inherit;}
+  .tpl-item.on{border-color:var(--accent);background:var(--accent-dim);}
+  .tpl-item .t1{font-size:11.5px;font-weight:800;display:flex;align-items:center;gap:6px;}
+  .tpl-item .t1 svg{width:14px;height:14px;color:var(--accent);}
+  .tpl-item.on .t1{color:var(--accent);}
+  .tpl-item .t2{font-size:10px;color:var(--text-faint);font-weight:700;line-height:1.4;}
+  .stage-row{display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px dashed var(--border);}
+  .stage-row:last-of-type{border-bottom:none;}
+  .stage-n{flex:1;border:1px solid var(--border);border-radius:8px;padding:6px 9px;background:var(--bg);color:var(--text);font-family:inherit;font-size:12px;font-weight:700;outline:none;min-width:0;}
+  .stage-n:focus{border-color:var(--accent);}
+  .stage-t{width:56px;border:1px solid var(--border);border-radius:8px;padding:6px 6px;background:var(--bg);color:var(--text);font-family:inherit;font-size:11px;outline:none;text-align:center;flex-shrink:0;}
+  .stage-del{border:none;background:transparent;color:var(--text-faint);cursor:pointer;padding:3px;flex-shrink:0;}
+  .stage-del:hover{color:var(--danger);}
+  .st-tabs{display:flex;gap:5px;margin:10px 0 10px;overflow-x:auto;padding-bottom:2px;}
+  .st-tabs::-webkit-scrollbar{height:0;}
+  .st-tab{flex:0 0 auto;padding:7px 13px;border-radius:12px;border:1px solid var(--border);background:var(--surface);font-size:11px;font-weight:800;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap;font-family:inherit;}
+  .st-tab.on{border-color:var(--accent);background:var(--accent-dim);color:var(--accent);}
+  .st-tab svg{width:12px;height:12px;}
+  .lock-badge{display:inline-flex;align-items:center;gap:3px;background:var(--surface-hover);color:var(--text-muted);border-radius:14px;padding:1px 8px;font-size:9px;font-weight:800;flex-shrink:0;}
+  .lock-badge svg{width:9px;height:9px;}
+  .sb-block{background:var(--surface-hover);border-radius:14px;padding:12px 13px;margin-top:8px;}
+  .sb-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:7px;}
+  .sb-plan{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:9px 11px;font-size:10.5px;font-weight:700;line-height:1.55;color:var(--text-muted);}
+  .sb-act{display:flex;flex-direction:column;gap:4px;}
+  .sb-act textarea{width:100%;border:1.5px solid var(--teal);border-radius:10px;padding:8px 10px;background:var(--bg);color:var(--text);font-family:inherit;font-size:11px;outline:none;resize:none;min-height:56px;font-weight:600;}
+  .sb-act textarea:focus{border-color:var(--accent);}
+  .lib-pick-list{border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+  .lib-pick-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-bottom:1px solid var(--border);cursor:pointer;font-size:11.5px;font-weight:700;}
+  .lib-pick-item:last-child{border-bottom:none;}
+  .lib-pick-item:hover{background:var(--surface-hover);}
+  .picker-search{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:12px;padding:9px 12px;background:var(--bg);}
+  .picker-search input{border:none;outline:none;background:transparent;color:var(--text);font-family:inherit;font-size:12px;flex:1;min-width:0;font-weight:700;}
+  .staff-hours{font-size:10px;color:var(--text-faint);font-weight:700;}
+  .demo-chip{display:inline-flex;align-items:center;gap:4px;border:none;background:transparent;color:var(--text-faint);font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;padding:2px 0;}
+  .demo-chip:hover{color:var(--accent);}
+  .demo-chip svg{width:10px;height:10px;}
 
   /* ==================== COMPETITION JOURNAL ==================== */
   .comp-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow-md);}
@@ -345,6 +381,8 @@
   <symbol id="i-battery" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2"/><line x1="22" y1="11" x2="22" y2="13"/></symbol>
   <symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
   <symbol id="i-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></symbol>
   <symbol id="i-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="14" height="14" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2v2"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
@@ -373,7 +411,7 @@
   <div class="sheet" id="sheetBox"></div>
 </div>
 
-<div class="wf">WIREFRAME v11 — BLUE FITNESS · Athlete App · WPLAN-19</div>
+<div class="wf">WIREFRAME v12 — BLUE FITNESS · Athlete App · WPLAN-19 · MON-10</div>
 
 <script>
 /* ==================== DATA ==================== */
@@ -383,73 +421,46 @@ const DAYS = [
 ];
 const TODAY = 3; /* ד = 14.10 */
 
-/* ==================== TIME-GENERATED SCAFFOLD — blocks derive from start time ==================== */
+/* ==================== TIME-ADAPTIVE SCHEDULE — prep rows derive from the start time ==================== */
 function h2t(h){
   const H = Math.floor(h), M = Math.round((h-H)*60);
   return String(H).padStart(2,'0') + ':' + String(M).padStart(2,'0');
 }
-/* day blocks: morning comp = evening+morning; afternoon adds a light-meal block; evening adds main-meal + pre-race blocks */
-function genDayBlocks(startH){
-  const blocks = [ { label:'ערב לפני', items:[
-    { x:'להכין תיק — לפי רשימת הציוד', on:false },
-    { x:'לישון מוקדם — עד 22:00', on:false },
-  ]}];
+/* prep-only rows — heats themselves arrive from the coach, marked src:'coach' */
+function genSchedule(startH){
+  const rows = [ { t:'19:00', x:'ערב לפני · ארוחת ערב פחמימתית — פסטה / אורז' } ];
   if (startH < 12){
-    blocks.push({ label:'בוקר התחרות', items:[
-      { x:`ארוחת בוקר 3 שעות לפני — ${h2t(startH-3)}`, on:false },
-      { x:'לכתוב מספרי מקצה + מסלול על היד', on:false },
-      { x:'להגיע 30 דק׳ לפני ההתאמה', on:false },
-    ]});
+    rows.push({ t:h2t(startH-3), x:'התעוררות + ארוחת בוקר — 3 שעות לפני המקצה' });
+    rows.push({ t:h2t(startH-0.75), x:'הגעה לבריכה' });
+  } else if (startH < 17){
+    rows.push({ t:'08:00', x:'ארוחת בוקר רגילה' });
+    rows.push({ t:h2t(startH-2), x:'ארוחה קלה 2 שעות לפני' });
+    rows.push({ t:h2t(startH-0.75), x:'הגעה לבריכה' });
   } else {
-    blocks.push({ label:'בוקר — יום רגיל', items:[
-      { x:'ארוחת בוקר רגילה', on:false },
-      { x:'לא להתאמן קשה בבוקר', on:true },
-    ]});
-    if (startH < 17){
-      blocks.push({ label:'צהריים', items:[
-        { x:`ארוחה קלה 2 שעות לפני — ${h2t(startH-2)}`, on:false },
-        { x:'מנוחה — לא לעמוד בשמש', on:false },
-      ]});
-    } else {
-      blocks.push({ label:'צהריים', items:[
-        { x:`ארוחה עיקרית פחמימתית — ${h2t(startH-4)}`, on:false },
-        { x:'מנוחה / תנומה קצרה', on:false },
-      ]});
-      blocks.push({ label:'בין הערביים', items:[
-        { x:`חטיף קל — ${h2t(startH-1)}`, on:false },
-        { x:'להתחיל לשתות לאט — 500 מ"ל', on:false },
-      ]});
-    }
+    rows.push({ t:'08:00', x:'ארוחת בוקר רגילה' });
+    rows.push({ t:h2t(startH-4), x:'ארוחה עיקרית פחמימתית' });
+    rows.push({ t:h2t(startH-1), x:'חטיף קל + שתייה — 500 מ"ל' });
+    rows.push({ t:h2t(startH-0.75), x:'הגעה לבריכה' });
   }
-  return blocks;
+  return rows;
 }
-/* nutrition scaffold — meal blocks with times computed from start time */
-function genNutritionBlocks(startH){
-  const b = [ { when:'ערב לפני · ארוחה', what:'פחמימות + שתייה מרובה' } ];
-  if (startH < 12){
-    b.push({ when:`בוקר · ארוחה (${h2t(startH-3)})`, what:'פחמימות קלות לעיכול' });
-  } else {
-    b.push({ when:'בוקר · ארוחה', what:'ארוחת בוקר רגילה' });
-    if (startH >= 17) b.push({ when:`צהריים · ארוחה עיקרית (${h2t(startH-4)})`, what:'פחמימות — הארוחה הגדולה' });
-    else b.push({ when:`צהריים · ארוחה קלה (${h2t(startH-2)})`, what:'קלה — לא כבדה' });
-    b.push({ when:`לפני · ארוחה קלה (${h2t(startH-1.5)})`, what:'חטיף + נוזלים' });
-  }
-  b.push({ when:`שעה לפני · נוזלים (${h2t(startH-1)})`, what:'חצי ליטר מים + מלחים' });
-  b.push({ when:'במהלם', what:'לפי תוכנית הדלק' });
-  b.push({ when:'אחרי · התאוששות', what:'חלבון + פחמימה' });
-  return b;
-}
-/* club preparation template — the coach's standard, the athlete personalizes */
+/* club preparation template — the coach's standard: stages + todo; the schedule adapts to the start time */
 const CLUB_TEMPLATE = {
   name:'הכנה סטנדרטית — תחרות בריכה',
-  gearCats:['שחייה','ארוחות'],
-  gear:[
-    { x:'משקפות + רזרבי', on:false, cat:'שחייה' },
-    { x:'2 מכנסי תחרות', on:false, cat:'שחייה' },
-    { x:'מגבת + כובע', on:false, cat:'שחייה' },
-    { x:'חטיפים + בקבוק מים', on:false, cat:'ארוחות' },
+  stages:['מקצה ראשי','מקצה שני'],
+  todo:[
+    { x:'להכין תיק: משקפות + רזרבי · 2 מכנסי תחרות · מגבת + כובע · חטיפים ובקבוק מים', on:false },
+    { x:'לישון מוקדם — עד 22:00, טלפון מחוץ לחדר', on:false },
+    { x:'לכתוב מספר מקצה ומסלול על היד', on:false },
   ],
 };
+/* templates offered in the Race Builder (מסך א׳) */
+const RACE_TEMPLATES = [
+  { id:'club', name:'תחרות בריכה — הכנה סטנדרטית', sub:'התבנית של המאמנת + לוז מותאם לשעה', icon:'i-shield', stages:CLUB_TEMPLATE.stages, fromClub:true },
+  { id:'tri', name:'טריאתלון קלאסי', sub:'שחייה · אופניים · ריצה עם מתחמי חלופה', icon:'i-activity', stages:['שחייה','מתחם חלופה T1','אופניים','מתחם חלופה T2','ריצה'] },
+  { id:'run', name:'ריצת מרתון', sub:'פתיחה · שיגור · 10 הק"מ האחרונים', icon:'i-activity', stages:['פתיחה 0–10 ק"מ','שיגור 10–30 ק"מ','10 הק"מ האחרונים'] },
+  { id:'test', name:'מבחן בריכה', sub:'סדרת מבחן אחת — בלי לוז תחרותי', icon:'i-clipboard', kind:'test', stages:['סדרת המבחן'] },
+];
 
 const STEPS_MAYA = [
   { t:'warmup',  type:'חימום', title:'200 מ׳ חתירה קלה + 4×50 drill', zone:'z1', zoneTxt:'Z1 שלך: 2:10–2:25 / 100מ׳', note:'עם סנפירים — אסור לפי ההתאמה שלך (כתף)' },
@@ -478,6 +489,7 @@ const ATH = {
       { d:5, name:'מבחן ביומטרי — לפני האימון', time:'16:30', kind:'test', icon:'i-clipboard' },
     ],
     msgs:[
+      { icon:'i-msg', title:'המאמנת הגיבה על ההכנה — אליפות אזורית', body:'התוכנית שלך טובה. נשאר פרט אחד: מתי לנשום ב-100 — ראי במקצה הראשי.', time:'היום · 15:40', unread:true },
       { icon:'i-send', title:'פורסם שבוע 42', body:'השבוע שלך עודכן — אימון מפצה ביום שישי 17:30 במקום חמישי.', time:'היום · 09:12', unread:true },
       { icon:'i-x', title:'האימון ביום ה׳ בוטל', body:'סופת רעמים צפויה — נשלים בשישי. נודיע אם יש שינוי.', time:'אתמול · 18:40', unread:true },
       { icon:'i-clipboard', title:'תזכורת: מבחן ביומטרי', body:'יום שישי 16:30, לפני האימון. להגיע עם משקפות ומגבת.', time:'לפני יומיים', unread:false },
@@ -486,124 +498,72 @@ const ATH = {
     avail:[
       { type:'מחוץ לארץ', from:'20.10', to:'26.10', full:true, note:'טיול משפחתי — יש מכון כושר במלון', status:'המאמנת קיבלה ותכננה תוכנית נסיעה' },
     ],
-    journal:[
-      { d:'13.10 · א׳', wake:'06:50', sleep:'22:00', meals:3,
-        feel:[ {k:'שיפור',t:'היה קשה בפניות אבל סיימתי את כל הסטים'}, {k:'שימור',t:'הצלחתי להחזיק עם מאיה בכל המקצים'} ],
-        txt:'רוצה לעבוד על הפניות בכל אימון' },
-      { d:'12.10 · שבת', wake:'08:00', sleep:'23:10', meals:2,
-        feel:[ {k:'קושי',t:'לא אכלתי צהריים לפני האימון'} ],
-        txt:'הכתף מרגישה טוב אחרי הטיפול אצל הפיזיו' },
-    ],
     comps:[
       {
-        id:'alifut', kind:'competition', startH:9,
+        id:'alifut', kind:'competition', startH:9, state:'sent', daysAway:3,
         name:'אליפות אזורית — נערות ב׳', date:'שבת · 17.10 · 09:00', place:'בריכת הים',
-        gearCats:['שחייה','כללי','ארוחות'],
-        gear:[
-          { x:'משקפות רזרביות', on:true, cat:'שחייה' },
-          { x:'2 מכנסי תחרות', on:true, cat:'שחייה' },
-          { x:'מגבת + כובע', on:false, cat:'כללי' },
-          { x:'חטיפים + בקבוק מים', on:true, cat:'ארוחות' },
+        sched:[
+          { t:'19:00', x:'ערב לפני · ארוחת ערב פחמימתית — פסטה / אורז' },
+          { t:'06:00', x:'התעוררות + ארוחת בוקר — 3 שעות לפני המקצה' },
+          { t:'08:15', x:'הגעה לבריכה' },
+          { t:'08:30', x:'התאמה במים — 600 מ׳ קל', src:'coach' },
+          { t:'09:20', x:'מקצה 100 חתירה — מקצה ראשי', src:'coach' },
+          { t:'10:40', x:'מקצה 50 חתירה — מקצה שני', src:'coach' },
+          { t:'12:00', x:'סיום · פיקניק קבוצתי', src:'coach' },
         ],
-        timeline:[
-          { t:'08:30', x:'התאמה במים — 600 מ׳ קל' },
-          { t:'09:20', x:'100 חתירה — מקצה ראשי' },
-          { t:'10:40', x:'50 חתירה — מקצה שני' },
-          { t:'12:00', x:'סיום · פיקניק קבוצתי' },
+        todo:[
+          { x:'תיק ארוז: משקפות רזרביות · 2 מכנסיים · מגבת + כובע · חטיפים ומים', on:false, prob:'המכנס היחיד היה רטוב מהמקצה הראשון — היה קר. להביא 2' },
+          { x:'לישון מוקדם — עד 22:00, טלפון מחוץ לחדר', on:false },
+          { x:'לכתוב על היד מספר מקצה + מסלול', on:false },
+          { x:'להתאים גומיית משקפות — בדיקה אחרונה', on:true },
         ],
-        routine:{ blocks:[
-          { label:'ערב לפני', items:[
-            { x:'ארוחת ערב פחמימתית עד 19:00 — פסטה / אורז', on:true },
-            { x:'להכין תיק: משקפות, 2 מכנסיים, מגבת, כובע, חטיפים', on:false },
-            { x:'לישון מוקדם — עד 22:00, טלפון מחוץ לחדר', on:false },
-          ]},
-          { label:'בוקר התחרות', items:[
-            { x:'ארוחת בוקר 3 שעות לפני המקצה — 06:30', on:false },
-            { x:'לכתוב על היד מספר מקצה + מסלול (נמסר בכניסה)', on:false },
-            { x:'להתאים גומיית משקפות — בדיקה אחרונה', on:true },
-          ]},
-        ]},
-        nutrition:{
-          blocks:[
-            { when:'ערב לפני · ארוחה', what:'פסטה עם רוטב קל + שתייה מרובה' },
-            { when:'בוקר · ארוחה', what:'טוסט + גבינה + בננה' },
-            { when:'1 שעה לפני', what:'חצי ליטר מים + מלחים' },
-            { when:'בין מקצה 1 ל-2', what:'איזוטוני + חצי חטיף' },
-            { when:'אחרי · התאוששות', what:'שוקו + חטיף' },
-          ],
-        },
-        races:[
-          { name:'100 חתירה · 09:20', status:'המאמנת הגיבה · 1 הערה', copied:'גביע פתיחת העונה',
-            plan:[
-              { ph:'פתיחה', ath:'לצאת חזק מהזינוק + 10 מ׳ ראשונים בלי נשימה' },
-              { ph:'0–50', ath:'לשמור 31 חתירות למסלול',
-                coach:'מה חסר: מתי לנשום — כל 3 או 5 חתירות?' },
-              { ph:'פניות', ath:'יציאה חזקה מהקיר + לספור חתירות מיד אחרי',
-                tip:'~2 שנ׳ לכל פנייה — שיניתי את הדגש מהגביע' },
-              { ph:'50–100', ath:'לא לקצר חתירה, רגליים חזקות ב-25 האחרונים' },
-              { ph:'סיום', ath:'לגעת במקסימום בלי להרים ראש מהמים' },
-          ]},
-          { name:'50 חתירה · 10:40', status:'טרם נכתב — כתוב או העתק',
-            plan:[
-              { ph:'פתיחה', ath:'' },
-              { ph:'סיום', ath:'' },
-          ]},
+        stages:[
+          { n:'מקצה 100 חתירה', t:'09:20',
+            str:'פתיחה: לצאת חזק מהזינוק + 10 מ׳ ראשונים בלי נשימה · מסלול: לשמור 31 חתירות למסלול · פניות: יציאה חזקה מהקיר + לספור חתירות מיד אחרי · סיום: לגעת במקסימום בלי להרים ראש מהמים',
+            coach:'מה חסר: מתי לנשום — כל 3 או 5 חתירות?',
+            tip:'מהגביע: הרגשתי שאני מאבדת מהירות בפניות — המאמנת: ~2 שנ׳ לכל פנייה. זה המיקוד שלנו עכשיו',
+            nutr:[ { t:'בין המקצים', x:'איזוטוני + חצי חטיף', prob:'התייבשתי — לא שתיתי מספיק' } ] },
+          { n:'מקצה 50 חתירה', t:'10:40', str:'', nutr:[],
+            tip:'מהגביע: עצרתי חתירה 2 מ׳ לפני הקיר — המאמנת: איבדת 0.3 שנ׳, לסיים במקסימום' },
         ],
       },
       {
-        id:'mivhan', kind:'test', startH:16.5,
+        id:'mivhan', kind:'test', startH:16.5, state:'plan', daysAway:2,
         name:'מבחן ביומטרי — 7×100', date:'שישי · 16.10 · 16:30', place:'בריכת הים',
-        gearCats:['כללי'],
-        gear:[
-          { x:'משקפות', on:true, cat:'כללי' },
-          { x:'בקבוק מים + חטיף אחרי המבחן', on:true, cat:'כללי' },
+        sched:[
+          { t:'14:30', x:'ארוחה קלה — לא כבדה' },
+          { t:'16:00', x:'התאמה קלה — 400 מ׳', src:'coach' },
+          { t:'16:30', x:'סדרת מבחן: 7×100 חתירה · מנוחה 45 שנ׳', src:'coach' },
+          { t:'17:15', x:'דופק חוזר + תיעוד תוצאות', src:'coach' },
         ],
-        timeline:[
-          { t:'16:00', x:'התאמה קלה — 400 מ׳' },
-          { t:'16:30', x:'סדרת מבחן: 7×100 חתירה, מנוחה 45 שנ׳' },
-          { t:'17:15', x:'סיום · דופק חוזר + תיעוד תוצאות' },
+        todo:[
+          { x:'משקפות + בקבוק מים + חטיף אחרי המבחן', on:true },
+          { x:'לא להתאמן קשה ביום חמישי בערב', on:false },
         ],
-        routine:{ blocks:[
-          { label:'ערב לפני', items:[ { x:'לא להתאמן קשה ביום חמישי בערב', on:false } ]},
-          { label:'צהרי המבחן', items:[
-            { x:'ארוחה קלה 2 שעות לפני — עד 14:30', on:false },
-            { x:'מנוחה בצהריים · לא להתאמן בבוקר', on:true },
-            { x:'להגיע 30 דק׳ לפני להתאמה', on:false },
-          ]},
-        ]},
-        nutrition:{
-          blocks:[
-            { when:'ערב לפני · ארוחה', what:'ארוחה רגילה' },
-            { when:'בוקר · ארוחה', what:'ארוחת בוקר קלה' },
-            { when:'צהריים · ארוחה', what:'ארוחה קלה עד 14:30' },
-            { when:'בהפסקות בין ה-100ים', what:'2–3 לגימות מים' },
-          ],
-        },
-        races:[
-          { name:'סדרת המבחן 7×100', status:'טרם נבדק על ידי המאמנת',
-            plan:[
-              { ph:'100 ראשון', ath:'לא לצאת מהר מדי — זה לא מקצה' },
-              { ph:'אמצע', ath:'' },
-              { ph:'100 אחרון', ath:'לתת הכל — הנתון האמיתי נמדד פה' },
-          ]},
+        stages:[
+          { n:'סדרת 7×100', t:'16:30',
+            str:'100 ראשון — לא לצאת מהר מדי, זה לא מקצה · 100 אחרון — לתת הכל, הנתון האמיתי נמדד פה',
+            nutr:[ { t:'בהפסקות בין ה-100ים', x:'2–3 לגימות מים' } ] },
         ],
       },
       {
-        id:'erev', kind:'competition', startH:19,
-        fromTemplate:'הכנה סטנדרטית — תחרות בריכה',
+        id:'erev', kind:'competition', startH:19, state:'plan', daysAway:6,
+        fromTpl:'הכנה סטנדרטית — תחרות בריכה',
         name:'מפגש ערב — מקצי 50/100', date:'שלישי · 20.10 · 19:00', place:'בריכת הים',
-        gearCats:JSON.parse(JSON.stringify(CLUB_TEMPLATE.gearCats)),
-        gear:JSON.parse(JSON.stringify(CLUB_TEMPLATE.gear)),
-        timeline:[
-          { t:'18:15', x:'התאמה במים — 400 מ׳' },
-          { t:'19:00', x:'מקצי 50 ו-100' },
-          { t:'20:30', x:'סיום' },
+        sched:[
+          { t:'19:00', x:'ערב לפני · ארוחת ערב פחמימתית — פסטה / אורז' },
+          { t:'08:00', x:'ארוחת בוקר רגילה' },
+          { t:'15:00', x:'ארוחה עיקרית פחמימתית' },
+          { t:'18:00', x:'חטיף קל + שתייה — 500 מ"ל' },
+          { t:'18:15', x:'הגעה לבריכה · התאמה במים — 400 מ׳', src:'coach' },
+          { t:'19:00', x:'מקצה 50 חתירה — ראשי', src:'coach' },
+          { t:'19:10', x:'מקצה 100 חתירה — שני', src:'coach' },
+          { t:'20:30', x:'סיום', src:'coach' },
         ],
-        routine:{ blocks: genDayBlocks(19) },
-        nutrition:{ blocks: genNutritionBlocks(19) },
-        races:[
-          { name:'50 חתירה · 19:40', status:'טרם נכתב — כתוב או העתק',
-            plan:[ { ph:'פתיחה', ath:'' }, { ph:'סיום', ath:'' } ]},
+        todo: JSON.parse(JSON.stringify(CLUB_TEMPLATE.todo)),
+        stages:[
+          { n:'מקצה 50 חתירה', t:'19:00', str:'', nutr:[] },
+          { n:'מקצה 100 חתירה', t:'19:10', str:'', nutr:[] },
         ],
       },
     ],
@@ -667,83 +627,58 @@ const ATH = {
     ],
     lastWeekAtt:null,
     avail:[],
-    journal:[
-      { d:'13.10 · א׳', wake:'06:30', sleep:'22:40', meals:3,
-        feel:[ {k:'שיפור',t:'קצב ממוצע עלה ל-31 קמ"ש'} ],
-        txt:'רכיבה חזקה — לשמור על תזונה ברכיבות ארוכות' },
-    ],
     comps:[
       {
-        id:'half', kind:'competition',
+        id:'half', kind:'competition', startH:6.75, state:'plan', daysAway:38, precise:true,
         name:'חצי איש — מכבי תל אביב', date:'שבת · 21.11 · 06:45', place:'גלילות',
-        gearCats:['שחייה','אופניים','שטח חלופה','ריצה','ארוחות'],
-        gear:[
-          { x:'חליפה + משקפות רזרביים', on:true, cat:'שחייה' },
-          { x:'4 ג\'לים + 2 בקבוקים למתחם האופניים', on:true, cat:'אופניים' },
-          { x:'מגבת + סנדלים למתחם החלופה', on:false, cat:'שטח חלופה' },
-          { x:'מגפיים לריצה + כובע', on:false, cat:'ריצה' },
-          { x:'בננות + חטיפים להתאוששות', on:true, cat:'ארוחות' },
-        ],
-        timeline:[
-          { t:'04:30', x:'התעוררות + ארוחה' },
+        sched:[
+          { t:'21:00', x:'ערב לפני · ארוחת אורז + עוף' },
+          { t:'03:45', x:'התעוררות + ארוחה — 3 שעות לפני הזינוק' },
           { t:'05:40', x:'העברת ציוד למתחמי החלופה (T1/T2)' },
-          { t:'06:45', x:'זינוק שחייה — 1.9 ק"מ' },
-          { t:'08:00', x:'חלופה T1 → אופניים 90 ק"מ' },
-          { t:'11:15', x:'חלופה T2 → ריצה 21.1 ק"מ' },
-          { t:'13:30', x:'קו סיום' },
+          { t:'06:45', x:'זינוק שחייה — 1.9 ק"מ', src:'coach' },
+          { t:'08:00', x:'חלופה T1 → אופניים 90 ק"מ', src:'coach' },
+          { t:'11:15', x:'חלופה T2 → ריצה 21.1 ק"מ', src:'coach' },
+          { t:'13:30', x:'קו סיום', src:'coach' },
         ],
-        routine:{ blocks:[
-          { label:'ערב לפני', items:[
-            { x:'ציוד מסודר על הדלת + בקבוקים במקפיא', on:false },
-            { x:'שינה מוקדמת — 21:30', on:false },
-          ]},
-          { label:'בוקר התחרות', items:[
-            { x:'ארוחה 3 שעות לפני — 03:45', on:false },
-            { x:'ג\'ל 15 דק׳ לפני זינוק', on:true },
-          ]},
-        ]},
-        nutrition:{
-          precise:true,
-          blocks:[
-            { when:'ערב לפני · ארוחה', what:'אורז + עוף', items:[
-              { n:'אורז לבן מבושל', qty:250, u:'גרם', m:{k:1.30,c:0.28,p:0.03,f:0.003} },
-              { n:'חזה עוף מבושל', qty:150, u:'גרם', m:{k:1.65,c:0,p:0.31,f:0.04} },
-            ]},
-            { when:'בוקר · ארוחה', what:'שיבולת + בננה + קפה', items:[
-              { n:'שיבולת שיבולת (גרם)', qty:80, u:'גרם', m:{k:3.67,c:0.61,p:0.13,f:0.07} },
-              { n:'בננה', qty:1, u:'יחידה', m:{k:105,c:27,p:1.3,f:0.4} },
-            ]},
-            { when:'1 שעה לפני זינוק', what:'מלחים + חצי ליטר מים', items:[
-              { n:'שקיק מלחים', qty:1, u:'יחידה', m:{k:0,c:0,p:0,f:0} },
-              { n:'מים', qty:500, u:'מ"ל', m:{k:0,c:0,p:0,f:0} },
-            ]},
-            { when:'15 דק׳ לפני זינוק', what:'ג\'ל עם קפאין', items:[
-              { n:'ג\'ל SIS GO + קפאין', qty:1, u:'יחידה', m:{k:87,c:22,p:0,f:0} },
-            ]},
-            { when:'רכיבה', what:'איזוטוני — לגמור בקבוק תוך כדי', items:[
-              { n:'איזוטוני ISOSTAR', qty:750, u:'מ"ל', m:{k:0.24,c:0.06,p:0,f:0} },
-            ]},
-            { when:'ריצה · 2 ק"מ', what:'ג\'ל', items:[
-              { n:'ג\'ל SIS GO Energy', qty:1, u:'יחידה', m:{k:87,c:22,p:0,f:0} },
-            ]},
-            { when:'ריצה · 7 ק"מ', what:'ג\'ל', items:[
-              { n:'ג\'ל SIS GO Energy', qty:1, u:'יחידה', m:{k:87,c:22,p:0,f:0} },
-            ]},
-            { when:'אחרי · התאוששות', what:'חטיף חלבון + קולה', items:[
-              { n:'חטיף חלבון', qty:1, u:'יחידה', m:{k:200,c:16,p:20,f:6} },
-              { n:'קולה', qty:330, u:'מ"ל', m:{k:0.42,c:0.106,p:0,f:0} },
-            ]},
-          ],
-        },
-        races:[
-          { name:'מהלך המירוץ — 3 ענפים + 2 חלופות', status:'טרם נבדק על ידי המאמנת',
-            plan:[
-              { ph:'שחייה', ath:'לצאת מימין לגל — שטח פתוח יותר; לא להתמקם באמצע החבילה' },
-              { ph:'T1', ath:'' },
-              { ph:'אופניים', ath:'כיכר חלוקה א׳ — לקחת בקבוק ולזרוק; ג\'ל כל 45 דק׳' },
-              { ph:'T2', ath:'' },
-              { ph:'ריצה', ath:'קצב 5:30/ק"מ — לא לצאת מהר עם ההרגשה הטובה' },
-          ]},
+        todo:[
+          { x:'ציוד מסודר על הדלת + בקבוקים במקפיא', on:false },
+          { x:'שינה מוקדמת — 21:30', on:false },
+          { x:'ג\'ל לזינוק + 2 בקבוקים למתחם האופניים', on:true },
+        ],
+        stages:[
+          { n:'שחייה · 1.9 ק"מ', t:'06:45',
+            str:'לצאת מימין לגל — שטח פתוח יותר; לא להתמקם באמצע החבילה',
+            nutr:[
+              { t:'60 דק׳ לפני', x:'מלחים + חצי ליטר מים', items:[
+                { n:'שקיק מלחים', qty:1, u:'יחידה', m:{k:0,c:0,p:0,f:0} },
+                { n:'מים', qty:500, u:'מ"ל', m:{k:0,c:0,p:0,f:0} },
+              ]},
+              { t:'15 דק׳ לפני', x:'ג\'ל עם קפאין', items:[
+                { n:'ג\'ל SIS GO + קפאין', qty:1, u:'יחידה', m:{k:87,c:22,p:0,f:0} },
+              ]},
+            ] },
+          { n:'מתחם חלופה T1', t:'08:00', str:'', nutr:[] },
+          { n:'אופניים · 90 ק"מ', t:'08:30',
+            str:'כיכר חלוקה א׳ — לקחת בקבוק ולזרוק · ג\'ל כל 45 דק׳ · לשמור על עומס לזיגזג',
+            nutr:[
+              { t:'כיכר חלוקה א׳', x:'איזוטוני — לגמור בקבוק תוך כדי', items:[
+                { n:'איזוטוני ISOSTAR', qty:750, u:'מ"ל', m:{k:0.24,c:0.06,p:0,f:0} },
+              ]},
+              { t:'כל 45 דק׳', x:'ג\'ל', items:[
+                { n:'ג\'ל SIS GO Energy', qty:3, u:'יחידה', m:{k:87,c:22,p:0,f:0} },
+              ]},
+            ] },
+          { n:'מתחם חלופה T2', t:'11:15', str:'', nutr:[] },
+          { n:'ריצה · 21.1 ק"מ', t:'11:30',
+            str:'קצב 5:30/ק"מ — לא לצאת מהר עם ההרגשה הטובה',
+            nutr:[
+              { t:'ק"מ 2', x:'ג\'ל', items:[
+                { n:'ג\'ל SIS GO Energy', qty:1, u:'יחידה', m:{k:87,c:22,p:0,f:0} },
+              ]},
+              { t:'ק"מ 7', x:'ג\'ל', items:[
+                { n:'ג\'ל SIS GO Energy', qty:1, u:'יחידה', m:{k:87,c:22,p:0,f:0} },
+              ]},
+            ] },
         ],
       },
     ],
@@ -982,429 +917,471 @@ function saveAvail(){
   renderWeek();
 }
 
-/* ==================== JOURNAL VIEW ==================== */
-let jTab = 'daily';
-let jd = { wake:'07:00', sleep:'22:30', meals:new Set(['בוקר','ערב']), feels:{ 'שיפור':'', 'שימור':'', 'קושי':'' }, text:'' };
-function setJTab(t){ jTab = t; renderJournal(); }
+/* ==================== COMPETITION JOURNAL — 3 screens: א׳ מבנה / ב׳ תכנון / ג׳ תחקיר ==================== */
+let jw = { comp:null, screen:'plan', st:0, isNew:false };
 
 function renderJournal(){
-  const a = A();
-  let html = `
-    <div class="subtabs">
-      <button class="subtab ${jTab==='daily'?'active':''}" onclick="setJTab('daily')">יומן יומי</button>
-      <button class="subtab ${jTab==='comp'?'active':''}" onclick="setJTab('comp')">יומן תחרויות</button>
-    </div>`;
-  if (jTab==='daily'){
-    html += `
-      <div class="streak-chip"><svg class="icon-sm"><use href="#i-flame"/></svg> ${a.journal.length} ימים אחרונים עם יומן — המשך כך!</div>
-      <div class="jform">
-        <h4><svg class="icon-sm"><use href="#i-note"/></svg> היומן שלי · ד׳ 14.10</h4>
-        <div class="jrow"><span class="k">קמתי ב</span><input class="jinput" type="time" value="${jd.wake}" onchange="jd.wake=this.value"></div>
-        <div class="jrow"><span class="k">הלכתי לישון</span><input class="jinput" type="time" value="${jd.sleep}" onchange="jd.sleep=this.value"></div>
-        <div class="jrow"><span class="k">ארוחות</span>
-          <div class="jchips">${['בוקר','צהריים','ערב'].map(m=>
-            `<button class="jchip ${jd.meals.has(m)?'on ok':''}" onclick="toggleMeal('${m}')">${m}</button>`).join('')}</div>
-        </div>
-        <div class="jrow"><span class="k">באימון — מה כתוב:</span></div>
-        <div class="feel-row">
-          <span class="feel-k fk-ok">שיפור</span>
-          <input class="feel-input" value="${jd.feels['שיפור']}" placeholder="למשל: היה קשה בפניות אבל סיימתי הכל" oninput="jd.feels['שיפור']=this.value">
-        </div>
-        <div class="feel-row">
-          <span class="feel-k fk-mid">שימור</span>
-          <input class="feel-input" value="${jd.feels['שימור']}" placeholder="למשל: הצלחתי להחזיק עם מאיה" oninput="jd.feels['שימור']=this.value">
-        </div>
-        <div class="feel-row">
-          <span class="feel-k fk-bad">קושי</span>
-          <input class="feel-input" value="${jd.feels['קושי']}" placeholder="למשל: לא אכלתי צהריים לפני האימון" oninput="jd.feels['קושי']=this.value">
-        </div>
-        <textarea class="jtextarea" rows="2" placeholder="על מה אני רוצה לעבוד בהמשך?" oninput="jd.text=this.value">${jd.text}</textarea>
-        <button class="jsave" onclick="saveJournalDay()"><svg class="icon-sm" style="vertical-align:-3px"><use href="#i-check"/></svg> שמור יומן להיום</button>
-      </div>
-      <div class="sec"><svg class="icon-sm"><use href="#i-calendar"/></svg> יומנים קודמים</div>`;
-    a.journal.forEach(j=>{
-      const feels = Array.isArray(j.feel) ? j.feel : [j.feel];
-      html += `
-        <div class="jentry">
-          <div class="hd"><span>${j.d}</span><span>קמה ${j.wake} · ישנה ${j.sleep} · ארוחות ${j.meals}/3</span></div>
-          ${feels.map(f=>{
-            const fk = (typeof f === 'string') ? { k:f, t:'' } : f;
-            const cls = fk.k==='שיפור' ? 'fk-ok' : fk.k==='קושי' ? 'fk-bad' : 'fk-mid';
-            return `<div class="tx" style="margin-bottom:3px"><span class="feel-k ${cls}" style="margin-inline-end:6px">${fk.k}</span>${fk.t}</div>`;
-          }).join('')}
-          <div class="tx" style="color:var(--text);font-weight:800;margin-top:4px;display:flex;gap:5px;align-items:center;">
-            <svg class="icon-xs" style="color:var(--accent)"><use href="#i-flame"/></svg> ${j.txt}
-          </div>
-        </div>`;
-    });
-  } else {
-    /* competition journal */
-    /* competition journal: wizard flow — pick an event, then step by step */
-    if (wiz.comp){
-      html += renderWizard();
-    } else {
-      (a.comps||[]).forEach(c=>{
-        html += `
-          <div class="comp-card up comp-list-card" onclick="openComp('${c.id}')">
-            <div class="comp-head">
-              <svg class="icon" style="${c.kind==='test'?'color:var(--warning)':'color:var(--danger)'}"><use href="#${c.kind==='test'?'i-clipboard':'i-trophy'}"/></svg>
-              <div class="comp-name">${c.name}<div class="comp-sub">${c.date} · ${c.place}</div></div>
-              <svg class="icon" style="color:var(--text-faint)"><use href="#i-chevron-left"/></svg>
-            </div>
-            <div class="race-status ${c.submitted?'ok':''}">${c.submitted ? 'הוכן ונשלח למאמנת לתגובה' : 'לחץ להכנה שלב אחר שלב: ציוד · לוז · שגרה ותזונה · מהלך'}</div>
-          </div>`;
-      });
-    }
-    if (a.compPast){
-      const c = a.compPast;
-      html += `
-        <div class="comp-card">
-          <div class="comp-head">
-            <svg class="icon" style="color:var(--text-muted)"><use href="#i-trophy"/></svg>
-            <div class="comp-name">${c.name}<div class="comp-sub">${c.date} · סיכום מסקנות</div></div>
-          </div>
-          <div class="comp-sec">תוצאות — מול מה שתוכנן</div>
-          ${c.results.map(r=>`<div class="res-row">
-            <span class="res-k">${r.k}</span>
-            <span class="res-p">${r.plan}</span>
-            <svg class="icon-xs" style="color:var(--text-faint)"><use href="#i-chevron-left"/></svg>
-            <span class="res-v">${r.val}</span>
-            <span class="res-d ${r.good?'good':'bad'}">${r.diff}</span>
-          </div>`).join('')}
-          ${c.races ? `
-          <div class="comp-sec" style="margin-top:10px;">מה שכתבתי בכל שלב — וההערות של המאמנת</div>
-          ${c.races.map(r=>`
-            <div class="race-block" style="background:var(--surface-hover);">
-              <div class="race-h"><svg class="icon-sm" style="color:var(--text-muted)"><use href="#i-activity"/></svg> ${r.name}</div>
-              ${r.plan.map(p=>`
-                <div class="plan-row">
-                  <span class="plan-ph">${p.ph}</span>
-                  <span class="plan-tx">
-                    ${p.tx}
-                    ${p.ath ? `<div class="plan-ath"><svg><use href="#i-user"/></svg> אני כתבתי: ${p.ath}</div>` : ''}
-                    ${p.coach ? `<div class="plan-coach"><svg><use href="#i-msg"/></svg> הערת מאמנת: ${p.coach}</div>` : ''}
-                  </span>
-                </div>`).join('')}
-            </div>`).join('')}` : ''}
-          <div class="comp-sec" style="margin-top:10px;">התחושה שלי מול הצפייה של המאמנת</div>
-          <div class="gap-box">
-            <div class="gap-side gap-ath"><div class="gap-l">אני הרגשתי</div>${c.ath}</div>
-            <div class="gap-side gap-coach"><div class="gap-l">המאמנת ראתה</div>${c.coach}</div>
-          </div>
-          <div class="focus-box"><svg class="icon-sm"><use href="#i-flame"/></svg> מיקוד להמשך: ${c.focus}</div>
-        </div>`;
-    }
-    if ((!a.comps || !a.comps.length) && !a.compPast) html += `<div style="text-align:center;color:var(--text-faint);font-size:12px;padding:20px">אין תחרויות להצגה</div>`;
+  if (jw.comp){
+    if (jw.screen==='build') renderCompBuilder();
+    else if (jw.screen==='debrief') renderDebrief();
+    else renderPlan();
+    return;
   }
+  const a = A();
+  let html = `<button class="add-comp" onclick="openNewComp()"><svg class="icon-sm"><use href="#i-plus"/></svg> תחרות חדשה — בונה מבנה</button>`;
+  (a.comps||[]).forEach(c=>{ html += compCard(c); });
+  if (a.compPast) html += compPastCard(a.compPast);
+  if (!(a.comps||[]).length && !a.compPast) html += `<div style="text-align:center;color:var(--text-faint);font-size:12px;padding:20px">אין תחרויות להצגה</div>`;
   $('phBody').innerHTML = html;
 }
-function toggleMeal(m){
-  if (jd.meals.has(m)) jd.meals.delete(m); else jd.meals.add(m);
-  renderJournal();
-}
-function saveJournalDay(){
-  const a = A();
-  const feels = ['שיפור','שימור','קושי']
-    .filter(k => jd.feels[k] && jd.feels[k].trim())
-    .map(k => ({ k, t: jd.feels[k].trim() }));
-  a.journal.unshift({ d:'14.10 · היום', wake:jd.wake, sleep:jd.sleep, meals:jd.meals.size, feel:feels, txt:jd.text || '—' });
-  jd = { wake:'07:00', sleep:'22:30', meals:new Set(), feels:{ 'שיפור':'', 'שימור':'', 'קושי':'' }, text:'' };
-  renderJournal();
-}
-
-/* ==================== COMPETITION WIZARD — step flow; copy-per-step with problems in red ==================== */
-let wiz = { comp:null, step:1 };
-let peCtx = { r:0, p:0 };
-const WIZ_STEPS = [
-  { n:1, l:'ציוד', i:'i-clipboard' },
-  { n:2, l:'יום התחרות', i:'i-clock' },
-  { n:3, l:'תזונה', i:'i-activity' },
-  { n:4, l:'מהלך', i:'i-waves' },
-];
-function getComp(id){ return (A().comps||[]).find(c=>c.id===id); }
-function openComp(id){ wiz = { comp:id, step:1 }; renderJournal(); }
-function setWizStep(n){ wiz.step = n; renderJournal(); }
-function finishWizard(){ const c = getComp(wiz.comp); if (c) c.submitted = true; wiz.comp = null; renderJournal(); }
-function toggleWiz(i){ const c = getComp(wiz.comp); if (c) c.gear[i].on = !c.gear[i].on; renderJournal(); }
-function toggleWizRoutine(bi, ii){ const c = getComp(wiz.comp); if (c) c.routine.blocks[bi].items[ii].on = !c.routine.blocks[bi].items[ii].on; renderJournal(); }
-
-function renderWizard(){
-  const c = getComp(wiz.comp);
-  if (!c) return '';
-  const s4 = c.kind==='test' ? 'תכנית המבחן' : 'מהלך';
-  const steps = WIZ_STEPS.map(s=>`
-    <button class="wiz-step ${wiz.step===s.n?'active':''} ${wiz.step>s.n?'done':''}" onclick="setWizStep(${s.n})">
-      <svg><use href="#${s.i}"/></svg> ${s.n===4 ? s4 : s.l}
-    </button>`).join('');
-  const copied = c.copiedSteps && c.copiedSteps[wiz.step];
-  let body = '';
-
-  if (wiz.step===1){
-    /* gear — custom sections + drag to reorder */
-    const cats = c.gearCats || ['כללי'];
-    body = `<div class="routine-sec"><svg><use href="#i-clipboard"/></svg> מה צריך להכין — לפי מחלקות · גרירה לשינוי סדר</div>`;
-    cats.forEach(cat=>{
-      body += `<div class="routine-sec" style="margin-top:10px;"><svg><use href="#i-folder"/></svg> ${cat}</div>` +
-        c.gear.map((g,gi)=>({g,gi})).filter(x=>x.g.cat===cat).map(({g,gi})=>`
-          <div class="gear-item" draggable="true"
-               ondragstart="dragStart(event,'gear',${gi})"
-               ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="dropOn(event,'gear',${gi})">
-            <svg class="icon-xs grip-dots"><use href="#i-grip"/></svg>
-            <span class="ck ${g.on?'on':''}" onclick="event.stopPropagation();toggleWiz(${gi})">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>
-            <span style="flex:1">${g.x}${g.prob?`<span class="prob-note"><svg><use href="#i-alert"/></svg> בעיה מהפעם הקודמת: ${g.prob}</span>`:''}</span>
-          </div>`).join('') +
-        `<button class="add-mini" onclick="openAddItem('gear',0,'${cat}')"><svg><use href="#i-plus"/></svg> הוסף ל${cat}</button>`;
-    });
-    body += `<button class="add-mini" onclick="openCatAdd()"><svg><use href="#i-plus"/></svg> מחלקה חדשה (קוסטום)</button>`;
-  }
-  if (wiz.step===2){
-    /* competition day — schedule (chronological) + time-generated routine blocks */
-    const sorted = sortedTimeline(c);
-    body = `<div class="routine-sec"><svg><use href="#i-clock"/></svg> לוז היום — מסודר לפי שעה</div>` +
-      sorted.map(t=>`<div class="tl-row"><span class="tl-t">${t.t}</span><span>${t.x}</span></div>`).join('') +
-      `<button class="add-mini" onclick="openAddItem('timeline')"><svg><use href="#i-plus"/></svg> הוסף שעה — תשובץ אוטומטית לפי הזמן</button>` +
-      `<div class="routine-sec" style="margin-top:14px;"><svg><use href="#i-sun"/></svg> שגרה — בלוקים לפי שעת האירוע (${h2t(c.startH||9)})</div>` +
-      c.routine.blocks.map((blk,bi)=>`
-        <div style="margin-top:10px;">
-          <div class="routine-sec"><input class="rblock-label" value="${blk.label}" oninput="getComp('${wiz.comp}').routine.blocks[${bi}].label=this.value"></div>
-          ${blk.items.map((g,ii)=>`<div class="ck-row" onclick="toggleWizRoutine(${bi},${ii})">
-            <span class="ck ${g.on?'on':''}">${g.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>${g.x}</div>`).join('')}
-          <button class="add-mini" onclick="openAddItem('routine',${bi})"><svg><use href="#i-plus"/></svg> הוסף לבלוק</button>
-        </div>`).join('') +
-      `<button class="add-mini" onclick="addRoutineBlock()"><svg><use href="#i-plus"/></svg> בלוק שגרה חדש</button>`;
-  }
-  if (wiz.step===3){
-    /* nutrition — one fueling plan: meals + gels + fluids, as time blocks */
-    body = `<div class="routine-sec"><svg><use href="#i-activity"/></svg> תזונת תחרות — ארוחות + דלק במהלם
-      <button class="precise-toggle ${c.nutrition.precise?'on':''}" onclick="togglePrecise()">${c.nutrition.precise?'מדויק — גרם · מ"ל':'מצב מדויק'}</button>
-    </div>
-    <div class="sh-sub" style="margin:6px 0 10px;"><span>הכל בבלוקים לפי זמן: ארוחות לפני, דלק במהלם, התאוששות אחרי</span></div>` +
-      (c.nutrition.blocks||[]).map((n,ni)=>`
-        <div class="nutr-block">
-          <div class="nutr-row">
-            <input class="nutr-when" value="${n.when}" placeholder='מתי? למשל: בוקר · ארוחה או ריצה · 5 ק"מ' oninput="getComp('${wiz.comp}').nutrition.blocks[${ni}].when=this.value">
-            <input class="nutr-what" value="${n.what}" placeholder="מה? למשל: פסטה / ג'ל / איזוטוני" oninput="getComp('${wiz.comp}').nutrition.blocks[${ni}].what=this.value">
-            <button class="nutr-x" onclick="delNutrRow(${ni})"><svg class="icon-xs"><use href="#i-x"/></svg></button>
-          </div>
-          ${c.nutrition.precise ? `
-            ${(n.items||[]).map((it,ii)=>`
-              <div class="meal-item">
-                <span class="meal-n">${it.n}</span>
-                <input class="meal-q" value="${it.qty}" onchange="setMealQty(${ni},${ii},this.value)">
-                <span class="meal-u">${it.u}</span>
-                <span class="meal-m">${itemMacros(it)}</span>
-                <button class="meal-x" onclick="delMealItem(${ni},${ii})"><svg class="icon-xs"><use href="#i-x"/></svg></button>
-              </div>`).join('')}
-            ${(n.items && n.items.length) ? `<div class="meal-tot"><span>סה"כ ארוחה</span><span>${mealTotals(n)}</span></div>` : ''}
-            ${n.photo ? `<img class="meal-photo" src="${n.photo}">` : ''}
-            <button class="photo-btn" onclick="document.getElementById('ph-${ni}').click()">
-              <svg class="icon-xs"><use href="#i-plus"/></svg> ${n.photo ? 'החלפת תמונה' : 'צרף תמונת ארוחה — לזיהוי אוטומטי'}
-            </button>
-            <input type="file" accept="image/*" id="ph-${ni}" style="display:none" onchange="addPhoto(${ni},this)">
-            <button class="add-mini" style="margin-top:6px" onclick="openFoodAdd(${ni})"><svg><use href="#i-plus"/></svg> הוסף מזון / מוצר (גרם · מותג)</button>
-          ` : ''}
-          ${n.prob?`<div class="prob-note"><svg><use href="#i-alert"/></svg> מהפעם הקודמת: ${n.prob}</div>`:''}
-        </div>`).join('') +
-      `<button class="add-mini" onclick="addNutrRow()"><svg><use href="#i-plus"/></svg> הוסף בלוק — ארוחה / ג'ל / נוזלים / התאוששות</button>`;
-  }
-  if (wiz.step===5){
-    body = `<div class="comp-sec">${c.kind==='test'?'תכנית המבחן':'מהלך התחרות'} — אתה כותב, המאמנת תגיב מה חסר</div>` +
-      c.races.map((r,ri)=>`
-        <div class="race-block">
-          <div class="race-h">
-            <svg class="icon-sm"><use href="#i-activity"/></svg> ${r.name}
-            ${r.copied ? `<span class="copied-chip">הועתק מ${r.copied}</span>` : ''}
-          </div>
-          <div class="race-status ${r.status && r.status.startsWith('המאמנת') ? 'ok':''}">${r.status}</div>
-          ${r.plan.map((p,pi)=>`
-            <div class="plan-row" draggable="true"
-                 ondragstart="dragStart(event,'plan',${pi},${ri})"
-                 ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="dropOn(event,'plan',${pi},${ri})">
-              <svg class="icon-xs grip-dots"><use href="#i-grip"/></svg>
-              <span class="plan-ph">${p.ph}</span>
-              <span class="plan-tx">
-                ${p.ath
-                  ? `<span class="plan-mine">${p.ath}</span>`
-                  : `<span class="plan-empty">עדיין לא נכתב — מה אתה עושה בשלב הזה?</span>`}
-                ${p.tip ? `<div class="plan-tip"><svg><use href="#i-alert"/></svg> מסקנה מהתחרות הקודמת: ${p.tip}</div>` : ''}
-                ${p.coach ? `<div class="plan-coach"><svg><use href="#i-msg"/></svg> מה חסר (המאמנת): ${p.coach}</div>` : ''}
-                <button class="plan-edit" onclick="openPhaseEdit(${ri},${pi})">
-                  <svg><use href="#i-pencil"/></svg> ${p.ath ? 'עריכה' : 'כתוב'}
-                </button>
-              </span>
-            </div>`).join('')}
-          <button class="add-mini" onclick="openAddItem('phase',${ri})"><svg><use href="#i-plus"/></svg> הוסף שלב</button>
-        </div>`).join('');
-  }
-
-  const nextLabel = wiz.step<4 ? 'המשך' : 'סיום — שליחה למאמנת';
-  const nextAction = wiz.step<4 ? `setWizStep(${wiz.step+1})` : 'finishWizard()';
+function compCard(c){
+  const stMap = { new:['מבנה חדש — לבנות מתבניות','cs-new'], plan:['בתכנון — ממלאים את השלבים','cs-plan'], sent:['הוכן ונשלח למאמנת','cs-sent'], done:['הושלמה · תחקיר נסגר','cs-done'] };
+  const st = stMap[c.state] || stMap.plan;
+  const coachRe = c.state==='sent' && (c.stages||[]).some(s=>s.coach);
+  const filled = (c.stages||[]).filter(s=>s.str && s.str.trim()).length;
+  const total = (c.stages||[]).length;
   return `
-    <button class="wiz-back" onclick="wiz.comp=null;renderJournal()"><svg class="icon-xs"><use href="#i-chevron-right"/></svg> חזרה לרשימת האירועים</button>
+    <div class="comp-card up comp-list-card" onclick="openComp('${c.id}')">
+      <div class="comp-head">
+        <svg class="icon" style="${c.kind==='test'?'color:var(--warning)':'color:var(--danger)'}"><use href="#${c.kind==='test'?'i-clipboard':'i-trophy'}"/></svg>
+        <div class="comp-name">${c.name}<div class="comp-sub">${c.date} · ${c.place}</div></div>
+        <svg class="icon" style="color:var(--text-faint)"><use href="#i-chevron-left"/></svg>
+      </div>
+      <div class="comp-head" style="margin-top:6px;flex-wrap:wrap;gap:5px">
+        <span class="comp-state ${st[1]}">${st[0]}</span>
+        <span class="cd-chip">בעוד ${c.daysAway||0} ימים</span>
+        ${coachRe?`<span class="resp-badge"><svg><use href="#i-msg"/></svg> המאמנת הגיבה</span>`:''}
+        ${c.state==='plan'&&total?`<span class="cd-chip" style="margin-inline-start:auto">${filled}/${total} שלבים מתוכננים</span>`:''}
+      </div>
+    </div>`;
+}
+/* past competition — closed debrief: side-by-side planned מול actual + coach notes */
+function compPastCard(c){
+  return `
+    <div class="comp-card">
+      <div class="comp-head">
+        <svg class="icon" style="color:var(--text-muted)"><use href="#i-trophy"/></svg>
+        <div class="comp-name">${c.name}<div class="comp-sub">${c.date} · תחקיר נסגר</div></div>
+        <span class="comp-state cs-done">הושלמה</span>
+      </div>
+      <div class="comp-sec">תוצאות — מול מה שתוכנן</div>
+      ${c.results.map(r=>`<div class="res-row">
+        <span class="res-k">${r.k}</span>
+        <span class="res-p">${r.plan}</span>
+        <svg class="icon-xs" style="color:var(--text-faint)"><use href="#i-chevron-left"/></svg>
+        <span class="res-v">${r.val}</span>
+        <span class="res-d ${r.good?'good':'bad'}">${r.diff}</span>
+      </div>`).join('')}
+      ${c.races ? `
+      <div class="comp-sec" style="margin-top:10px;">מתוכנן (מסך ב׳) מול מה שקרה בפועל</div>
+      ${c.races.map(r=>`
+        <div class="sb-block">
+          <div class="race-h"><svg class="icon-sm" style="color:var(--text-muted)"><use href="#i-activity"/></svg> ${r.name}</div>
+          ${r.plan.map(p=>`
+            <div class="sb-row">
+              <div class="sb-plan">${p.tx}</div>
+              <div class="sb-act">
+                ${p.ath ? `<span class="plan-ath"><svg><use href="#i-user"/></svg> אני כתבתי: ${p.ath}</span>` : ''}
+                ${p.coach ? `<span class="plan-coach"><svg><use href="#i-msg"/></svg> המאמנת: ${p.coach}</span>` : ''}
+              </div>
+            </div>`).join('')}
+        </div>`).join('')}` : ''}
+      <div class="comp-sec" style="margin-top:10px;">התחושה שלי מול הצפייה של המאמנת</div>
+      <div class="gap-box">
+        <div class="gap-side gap-ath"><div class="gap-l">אני הרגשתי</div>${c.ath}</div>
+        <div class="gap-side gap-coach"><div class="gap-l">המאמנת ראתה</div>${c.coach}</div>
+      </div>
+      <div class="focus-box"><svg class="icon-sm"><use href="#i-flame"/></svg> מיקוד להמשך: ${c.focus}</div>
+    </div>`;
+}
+
+/* screen routing */
+function openComp(id){
+  const c = getComp(id);
+  jw = { comp:id, screen:(c && c.state==='new') ? 'build':'plan', st:0, isNew:false };
+  renderJournal();
+}
+function backFromJournal(){ jw = { comp:null, screen:'plan', st:0, isNew:false }; renderJournal(); }
+function openNewComp(){
+  const a = A();
+  const c = {
+    id:'new'+Date.now().toString(36), kind:'competition', startH:9, state:'new', daysAway:7,
+    name:'תחרות חדשה', date:'(הוספת תאריך)', place:'(מקום)',
+    sched:[], todo:[], stages:[], tplId:null, fromTpl:null,
+  };
+  a.comps.unshift(c);
+  jw = { comp:c.id, screen:'build', st:0, isNew:true };
+  renderJournal();
+}
+
+/* מסך א׳ — Race Builder: templates + stage add/rename/reorder/delete */
+function backFromBuild(){
+  const c = getComp(jw.comp);
+  if (jw.isNew && c && c.state==='new' && !(c.stages||[]).length){
+    A().comps = A().comps.filter(x=>x.id!==c.id);
+    jw = { comp:null, screen:'plan', st:0, isNew:false };
+  } else if (c){
+    jw = { comp:c.id, screen:'plan', st:0, isNew:false };
+  } else {
+    jw = { comp:null, screen:'plan', st:0, isNew:false };
+  }
+  renderJournal();
+}
+function setStartH(h){
+  const c = getComp(jw.comp);
+  c.startH = h;
+  if (c.tplId==='club') c.sched = genSchedule(h);
+  renderJournal();
+}
+function pickTpl(ti){
+  const c = getComp(jw.comp);
+  const t = RACE_TEMPLATES[ti];
+  c.tplId = t.id;
+  c.kind = t.kind || 'competition';
+  c.stages = t.stages.map(n=>({ n, t:'', str:'', act:'', nutr:[] }));
+  if (t.kind==='test') c.name = 'מבחן בריכה (חדש)';
+  else if (t.id==='tri') c.name = 'טריאתלון (חדש)';
+  else if (t.id==='run') c.name = 'מרתון (חדש)';
+  else c.name = 'תחרות בריכה (חדשה)';
+  if (t.fromClub){
+    c.todo = JSON.parse(JSON.stringify(CLUB_TEMPLATE.todo));
+    c.sched = genSchedule(c.startH||9);
+    c.fromTpl = CLUB_TEMPLATE.name;
+  } else {
+    c.todo = []; c.sched = []; c.fromTpl = null;
+  }
+  renderJournal();
+}
+function renameStage(i,v){ getComp(jw.comp).stages[i].n = v; }
+function setStageTime(i,v){ getComp(jw.comp).stages[i].t = v; }
+function addStage(){ getComp(jw.comp).stages.push({ n:'שלב חדש', t:'', str:'', act:'', nutr:[] }); renderJournal(); }
+function delStage(i){ const c=getComp(jw.comp); c.stages.splice(i,1); renderJournal(); }
+function continueToPlan(){
+  const c = getComp(jw.comp);
+  if (!(c.stages||[]).length){ alert('WIREFRAME — צריך לפחות שלב אחד'); return; }
+  c.state = 'plan';
+  jw = { comp:c.id, screen:'plan', st:0, isNew:false };
+  renderJournal();
+}
+function renderCompBuilder(){
+  const c = getComp(jw.comp);
+  if (!c){ backFromJournal(); return; }
+  const showTpls = jw.isNew && !(c.stages||[]).length;
+  const timeOpts = [ { h:9, l:'בוקר · 09:00' }, { h:16.5, l:'אחר הצהריים · 16:30' }, { h:19, l:'ערב · 19:00' } ];
+  let html = `
+    <button class="wiz-back" onclick="backFromBuild()"><svg class="icon-xs"><use href="#i-chevron-right"/></svg> חזרה</button>
+    <div class="comp-head" style="margin-top:8px;">
+      <svg class="icon" style="color:var(--danger)"><use href="#${c.kind==='test'?'i-clipboard':'i-trophy'}"/></svg>
+      <div class="comp-name">מסך א׳ — מבנה התחרות<div class="comp-sub">כל שלב מקבל כרטיסיית תכנון משלו (אסטרטגיה + דלק) — ניתן להוסיף, לשנות שם, לגרור ולמחוק</div></div>
+    </div>
+    <div class="jrow" style="padding:2px 0"><span class="k" style="min-width:64px">שעת הזינוק</span>
+      <div class="jchips">${timeOpts.map(o=>`<button class="jchip ${c.startH===o.h?'on':''}" onclick="setStartH(${o.h})">${o.l}</button>`).join('')}</div>
+    </div>`;
+  if (showTpls){
+    html += `
+      <div class="routine-sec" style="margin-top:10px;"><svg><use href="#i-shield"/></svg> תבניות מוכנות — נקודת פתיחה, לא גדר</div>
+      <div class="tpl-pick">${RACE_TEMPLATES.map((t,ti)=>`
+        <button class="tpl-item ${c.tplId===t.id?'on':''}" onclick="pickTpl(${ti})">
+          <span class="t1"><svg><use href="#${t.icon}"/></svg> ${t.name}</span>
+          <span class="t2">${t.sub}</span>
+        </button>`).join('')}</div>`;
+  }
+  html += `<div class="routine-sec" style="margin-top:12px;"><svg><use href="#i-activity"/></svg> שלבי התחרות · גרירה לשינוי הסדר</div>`;
+  html += (c.stages||[]).map((s,i)=>`
+    <div class="stage-row" draggable="true"
+         ondragstart="dragStart(event,'stage',${i})"
+         ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="dropOn(event,'stage',${i})">
+      <svg class="icon-xs grip-dots"><use href="#i-grip"/></svg>
+      <input class="stage-n" value="${s.n}" placeholder="שם השלב" oninput="renameStage(${i},this.value)">
+      <input class="stage-t" value="${s.t||''}" placeholder="08:30" onchange="setStageTime(${i},this.value)">
+      <button class="stage-del" onclick="delStage(${i})"><svg class="icon-xs"><use href="#i-x"/></svg></button>
+    </div>`).join('');
+  html += `<button class="add-mini" onclick="addStage()"><svg><use href="#i-plus"/></svg> הוסף שלב</button>
+    <button class="wiz-next" style="width:100%;margin-top:14px;" onclick="continueToPlan()">המשך לתכנון <svg class="icon-sm"><use href="#i-chevron-left"/></svg></button>`;
+  $('phBody').innerHTML = html;
+}
+
+/* מסך ב׳ — תכנון: לוז דינמי (שורות מאמנת נעולות) + צ׳קליסט חופשי + כרטיסיות שלבים עם אסטרטגיה ותזונה */
+function toggleTodo(i){ const c=getComp(jw.comp); c.todo[i].on=!c.todo[i].on; renderJournal(); }
+function delTodo(i){ const c=getComp(jw.comp); c.todo.splice(i,1); renderJournal(); }
+
+function renderPlan(){
+  const c = getComp(jw.comp);
+  if (!c){ backFromJournal(); return; }
+  const stages = c.stages||[];
+  const sti = Math.min(jw.st, Math.max(stages.length-1, 0));
+  const st = stages[sti];
+  let html = `
+    <button class="wiz-back" onclick="backFromJournal()"><svg class="icon-xs"><use href="#i-chevron-right"/></svg> חזרה לרשימה</button>
     <div class="comp-head" style="margin-top:8px;">
       <svg class="icon" style="${c.kind==='test'?'color:var(--warning)':'color:var(--danger)'}"><use href="#${c.kind==='test'?'i-clipboard':'i-trophy'}"/></svg>
       <div class="comp-name">${c.name}<div class="comp-sub">${c.date} · ${c.place}</div></div>
+      <span class="comp-state ${c.state==='sent'?'cs-sent':'cs-plan'}">${c.state==='sent'?'הוגש למאמנת':'טיוטה בתכנון'}</span>
     </div>
-    <div class="wiz-steps">${steps}</div>
-    <div class="wiz-body">${body}</div>
+    ${c.fromTpl?`<div style="display:flex;align-items:center;gap:5px;color:var(--accent);font-size:10.5px;font-weight:800;margin-top:8px;"><svg class="icon-xs"><use href="#i-shield"/></svg> הוכן מתבנית המאמנת — מותאם אישית מכאן</div>`:''}
+    <div class="comp-sec" style="margin-top:12px;">מסך ב׳ · לוז ואירועים — מסודר לפי שעה</div>`;
+  html += sortRows(c.sched||[]).map(r=>`
+    <div class="tl-row"><span class="tl-t">${r.t}</span><span style="flex:1;min-width:0">${r.x}</span>${r.src==='coach'?`<span class="lock-badge"><svg><use href="#i-shield"/></svg> מהמאמנת</span>`:''}</div>`).join('');
+  html += `<button class="add-mini" onclick="openAddItem('sched')"><svg><use href="#i-plus"/></svg> הוספת שעה — מושבצת לפי הזמן</button>`;
+  html += `
+    <div class="routine-sec" style="margin-top:14px;"><svg><use href="#i-clipboard"/></svg> צ׳קליסט חופשי — משימות לפני האירוע</div>
+    ${(c.todo||[]).map((t,ti)=>`
+      <div class="ck-row" style="cursor:default">
+        <span class="ck ${t.on?'on':''}" onclick="toggleTodo(${ti})">${t.on?'<svg style="width:11px;height:11px"><use href="#i-check"/></svg>':''}</span>
+        <span style="flex:1;min-width:0">${t.x}</span>
+        <button class="nutr-x" onclick="delTodo(${ti})"><svg class="icon-xs"><use href="#i-x"/></svg></button>
+      </div>
+      ${t.prob?`<div class="prob-note" style="margin-top:2px"><svg><use href="#i-alert"/></svg> מהפעם הקודמת: ${t.prob}</div>`:''}`).join('')}
+    <button class="add-mini" onclick="openAddItem('todo')"><svg><use href="#i-plus"/></svg> הוספת משימה</button>
+    <div class="routine-sec" style="margin-top:14px;"><svg><use href="#i-activity"/></svg> שלבי התחרות — אסטרטגיה ותזונה לכל שלב</div>
+    <div class="st-tabs">${(stages.length? stages.map((s,i)=>`
+      <button class="st-tab ${i===sti?'on':''}" onclick="jw.st=${i};renderJournal()"><svg><use href="#i-activity"/></svg> ${s.n}</button>`).join('')
+      : `<button class="demo-chip" style="color:var(--accent)" onclick="jw.screen='build';renderJournal()">אין שלבים — לסעיף בונה המבנה</button>`)}</div>`;
+  if (st) html += renderStagePanel(stages, sti);
+  html += `
     <div class="wiz-nav">
-      <button class="wiz-copy ${copied?'done':''}" onclick="openWizCopy()">
-        <svg class="icon-sm"><use href="#i-copy"/></svg> ${copied ? 'הועתק מ'+copied : 'העתק מתחרות קודמת'}
-      </button>
-      <button class="wiz-next" onclick="${nextAction}">${nextLabel} <svg class="icon-sm"><use href="#i-chevron-left"/></svg></button>
+      <button class="wiz-copy ${c.copied?'done':''}" onclick="openWizCopy('all')"><svg class="icon-sm"><use href="#i-copy"/></svg> ${c.copied? 'הועתק מ'+c.copied : 'העתקה כוללת'}</button>
+      <button class="wiz-next" onclick="submitPlan()">${c.state==='sent'?'עדכון — נשלח למאמנת':'סיום תכנון — שליחה למאמנת'} <svg class="icon-sm"><use href="#i-chevron-left"/></svg></button>
+    </div>
+    <div style="display:flex;justify-content:center;gap:12px;margin:2px 0 10px;">
+      <button class="demo-chip" onclick="openDebrief()">דמו: אחרי התחרות — "סיום תחרות" פותח את מסך התחקיר</button>
+      <button class="demo-chip" style="color:var(--accent)" onclick="jw.screen='build';jw.isNew=false;renderJournal()"><svg><use href="#i-activity"/></svg> עריכת מבנה השלבים</button>
+    </div>`;
+  $('phBody').innerHTML = html;
+}
+/* השלב הפעיל — אסטרטגיה (הכתוב שלי + המאמנת) ודלק פר שלב */
+function renderStagePanel(stages, si){
+  const s = stages[si];
+  const c = getComp(jw.comp);
+  const doneChip = s.str && s.str.trim() ? `<span class="comp-state cs-done">תוכנן</span>` : '';
+  return `
+    <div class="sb-block" style="margin-top:0;">
+      <div class="race-h" style="display:flex;align-items:center;gap:6px;">
+        <svg class="icon-sm" style="color:var(--accent)"><use href="#i-activity"/></svg>
+        <span style="flex:1">${s.n}${s.t?` · ${s.t}`:''}</span>${doneChip}
+      </div>
+      ${s.tip?`<div class="prob-note" style="margin-top:7px"><svg><use href="#i-alert"/></svg> מסקנה מהתחרות הקודמת: ${s.tip}</div>`:''}
+      ${s.str && s.str.trim()
+        ? `<div class="plan-mine" style="margin-top:7px;font-size:11.5px;line-height:1.55;">${s.str}</div>`
+        : `<div class="plan-empty" style="margin-top:7px;">עדיין לא נכתב — אסטרטגיה: פתיחה, קצב, פניות, מיקום.</div>`}
+      <button class="plan-edit" style="margin-top:5px" onclick="openStageEdit(${si})"><svg><use href="#i-pencil"/></svg> ${s.str? 'עריכת האסטרטגיה' : 'כתוב אסטרטגיה'}</button>
+      ${s.coach?`<div class="plan-coach" style="margin-top:7px;"><svg><use href="#i-msg"/></svg> מה חסר לדעת המאמנת: ${s.coach}</div>`:''}
+      <div class="routine-sec" style="margin-top:10px;font-size:10.5px;">
+        <svg><use href="#i-flame"/></svg> דלק בשלב הזה
+        <button class="precise-toggle ${c.precise?'on':''}" onclick="togglePrecise()">${c.precise?'מדויק — גרף ומותגים':'מצב מדויק'}</button>
+      </div>
+      ${(s.nutr||[]).map((n,ni)=>`
+        <div class="nutr-block">
+          <div class="nutr-row">
+            <input class="nutr-when" value="${n.t}" placeholder="מתי — 45 דק׳ לפני / קמ 5" oninput="setNutr(${si},${ni},'t',this.value)">
+            <input class="nutr-what" value="${n.x}" placeholder="מה — גל / איזוטוני" oninput="setNutr(${si},${ni},'x',this.value)">
+            <button class="nutr-x" onclick="delNutrRow(${si},${ni})"><svg class="icon-xs"><use href="#i-x"/></svg></button>
+          </div>
+          ${c.precise ? `
+            ${(n.items||[]).map((it,ii)=>`
+              <div class="meal-item">
+                <span class="meal-n">${it.n}</span>
+                <input class="meal-q" value="${it.qty}" onchange="setMealQty(${si},${ni},${ii},this.value)">
+                <span class="meal-u">${it.u}</span>
+                <span class="meal-m">${itemMacros(it)}</span>
+                <button class="meal-x" onclick="delMealItem(${si},${ni},${ii})"><svg class="icon-xs"><use href="#i-x"/></svg></button>
+              </div>`).join('')}
+            ${(n.items && n.items.length) ? `<div class="meal-tot"><span>סה״כ השורה</span><span>${mealTotals(n)}</span></div>` : ''}
+            <button class="photo-btn" onclick="document.getElementById('ph-${si}-${ni}').click()">
+              <svg class="icon-xs"><use href="#i-plus"/></svg> ${n.photo ? 'החלפת תמונה' : 'צריפת תמונת ארוחה — לזיהוי אוטומטי'}
+            </button>
+            <input type="file" accept="image/*" id="ph-${si}-${ni}" style="display:none" onchange="addPhoto(${si},${ni},this)">
+            <button class="add-mini" style="margin-top:6px" onclick="openFoodAdd(${si},${ni})"><svg><use href="#i-plus"/></svg> הוספת מזון / מוצר (גרם · מותג)</button>
+          ` : ''}
+          ${n.prob?`<div class="prob-note" style="margin-top:4px"><svg><use href="#i-alert"/></svg> מהפעם הקודמת: ${n.prob}</div>`:''}
+        </div>`).join('')}
+      <button class="add-mini" onclick="addNutrRow(${si})"><svg><use href="#i-plus"/></svg> הוספת בלוק דלק — מתי ומה</button>
+      <button class="add-mini" style="margin-top:6px" onclick="openWizCopy('stage')"><svg><use href="#i-copy"/></svg> העתק אל השלב הזה — מתחרות קודמת או מהתבנית</button>
     </div>`;
 }
-
-/* copy the current step from a previous competition — problems arrive in red */
-function openWizCopy(){
-  const a = A();
-  const stepLabels = { 1:'ציוד', 2:'יום התחרות', 3:'תזונה', 4:'מהלך' };
+function openStageEdit(si){
+  const c = getComp(jw.comp);
+  const s = c.stages[si];
   openSheet(`
     <div class="sh-grip"></div>
-    <div class="sh-title"><svg class="icon"><use href="#i-copy"/></svg> ממה למלא את השלב: ${stepLabels[wiz.step]}?</div>
-    <div class="sh-sub"><span>בעיות מהעבר מסומנות באדום — תעדכן אותן למשהו יותר טוב</span></div>
+    <div class="sh-title"><svg class="icon"><use href="#i-pencil"/></svg> האסטרטגיה שלי — ${s.n}</div>
+    <div class="sh-sub"><span>כתיבה חופשית — מהלך, קצב, פניות, מיקום</span><span>אתה כותב · המאמנת קוראת ומגיבה מה חסר</span></div>
+    ${s.tip?`<div class="prob-note" style="margin-top:8px"><svg><use href="#i-alert"/></svg> מסקנה מהתחרות הקודמת: ${s.tip}</div>`:''}
+    ${s.coach?`<div class="plan-coach" style="margin-top:8px"><svg><use href="#i-msg"/></svg> המאמנת: ${s.coach}</div>`:''}
+    <textarea class="jtextarea" id="seText" rows="4" style="margin-top:10px" placeholder="לדוגמה: פתיחה חזקה + מתי לנשום + קצב הסלול">${s.str||''}</textarea>
+    <button class="rp-save" onclick="saveStageStr(${si})"><svg class="icon-sm" style="vertical-align:-3px"><use href="#i-check"/></svg> שמירת האסטרטגיה</button>
+    <button class="sh-close" onclick="closeSheet()">ביטול</button>
+  `);
+}
+function saveStageStr(si){
+  getComp(jw.comp).stages[si].str = $('seText').value.trim();
+  closeSheet();
+  renderJournal();
+}
+function setNutr(si,ni,f,v){ getComp(jw.comp).stages[si].nutr[ni][f] = v; }
+
+/* סיום תכנון → הגשה למאמנת (עריכה אחרי תגובה עדיין חופשית); לולאת התגובה: המשוב חוזר לאתלט */
+function submitPlan(){
+  const c = getComp(jw.comp);
+  if (!c) return;
+  const isResend = c.state==='sent';
+  c.state = 'sent';
+  A().msgs.unshift({ icon:'i-send', title:(isResend?'עדכון ההכנה':'ההכנה הוגשה')+' — '+c.name, body:'לוז, משימות, אסטרטגיה לכל שלב ודלק — בדרך למאמנת. התשובה תופיע כאן.', time:'עכשיו', unread:true });
+  renderJournal();
+}
+
+/* מסך ג׳ — תחקיר: נפתח רק ב"סיום תחרות"; שלב אחר שלב planned | actual זה לצד זה */
+function openDebrief(){ jw.screen = 'debrief'; renderJournal(); }
+function setAct(i,v){ getComp(jw.comp).stages[i].act = v; }
+function closeDebrief(){
+  const c = getComp(jw.comp);
+  c.state = 'done';
+  A().msgs.unshift({ icon:'i-check', title:'התחקיר הוגש — '+c.name, body:'מה קרה בפועל מול התוכנית, והלקחים — עברו למאמנת לשיחת הסיכום המשותפת.', time:'עכשיו', unread:true });
+  backFromJournal();
+}
+function renderDebrief(){
+  const c = getComp(jw.comp);
+  if (!c){ backFromJournal(); return; }
+  const stages = c.stages||[];
+  let html = `
+    <button class="wiz-back" onclick="jw.screen='plan';renderJournal()"><svg class="icon-xs"><use href="#i-chevron-right"/></svg> חזרה לתכנון</button>
+    <div class="comp-head" style="margin-top:8px;">
+      <svg class="icon" style="color:var(--success)"><use href="#i-check"/></svg>
+      <div class="comp-name">מסך ג׳ — תחקיר ומסקנות<div class="comp-sub">נפתח בלחיצת "סיום תחרות" · בכל שלב: התוכנית קבועה מצד אחד, מה שקרה בפועל ניתן לכתוב</div></div>
+      <span class="comp-state ${c.state==='done'?'cs-done':'cs-sent'}">${c.state==='done'?'תחקיר נסגר':'במילוי'}</span>
+    </div>`;
+  stages.forEach((s,i)=>{
+    const nutr = (s.nutr||[]).filter(n=>n.x).map(n=>`${n.t?n.t:''} ${n.x}`.trim()).join(' · ');
+    html += `
+      <div class="sb-block">
+        <div class="race-h" style="display:flex;align-items:center;gap:6px;">
+          <svg class="icon-sm" style="color:var(--accent)"><use href="#i-activity"/></svg>
+          <span style="flex:1">${s.n}${s.t?` · ${s.t}`:''}</span>
+        </div>
+        <div class="sb-row">
+          <div class="sb-plan">
+            <div class="gap-l">התוכנית (מסך ב׳)</div>
+            ${s.str || '— לא נכתבה תוכנית לשלב —'}
+            ${nutr?`<div style="margin-top:4px">דלק: ${nutr}</div>`:''}
+          </div>
+          <div class="sb-act">
+            <span class="plan-ath" style="justify-content:flex-start"><svg><use href="#i-user"/></svg> מה קרה בפועל?</span>
+            <textarea rows="2" oninput="setAct(${i},this.value)" placeholder="ביצוע · תזונה · תחושות">${s.act||''}</textarea>
+          </div>
+        </div>
+      </div>`;
+  });
+  html += `
+    <div class="comp-sec" style="margin-top:12px;">תחקיר מנטלי — לקחים מרכזיים לתחרות הבאה</div>
+    <textarea class="jtextarea" rows="3" oninput="getComp(jw.comp).debrief=this.value" placeholder="מה לשמור · מה לשנות · היכן להתמקד">${c.debrief||''}</textarea>
+    <button class="rp-save" style="width:100%;margin-top:10px;" onclick="closeDebrief()"><svg class="icon-sm" style="vertical-align:-3px"><use href="#i-check"/></svg> סגירת התחקיר — זורם למאמנת לשיחה</button>`;
+  $('phBody').innerHTML = html;
+}
+
+/* ==================== COPY MACHINE — one mechanism: whole plan or a single stage; template or previous competition ==================== */
+function getComp(id){ return (A().comps||[]).find(c=>c.id===id); }
+function pastPlanText(r){
+  return r.plan.map(p=>p.tx).filter(Boolean).join(' · ');
+}
+function pastStageTip(r){
+  return r.plan.map(p=>[p.ath, p.coach].filter(Boolean).join(' — המאמנת: ')).find(Boolean) || null;
+}
+function openWizCopy(target){
+  const a = A();
+  const c = getComp(jw.comp);
+  if (!c) return;
+  const what = target==='all' ? 'את התכנון המלא (לוז · משימות · כל שלב)' : `את השלב: ${(c.stages||[])[jw.st] ? c.stages[jw.st].n : ''}`;
+  openSheet(`
+    <div class="sh-grip"></div>
+    <div class="sh-title"><svg class="icon"><use href="#i-copy"/></svg> ממה למלא ${what}?</div>
+    <div class="sh-sub"><span>מה שהיה בעייתי במקור יורד מסומן באדום — עדכן למשהו טוב יותר</span></div>
     <div style="margin-top:12px;">
-      <div class="lib-pick-item" onclick="applyWizCopy('club')">
+      <div class="lib-pick-item" onclick="applyCopy('club','${target}')">
         <svg class="icon-sm" style="color:var(--accent)"><use href="#i-shield"/></svg>
-        <span style="flex:1">${CLUB_TEMPLATE.name}<br><span class="staff-hours">הסטנדרט של המאמנת — מותאם אוטומטית לשעת האירוע</span></span>
+        <span style="flex:1">${CLUB_TEMPLATE.name}<br><span class="staff-hours">הסטנדרט של המאמנת — מותאם אוטומטית לשעת הזינוק</span></span>
         <svg class="icon-xs"><use href="#i-chevron-left"/></svg>
       </div>
-      <div class="lib-pick-item" onclick="applyWizCopy('past')">
+      <div class="lib-pick-item" onclick="applyCopy('past','${target}')">
         <svg class="icon-sm" style="color:var(--warning)"><use href="#i-trophy"/></svg>
-        <span style="flex:1">${a.compPast.name} · ${a.compPast.date}<br><span class="staff-hours">ההכנה שלי מאז + מסקנות ובעיות מסומנות</span></span>
+        <span style="flex:1">${a.compPast.name} · ${a.compPast.date}<br><span class="staff-hours">ההכנה הקודמת שלך + מסקנות ובעיות באדום</span></span>
         <svg class="icon-xs"><use href="#i-chevron-left"/></svg>
       </div>
     </div>
     <button class="sh-close" onclick="closeSheet()">ביטול</button>
   `);
 }
-function applyWizCopy(srcKind){
-  const c = getComp(wiz.comp);
-  if (!c) return;
-  c.copiedSteps = c.copiedSteps || {};
-  /* club template — the coach's standard, time-adapted to this event */
-  if (srcKind === 'club'){
-    if (wiz.step===1){
-      c.gearCats = JSON.parse(JSON.stringify(CLUB_TEMPLATE.gearCats));
-      c.gear = JSON.parse(JSON.stringify(CLUB_TEMPLATE.gear));
-      c.fromTemplate = CLUB_TEMPLATE.name;
+function applyCopy(srcKind, target){
+  const a = A();
+  const c = getComp(jw.comp);
+  if (!c || !a.compPast) return;
+  const src = a.compPast;
+  /* שורות המקצים שפרסמה המאמנת נשארות נעולות (src:'coach') בכל העתקה */
+  const coachRows = (c.sched||[]).filter(r=>r.src==='coach');
+  let ok = true;
+  if (srcKind==='club'){
+    if (target==='all'){
+      c.sched = [...genSchedule(c.startH||9), ...coachRows];
+      c.todo = JSON.parse(JSON.stringify(CLUB_TEMPLATE.todo));
+      if (!(c.stages||[]).length) c.stages = CLUB_TEMPLATE.stages.map(n=>({ n, t:'', str:'', act:'', nutr:[] }));
+      c.copied = CLUB_TEMPLATE.name;
+    } else {
+      alert('WIREFRAME — לתבנית המאמנת אין אסטרטגיה אישית לשלב. העתק מתחרות קודמת, או כתוב בעצמך.');
+      ok = false;
     }
-    if (wiz.step===2) c.routine = { blocks: genDayBlocks(c.startH||9) };
-    if (wiz.step===3) c.nutrition = { blocks: genNutritionBlocks(c.startH||9), precise: !!c.nutrition.precise };
-    if (wiz.step===4){ alert('WIREFRAME — המהלך אישי: כתוב בעצמך, או העתק מתחרות קודמת'); return; }
-    c.copiedSteps[wiz.step] = CLUB_TEMPLATE.name;
-    closeSheet(); renderJournal(); return;
-  }
-  /* previous competition — with conclusions in red */
-  const src = A().compPast;
-  if (wiz.step===1){
-    c.gearCats = src.gearCats ? src.gearCats.slice() : ['כללי'];
-    c.gear = src.gear.map(g=>({ x:g.x, on:g.on, cat:g.cat||'כללי', prob:g.prob||null }));
-  }
-  if (wiz.step===2){
-    c.timeline = src.timeline.map(t=>({ t:t.t, x:t.x }));
-    c.routine = JSON.parse(JSON.stringify(src.routine));
-  }
-  if (wiz.step===3) c.nutrition = JSON.parse(JSON.stringify(src.nutrition));
-  if (wiz.step===4){
-    c.races.forEach((r,ri)=>{
-      const past = (src.races && (src.races[ri] || src.races[0])) || null;
+  } else if (target==='all'){
+    c.sched = [...src.timeline.map(t=>({ t:t.t, x:t.x })), ...coachRows];
+    c.todo = src.gear.map(g=>({ x:g.x, on:false, prob:g.prob||null }));
+    (c.stages||[]).forEach((s,i)=>{
+      const past = (src.races && (src.races[i] || src.races[0])) || null;
       if (!past) return;
-      r.plan = past.plan.map(p=>({ ph:p.ph, ath:p.ath||'', tip:p.coach||null }));
-      r.copied = src.name;
-      r.status = 'הועתק מ'+src.name+' — ערוך לפי המסקנות';
+      s.str = pastPlanText(past);
+      s.tip = pastStageTip(past);
     });
+    c.copied = src.name;
+  } else {
+    const i = jw.st;
+    const past = src.races && (src.races[i] || src.races[0]);
+    if (past){
+      c.stages[i].str = pastPlanText(past);
+      c.stages[i].tip = pastStageTip(past);
+    }
+    const pn = (src.nutrition.blocks||[]).filter(b=>b.prob);
+    c.stages[i].nutr = pn.map(b=>({ t:b.when||'', x:b.what||'', prob:b.prob||null, items: c.precise ? [] : undefined }));
   }
-  c.copiedSteps[wiz.step] = src.name;
+  if (!ok) return;
   closeSheet();
   renderJournal();
 }
 
-function openPhaseEdit(ri, pi){
-  const c = getComp(wiz.comp);
-  const race = c.races[ri];
-  const ph = race.plan[pi];
-  peCtx = { r:ri, p:pi };
-  openSheet(`
-    <div class="sh-grip"></div>
-    <div class="sh-title"><svg class="icon"><use href="#i-pencil"/></svg> התוכנית שלי — ${race.name}</div>
-    <div class="sh-sub"><span>שלב: ${ph.ph}</span><span>אתה כותב — המאמנת תקרא ותגיב מה חסר</span></div>
-    ${ph.tip ? `<div class="plan-tip" style="margin-top:8px;"><svg><use href="#i-alert"/></svg> מסקנה מהתחרות הקודמת: ${ph.tip}</div>` : ''}
-    <textarea class="jtextarea" id="peText" rows="3" style="margin-top:10px" placeholder="למשל: לצאת חזק מהזינוק + 10 מ׳ ראשונים בלי נשימה">${ph.ath||''}</textarea>
-    <button class="rp-save" onclick="savePhaseNote()"><svg class="icon-sm" style="vertical-align:-3px"><use href="#i-check"/></svg> שמור שלב בתוכנית</button>
-    <button class="sh-close" onclick="closeSheet()">ביטול</button>
-  `);
-}
-function savePhaseNote(){
-  const c = getComp(wiz.comp);
-  const race = c.races[peCtx.r];
-  race.plan[peCtx.p].ath = $('peText').value.trim();
-  race.status = 'טרם נבדק על ידי המאמנת';
-  closeSheet();
-  renderJournal();
-}
-/* ==================== FLEXIBLE ADD — items anywhere ==================== */
-let addCtx = { kind:'', ri:0, bi:0, cat:'' };
-function openAddItem(kind, ri, cat){
-  addCtx = { kind, ri: ri||0, bi: ri||0, cat: cat||'' };
-  const titles = { gear:'פריט ציוד חדש', timeline:'שעה חדשה בלוז', routine:'פעולה חדשה בשגרה', phase:'שלב חדש במהלך' };
-  let fields = '';
-  if (kind==='timeline'){
-    fields = `<input class="feel-input" id="adTime" placeholder="שעה — למשל 06:00" style="margin-bottom:8px">
-      <input class="feel-input" id="adWhat" placeholder="מה קורה — למשל: חימום יבש">`;
-  } else if (kind==='phase'){
-    fields = `<input class="feel-input" id="adWhat" placeholder="שם השלב — למשל: T2 חלופה" style="margin-bottom:8px">
-      <textarea class="jtextarea" id="adText" rows="2" placeholder="מה אני עושה בשלב הזה?"></textarea>`;
-  } else {
-    fields = `<input class="feel-input" id="adWhat" placeholder="למשל: משקפות ברזרבי / מנוחת צהריים">`;
-  }
-  const catNote = addCtx.cat ? `<div class="sh-sub"><span>מחלקה: ${addCtx.cat}</span></div>` : '';
+/* ==================== FLEXIBLE ADD — תוספת בכל מקום (לוז · משימות) ==================== */
+let addCtx = { kind:'' };
+function openAddItem(kind){
+  addCtx = { kind };
+  const titles = { sched:'שעה חדשה בלוז', todo:'משימה חדשה לפני האירוע' };
+  const fields = kind==='sched'
+    ? `<input class="feel-input" id="adTime" placeholder="שעה — למשל 06:00" style="margin-bottom:8px">
+      <input class="feel-input" id="adWhat" placeholder="מה קורה — למשל: חימום יבש">`
+    : `<input class="feel-input" id="adWhat" placeholder="למשל: לסמן מספר מקצה על היד / למלא בקבוקים">`;
   openSheet(`
     <div class="sh-grip"></div>
     <div class="sh-title"><svg class="icon"><use href="#i-plus"/></svg> ${titles[kind]}</div>
-    ${catNote}
     <div style="margin-top:10px;">${fields}</div>
-    <button class="rp-save" onclick="commitAdd()"><svg class="icon-sm" style="vertical-align:-3px"><use href="#i-check"/></svg> הוסף</button>
+    <button class="rp-save" onclick="commitAdd()"><svg class="icon-sm" style="vertical-align:-3px"><use href="#i-check"/></svg> הוספה</button>
     <button class="sh-close" onclick="closeSheet()">ביטול</button>
   `);
 }
 function commitAdd(){
-  const c = getComp(wiz.comp);
+  const c = getComp(jw.comp);
   if (!c) return;
   const what = ($('adWhat') && $('adWhat').value.trim()) || '';
-  const kind = addCtx.kind;
-  if (kind==='gear' && what) c.gear.push({ x:what, on:false, cat:addCtx.cat || 'כללי' });
-  if (kind==='timeline' && what) c.timeline.push({ t:($('adTime') && $('adTime').value.trim()) || '—', x:what });
-  if (kind==='routine' && what) c.routine.blocks[addCtx.bi].items.push({ x:what, on:false });
-  if (kind==='phase' && what) c.races[addCtx.ri].plan.push({ ph:what, ath:($('adText') && $('adText').value.trim()) || '' });
+  if (addCtx.kind==='sched' && what) c.sched = [...(c.sched||[]), { t:($('adTime') && $('adTime').value.trim()) || '—', x:what }];
+  if (addCtx.kind==='todo' && what) c.todo = [...(c.todo||[]), { x:what, on:false }];
   closeSheet();
-  renderJournal();
-}
-function openCatAdd(){
-  openSheet(`
-    <div class="sh-grip"></div>
-    <div class="sh-title"><svg class="icon"><use href="#i-plus"/></svg> מחלקת ציוד חדשה</div>
-    <div class="sh-sub"><span>קוסטום לפי האירוע שלך — שחייה, אופניים, שטח חלופה, בוקר, ערב לפני...</span></div>
-    <input class="feel-input" id="adWhat" placeholder="שם המחלקה" style="margin-top:10px">
-    <button class="rp-save" onclick="commitCat()"><svg class="icon-sm" style="vertical-align:-3px"><use href="#i-check"/></svg> הוסף מחלקה</button>
-    <button class="sh-close" onclick="closeSheet()">ביטול</button>
-  `);
-}
-function commitCat(){
-  const c = getComp(wiz.comp);
-  const name = ($('adWhat').value||'').trim();
-  if (name){ c.gearCats = c.gearCats || []; c.gearCats.push(name); }
-  closeSheet();
-  renderJournal();
-}
-function addRoutineBlock(){
-  const c = getComp(wiz.comp);
-  c.routine.blocks.push({ label:'בלוק חדש', items:[] });
   renderJournal();
 }
 function togglePrecise(){
-  const c = getComp(wiz.comp);
-  c.nutrition.precise = !c.nutrition.precise;
+  const c = getComp(jw.comp);
+  c.precise = !c.precise;
   renderJournal();
 }
 
@@ -1438,21 +1415,21 @@ function mealTotals(n){
   (n.items||[]).forEach(it=>{ k+=it.qty*it.m.k; c+=it.qty*it.m.c; p+=it.qty*it.m.p; });
   return `${Math.round(k)} קל' · ${Math.round(c)} ג' פחמימה · ${Math.round(p)} ג' חלבון`;
 }
-function setMealQty(ni,ii,v){ const c=getComp(wiz.comp); const it=c.nutrition.blocks[ni].items[ii]; it.qty=+v||0; renderJournal(); }
-function delMealItem(ni,ii){ const c=getComp(wiz.comp); c.nutrition.blocks[ni].items.splice(ii,1); renderJournal(); }
-function addPhoto(ni,el){
+function setMealQty(si,ni,ii,v){ const c=getComp(jw.comp); const it=c.stages[si].nutr[ni].items[ii]; it.qty=+v||0; renderJournal(); }
+function delMealItem(si,ni,ii){ const c=getComp(jw.comp); c.stages[si].nutr[ni].items.splice(ii,1); renderJournal(); }
+function addPhoto(si,ni,el){
   const f = el.files && el.files[0];
   if (!f) return;
   const rd = new FileReader();
-  rd.onload = e => { getComp(wiz.comp).nutrition.blocks[ni].photo = e.target.result; renderJournal(); };
+  rd.onload = e => { getComp(jw.comp).stages[si].nutr[ni].photo = e.target.result; renderJournal(); };
   rd.readAsDataURL(f);
 }
-let foodCtx = 0;
-function openFoodAdd(ni){
-  foodCtx = ni;
+let foodCtx = { si:0, ni:0 };
+function openFoodAdd(si,ni){
+  foodCtx = { si, ni };
   openSheet(`
     <div class="sh-grip"></div>
-    <div class="sh-title"><svg class="icon"><use href="#i-plus"/></svg> הוספת מזון / מוצר לארוחה</div>
+    <div class="sh-title"><svg class="icon"><use href="#i-plus"/></svg> הוספת מזון / מוצר לשלב</div>
     <div class="picker-search" style="margin:10px 0 8px;">
       <svg class="icon icon-sm"><use href="#i-search"/></svg>
       <input id="foodQ" placeholder="חיפוש — פסטה, עוף, ג'ל SIS..." oninput="renderFoodList()">
@@ -1472,27 +1449,28 @@ function renderFoodList(){
 }
 function pickFood(idx){
   const f = FOOD_DB[idx];
-  const c = getComp(wiz.comp);
-  const blk = c.nutrition.blocks[foodCtx];
+  const c = getComp(jw.comp);
+  const blk = c.stages[foodCtx.si].nutr[foodCtx.ni];
   blk.items = blk.items || [];
   const qty = f.u==='יחידה' ? 1 : 100;
   blk.items.push({ n:f.n, qty, u:f.u, m:Object.assign({},f.m) });
   closeSheet();
   renderJournal();
 }
-function addNutrRow(){
-  const c = getComp(wiz.comp);
-  c.nutrition.blocks = c.nutrition.blocks || [];
-  c.nutrition.blocks.push({ when:'מתי?', what:'מה?', items: c.nutrition.precise ? [] : undefined });
+function addNutrRow(si){
+  const c = getComp(jw.comp);
+  const st = c.stages[si];
+  st.nutr = st.nutr || [];
+  st.nutr.push({ t:'מתי?', x:'מה?', items: c.precise ? [] : undefined });
   renderJournal();
 }
-function delNutrRow(ni){
-  const c = getComp(wiz.comp);
-  if (c.nutrition.blocks) c.nutrition.blocks.splice(ni,1);
+function delNutrRow(si,ni){
+  const c = getComp(jw.comp);
+  c.stages[si].nutr.splice(ni,1);
   renderJournal();
 }
 
-/* ==================== DRAG REORDER — gear + race phases ==================== */
+/* ==================== DRAG REORDER — stages ==================== */
 let dragInfo = null;
 function dragStart(e, list, a, ri){
   dragInfo = { list, a, ri: ri||0 };
@@ -1504,27 +1482,24 @@ function dragLeave(e){ e.currentTarget.classList.remove('drag-over'); }
 function dropOn(e, list, b, ri){
   e.preventDefault(); e.currentTarget.classList.remove('drag-over');
   if (!dragInfo || dragInfo.list!==list || dragInfo.a===b) { dragInfo=null; return; }
-  const c = getComp(wiz.comp);
-  if (list==='gear'){
-    const it = c.gear.splice(dragInfo.a,1)[0];
-    c.gear.splice(b,0,it);
-  }
-  if (list==='plan'){
-    const plan = c.races[dragInfo.ri].plan;
-    const it = plan.splice(dragInfo.a,1)[0];
-    plan.splice(b,0,it);
-  }
+  const c = getComp(jw.comp);
+  const it = c.stages.splice(dragInfo.a,1)[0];
+  c.stages.splice(b,0,it);
   dragInfo = null;
   renderJournal();
 }
 
-/* timeline — sorted chronologically */
+/* שורות הלוז — מסודרות כרונולוגית; "ערב לפני" נשאר ראשון גם כשהתחרות אחר הצהריים/בערב */
 function tToMin(t){
   const m = (t||'').match(/^(\d{1,2}):(\d{2})$/);
   return m ? (+m[1])*60+(+m[2]) : 99999;
 }
-function sortedTimeline(c){
-  return c.timeline.slice().sort((a,b)=>tToMin(a.t)-tToMin(b.t));
+function sortRows(rows){
+  return (rows||[]).slice().sort((x,y)=>{
+    const kx = (x.x||'').startsWith('ערב לפני') ? -100 : tToMin(x.t);
+    const ky = (y.x||'').startsWith('ערב לפני') ? -100 : tToMin(y.t);
+    return kx-ky;
+  });
 }
 
 /* ==================== PROGRESS VIEW ==================== */
