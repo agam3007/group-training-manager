@@ -1249,6 +1249,15 @@ const ATHLETE_CONTEXT = {
       { d:'12 אוק׳', t:'כוח — בוצע · RPE 5 · הכתף מרגישה טוב אחרי הטיפול' },
     ],
     compLog: 'גביע פתיחה 3.10: 100 ח׳ 1:38 מול יעד 1:36 · היא הרגישה חזקה, הפער ביציאות מהפניות · מיקוד: יציאות',
+    prep: {
+      name: 'אליפות אזורית — נערות ב׳',
+      when: 'שבת · 17.10 · 09:00 · בריכת הים',
+      state: 'ההכנה נשלחה מהאפליקציה — לוז, צ׳קליסט, אסטרטגיה ודלק לכל שלב',
+      stages: [
+        { n:'מקצה 100 חתירה', plan:'חימום בספישי · זינוק רגוע · קצב מוגבר במחצית', me:'מה חסר: מתי לנשום — כל 3 או 5 חתירות?' },
+        { n:'מקצה 50 חתירה', plan:'זינוק אחרי 40 דק׳ מנוחה · פתיחה מסודרת', me:'איבדת 0.3 שנ׳ בחתירת הסיום — לסיים בלי האטה' },
+      ],
+    },
     notes: [
       { d:'1 אוק׳', t:'מגיבה טוב לטיפול פיזיו. להעלות נפח בהדרגה.' },
       { d:'24 ספט׳', t:'ביקשה להוסיף ריצה — לשלב ביום ו׳.' },
@@ -1887,6 +1896,13 @@ function renderAthletePanel(id){
       <h4><svg class="icon-xs"><use href="#i-note"/></svg> דיווחי אימון אחרונים (RPE + הערות) — מהאפליקציה</h4>
       ${a.reports.map(j=>`<div class="ath-note"><b>${j.d}:</b> ${j.t}</div>`).join('')}
     </div>` : ''}
+    ${a.prep ? `
+    <div class="ath-section">
+      <h4><svg class="icon-xs"><use href="#i-trophy"/></svg> תחרות קרובה — תוכנית הכנה מהספורטאית</h4>
+      <div class="ath-flag"><svg class="icon-sm"><use href="#i-send"/></svg> ${a.prep.name} · ${a.prep.when} — ${a.prep.state}</div>
+      ${a.prep.stages.map(s=>`<div class="ath-note"><b>${s.n}:</b> ${s.plan} · ${s.me ? 'תגובתך: '+s.me : 'ממתין לתגובתך — מה חסר?'}</div>`).join('')}
+      <button class="ath-btn" style="margin-top:6px" onclick="openPrep()"><svg class="icon-xs"><use href="#i-pencil"/></svg> פתח תוכנית הכנה והגב</button>
+    </div>` : ''}
     ${a.compLog ? `
     <div class="ath-section">
       <h4><svg class="icon-xs"><use href="#i-trophy"/></svg> מסקנות מתחרות</h4>
@@ -1900,6 +1916,10 @@ function renderAthletePanel(id){
       <button class="ath-btn" onclick="alert('WIREFRAME — שליחת הודעה למתאמן')"><svg class="icon-xs"><use href="#i-send"/></svg> הודעה</button>
       <button class="ath-btn" onclick="alert('WIREFRAME — הוספת מבחן')"><svg class="icon-xs"><use href="#i-plus"/></svg> מבחן</button>
     </div>`;
+}
+
+function openPrep(){
+  alert('WIREFRAME — פתיחת תוכנית ההכנה של הספורטאית (מסך ב׳ שלה): לוז שהמקצים בו נעולים ע״י הפרסום שלך · צ׳קליסט ציוד · כרטיסיית תכנון לכל שלב (אסטרטגיה + תזונה). התגובה ״מה חסר״ מוזנת פר-שלב ומופיעה אצל האתלט בתוך כרטיסיית השלב.');
 }
 
 /* staff hours for the viewed week — sessions + accompanied events */

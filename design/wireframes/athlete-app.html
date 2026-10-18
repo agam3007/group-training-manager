@@ -94,6 +94,8 @@
   .ev-card.pers .icon-xs{color:var(--teal);}
   .ev-name{font-size:12px;font-weight:800;flex:1;}
   .ev-time{font-size:10.5px;font-weight:800;color:var(--text-muted);}
+  .ev-card.clickable{cursor:pointer;transition:border-color .15s, background .15s;}
+  .ev-card.clickable:hover{border-color:var(--accent);background:var(--surface-ocean);}
 
   /* coach note */
   .note-card{background:var(--surface-ocean);border-radius:16px;padding:13px 15px;margin:14px 0 4px;display:flex;gap:10px;align-items:flex-start;}
@@ -210,6 +212,9 @@
   .stage-t{width:56px;border:1px solid var(--border);border-radius:8px;padding:6px 6px;background:var(--bg);color:var(--text);font-family:inherit;font-size:11px;outline:none;text-align:center;flex-shrink:0;}
   .stage-del{border:none;background:transparent;color:var(--text-faint);cursor:pointer;padding:3px;flex-shrink:0;}
   .stage-del:hover{color:var(--danger);}
+  .stage-move{display:flex;flex-direction:column;gap:1px;flex-shrink:0;}
+  .stage-move button{border:none;background:transparent;color:var(--text-faint);cursor:pointer;padding:1px 2px;line-height:0;}
+  .stage-move button:hover{color:var(--accent);}
   .st-tabs{display:flex;gap:5px;margin:10px 0 10px;overflow-x:auto;padding-bottom:2px;}
   .st-tabs::-webkit-scrollbar{height:0;}
   .st-tab{flex:0 0 auto;padding:7px 13px;border-radius:12px;border:1px solid var(--border);background:var(--surface);font-size:11px;font-weight:800;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap;font-family:inherit;}
@@ -388,6 +393,9 @@
   <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
   <symbol id="i-grip" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="9" cy="5" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="9" cy="19" r="1.6"/><circle cx="15" cy="5" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="15" cy="19" r="1.6"/></symbol>
   <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+  <symbol id="i-chev-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></symbol>
+  <symbol id="i-chev-dn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
 </svg>
 </head>
 <body>
@@ -487,6 +495,8 @@ const ATH = {
     events:[
       { d:1, name:'טיול שנתי בית ספר', time:'08:00', kind:'pers', icon:'i-user' },
       { d:5, name:'מבחן ביומטרי — לפני האימון', time:'16:30', kind:'test', icon:'i-clipboard' },
+      { d:5, name:'מבחן 7×100 בבריכה', time:'16:00', kind:'test', icon:'i-clipboard', comp:'mivhan' },
+      { d:6, name:'אליפות אזורית — נערות ב׳', time:'09:00', kind:'comp', icon:'i-trophy', comp:'alifut' },
     ],
     msgs:[
       { icon:'i-msg', title:'המאמנת הגיבה על ההכנה — אליפות אזורית', body:'התוכנית שלך טובה. נשאר פרט אחד: מתי לנשום ב-100 — ראי במקצה הראשי.', time:'היום · 15:40', unread:true },
@@ -815,16 +825,17 @@ function renderWeek(){
   html += `<div class="sec"><svg class="icon-sm"><use href="#i-calendar"/></svg> שאר השבוע</div>`;
   rest.forEach(s=>{ html += sessionCard(s, {}); });
 
-  /* events */
+  /* events — tapping a competition/test event opens its preparation journal (מסך א׳/ב׳) */
   const evs = a.events || [];
   if (evs.length){
-    html += `<div class="sec"><svg class="icon-sm"><use href="#i-note"/></svg> לוח האירועים</div>`;
+    html += `<div class="sec"><svg class="icon-sm"><use href="#i-note"/></svg> לוח האירועים — לחיצה על תחרות/מבחן פותחת את ההכנה שלו</div>`;
     evs.forEach(ev=>{
+      const cd = ev.comp ? (a.comps||[]).find(x=>x.id===ev.comp) : null;
       html += `
-        <div class="ev-card ${ev.kind}">
+        <div class="ev-card ${ev.kind} ${ev.comp?'clickable':''}" ${ev.comp?`onclick="openComp('${ev.comp}')"`:''}>
           <svg class="icon-xs"><use href="#${ev.icon}"/></svg>
           <span class="ev-name">${ev.name}</span>
-          <span class="ev-time">${DAYS[ev.d].l}׳ · ${ev.time}</span>
+          <span class="ev-time">${DAYS[ev.d].l}׳ · ${ev.time}${cd?` · בעוד ${cd.daysAway} ימים`:''}</span>
         </div>`;
     });
   }
@@ -1056,6 +1067,15 @@ function renameStage(i,v){ getComp(jw.comp).stages[i].n = v; }
 function setStageTime(i,v){ getComp(jw.comp).stages[i].t = v; }
 function addStage(){ getComp(jw.comp).stages.push({ n:'שלב חדש', t:'', str:'', act:'', nutr:[] }); renderJournal(); }
 function delStage(i){ const c=getComp(jw.comp); c.stages.splice(i,1); renderJournal(); }
+function setCompMeta(f,v){ const c=getComp(jw.comp); if(!v || !v.trim()) return; c[f]=v.trim(); renderJournal(); }
+function moveStage(i,dir){
+  const c = getComp(jw.comp);
+  const b = i + dir;
+  if (b<0 || b>=(c.stages||[]).length) return;
+  const it = c.stages.splice(i,1)[0];
+  c.stages.splice(b,0,it);
+  renderJournal();
+}
 function continueToPlan(){
   const c = getComp(jw.comp);
   if (!(c.stages||[]).length){ alert('WIREFRAME — צריך לפחות שלב אחד'); return; }
@@ -1074,6 +1094,15 @@ function renderCompBuilder(){
       <svg class="icon" style="color:var(--danger)"><use href="#${c.kind==='test'?'i-clipboard':'i-trophy'}"/></svg>
       <div class="comp-name">מסך א׳ — מבנה התחרות<div class="comp-sub">כל שלב מקבל כרטיסיית תכנון משלו (אסטרטגיה + דלק) — ניתן להוסיף, לשנות שם, לגרור ולמחוק</div></div>
     </div>
+    <div class="jrow" style="padding:2px 0"><span class="k">שם האירוע</span>
+      <input class="feel-input" value="${c.name}" onchange="setCompMeta('name',this.value)">
+    </div>
+    <div class="jrow" style="padding:2px 0"><span class="k">תאריך</span>
+      <input class="feel-input" value="${c.date}" onchange="setCompMeta('date',this.value)">
+    </div>
+    <div class="jrow" style="padding:2px 0"><span class="k">מקום</span>
+      <input class="feel-input" value="${c.place}" onchange="setCompMeta('place',this.value)">
+    </div>
     <div class="jrow" style="padding:2px 0"><span class="k" style="min-width:64px">שעת הזינוק</span>
       <div class="jchips">${timeOpts.map(o=>`<button class="jchip ${c.startH===o.h?'on':''}" onclick="setStartH(${o.h})">${o.l}</button>`).join('')}</div>
     </div>`;
@@ -1086,11 +1115,15 @@ function renderCompBuilder(){
           <span class="t2">${t.sub}</span>
         </button>`).join('')}</div>`;
   }
-  html += `<div class="routine-sec" style="margin-top:12px;"><svg><use href="#i-activity"/></svg> שלבי התחרות · גרירה לשינוי הסדר</div>`;
+  html += `<div class="routine-sec" style="margin-top:12px;"><svg><use href="#i-activity"/></svg> שלבי התחרות · גרירה או חצים לשינוי הסדר</div>`;
   html += (c.stages||[]).map((s,i)=>`
     <div class="stage-row" draggable="true"
          ondragstart="dragStart(event,'stage',${i})"
          ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="dropOn(event,'stage',${i})">
+      <div class="stage-move">
+        <button title="העלה" onclick="moveStage(${i},-1)"><svg class="icon-xs"><use href="#i-chev-up"/></svg></button>
+        <button title="הורד" onclick="moveStage(${i},1)"><svg class="icon-xs"><use href="#i-chev-dn"/></svg></button>
+      </div>
       <svg class="icon-xs grip-dots"><use href="#i-grip"/></svg>
       <input class="stage-n" value="${s.n}" placeholder="שם השלב" oninput="renameStage(${i},this.value)">
       <input class="stage-t" value="${s.t||''}" placeholder="08:30" onchange="setStageTime(${i},this.value)">
@@ -1391,7 +1424,7 @@ const FOOD_DB = [
   { n:'אורז לבן מבושל', u:'גרם', m:{k:1.30,c:0.28,p:0.03,f:0.003} },
   { n:'חזה עוף מבושל', u:'גרם', m:{k:1.65,c:0,p:0.31,f:0.04} },
   { n:'בננה', u:'יחידה', m:{k:105,c:27,p:1.3,f:0.4} },
-  { n:'שיבולת שיבולת (גרם)', u:'גרם', m:{k:3.67,c:0.61,p:0.13,f:0.07} },
+  { n:'שיבולת שועל (גרם)', u:'גרם', m:{k:3.67,c:0.61,p:0.13,f:0.07} },
   { n:'טוסט קמח מלא (פרוסה)', u:'יחידה', m:{k:80,c:13,p:4,f:1} },
   { n:'גבינה לבנה 5%', u:'גרם', m:{k:0.96,c:0.035,p:0.12,f:0.05} },
   { n:'ג\'ל SIS GO Energy', u:'יחידה', m:{k:87,c:22,p:0,f:0} },
