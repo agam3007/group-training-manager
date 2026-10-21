@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facilities — Blue Fitness</title>
+<style>
+  :root{--bg:#F8FAFC;--surface:#FFF;--surface-ocean:#E0F2FE;--surface-hover:#F1F5F9;--border:#CBD5E1;--text:#0F172A;--text-muted:#475569;--text-faint:#94A3B8;--accent:#2563EB;--accent-dim:rgba(37,99,235,.08);--accent-text:#FFF;--success:#16A34A;--success-bg:#DCFCE7;--danger:#DC2626;--danger-bg:#FEE2E2;--warning:#D97706;--warning-bg:#FEF3C7;--teal:#0D9488;--teal-bg:rgba(13,148,136,.12);--shadow-md:0 4px 12px rgba(15,23,42,.06);--shadow-lg:0 8px 32px rgba(15,23,42,.12);}
+  :root[data-theme="dark"]{--bg:#0F172A;--surface:#1E293B;--surface-ocean:#25334A;--surface-hover:#334155;--border:#334155;--text:#F8FAFC;--text-muted:#94A3B8;--text-faint:#64748B;--accent:#3B82F6;--accent-dim:rgba(59,130,246,.15);--accent-text:#FFF;--success:#22C55E;--success-bg:rgba(34,197,94,.2);--danger:#EF4444;--danger-bg:rgba(239,68,68,.2);--warning:#FBBF24;--warning-bg:rgba(251,191,36,.2);--teal:#2DD4BF;--teal-bg:rgba(45,212,191,.15);--shadow-md:0 4px 12px rgba(0,0,0,.25);--shadow-lg:0 8px 32px rgba(0,0,0,.4);}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);}
+  .icon{width:20px;height:20px;stroke-width:2;flex-shrink:0;}
+  .icon-sm{width:16px;height:16px;}
+  .icon-xs{width:13px;height:13px;}
+  button{font-family:inherit;}
+
+  .demo-bar{display:flex;gap:12px;align-items:center;padding:12px 32px;border-bottom:1px solid var(--border);background:var(--surface);}
+  .demo-note{font-size:11px;color:var(--text-muted);font-weight:700;}
+  .seg{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:3px;gap:3px;}
+  .seg button{padding:6px 14px;border:none;border-radius:9px;background:transparent;color:var(--text-muted);font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:5px;}
+  .seg button.active{background:var(--accent);color:#FFF;}
+  .demo-bar .demo-note{margin-inline-end:auto;}
+
+  .layout{display:flex;min-height:calc(100vh - 47px);}
+  .side{width:70px;background:var(--surface);border-inline-start:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:18px 0;gap:6px;}
+  .rail-brand{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--accent),#1D4ED8);color:#FFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;margin-bottom:14px;box-shadow:0 6px 16px rgba(37,99,235,.35);}
+  .rail-btn{width:44px;height:44px;border:none;border-radius:12px;background:transparent;color:var(--text-faint);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .rail-btn.active{background:var(--accent-dim);color:var(--accent);}
+  .rail-split{flex:1;}
+
+  .main{flex:1;padding:22px 32px 60px;}
+  .page-title{display:flex;align-items:center;gap:12px;margin-bottom:4px;}
+  .page-title h1{font-size:21px;font-weight:800;}
+  .page-sub{font-size:12.5px;color:var(--text-muted);margin-bottom:14px;font-weight:700;}
+
+  .fgrid{display:grid;grid-template-columns:minmax(0,1fr) 430px;gap:14px;align-items:start;}
+
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:14px;box-shadow:var(--shadow-md);}
+  .panel-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;margin-bottom:8px;flex-wrap:wrap;}
+
+  .chip{font-size:10.5px;font-weight:800;padding:4px 10px;border-radius:16px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+  .chip.ok{background:var(--success-bg);color:var(--success);}
+  .chip.bad{background:var(--danger-bg);color:var(--danger);}
+  .chip.warn{background:var(--warning-bg);color:var(--warning);}
+  .chip.info{background:var(--surface-ocean);color:var(--accent);}
+  .chip.teal{background:var(--teal-bg);color:var(--teal);}
+  .chip.dim{background:var(--surface-hover);color:var(--text-muted);}
+
+  .btn{border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:9px 16px;font-size:12.5px;font-weight:800;color:var(--text-muted);display:inline-flex;align-items:center;gap:6px;cursor:pointer;}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#FFF;}
+
+  .fcards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+  .fcard{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:12px;cursor:pointer;}
+  .fcard.sel{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;}
+  .f-row{display:flex;gap:10px;align-items:flex-start;}
+  .f-ico{width:38px;height:38px;border-radius:12px;background:var(--surface-ocean);color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .f-ico.teal{background:var(--teal-bg);color:var(--teal);}
+  .f-ico.warn{background:var(--warning-bg);color:var(--warning);}
+  .f-name{font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .f-meta{font-size:10.5px;color:var(--text-muted);font-weight:700;margin-top:3px;}
+
+  .p-sub{font-size:11px;color:var(--text-muted);font-weight:700;margin-bottom:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .lanes{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;}
+  .lane{background:var(--surface-hover);border:1px solid var(--border);border-radius:10px;padding:7px 4px;min-height:130px;display:flex;flex-direction:column;gap:4px;text-align:center;}
+  .lane .ln-head{font-size:9px;font-weight:800;color:var(--text-faint);}
+  .lane small{font-size:8.5px;color:var(--text-muted);font-weight:700;}
+  .lane .chip{font-size:9px;padding:3px 5px;white-space:normal;line-height:1.3;justify-content:center;}
+  .lane.coll{border:2px solid var(--danger);background:var(--danger-bg);}
+  .lane.free{border-style:dashed;}
+  .legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  .sug{display:flex;flex-direction:column;gap:6px;margin-top:6px;}
+  .sug-row{display:flex;gap:8px;align-items:center;font-size:11.5px;font-weight:700;flex-wrap:wrap;}
+
+  .warn-card{background:var(--danger-bg);border:1px solid var(--danger);border-radius:16px;padding:14px;}
+  .warn-title{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:800;color:var(--danger);margin-bottom:8px;}
+  .warn-txt{font-size:12px;font-weight:700;line-height:1.5;margin-bottom:10px;}
+
+  .opt-row{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer;}
+  .opt-row.sel{border-color:var(--accent);background:var(--accent-dim);}
+  .opt-row.off{opacity:.6;}
+  .rdio{width:16px;height:16px;border-radius:50%;border:2px solid var(--text-faint);flex-shrink:0;margin-top:2px;}
+  .rdio.on{border-color:var(--accent);background:var(--accent);box-shadow:inset 0 0 0 3px var(--surface);}
+  .o-t{font-size:12.5px;font-weight:800;}
+  .o-p{font-size:11px;color:var(--text-muted);font-weight:700;margin-top:3px;}
+  .dlg-btns{display:flex;gap:8px;margin-top:12px;}
+  .dlg-btns .btn{flex:1;justify-content:center;}
+
+  .wf{position:fixed;bottom:4px;inset-inline:0;text-align:center;font-size:10px;color:var(--text-faint);z-index:200;}
+</style>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-pool" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16c.6.5 1.2 1 2.5 1C7 17 7 15 9.5 15c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1C7 13 7 11 9.5 11c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/><path d="M2 8c.6.5 1.2 1 2.5 1C7 9 7 7 9.5 7c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+</svg>
+</head>
+<body>
+
+<div class="demo-bar">
+  <span class="demo-note">WIREFRAME — הקצאת מתקן למופע: תצוגת מסלולים לבריכה, הצעה אוטומטית לפי יכולת וזיהוי התנגשות</span>
+  <div class="seg">
+    <button onclick="toggleTheme()" id="themeBtn"><svg class="icon icon-sm"><use href="#i-moon"/></svg> Dark</button>
+    <button class="active">מאמנת עדי</button>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="side">
+    <div class="rail-brand">BF</div>
+    <button class="rail-btn"><svg class="icon"><use href="#i-home"/></svg></button>
+    <button class="rail-btn active"><svg class="icon"><use href="#i-pool"/></svg></button>
+    <button class="rail-btn"><svg class="icon"><use href="#i-calendar"/></svg></button>
+    <button class="rail-btn"><svg class="icon"><use href="#i-users"/></svg></button>
+    <button class="rail-btn"><svg class="icon"><use href="#i-clipboard"/></svg></button>
+    <div class="rail-split"></div>
+    <button class="rail-btn" onclick="toggleTheme()"><svg class="icon"><use href="#i-sun"/></svg></button>
+  </div>
+
+  <div class="main">
+    <div class="page-title">
+      <h1>מתקנים והקצאות מסלולים</h1>
+      <span class="chip warn"><svg class="icon-xs"><use href="#i-alert"/></svg> התנגשות אחת לפתרון</span>
+    </div>
+    <div class="page-sub">כרטיסי מתקנים, תצוגת מסלולים למופע ודיאלוג הקצאה — כולל זיהוי התנגשויות בין מופעים חופפים.</div>
+
+    <div class="fgrid">
+      <div>
+        <!-- facility cards -->
+        <div class="fcards">
+          <div class="fcard sel">
+            <div class="f-row">
+              <div class="f-ico"><svg class="icon"><use href="#i-pool"/></svg></div>
+              <div><div class="f-name">בריכת הפועל</div><div class="f-meta">8 מסלולים · 25 מ' · סניף מרכז</div></div>
+            </div>
+            <div class="f-meta" style="margin-top:8px">3 מופעים השבוע · ניצול 86%</div>
+          </div>
+          <div class="fcard">
+            <div class="f-row">
+              <div class="f-ico teal"><svg class="icon"><use href="#i-repeat"/></svg></div>
+              <div><div class="f-name">מסלול ריצה</div><div class="f-meta">400 מ' · בחוץ</div></div>
+            </div>
+            <div class="f-meta" style="margin-top:8px">1 מופע השבוע</div>
+          </div>
+          <div class="fcard">
+            <div class="f-row">
+              <div class="f-ico warn"><svg class="icon"><use href="#i-heart"/></svg></div>
+              <div><div class="f-name">אולם יבשה</div><div class="f-meta">100 מ"ר · 2 חדרים</div></div>
+            </div>
+            <div class="f-meta" style="margin-top:8px">2 מופעים השבוע</div>
+          </div>
+        </div>
+
+        <!-- pool view -->
+        <div class="panel">
+          <div class="panel-title"><svg class="icon-sm"><use href="#i-pool"/></svg> בריכת הפועל — חלוקת מסלולים <span class="chip info"><svg class="icon-xs"><use href="#i-clock"/></svg> שישי 23.10 · 17:30–18:20</span></div>
+          <div class="p-sub"><span class="chip teal">אימון מפצה — דגיגונים</span> 18 מתאמנים · מדריכה ריקי לוין <span class="chip dim">הוזז מחמישי 22.10</span></div>
+
+          <div class="lanes">
+            <div class="lane"><span class="ln-head">מסלול 1</span><span class="chip teal">דגיגונים א'</span><small>3 מתאמנים</small></div>
+            <div class="lane"><span class="ln-head">מסלול 2</span><span class="chip teal">דגיגונים א'</span><small>3 מתאמנים</small></div>
+            <div class="lane"><span class="ln-head">מסלול 3</span><span class="chip teal">דגיגונים ב'</span><small>6 מתאמנים</small></div>
+            <div class="lane"><span class="ln-head">מסלול 4</span><span class="chip teal">דגיגונים ג'</span><small>6 מתאמנים</small></div>
+            <div class="lane coll"><span class="ln-head">מסלול 5</span><span class="chip teal">מפצה — דגיגונים</span><span class="chip dim">נוער תחרותי</span><span class="chip bad">התנגשות</span></div>
+            <div class="lane coll"><span class="ln-head">מסלול 6</span><span class="chip teal">מפצה — דגיגונים</span><span class="chip dim">נוער תחרותי</span><span class="chip bad">התנגשות</span></div>
+            <div class="lane"><span class="ln-head">מסלול 7</span><span class="chip dim">נוער תחרותי</span><small>9 מתאמנים</small></div>
+            <div class="lane free"><span class="ln-head">מסלול 8</span><small>פנוי</small></div>
+          </div>
+
+          <div class="legend">
+            <span class="chip teal">אימון המפצה</span>
+            <span class="chip dim">נוער תחרותי · 17:00–19:00</span>
+            <span class="chip bad">שתי הקבוצות במסלולים 5–6</span>
+            <span class="chip dim">מסלול פנוי</span>
+          </div>
+
+          <div class="panel-title" style="margin-top:12px;font-size:12px"><svg class="icon-sm"><use href="#i-users"/></svg> ההצעה האוטומטית — חלוקה לפי יכולת</div>
+          <div class="sug">
+            <div class="sug-row"><span class="chip teal">א' — מהירים</span> מסלולים 1–2 · 6 מתאמנים</div>
+            <div class="sug-row"><span class="chip teal">ב' — ביניים</span> מסלול 3 · 6 מתאמנים</div>
+            <div class="sug-row"><span class="chip teal">ג' — מתחילים</span> מסלול 4 · 6 מתאמנים</div>
+          </div>
+          <div class="demo-note" style="margin-top:8px;display:block">החלוקה מוצעת אוטומטית לפי רמת יכולת — גרירת קבוצות בין מסלולים מעדכנת את ההצעה.</div>
+        </div>
+      </div>
+
+      <!-- side: dialog + warning -->
+      <div>
+        <div class="warn-card" style="margin-bottom:14px">
+          <div class="warn-title"><svg class="icon"><use href="#i-alert"/></svg> התנגשות מסלולים <span class="chip bad">מסלולים 5–6</span></div>
+          <div class="warn-txt">אימון המפצה של דגיגונים (17:30–18:20) חופף לנוער תחרותי (17:00–19:00) — שתי הקבוצות משובצות יחד באותם מסלולים 5–6.</div>
+          <button class="btn primary" style="width:100%;justify-content:center"><svg class="icon-sm"><use href="#i-check"/></svg> לפתור בעזרת הצעת המערכת — מסלולים 1–4</button>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title" style="font-size:14px">הקצאת מתקן למופע</div>
+          <div class="o-p" style="margin-bottom:10px">אימון מפצה — דגיגונים · שישי 23.10 · 17:30–18:20</div>
+
+          <div class="opt-row off">
+            <span class="rdio"></span>
+            <div style="flex:1"><div class="o-t">הבריכה כולה — 8 מסלולים</div><div class="o-p">לא זמין: נוער תחרותי שוחה במסלולים 5–7</div></div>
+            <span class="chip bad">לא זמין</span>
+          </div>
+          <div class="opt-row sel">
+            <span class="rdio on"></span>
+            <div style="flex:1"><div class="o-t">מסלולים נבחרים</div><div class="o-p">ההצעה האוטומטית: מסלולים 1–4 עם חלוקה לפי יכולת</div></div>
+            <span class="chip info">מומלץ</span>
+          </div>
+          <div class="opt-row">
+            <span class="rdio"></span>
+            <div style="flex:1"><div class="o-t">העברה לאולם יבשה</div><div class="o-p">חלופה — אימון יבשה במקום הכניסה למים</div></div>
+          </div>
+
+          <div class="dlg-btns">
+            <button class="btn primary"><svg class="icon-sm"><use href="#i-check"/></svg> אישור ההקצאה</button>
+            <button class="btn">שמור כטיוטה</button>
+          </div>
+
+          <div class="demo-note" style="display:block;margin-top:10px;padding-top:8px;border-top:1px dashed var(--border)">סדר הבדיקה במערכת: סתירת מדריכים קודמת לבדיקת התנגשות מתקן ומסלולים (WPLAN-20).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wf">WIREFRAME v1 — BLUE FITNESS · Facilities · F1.5 · DOM-4 · SES-2 · D6/D8 · WPLAN-20</div>
+<script>
+  function toggleTheme(){
+    const h=document.documentElement;
+    const d=h.dataset.theme==='dark';
+    h.dataset.theme=d?'':'dark';
+    document.getElementById('themeBtn').innerHTML=d
+      ?'<svg class="icon icon-sm"><use href="#i-moon"/></svg> Dark'
+      :'<svg class="icon icon-sm"><use href="#i-sun"/></svg> Light';
+  }
+</script>
+</body>
+</html>

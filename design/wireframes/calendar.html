@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendar — Blue Fitness</title>
+<style>
+  :root{--bg:#F8FAFC;--surface:#FFF;--surface-ocean:#E0F2FE;--surface-hover:#F1F5F9;--border:#CBD5E1;--text:#0F172A;--text-muted:#475569;--text-faint:#94A3B8;--accent:#2563EB;--accent-dim:rgba(37,99,235,.08);--accent-text:#FFF;--success:#16A34A;--success-bg:#DCFCE7;--danger:#DC2626;--danger-bg:#FEE2E2;--warning:#D97706;--warning-bg:#FEF3C7;--teal:#0D9488;--teal-bg:rgba(13,148,136,.12);--shadow-md:0 4px 12px rgba(15,23,42,.06);--shadow-lg:0 8px 32px rgba(15,23,42,.12);}
+  :root[data-theme="dark"]{--bg:#0F172A;--surface:#1E293B;--surface-ocean:#25334A;--surface-hover:#334155;--border:#334155;--text:#F8FAFC;--text-muted:#94A3B8;--text-faint:#64748B;--accent:#3B82F6;--accent-dim:rgba(59,130,246,.15);--accent-text:#FFF;--success:#22C55E;--success-bg:rgba(34,197,94,.2);--danger:#EF4444;--danger-bg:rgba(239,68,68,.2);--warning:#FBBF24;--warning-bg:rgba(251,191,36,.2);--teal:#2DD4BF;--teal-bg:rgba(45,212,191,.15);--shadow-md:0 4px 12px rgba(0,0,0,.25);--shadow-lg:0 8px 32px rgba(0,0,0,.4);}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);}
+  .icon{width:20px;height:20px;stroke-width:2;flex-shrink:0;}
+  .icon-sm{width:16px;height:16px;}
+  .icon-xs{width:13px;height:13px;}
+  button{font-family:inherit;}
+
+  .demo-bar{display:flex;gap:12px;align-items:center;padding:12px 32px;border-bottom:1px solid var(--border);background:var(--surface);}
+  .demo-note{font-size:11px;color:var(--text-muted);font-weight:700;}
+  .seg{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:3px;gap:3px;}
+  .seg button{padding:6px 14px;border:none;border-radius:9px;background:transparent;color:var(--text-muted);font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:5px;}
+  .seg button.active{background:var(--accent);color:#FFF;}
+  .demo-bar .demo-note{margin-inline-end:auto;}
+
+  .layout{display:flex;min-height:calc(100vh - 47px);}
+  .side{width:70px;background:var(--surface);border-inline-start:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:18px 0;gap:6px;}
+  .rail-brand{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--accent),#1D4ED8);color:#FFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;margin-bottom:14px;box-shadow:0 6px 16px rgba(37,99,235,.35);}
+  .rail-btn{width:44px;height:44px;border:none;border-radius:12px;background:transparent;color:var(--text-faint);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .rail-btn.active{background:var(--accent-dim);color:var(--accent);}
+  .rail-split{flex:1;}
+
+  .main{flex:1;padding:22px 32px 60px;max-width:1400px;}
+
+  .page-title{display:flex;align-items:center;gap:12px;margin-bottom:4px;}
+  .page-title h1{font-size:21px;font-weight:800;}
+  .page-sub{font-size:12.5px;color:var(--text-muted);margin-bottom:14px;font-weight:700;}
+
+  .filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px;}
+  .sel{border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:9px 14px;font-size:12.5px;font-weight:800;color:var(--text-muted);display:inline-flex;align-items:center;gap:6px;cursor:pointer;}
+  .sel .v{color:var(--accent);}
+  .chk{border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:9px 14px;font-size:12px;font-weight:800;color:var(--text-faint);display:inline-flex;align-items:center;gap:6px;cursor:pointer;}
+  .chk.on{color:var(--accent);border-color:var(--accent);background:var(--accent-dim);}
+  .layer-lbl{font-size:11px;font-weight:800;color:var(--text-faint);margin-inline-start:6px;}
+  .weeknav{margin-inline-start:auto;display:flex;align-items:center;gap:6px;}
+
+  /* week grid */
+  .grid-wrap{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:14px;box-shadow:var(--shadow-md);}
+  .wgrid{display:grid;grid-template-columns:52px repeat(7,minmax(110px,1fr));grid-template-rows:38px repeat(6,56px);gap:4px;}
+  .dhead{display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:12px;background:var(--surface-hover);}
+  .dhead small{font-size:10px;color:var(--text-faint);font-weight:800;}
+  .dhead b{font-size:12.5px;font-weight:800;}
+  .dhead.today{background:var(--accent);color:#FFF;}
+  .dhead.today small{color:rgba(255,255,255,.75);}
+  .hruler{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--text-faint);}
+  .gcell{border-radius:6px;background:repeating-linear-gradient(to bottom,transparent,transparent 100%,var(--surface-hover) 100%);border-top:1px dashed var(--surface-hover);}
+
+  .ev{border-radius:10px;padding:5px 8px;font-size:11px;font-weight:800;line-height:1.35;overflow:hidden;background:var(--surface-ocean);border-inline-start:3px solid var(--accent);color:var(--text);cursor:pointer;}
+  .ev .t{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-muted);}
+  .ev .nm{display:flex;align-items:center;gap:4px;}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+  .ev.teal{background:var(--teal-bg);border-inline-start-color:var(--teal);}
+  .ev.teal .dot{background:var(--teal);}
+  .ev.warn{background:var(--warning-bg);border-inline-start-color:var(--warning);}
+  .ev.warn .dot{background:var(--warning);}
+  .ev.canceled{background:var(--danger-bg);border-inline-start-color:var(--danger);border:1.5px dashed var(--danger);border-inline-start:3px solid var(--danger);opacity:.85;}
+  .ev.canceled .nm{text-decoration:line-through;opacity:.7;}
+  .ev.intense{background:var(--warning-bg);border-inline-start-color:var(--warning);}
+  .ev.today-ev{box-shadow:0 0 0 1.5px var(--accent);background:var(--accent-dim);border-inline-start-color:var(--accent);}
+  .tag{font-size:9.5px;font-weight:800;border-radius:8px;padding:1px 6px;background:rgba(15,23,42,.08);color:var(--text-muted);display:inline-block;margin-top:2px;}
+
+  .dated{display:flex;align-items:center;gap:10px;border:1.5px dashed var(--accent);background:var(--accent-dim);border-radius:14px;padding:12px 14px;font-size:12.5px;font-weight:800;color:var(--accent);margin-top:10px;}
+
+  .chip{font-size:10.5px;font-weight:800;padding:4px 10px;border-radius:16px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+  .chip.ok{background:var(--success-bg);color:var(--success);}
+  .chip.bad{background:var(--danger-bg);color:var(--danger);}
+  .chip.warn{background:var(--warning-bg);color:var(--warning);}
+  .chip.info{background:var(--surface-ocean);color:var(--accent);}
+  .chip.dim{background:var(--surface-hover);color:var(--text-muted);}
+
+  .btn{border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:9px 16px;font-size:12.5px;font-weight:800;color:var(--text-muted);display:inline-flex;align-items:center;gap:6px;cursor:pointer;}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#FFF;}
+
+  /* dialog */
+  .ovl{position:fixed;inset:0;background:rgba(15,23,42,.45);display:flex;align-items:center;justify-content:center;z-index:300;}
+  .dlg{width:500px;max-width:94vw;background:var(--surface);border-radius:18px;box-shadow:var(--shadow-lg);padding:20px 22px;}
+  .dlg-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:4px;}
+  .dlg-title{font-size:15px;font-weight:800;flex:1;}
+  .dlg-sub{font-size:11px;color:var(--text-muted);font-weight:700;margin-bottom:12px;}
+  .opt-row{display:flex;gap:10px;align-items:flex-start;border:1.5px solid var(--border);border-radius:14px;padding:11px 14px;margin-bottom:8px;}
+  .opt-row.sel{border-color:var(--accent);background:var(--accent-dim);}
+  .opt-row b{font-size:12.5px;display:flex;gap:6px;align-items:center;}
+  .opt-row p{font-size:11px;color:var(--text-muted);font-weight:700;margin-top:2px;}
+  .rad{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;}
+  .opt-row.sel .rad{border-color:var(--accent);}
+  .opt-row.sel .rad::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);}
+
+  .wf{position:fixed;bottom:4px;inset-inline:0;text-align:center;font-size:10px;color:var(--text-faint);z-index:400;}
+</style>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-pool" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16c.6.5 1.2 1 2.5 1C7 17 7 15 9.5 15c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1C7 13 7 11 9.5 11c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/><path d="M2 8c.6.5 1.2 1 2.5 1C7 9 7 7 9.5 7c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></symbol>
+  <symbol id="i-chev-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
+  <symbol id="i-chev-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+</svg>
+</head>
+<body>
+
+<div class="demo-bar">
+  <span class="demo-note">WIREFRAME — יומן שבועי עם חריגות מסדרה · למטה: דיאלוג יצירת חריגה (מוצג פתוח לעיון)</span>
+  <div class="seg">
+    <button onclick="toggleTheme()" id="themeBtn"><svg class="icon icon-sm"><use href="#i-moon"/></svg> Dark</button>
+    <button class="active">מצב דמו</button>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="side">
+    <div class="rail-brand">BF</div>
+    <button class="rail-btn"><svg class="icon"><use href="#i-home"/></svg></button>
+    <button class="rail-btn active"><svg class="icon"><use href="#i-calendar"/></svg></button>
+    <button class="rail-btn"><svg class="icon"><use href="#i-users"/></svg></button>
+    <button class="rail-btn"><svg class="icon"><use href="#i-pool"/></svg></button>
+    <button class="rail-btn"><svg class="icon"><use href="#i-chart"/></svg></button>
+    <button class="rail-btn"><svg class="icon"><use href="#i-clipboard"/></svg></button>
+    <div class="rail-split"></div>
+    <button class="rail-btn" onclick="toggleTheme()"><svg class="icon"><use href="#i-sun"/></svg></button>
+  </div>
+
+  <div class="main">
+    <div class="page-title">
+      <h1>יומן שבועי</h1>
+      <span class="chip info">18–24.10.2026 · שבוע 42</span>
+    </div>
+    <div class="page-sub">כל כרטיס מופע נוצר מתוך סדרה (הנקודה בצד השם). לחיצה על מופע — מאפשרת חריגות: ביטול, הזזת מועד, מיקום ומסלולים, שינוי תוכנית.</div>
+
+    <div class="filters">
+      <button class="sel"><svg class="icon-sm"><use href="#i-users"/></svg> קבוצה: <span class="v">הכל</span></button>
+      <button class="sel"><svg class="icon-sm"><use href="#i-user"/></svg> מתאמנ/ת: <span class="v">הכל</span></button>
+      <button class="sel"><svg class="icon-sm"><use href="#i-home"/></svg> סניף: <span class="v">מרכז</span></button>
+      <span class="layer-lbl">שכבה אישית (מאמנת):</span>
+      <button class="chk on"><svg class="icon-xs"><use href="#i-check"/></svg> אימוניי</button>
+      <button class="chk on"><svg class="icon-xs"><use href="#i-check"/></svg> קבוצות אישיות</button>
+      <button class="chk"><svg class="icon-xs"><use href="#i-check"/></svg> אילוצים והעדרויות</button>
+      <div class="weeknav">
+        <button class="sel"><svg class="icon-sm"><use href="#i-chev-right"/></svg></button>
+        <span style="font-size:12.5px;font-weight:800">18–24.10</span>
+        <button class="sel"><svg class="icon-sm"><use href="#i-chev-left"/></svg></button>
+        <button class="btn primary"><svg class="icon-sm"><use href="#i-plus"/></svg> סדרה חדשה</button>
+      </div>
+    </div>
+
+    <div class="grid-wrap">
+      <div class="wgrid">
+        <span></span>
+        <div class="dhead"><small>18.10</small><b>ראשון</b></div>
+        <div class="dhead"><small>19.10</small><b>שני</b></div>
+        <div class="dhead"><small>20.10</small><b>שלישי</b></div>
+        <div class="dhead today"><small>21.10 · היום</small><b>רביעי</b></div>
+        <div class="dhead"><small>22.10</small><b>חמישי</b></div>
+        <div class="dhead"><small>23.10</small><b>שישי</b></div>
+        <div class="dhead"><small>24.10</small><b>שבת</b></div>
+
+        <div class="hruler" style="grid-column:1;grid-row:2">15:00</div><span class="gcell" style="grid-column:2;grid-row:2"></span><span class="gcell" style="grid-column:3;grid-row:2"></span><span class="gcell" style="grid-column:4;grid-row:2"></span><span class="gcell" style="grid-column:5;grid-row:2"></span><span class="gcell" style="grid-column:6;grid-row:2"></span><span class="gcell" style="grid-column:7;grid-row:2"></span><span class="gcell" style="grid-column:8;grid-row:2"></span>
+        <div class="hruler" style="grid-column:1;grid-row:3">16:00</div><span class="gcell" style="grid-column:2;grid-row:3"></span><span class="gcell" style="grid-column:3;grid-row:3"></span><span class="gcell" style="grid-column:5;grid-row:3"></span><span class="gcell" style="grid-column:6;grid-row:3"></span><span class="gcell" style="grid-column:7;grid-row:3"></span><span class="gcell" style="grid-column:8;grid-row:3"></span>
+        <div class="ev warn" style="grid-column:4;grid-row:3/4"><div class="t"><span class="dot"></span>16:30–17:30 · אולם</div><div class="nm"><b>צעירים ב' — יבשה</b></div></div>
+        <div class="hruler" style="grid-column:1;grid-row:4">17:00</div><span class="gcell" style="grid-column:2;grid-row:4"></span><span class="gcell" style="grid-column:4;grid-row:4"></span><span class="gcell" style="grid-column:5;grid-row:4"></span><span class="gcell" style="grid-column:6;grid-row:4"></span><span class="gcell" style="grid-column:8;grid-row:4"></span>
+        <div class="ev teal" style="grid-column:3;grid-row:4/5"><div class="t"><span class="dot"></span>17:00–18:00 · אולם</div><div class="nm"><b>צעירים א' — יבשה</b></div></div>
+        <div class="ev teal" style="grid-column:7;grid-row:4/5"><div class="t"><span class="dot"></span>17:30–18:20 · הפועל</div><div class="nm"><b>אימון מפצה — דגיגונים</b><span class="tag">הוזז מחמישי 22.10</span></div></div>
+        <div class="hruler" style="grid-column:1;grid-row:5">18:00</div><span class="gcell" style="grid-column:3;grid-row:5"></span><span class="gcell" style="grid-column:4;grid-row:5"></span><span class="gcell" style="grid-column:7;grid-row:5"></span><span class="gcell" style="grid-column:8;grid-row:5"></span>
+        <div class="ev" style="grid-column:2;grid-row:5/6"><div class="t"><span class="dot"></span>18:00–19:00 · הפועל</div><div class="nm"><b>דגיגונים</b></div></div>
+        <div class="ev today-ev" style="grid-column:5;grid-row:5/6"><div class="t"><span class="dot"></span>18:00–19:00 · הפועל</div><div class="nm"><b>דגיגונים</b> · ריקי לוין</div><span class="tag">היום · 18 מתאמנים</span></div>
+        <div class="ev canceled" style="grid-column:6;grid-row:5/6"><div class="t">18:00–19:00 · הפועל</div><div class="nm"><b>דגיגונים</b></div><span class="tag">בוטל — מוחלף בשישי</span></div>
+        <div class="hruler" style="grid-column:1;grid-row:6">19:00</div><span class="gcell" style="grid-column:3;grid-row:6"></span><span class="gcell" style="grid-column:4;grid-row:6"></span><span class="gcell" style="grid-column:5;grid-row:6"></span><span class="gcell" style="grid-column:7;grid-row:6"></span><span class="gcell" style="grid-column:8;grid-row:6"></span>
+        <div class="ev teal" style="grid-column:2;grid-row:6/7"><div class="t"><span class="dot"></span>19:15–20:15 · הפועל</div><div class="nm"><b>ראשנים</b></div></div>
+        <div class="ev intense" style="grid-column:6;grid-row:6/7"><div class="t"><span class="dot"></span>19:15–20:15 · הפועל</div><div class="nm"><b>ראשנים — סטים אינטנסיבי</b></div></div>
+        <div class="hruler" style="grid-column:1;grid-row:7">20:00</div><span class="gcell" style="grid-column:2;grid-row:7"></span><span class="gcell" style="grid-column:3;grid-row:7"></span><span class="gcell" style="grid-column:4;grid-row:7"></span><span class="gcell" style="grid-column:5;grid-row:7"></span><span class="gcell" style="grid-column:6;grid-row:7"></span><span class="gcell" style="grid-column:7;grid-row:7"></span><span class="gcell" style="grid-column:8;grid-row:7"></span>
+      </div>
+
+      <div class="dated"><svg class="icon-sm"><use href="#i-calendar"/></svg> אירוע מתוארך ביומן — <b>יום מבחן · שבת 24.10 · 09:00–13:00 · בריכת הפועל</b> (מסלולים 1–4 סגורים לאימוני קבוצות) <span class="chip info" style="margin-inline-start:auto">מופיע גם בפורטל של ההורים</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- dialog: exception -->
+<div class="ovl">
+  <div class="dlg">
+    <div class="dlg-head">
+      <svg class="icon" style="color:var(--accent)"><use href="#i-calendar"/></svg>
+      <div class="dlg-title">חריגה מהסדרה — דגיגונים · חמישי 22.10 · 18:00</div>
+      <button class="btn" style="padding:7px 9px"><svg class="icon-sm"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="dlg-sub">החריגה מיושמת על המופע הנבחר בלבד — הסדרה עצמה ומופעי השבועות הבאים נשארים קבועים.</div>
+
+    <div class="opt-row sel">
+      <span class="rad"></span>
+      <div><b><svg class="icon-sm"><use href="#i-x-circle"/></svg> ביטול המופע</b>
+      <p>המופע נרשם בסטטוס "בוטל" — ההורים מקבלים הודעה אוטומטית</p></div>
+    </div>
+    <div class="opt-row">
+      <span class="rad"></span>
+      <div style="flex:1"><b><svg class="icon-sm"><use href="#i-calendar"/></svg> הזזת מועד</b>
+      <p>בוחרים יום ושעה חדשים — נוצר מופע חד-פעמי מסומן "הוזז מ..."</p></div>
+    </div>
+    <div class="opt-row">
+      <span class="rad"></span>
+      <div><b><svg class="icon-sm"><use href="#i-pin"/></svg> מיקום ומסלולים</b>
+      <p>החלפת מתקן או בחירת מסלולים למופע הזה (לדוגמה: מסלולים 5–8)</p></div>
+    </div>
+    <div class="opt-row">
+      <span class="rad"></span>
+      <div><b><svg class="icon-sm"><use href="#i-pencil"/></svg> שינוי תוכנית</b>
+      <p>תוכן ספציפי למופע — תוכנית הסדרה נשארת למופעים האחרים</p></div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btn primary"><svg class="icon-sm"><use href="#i-check"/></svg> יצירת החריגה</button>
+      <button class="btn">סגירה</button>
+    </div>
+  </div>
+</div>
+
+<div class="wf">WIREFRAME v1 — BLUE FITNESS · Calendar &amp; Exceptions · F1.2 · F1.3 · SES-1/2/6 · USR-6 · WPLAN-20</div>
+<script>
+  function toggleTheme(){
+    const h=document.documentElement;
+    const d=h.dataset.theme==='dark';
+    h.dataset.theme=d?'':'dark';
+    document.getElementById('themeBtn').innerHTML=d
+      ?'<svg class="icon icon-sm"><use href="#i-moon"/></svg> Dark'
+      :'<svg class="icon icon-sm"><use href="#i-sun"/></svg> Light';
+  }
+</script>
+</body>
+</html>

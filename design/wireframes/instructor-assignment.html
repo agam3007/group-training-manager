@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instructor Assignment — Blue Fitness</title>
+<style>
+  :root{--bg:#F8FAFC;--surface:#FFF;--surface-ocean:#E0F2FE;--surface-hover:#F1F5F9;--border:#CBD5E1;--text:#0F172A;--text-muted:#475569;--text-faint:#94A3B8;--accent:#2563EB;--accent-dim:rgba(37,99,235,.08);--accent-text:#FFF;--success:#16A34A;--success-bg:#DCFCE7;--danger:#DC2626;--danger-bg:#FEE2E2;--warning:#D97706;--warning-bg:#FEF3C7;--teal:#0D9488;--teal-bg:rgba(13,148,136,.12);--shadow-md:0 4px 12px rgba(15,23,42,.06);--shadow-lg:0 8px 32px rgba(15,23,42,.12);}
+  :root[data-theme="dark"]{--bg:#0F172A;--surface:#1E293B;--surface-ocean:#25334A;--surface-hover:#334155;--border:#334155;--text:#F8FAFC;--text-muted:#94A3B8;--text-faint:#64748B;--accent:#3B82F6;--accent-dim:rgba(59,130,246,.15);--accent-text:#FFF;--success:#22C55E;--success-bg:rgba(34,197,94,.2);--danger:#EF4444;--danger-bg:rgba(239,68,68,.2);--warning:#FBBF24;--warning-bg:rgba(251,191,36,.2);--teal:#2DD4BF;--teal-bg:rgba(45,212,191,.15);--shadow-md:0 4px 12px rgba(0,0,0,.25);--shadow-lg:0 8px 32px rgba(0,0,0,.4);}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);}
+  .icon{width:20px;height:20px;stroke-width:2;flex-shrink:0;}
+  .icon-sm{width:16px;height:16px;}
+  .icon-xs{width:13px;height:13px;}
+  button{font-family:inherit;}
+
+  .demo-bar{display:flex;gap:12px;align-items:center;padding:12px 32px;border-bottom:1px solid var(--border);background:var(--surface);}
+  .demo-note{font-size:11px;color:var(--text-muted);font-weight:700;}
+  .seg{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:3px;gap:3px;}
+  .seg button{padding:6px 14px;border:none;border-radius:9px;background:transparent;color:var(--text-muted);font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:5px;}
+  .seg button.active{background:var(--accent);color:#FFF;}
+  .demo-bar .demo-note{margin-inline-end:auto;}
+
+  .layout{display:flex;min-height:calc(100vh - 47px);}
+  .side{width:70px;background:var(--surface);border-inline-start:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:18px 0;gap:6px;}
+  .rail-brand{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--accent),#1D4ED8);color:#FFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;margin-bottom:14px;box-shadow:0 6px 16px rgba(37,99,235,.35);}
+  .rail-btn{width:44px;height:44px;border:none;border-radius:12px;background:transparent;color:var(--text-faint);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .rail-btn.active{background:var(--accent-dim);color:var(--accent);}
+  .rail-split{flex:1;}
+
+  .main{flex:1;padding:22px 32px 60px;max-width:1280px;}
+
+  .page-title{display:flex;align-items:center;gap:12px;margin-bottom:4px;}
+  .page-title h1{font-size:21px;font-weight:800;}
+  .page-sub{font-size:12.5px;color:var(--text-muted);margin-bottom:14px;font-weight:700;}
+
+  .filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px;}
+  .sel{border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:9px 14px;font-size:12.5px;font-weight:800;color:var(--text-muted);display:inline-flex;align-items:center;gap:6px;cursor:pointer;}
+  .sel .v{color:var(--accent);}
+  .weeknav{margin-inline-start:auto;display:flex;align-items:center;gap:6px;}
+
+  .cols{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:16px;align-items:start;}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow-md);}
+  .sec-title{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:800;margin-bottom:4px;}
+  .sec-title .right{margin-inline-start:auto;display:flex;gap:6px;align-items:center;}
+  .sec-sub{font-size:11px;color:var(--text-faint);font-weight:700;margin-bottom:10px;}
+
+  .chip{font-size:10.5px;font-weight:800;padding:4px 10px;border-radius:16px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+  .chip.ok{background:var(--success-bg);color:var(--success);}
+  .chip.bad{background:var(--danger-bg);color:var(--danger);}
+  .chip.warn{background:var(--warning-bg);color:var(--warning);}
+  .chip.info{background:var(--surface-ocean);color:var(--accent);}
+  .chip.dim{background:var(--surface-hover);color:var(--text-muted);}
+  .chip.teal{background:var(--teal-bg);color:var(--teal);}
+  .chip.plain{background:var(--accent-dim);color:var(--accent);}
+
+  .btn{border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:9px 16px;font-size:12.5px;font-weight:800;color:var(--text-muted);display:inline-flex;align-items:center;gap:6px;cursor:pointer;}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#FFF;}
+
+  .tbl{width:100%;border-collapse:collapse;font-size:12.5px;}
+  .tbl th{color:var(--text-faint);font-size:11px;font-weight:800;text-align:start;padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap;}
+  .tbl td{padding:10px;border-bottom:1px dashed var(--border);font-weight:600;vertical-align:middle;}
+  .tbl tr:last-child td{border-bottom:none;}
+  .tbl .muted{color:var(--text-faint);}
+
+  /* warnings */
+  .wl{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:12px;margin-bottom:8px;font-size:12.5px;font-weight:700;}
+  .wl.bad{background:var(--danger-bg);color:var(--danger);}
+  .wl.warn{background:var(--warning-bg);color:var(--warning);}
+  .wl svg{margin-top:1px;}
+
+  /* instructors */
+  .i-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px dashed var(--border);}
+  .i-row.first{border-top:none;}
+  .i-name{font-size:13px;font-weight:800;min-width:120px;}
+  .i-role{font-size:10.5px;color:var(--text-faint);font-weight:700;}
+  .bar{flex:1;height:7px;background:var(--surface-hover);border-radius:6px;overflow:hidden;}
+  .bar span{display:block;height:100%;border-radius:6px;background:var(--accent);}
+  .bar.over span{background:var(--warning);}
+  .scope{font-size:11px;font-weight:800;color:var(--text-muted);min-width:34px;text-align:center;}
+
+  /* replace */
+  .rep{border:1.5px dashed var(--warning);background:var(--warning-bg);border-radius:14px;padding:12px 14px;font-size:12.5px;font-weight:700;color:var(--warning);margin-bottom:10px;}
+  .sg{display:flex;gap:8px;flex-wrap:wrap;}
+  .sg-chip{border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:8px 12px;font-size:11.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+  .sg-chip small{color:var(--text-faint);font-weight:700;}
+
+  /* phone peek */
+  .peek{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:14px;}
+  .pm{background:var(--bg);border:7px solid #0F172A;border-radius:26px;overflow:hidden;margin-top:8px;}
+  .pm-head{padding:12px 16px 6px;border-bottom:0;}
+  .pm-title{font-size:14px;font-weight:800;}
+  .pm-sub{font-size:10.5px;color:var(--text-muted);font-weight:700;margin-top:2px;}
+  .pm-row{display:flex;align-items:center;gap:10px;margin:0 12px 8px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-size:12px;}
+  .pm-day{font-weight:800;min-width:44px;}
+  .pm-body{flex:1;}
+  .pm-meta{font-size:10.5px;color:var(--text-muted);font-weight:700;}
+
+  .wf{position:fixed;bottom:4px;inset-inline:0;text-align:center;font-size:10px;color:var(--text-faint);z-index:200;}
+</style>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-pool" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16c.6.5 1.2 1 2.5 1C7 17 7 15 9.5 15c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1C7 13 7 11 9.5 11c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/><path d="M2 8c.6.5 1.2 1 2.5 1C7 9 7 7 9.5 7c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></symbol>
+  <symbol id="i-chev-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
+  <symbol id="i-chev-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+  <symbol id="i-wifi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><path d="M2 8.82a15 15 0 0 1 20 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></symbol>
+  <symbol id="i-battery" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2"/><line x1="22" y1="11" x2="22" y2="13"/></symbol>
+</svg>
+</head>
+<body>
+
+<div class="demo-bar">
+  <span class="demo-note">WIREFRAME — שיבוץ מדריכים · מטריצה שבועית עם הדגשת סתירות והצעות חילוף</span>
+  <div class="seg">
+    <button onclick="toggleTheme()" id="themeBtn"><svg class="icon icon-sm"><use href="#i-moon"/></svg> Dark</button>
+    <button class="active">מצב דמו</button>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="side">
+    <div class="rail-brand">BF</div>
+    <button class="rail-btn"><svg class="icon"><use href="#i-home"/></svg></button>
+    <button class="rail-btn active"><svg class="icon"><use href="#i-clipboard"/></svg></button>
+    <button class="rail-btn"><svg class="icon"><use href="#i-calendar"/></svg></button>
+    <button class="rail-btn"><svg class="icon"><use href="#i-users"/></svg></button>
+    <button class="rail-btn"><svg class="icon"><use href="#i-pool"/></svg></button>
+    <button class="rail-btn"><svg class="icon"><use href="#i-chart"/></svg></button>
+    <div class="rail-split"></div>
+    <button class="rail-btn" onclick="toggleTheme()"><svg class="icon"><use href="#i-sun"/></svg></button>
+  </div>
+
+  <div class="main">
+    <div class="page-title">
+      <h1>שיבוץ מדריכים — שבוע 42</h1>
+      <span class="chip warn"><svg class="icon-xs"><use href="#i-alert"/></svg> 3 סתירות</span>
+    </div>
+    <div class="page-sub">כל מופע חייב מדריך אחד לפחות — בדיקת סתירות מדריכים מתרחשת לפני בדיקת התנגשות מתקן</div>
+
+    <div class="filters">
+      <button class="sel"><svg class="icon-sm"><use href="#i-home"/></svg> סניף: <span class="v">מרכז</span></button>
+      <button class="sel"><svg class="icon-sm"><use href="#i-pool"/></svg> מתקן: <span class="v">הכל</span></button>
+      <button class="sel"><svg class="icon-sm"><use href="#i-user"/></svg> מדריך: <span class="v">הכל</span></button>
+      <div class="weeknav">
+        <button class="sel"><svg class="icon-sm"><use href="#i-chev-right"/></svg></button>
+        <span style="font-size:12.5px;font-weight:800">18–24.10</span>
+        <button class="sel"><svg class="icon-sm"><use href="#i-chev-left"/></svg></button>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div class="colmain">
+        <!-- matrix -->
+        <div class="card">
+          <div class="sec-title">
+            <svg class="icon-sm"><use href="#i-calendar"/></svg> המופעים של השבוע
+            <div class="right"><span class="chip ok">13 משוייכים</span><span class="chip bad">1 ללא מדריך</span><span class="chip warn">2 סתירות</span></div>
+          </div>
+          <table class="tbl">
+            <tr><th>יום</th><th>שעה</th><th>קבוצה</th><th>מתקן</th><th>מדריך משוייך</th></tr>
+            <tr><td><b>א' 18.10</b></td><td>18:00–19:00</td><td>דגיגונים</td><td>בריכת הפועל</td><td><span class="chip ok"><svg class="icon-xs"><use href="#i-check"/></svg> ריקי לוין</span></td></tr>
+            <tr><td><b>א' 18.10</b></td><td>19:15–20:15</td><td>ראשנים</td><td>בריכת הפועל</td><td><span class="chip ok"><svg class="icon-xs"><use href="#i-check"/></svg> עדי פלד</span></td></tr>
+            <tr><td><b>ב' 19.10</b></td><td>17:00–18:00</td><td>צעירים א' — יבשה</td><td>אולם</td><td><span class="chip bad"><svg class="icon-xs"><use href="#i-x"/></svg> ללא מדריך</span></td></tr>
+            <tr><td><b>ב' 19.10</b></td><td>18:00–19:00</td><td>דגיגונים</td><td>בריכת הפועל</td><td><span class="chip dim">ממתין לשיוך</span></td></tr>
+            <tr><td><b>ד' 21.10 · היום</b></td><td>18:00–19:00</td><td>דגיגונים</td><td>בריכת הפועל</td><td><span class="chip warn"><svg class="icon-xs"><use href="#i-alert"/></svg> ריקי לוין — כפל שיבוץ</span></td></tr>
+            <tr><td><b>ד' 21.10 · היום</b></td><td>18:00–19:00</td><td>צעירים ב' — יבשה</td><td>אולם</td><td><span class="chip warn"><svg class="icon-xs"><use href="#i-alert"/></svg> ריקי לוין — כפל שיבוץ</span></td></tr>
+            <tr><td><b>ה' 22.10</b></td><td>19:15–20:15</td><td>ראשנים — סטים אינטנסיבי</td><td>בריכת הפועל</td><td><span class="chip warn"><svg class="icon-xs"><use href="#i-alert"/></svg> דניאל סער — מעל ההיקף</span></td></tr>
+            <tr><td><b>ו' 23.10</b></td><td>17:30–18:20</td><td>אימון מפצה — דגיגונים</td><td>בריכת הפועל</td><td><span class="chip ok"><svg class="icon-xs"><use href="#i-check"/></svg> ריקי לוין</span></td></tr>
+          </table>
+        </div>
+
+        <!-- warnings -->
+        <div class="card">
+          <div class="sec-title"><svg class="icon-sm"><use href="#i-alert"/></svg> בדיקת סתירות — חסימה לפרסום</div>
+          <div class="wl bad"><svg class="icon-sm"><use href="#i-x"/></svg> שני 19.10 · 18:00 · דגיגונים — מופע ללא מדריך. דרוש שיוך או ביטול מופע.</div>
+          <div class="wl warn"><svg class="icon-sm"><use href="#i-alert"/></svg> ריקי לוין משוייכת לשני מופעים באותה שעה (רביעי 21.10 · 18:00) — בחרו מדריך שני "צעירים ב' · אולם".</div>
+          <div class="wl warn"><svg class="icon-sm"><use href="#i-alert"/></svg> דניאל סער שוייך ל-7 מופעים מתוך היקף חוזה 6 — חורג מההיקף במופע אחד.</div>
+          <div class="demo-note" style="display:block;margin-top:6px">סדר הבדיקה: סתירת מדריכים קודמת לבדיקת התנגשות מתקן ומסלולים</div>
+        </div>
+      </div>
+
+      <aside class="colside">
+        <!-- instructors -->
+        <div class="card">
+          <div class="sec-title">
+            <svg class="icon-sm"><use href="#i-users"/></svg> מדריכים · היקף שבועי
+            <div class="right"><span class="chip dim">4 פעילים</span></div>
+          </div>
+          <div class="i-row first">
+            <div><div class="i-name">ריקי לוין</div><div class="i-role">מדריכת שחייה</div></div>
+            <div class="bar"><span style="width:100%"></span></div>
+            <span class="scope">4/4</span>
+          </div>
+          <div class="i-row">
+            <div><div class="i-name">עדי פלד</div><div class="i-role">מאמנת ראשית</div></div>
+            <div class="bar"><span style="width:67%"></span></div>
+            <span class="scope">4/6</span>
+          </div>
+          <div class="i-row">
+            <div><div class="i-name">דניאל סער</div><div class="i-role">מדריך אימון יבשה</div></div>
+            <div class="bar over"><span style="width:100%"></span></div>
+            <span class="scope">7/6</span>
+          </div>
+          <div class="i-row">
+            <div><div class="i-name">מרינה זילבר</div><div class="i-role">מדריכת מתחילים</div></div>
+            <div class="bar"><span style="width:0"></span></div>
+            <span class="scope">0/3</span>
+          </div>
+        </div>
+
+        <!-- replacement -->
+        <div class="card">
+          <div class="sec-title"><svg class="icon-sm"><use href="#i-repeat"/></svg> בקשת חילוף</div>
+          <div class="rep"><b>עדי פלד לא זמינה בחמישי 12.11 · 17:30 (ראשנים)</b> — דרוש מדריך חלופי לאותו מופע</div>
+          <div class="sg">
+            <span class="sg-chip"><svg class="icon-xs"><use href="#i-check"/></svg> ריקי לוין <small>· פנויה במועד</small></span>
+            <span class="sg-chip"><svg class="icon-xs"><use href="#i-check"/></svg> דניאל סער <small>· פנוי</small></span>
+            <span class="sg-chip">מרינה זילבר <small>· חריגה מהיקף</small></span>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button class="btn primary"><svg class="icon-sm"><use href="#i-check"/></svg> שיוך חילוף ועדכון ההורים</button>
+            <button class="btn">שמור טיוטה</button>
+          </div>
+        </div>
+
+        <!-- phone peek -->
+        <div class="peek">
+          <div class="sec-title" style="margin-bottom:0"><svg class="icon-sm"><use href="#i-clock"/></svg> מה מדריך רואה בטלפון</div>
+          <div class="pm">
+            <div class="pm-head">
+              <div class="pm-title">המפגשים שלי</div>
+              <div class="pm-sub">ריקי לוין · רביעי 21.10 · היום</div>
+            </div>
+            <div style="height:8px"></div>
+            <div class="pm-row"><span class="pm-day">18:00</span><div class="pm-body"><b>דגיגונים</b><div class="pm-meta">בריכת הפועל · 18 מתאמנים</div></div><span class="chip teal">נוכחות</span></div>
+            <div class="pm-row"><span class="pm-day">18:00</span><div class="pm-body"><b>צעירים ב' — יבשה</b><div class="pm-meta">אולם · 12 מתאמנים</div></div><span class="chip warn">כפל שיבוץ</span></div>
+            <div class="pm-row"><span class="pm-day">ו'</span><div class="pm-body"><b>אימון מפצה — דגיגונים</b><div class="pm-meta">שישי 23.10 · 17:30</div></div><span class="chip dim">מופע שהוזז</span></div>
+          </div>
+          <div class="demo-note" style="display:block;margin-top:8px">הצצת זווית המדריך — עם סימון נוכחות בצד כל מופע</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<div class="wf">WIREFRAME v1 — BLUE FITNESS · Instructor Assignment · F1.16 · SES-8 · DOM-2 · D27 · D18</div>
+<script>
+  function toggleTheme(){
+    const h=document.documentElement;
+    const d=h.dataset.theme==='dark';
+    h.dataset.theme=d?'':'dark';
+    document.getElementById('themeBtn').innerHTML=d
+      ?'<svg class="icon icon-sm"><use href="#i-moon"/></svg> Dark'
+      :'<svg class="icon icon-sm"><use href="#i-sun"/></svg> Light';
+  }
+</script>
+</body>
+</html>

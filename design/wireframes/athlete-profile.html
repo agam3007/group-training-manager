@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Athlete Profile — Blue Fitness</title>
+<style>
+  :root{--bg:#F8FAFC;--surface:#FFF;--surface-ocean:#E0F2FE;--surface-hover:#F1F5F9;--border:#CBD5E1;--text:#0F172A;--text-muted:#475569;--text-faint:#94A3B8;--accent:#2563EB;--accent-dim:rgba(37,99,235,.08);--accent-text:#FFF;--success:#16A34A;--success-bg:#DCFCE7;--danger:#DC2626;--danger-bg:#FEE2E2;--warning:#D97706;--warning-bg:#FEF3C7;--teal:#0D9488;--teal-bg:rgba(13,148,136,.12);--shadow-md:0 4px 12px rgba(15,23,42,.06);--shadow-lg:0 8px 32px rgba(15,23,42,.12);}
+  :root[data-theme="dark"]{--bg:#0F172A;--surface:#1E293B;--surface-ocean:#25334A;--surface-hover:#334155;--border:#334155;--text:#F8FAFC;--text-muted:#94A3B8;--text-faint:#64748B;--accent:#3B82F6;--accent-dim:rgba(59,130,246,.15);--accent-text:#FFF;--success:#22C55E;--success-bg:rgba(34,197,94,.2);--danger:#EF4444;--danger-bg:rgba(239,68,68,.2);--warning:#FBBF24;--warning-bg:rgba(251,191,36,.2);--teal:#2DD4BF;--teal-bg:rgba(45,212,191,.15);--shadow-md:0 4px 12px rgba(0,0,0,.25);--shadow-lg:0 8px 32px rgba(0,0,0,.4);}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);}
+  .icon{width:20px;height:20px;stroke-width:2;flex-shrink:0;}
+  .icon-sm{width:16px;height:16px;}
+  .icon-xs{width:13px;height:13px;}
+  button{font-family:inherit;}
+
+  .demo-bar{display:flex;gap:12px;align-items:center;padding:12px 32px;border-bottom:1px solid var(--border);background:var(--surface);}
+  .demo-note{font-size:11px;color:var(--text-muted);font-weight:700;}
+  .seg{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:3px;gap:3px;}
+  .seg button{padding:6px 14px;border:none;border-radius:9px;background:transparent;color:var(--text-muted);font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:5px;}
+  .seg button.active{background:var(--accent);color:#FFF;}
+  .demo-bar .demo-note{margin-inline-end:auto;}
+
+  /* ==================== LAYOUT ==================== */
+  .layout{display:flex;min-height:calc(100vh - 47px);}
+  .side{width:70px;background:var(--surface);border-inline-start:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:18px 0;gap:6px;position:sticky;top:0;height:calc(100vh - 47px);}
+  .rail-brand{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--accent),#1D4ED8);color:#FFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;margin-bottom:14px;box-shadow:0 6px 16px rgba(37,99,235,.35);}
+  .rail-btn{width:44px;height:44px;border:none;border-radius:12px;background:transparent;color:var(--text-faint);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .rail-btn:hover{background:var(--surface-hover);}
+  .rail-btn.active{background:var(--accent-dim);color:var(--accent);}
+  .rail-split{flex:1;}
+
+  .main{flex:1;padding:22px 32px 60px;max-width:1180px;}
+
+  /* header card */
+  .p-head{display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px 22px;margin-bottom:14px;box-shadow:var(--shadow-md);}
+  .av-lg{width:64px;height:64px;border-radius:50%;background:var(--surface-ocean);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;flex-shrink:0;}
+  .p-name{font-size:20px;font-weight:800;display:flex;align-items:center;gap:10px;}
+  .p-sub{font-size:12px;color:var(--text-muted);margin-top:3px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .p-sub span{display:flex;align-items:center;gap:4px;}
+  .p-actions{margin-inline-start:auto;display:flex;gap:8px;}
+  .btn{border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:9px 16px;font-size:12.5px;font-weight:800;color:var(--text-muted);display:inline-flex;align-items:center;gap:6px;cursor:pointer;}
+  .btn.danger-txt{color:var(--danger);}
+
+  .chip{font-size:10.5px;font-weight:800;padding:4px 10px;border-radius:16px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+  .chip.ok{background:var(--success-bg);color:var(--success);}
+  .chip.bad{background:var(--danger-bg);color:var(--danger);}
+  .chip.warn{background:var(--warning-bg);color:var(--warning);}
+  .chip.info{background:var(--surface-ocean);color:var(--accent);}
+  .chip.teal{background:var(--teal-bg);color:var(--teal);}
+  .chip.dim{background:var(--surface-hover);color:var(--text-muted);}
+
+  /* tab bar */
+  .tabbar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 6px;}
+  .tab{border:1px solid var(--border);background:var(--surface);color:var(--text-muted);border-radius:14px;padding:9px 18px;font-size:12.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+  .tab.active{background:var(--accent);border-color:var(--accent);color:#FFF;}
+  .tab .n{font-size:10px;background:var(--danger-bg);color:var(--danger);border-radius:10px;padding:1px 7px;}
+  .tab.active .n{background:rgba(255,255,255,.25);color:#FFF;}
+  .tabnote{font-size:11px;color:var(--text-faint);font-weight:700;margin:4px 2px 16px;}
+
+  /* cards */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px 20px;margin-bottom:14px;}
+  .sec-title{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:800;margin-bottom:12px;}
+  .sec-title .right{margin-inline-start:auto;display:flex;gap:6px;align-items:center;}
+  .hl{height:1px;background:var(--border);margin:10px 0;}
+
+  .rowline{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px dashed var(--border);font-size:13px;}
+  .rowline.first{border-top:none;}
+  .ro-lbl{min-width:130px;color:var(--text-faint);font-size:11.5px;font-weight:800;}
+  .ro-val{font-weight:700;}
+  .ro-extra{color:var(--text-faint);font-size:11.5px;margin-inline-start:auto;font-weight:700;}
+
+  .tg{font-size:10.5px;font-weight:800;border-radius:12px;padding:4px 10px;background:var(--surface-hover);color:var(--text-muted);border:1px solid var(--border);}
+
+  .tbl{width:100%;border-collapse:collapse;font-size:12.5px;}
+  .tbl th{color:var(--text-faint);font-size:11px;font-weight:800;text-align:start;padding:8px 10px;border-bottom:1px solid var(--border);}
+  .tbl td{padding:10px;border-bottom:1px dashed var(--border);font-weight:600;}
+  .tbl tr:last-child td{border-bottom:none;}
+  .tbl .muted{color:var(--text-faint);}
+
+  .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  .tile{background:var(--surface-hover);border-radius:14px;padding:12px 14px;}
+  .tile .t-num{font-size:18px;font-weight:800;display:flex;align-items:baseline;gap:5px;}
+  .tile .t-num small{font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;}
+  .tile .t-lbl{font-size:10.5px;color:var(--text-muted);font-weight:700;margin-top:2px;}
+  .tile .t-since{font-size:10px;color:var(--text-faint);margin-top:4px;font-weight:700;}
+
+  .banner{display:flex;align-items:center;gap:10px;border-radius:14px;padding:12px 14px;font-size:12.5px;font-weight:700;margin-top:10px;}
+  .banner.warn{background:var(--warning-bg);color:var(--warning);}
+
+  .wf{position:fixed;bottom:4px;inset-inline:0;text-align:center;font-size:10px;color:var(--text-faint);z-index:200;}
+</style>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-pool" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16c.6.5 1.2 1 2.5 1C7 17 7 15 9.5 15c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1C7 13 7 11 9.5 11c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/><path d="M2 8c.6.5 1.2 1 2.5 1C7 9 7 7 9.5 7c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></symbol>
+  <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></symbol>
+  <symbol id="i-chev-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+</svg>
+</head>
+<body>
+
+<div class="demo-bar">
+  <span class="demo-note">WIREFRAME — פרופיל ספורטאית (מסך ניהול) · מציג ספורטאית עם פציעה פעילה וטופס רפואי בפג-תוקף</span>
+  <div class="seg">
+    <button onclick="toggleTheme()" id="themeBtn"><svg class="icon icon-sm"><use href="#i-moon"/></svg> Dark</button>
+    <button class="active">מצב דמו</button>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="side">
+    <div class="rail-brand">BF</div>
+    <button class="rail-btn"><svg class="icon"><use href="#i-home"/></svg></button>
+    <button class="rail-btn"><svg class="icon"><use href="#i-calendar"/></svg></button>
+    <button class="rail-btn active"><svg class="icon"><use href="#i-users"/></svg></button>
+    <button class="rail-btn"><svg class="icon"><use href="#i-pool"/></svg></button>
+    <button class="rail-btn"><svg class="icon"><use href="#i-chart"/></svg></button>
+    <button class="rail-btn"><svg class="icon"><use href="#i-clipboard"/></svg></button>
+    <div class="rail-split"></div>
+    <button class="rail-btn" onclick="toggleTheme()"><svg class="icon"><use href="#i-sun"/></svg></button>
+  </div>
+
+  <div class="main">
+    <!-- header -->
+    <div class="p-head">
+      <button class="btn" style="padding:9px 11px"><svg class="icon-sm"><use href="#i-chev-right"/></svg></button>
+      <div class="av-lg">נש</div>
+      <div>
+        <div class="p-name">נעמי שרון <span class="chip teal"><svg class="icon-xs"><use href="#i-trophy"/></svg> רמה: כסף · מבחן 09.2026</span></div>
+        <div class="p-sub">
+          <span><svg class="icon-xs"><use href="#i-users"/></svg> ראשנים · מאמנת עדי פלד</span>
+          <span><svg class="icon-xs"><use href="#i-calendar"/></svg> בת 13 · סניף מרכז</span>
+          <span class="chip bad" style="margin-inline-start:6px"><svg class="icon-xs"><use href="#i-alert"/></svg> פציעה פעילה · ברך</span>
+        </div>
+      </div>
+      <div class="p-actions">
+        <button class="btn"><svg class="icon-sm"><use href="#i-pencil"/></svg> עריכה</button>
+        <button class="btn danger-txt"><svg class="icon-sm"><use href="#i-folder"/></svg> העברה לארכיון</button>
+      </div>
+    </div>
+
+    <!-- tabs -->
+    <div class="tabbar">
+      <button class="tab active"><svg class="icon-sm"><use href="#i-user"/></svg> פרטים</button>
+      <button class="tab"><svg class="icon-sm"><use href="#i-users"/></svg> קבוצות פר-עונה</button>
+      <button class="tab"><svg class="icon-sm"><use href="#i-pool"/></svg> אזורים אישיים</button>
+      <button class="tab"><svg class="icon-sm"><use href="#i-trophy"/></svg> תוצאות ומטרות</button>
+      <button class="tab"><svg class="icon-sm"><use href="#i-heart"/></svg> נתוני גדילה</button>
+      <button class="tab"><svg class="icon-sm"><use href="#i-shield"/></svg> פציעות <span class="n">1</span></button>
+      <button class="tab"><svg class="icon-sm"><use href="#i-note"/></svg> מסמכים והסכמות <span class="n">1</span></button>
+      <button class="tab"><svg class="icon-sm"><use href="#i-chart"/></svg> סיכום מעקב</button>
+    </div>
+    <div class="tabnote">ויירפריים ברמת מראה — הטאבים מוצגים כאן במחסנית אחת לסקירה; בפועל נפתח טאב אחד בכל פעם.</div>
+
+    <!-- פרטים -->
+    <div class="card">
+      <div class="sec-title"><svg class="icon-sm"><use href="#i-user"/></svg> פרטים אישיים</div>
+      <div class="rowline first"><span class="ro-lbl">טלפון</span><span class="ro-val">054-8821347</span><span class="ro-extra">מוזן ע"י האפוטרופוס</span></div>
+      <div class="rowline"><span class="ro-lbl">אימייל</span><span class="ro-val">naomi.s@family.example</span></div>
+      <div class="rowline"><span class="ro-lbl">אפוטרופוס</span><span class="ro-val">עידו שרון — אב · 050-7712004</span><span class="ro-extra">מקבל עדכוני נוכחות ותשלומים</span></div>
+      <div class="rowline"><span class="ro-lbl">תגיות</span>
+        <span class="tg">יעד: תחרות אביב</span>
+        <span class="tg">שוחה במשקפיים</span>
+        <span class="tg">סגנון מועדף: גב</span>
+      </div>
+      <div class="rowline"><span class="ro-lbl">העדפת אימון</span><span class="ro-val">ערב · סניף מרכז</span></div>
+    </div>
+
+    <!-- קבוצות פר-עונה -->
+    <div class="card">
+      <div class="sec-title"><svg class="icon-sm"><use href="#i-users"/></svg> קבוצות פר-עונה</div>
+      <table class="tbl">
+        <tr><th>עונה</th><th>קבוצה</th><th>מאמן אחראי</th><th>מעמד</th><th>פרטים</th></tr>
+        <tr><td>26/27</td><td><b>ראשנים</b></td><td>עדי פלד</td><td><span class="chip ok"><svg class="icon-xs"><use href="#i-check"/></svg> חברות פעילה</span></td><td class="muted">הצטרפה 09.2025 · שעות שבועיות: 4</td></tr>
+        <tr class="muted"><td>25/26</td><td>דגיגונים</td><td>עדי פלד</td><td><span class="chip dim">סיימה בעונה</span></td><td class="muted">מעבר קבוע בסוף העונה — הרישום ההיסטורי נשמר שלם</td></tr>
+      </table>
+      <div class="rowline first" style="margin-top:10px"><span class="ro-lbl" style="min-width:auto">הערת דמו</span><span class="demo-note">כל עונה שומרת שורה נפרדת — ההיסטוריה לא נשמטת במעברי קבוצה</span></div>
+    </div>
+
+    <!-- אזורים -->
+    <div class="card">
+      <div class="sec-title">
+        <svg class="icon-sm"><use href="#i-pool"/></svg> אזורים אישיים — שחייה
+        <div class="right">
+          <span class="chip info">גרסה 2 · פעילה מ-09.2026</span>
+          <span class="chip dim">גרסה 1 · 25/26 — נארכבה</span>
+        </div>
+      </div>
+      <table class="tbl">
+        <tr><th>אזור</th><th>מתאר</th><th>קצב / 100 מ'</th><th>שימוש טיפוסי בתוכנית</th></tr>
+        <tr><td><b>Z1</b></td><td>התאוששות</td><td>4:50–5:15</td><td class="muted">חימום · סיום</td></tr>
+        <tr><td><b>Z2</b></td><td>אירובי מרחבי</td><td>4:30–4:50</td><td class="muted">ווליום עיקרי</td></tr>
+        <tr><td><b>Z3</b></td><td>סף מצטבר</td><td>4:05–4:25</td><td class="muted">סטים עיקריים</td></tr>
+        <tr><td><b>Z4</b></td><td>סף פיתוח</td><td>3:45–4:05</td><td class="muted">אינטנסיבי — לפי הקבוצה</td></tr>
+        <tr><td><b>Z5</b></td><td>מקצה</td><td>מהיר מ-3:45</td><td class="muted">קטעי קצר ומקצה</td></tr>
+      </table>
+      <div class="rowline first" style="margin-top:10px"><span class="ro-lbl" style="min-width:auto">מקור</span><span class="ro-val">מבחן מקצה פנימי · 14.09.2026</span><span class="ro-extra">ריצה — לא נבחנה בספורט זה</span></div>
+      <div class="hl"></div>
+      <div class="sec-title" style="margin-top:4px"><svg class="icon-sm"><use href="#i-chart"/></svg> מחשבון טווחי עבודה</div>
+      <div class="rowline first"><span class="ro-lbl">שיטת חישוב</span>
+        <span class="chip info">לפי קצב מבחן</span>
+        <span class="chip dim">מהירות קריטית</span>
+        <span class="chip dim">אחוז מהמקסימלי</span>
+        <span class="chip dim">אזורי הקטלוג</span>
+        <span class="chip dim">ידני</span>
+      </div>
+      <div class="rowline"><span class="ro-lbl">תוצאת בסיס</span><span class="ro-val">מקצה 200 מ' — 8:30.0 דק'</span><span class="ro-extra">קצב סף מחושב: 4:15 / 100 מ'</span></div>
+      <div class="rowline"><span class="ro-lbl">הצעה — Z1</span><span class="ro-val">4:50–5:15</span><span class="ro-extra">מחושב אוטומטית</span></div>
+      <div class="rowline"><span class="ro-lbl">הצעה — Z2</span><span class="ro-val">4:30–4:50</span><span class="ro-extra">מחושב אוטומטית</span></div>
+      <div class="rowline"><span class="ro-lbl">הצעה — Z3</span><span class="ro-val">4:05–4:25</span><span class="ro-extra">מחושב אוטומטית</span></div>
+      <div class="rowline"><span class="ro-lbl">הצעה — Z4</span><span class="ro-val">3:45–4:05</span><span class="ro-extra"><button class="btn" style="padding:5px 10px"><svg class="icon-xs"><use href="#i-pencil"/></svg> עריכה</button> <span class="chip teal">עודכן ידנית · הותאם לשיקום</span></span></div>
+      <div class="rowline"><span class="ro-lbl">הצעה — Z5</span><span class="ro-val">מהיר מ-3:45</span><span class="ro-extra"><button class="btn" style="padding:5px 10px"><svg class="icon-xs"><use href="#i-pencil"/></svg> דיוק</button> <span class="ro-extra" style="font-size:10.5px">אפשר להתאים בשינוי ידני</span></span></div>
+      <div class="rowline"><span class="demo-note">ההצעות מחושבות מתוצאת המבחן לפי השיטה הנבחרת; כל אזור ניתן לשינוי ולדיוק ידני — הערך המחושב המקורי נשמר ומוצג, ומבחן חדש פותח גרסה חדשה עם הצעות מעודכנות.</span></div>
+    </div>
+
+    <!-- תוצאות ומטרות -->
+    <div class="card">
+      <div class="sec-title"><svg class="icon-sm"><use href="#i-trophy"/></svg> תוצאות מבחנים ומטרות
+        <div class="right"><button class="btn" style="padding:7px 12px"><svg class="icon-sm"><use href="#i-pencil"/></svg> רישום מבחן חדש</button></div>
+      </div>
+
+      <div class="rowline first"><span class="ro-lbl">מבחן 14.09.2026</span><span class="ro-val">מקצה 200 מ' — 8:30.0 דק'</span><span class="ro-extra"><span class="chip ok">עדכני — מייצר אזורים, גרסה 2</span></span></div>
+      <div class="rowline"><span class="ro-lbl">מבחן 03.05.2026</span><span class="ro-val">מקצה 200 מ' — 8:44.5 דק'</span><span class="ro-extra"><span class="chip dim">ארכיון — גרסה 1</span></span></div>
+      <div class="rowline"><span class="ro-lbl">מבחן ריצה</span><span class="ro-val" style="color:var(--text-muted)">טרם נבחנה — ללא טווחי עבודה לריצה</span></div>
+
+      <div class="hl"></div>
+      <div class="sec-title" style="margin-top:4px"><svg class="icon-sm"><use href="#i-user"/></svg> מטרות
+        <div class="right"><button class="btn" style="padding:7px 12px">מטרה חדשה</button></div>
+      </div>
+      <div class="rowline first"><span class="ro-val"><b>הורדת קצב סף ל-4:05 / 100 מ'</b></span><span class="ro-extra">יעד 03.2027</span><span class="chip ok">פעילה</span></div>
+      <div class="rowline"><span class="ro-val">השתתפות בתחרות אביב — 100 מ' גב</span><span class="ro-extra">יעד 04.2027</span><span class="chip info">מתוכננת</span></div>
+      <div class="rowline"><span class="ro-val">חזרה מלאה מפציעת הברך לתרגילי מהירות</span><span class="ro-extra">יעד 12.2026</span><span class="chip teal">בשיקום</span></div>
+
+      <div class="hl"></div>
+      <div class="sec-title" style="margin-top:4px"><svg class="icon-sm"><use href="#i-note"/></svg> הערות מדריכים וטיפול
+        <div class="right"><button class="btn" style="padding:7px 12px">הערה חדשה</button></div>
+      </div>
+      <div class="rowline first"><span class="ro-val">05.10.2026 · עדי פלד — עבודת הרגליים בסגנון גב השתפרה; להגביר עומס טכניקה</span></div>
+      <div class="rowline"><span class="ro-val">28.09.2026 · שירלי רוזן (פיזיו) — חזרה הדרגתית לאימוני מהירות, לפי התקדמות שבועית</span></div>
+      <div class="rowline"><span class="demo-note">המטרות מוצגות גם בפורטל ההורה; ההערות נשמרות בתיק הספורטאי לאורך העונות.</span></div>
+    </div>
+
+    <!-- נתוני גדילה -->
+    <div class="card">
+      <div class="sec-title"><svg class="icon-sm"><use href="#i-heart"/></svg> נתוני גדילה</div>
+      <div class="tiles">
+        <div class="tile"><div class="t-num">158<small class="chip info">ס"מ</small></div><div class="t-lbl">גובה</div><div class="t-since">מדידה 05.2026</div></div>
+        <div class="tile"><div class="t-num">47<small class="chip info">ק"ג</small></div><div class="t-lbl">משקל</div><div class="t-since">מדידה 05.2026</div></div>
+        <div class="tile"><div class="t-num">18.8</div><div class="t-lbl">BMI מחושב</div><div class="t-since">עדכון אוטומטי</div></div>
+        <div class="tile"><div class="t-num">+4<small class="chip ok">ס"מ</small></div><div class="t-lbl">גדילה בשנה האחרונה</div><div class="t-since">מ-154 ל-158 · מ-09.2025</div></div>
+      </div>
+    </div>
+
+    <!-- פציעות -->
+    <div class="card">
+      <div class="sec-title">
+        <svg class="icon-sm"><use href="#i-shield"/></svg> פציעות ומגבלות
+        <div class="right"><span class="chip bad">1 פעילה</span></div>
+      </div>
+      <div class="rowline first">
+        <span class="ro-lbl" style="min-width:auto"><b>מתיחת גיד — ברך ימין</b></span>
+        <span class="chip bad">פעילה</span> <span class="ro-extra">מ-08.10.2026</span>
+      </div>
+      <div class="rowline"><span class="ro-lbl">מגבלות בתוקף</span>
+        <span class="tg">נפח מופחת</span>
+        <span class="tg">חימום בלבד ביום טכניקה</span>
+        <span class="tg">אין דחיפות מהקצה</span>
+      </div>
+      <div class="rowline"><span class="ro-lbl">טיפול פיזי</span><span class="ro-val">שירלי רוזן — פיזיו של הקבוצה</span><span class="ro-extra"><span class="chip warn"><svg class="icon-xs"><use href="#i-alert"/></svg> אין עדכון 6 ימים</span></span></div>
+      <div class="rowline"><span class="ro-lbl">היסטוריה</span><span class="ro-val">קרסול · 03.2026</span><span class="chip ok">החלימה</span></div>
+      <div class="banner warn"><svg class="icon-sm"><use href="#i-alert"/></svg> הפציעה משפיעה על התאמות אישיות בתוכניות — המערכת מציגה התראה בעת פרסום תוכנית חדשה</div>
+    </div>
+
+    <!-- מסמכים -->
+    <div class="card">
+      <div class="sec-title"><svg class="icon-sm"><use href="#i-note"/></svg> מסמכים והסכמות</div>
+      <div class="rowline first"><span class="ro-lbl">טופס רפואי</span><span class="chip bad">פג תוקף · 01.10.2026</span><span class="ro-extra">נשלחה תזכורת לאפוטרופוס לחידוש</span></div>
+      <div class="rowline"><span class="ro-lbl">הסכמת ביטוח</span><span class="chip ok">תקף עד 07.2027</span></div>
+      <div class="rowline"><span class="ro-lbl">הסכמת מדיה</span><span class="chip ok">נחתמה 09.2025</span><span class="ro-extra">זכות הורה לשלול בין עונות</span></div>
+      <div class="rowline"><span class="ro-lbl">תנאי רישום ושימוש</span><span class="chip ok">נחתמו 09.2025</span></div>
+    </div>
+
+    <!-- סיכום מעקב -->
+    <div class="card">
+      <div class="sec-title"><svg class="icon-sm"><use href="#i-chart"/></svg> סיכום מעקב — 4 שבועות אחרונים</div>
+      <div class="tiles">
+        <div class="tile"><div class="t-num">84%</div><div class="t-lbl">נוכחות</div></div>
+        <div class="tile"><div class="t-num">2</div><div class="t-lbl">איחורים</div></div>
+        <div class="tile"><div class="t-num">12</div><div class="t-lbl">דיווחי עצמי</div></div>
+        <div class="tile"><div class="t-num">4</div><div class="t-lbl">החמצות כוללות</div></div>
+      </div>
+      <div class="banner warn"><svg class="icon-sm"><use href="#i-alert"/></svg> טרנד: ירידה בהשתתפות מתחילת הפציעה — מומלץ לקבוע תיאום עם האפוטרופוס</div>
+    </div>
+  </div>
+</div>
+
+<div class="wf">WIREFRAME v1 — BLUE FITNESS · Athlete Profile · F1.12 · DOM-6 · USR-9</div>
+<script>
+  function toggleTheme(){
+    const h=document.documentElement;
+    const d=h.dataset.theme==='dark';
+    h.dataset.theme=d?'':'dark';
+    document.getElementById('themeBtn').innerHTML=d
+      ?'<svg class="icon icon-sm"><use href="#i-moon"/></svg> Dark'
+      :'<svg class="icon icon-sm"><use href="#i-sun"/></svg> Light';
+  }
+</script>
+</body>
+</html>

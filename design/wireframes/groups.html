@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Groups — Blue Fitness</title>
+<style>
+  :root{--bg:#F8FAFC;--surface:#FFF;--surface-ocean:#E0F2FE;--surface-hover:#F1F5F9;--border:#CBD5E1;--text:#0F172A;--text-muted:#475569;--text-faint:#94A3B8;--accent:#2563EB;--accent-dim:rgba(37,99,235,.08);--accent-text:#FFF;--success:#16A34A;--success-bg:#DCFCE7;--danger:#DC2626;--danger-bg:#FEE2E2;--warning:#D97706;--warning-bg:#FEF3C7;--teal:#0D9488;--teal-bg:rgba(13,148,136,.12);--shadow-md:0 4px 12px rgba(15,23,42,.06);--shadow-lg:0 8px 32px rgba(15,23,42,.12);}
+  :root[data-theme="dark"]{--bg:#0F172A;--surface:#1E293B;--surface-ocean:#25334A;--surface-hover:#334155;--border:#334155;--text:#F8FAFC;--text-muted:#94A3B8;--text-faint:#64748B;--accent:#3B82F6;--accent-dim:rgba(59,130,246,.15);--accent-text:#FFF;--success:#22C55E;--success-bg:rgba(34,197,94,.2);--danger:#EF4444;--danger-bg:rgba(239,68,68,.2);--warning:#FBBF24;--warning-bg:rgba(251,191,36,.2);--teal:#2DD4BF;--teal-bg:rgba(45,212,191,.15);--shadow-md:0 4px 12px rgba(0,0,0,.25);--shadow-lg:0 8px 32px rgba(0,0,0,.4);}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);}
+  .icon{width:20px;height:20px;stroke-width:2;flex-shrink:0;}
+  .icon-sm{width:16px;height:16px;}
+  .icon-xs{width:13px;height:13px;}
+  button{font-family:inherit;}
+
+  .demo-bar{display:flex;gap:12px;align-items:center;padding:12px 32px;border-bottom:1px solid var(--border);background:var(--surface);}
+  .demo-note{font-size:11px;color:var(--text-muted);font-weight:700;}
+  .seg{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:3px;gap:3px;}
+  .seg button{padding:6px 14px;border:none;border-radius:9px;background:transparent;color:var(--text-muted);font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:5px;}
+  .seg button.active{background:var(--accent);color:#FFF;}
+  .demo-bar .demo-note{margin-inline-end:auto;}
+
+  .layout{display:flex;min-height:calc(100vh - 47px);}
+  .side{width:70px;background:var(--surface);border-inline-start:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:18px 0;gap:6px;}
+  .rail-brand{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--accent),#1D4ED8);color:#FFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;margin-bottom:14px;box-shadow:0 6px 16px rgba(37,99,235,.35);}
+  .rail-btn{width:44px;height:44px;border:none;border-radius:12px;background:transparent;color:var(--text-faint);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .rail-btn.active{background:var(--accent-dim);color:var(--accent);}
+  .rail-split{flex:1;}
+
+  .main{flex:1;padding:22px 32px 60px;max-width:1280px;}
+  .page-title{display:flex;align-items:center;gap:12px;margin-bottom:4px;}
+  .page-title h1{font-size:21px;font-weight:800;}
+  .page-title .btn{margin-inline-start:auto;}
+  .page-sub{font-size:12.5px;color:var(--text-muted);margin-bottom:16px;font-weight:700;}
+
+  .chip{font-size:10.5px;font-weight:800;padding:4px 10px;border-radius:16px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+  .chip.ok{background:var(--success-bg);color:var(--success);}
+  .chip.bad{background:var(--danger-bg);color:var(--danger);}
+  .chip.warn{background:var(--warning-bg);color:var(--warning);}
+  .chip.info{background:var(--surface-ocean);color:var(--accent);}
+  .chip.teal{background:var(--teal-bg);color:var(--teal);}
+  .chip.dim{background:var(--surface-hover);color:var(--text-muted);}
+
+  .btn{border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:9px 16px;font-size:12.5px;font-weight:800;color:var(--text-muted);display:inline-flex;align-items:center;gap:6px;cursor:pointer;}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#FFF;}
+
+  .ggrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start;}
+  .gcard{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:16px 18px;box-shadow:var(--shadow-md);}
+  .gcard.editmode{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset, var(--shadow-md);}
+  .ghead{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .gdot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+  .gname{font-size:15px;font-weight:800;}
+  .gtop{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+  .gmeta{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--text-muted);font-weight:700;padding:6px 0;}
+  .gmeta svg{color:var(--text-faint);}
+  .gdays{display:flex;gap:4px;margin-top:8px;}
+  .dchip{width:26px;height:26px;border-radius:8px;background:var(--surface-hover);color:var(--text-muted);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;}
+  .gacts{display:flex;gap:8px;margin-top:12px;padding-top:10px;border-top:1px dashed var(--border);}
+
+  /* edit card internals */
+  .elabel{display:block;font-size:10.5px;font-weight:800;color:var(--text-faint);margin:10px 0 5px;}
+  .inp{width:100%;border:1px solid var(--border);border-radius:12px;background:var(--surface-hover);padding:9px 12px;font-size:12.5px;font-weight:700;color:var(--text);font-family:inherit;}
+  .colors{display:flex;gap:6px;}
+  .cval{width:24px;height:24px;border-radius:8px;border:2px solid transparent;cursor:pointer;}
+  .cval.sel{border-color:var(--text);}
+  .srow{display:flex;align-items:center;gap:8px;background:var(--surface-hover);border:1px solid var(--border);border-radius:12px;padding:8px 12px;margin-bottom:6px;font-size:12px;font-weight:700;}
+  .srow .sd{width:60px;}
+  .srow .st{width:110px;color:var(--text-muted);}
+  .srow .x-ico{margin-inline-start:auto;color:var(--text-faint);}
+  .addrow{border:1.5px dashed var(--border);border-radius:12px;color:var(--text-faint);background:transparent;padding:8px;font-size:11.5px;font-weight:800;width:100%;display:flex;align-items:center;justify-content:center;gap:6px;}
+  .mrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px dashed var(--border);font-size:12.5px;font-weight:700;}
+  .mrow.first{border-top:none;}
+  .avs{display:flex;}
+  .avs span{width:26px;height:26px;border-radius:50%;background:var(--surface-ocean);color:var(--accent);border:2px solid var(--surface);margin-inline-start:-8px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;}
+  .avs span:first-child{margin-inline-start:0;}
+
+  .wf{position:fixed;bottom:4px;inset-inline:0;text-align:center;font-size:10px;color:var(--text-faint);z-index:200;}
+</style>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-pool" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16c.6.5 1.2 1 2.5 1C7 17 7 15 9.5 15c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1C7 13 7 11 9.5 11c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/><path d="M2 8c.6.5 1.2 1 2.5 1C7 9 7 7 9.5 7c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 2 .5 2.5 1"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></symbol>
+  <symbol id="i-chev-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+</svg>
+</head>
+<body>
+
+<div class="demo-bar">
+  <span class="demo-note">WIREFRAME — קבוצות וסדרות · כרטיס "דגיגונים" מוצג במצב עריכה</span>
+  <div class="seg">
+    <button onclick="toggleTheme()" id="themeBtn"><svg class="icon icon-sm"><use href="#i-moon"/></svg> Dark</button>
+    <button class="active">מצב דמו</button>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="side">
+    <div class="rail-brand">BF</div>
+    <button class="rail-btn"><svg class="icon"><use href="#i-home"/></svg></button>
+    <button class="rail-btn"><svg class="icon"><use href="#i-calendar"/></svg></button>
+    <button class="rail-btn active"><svg class="icon"><use href="#i-users"/></svg></button>
+    <button class="rail-btn"><svg class="icon"><use href="#i-pool"/></svg></button>
+    <button class="rail-btn"><svg class="icon"><use href="#i-chart"/></svg></button>
+    <button class="rail-btn"><svg class="icon"><use href="#i-clipboard"/></svg></button>
+    <div class="rail-split"></div>
+    <button class="rail-btn" onclick="toggleTheme()"><svg class="icon"><use href="#i-sun"/></svg></button>
+  </div>
+
+  <div class="main">
+    <div class="page-title">
+      <h1>קבוצות — סניף מרכז</h1>
+      <span class="chip info">עונה 26/27</span>
+      <button class="btn primary"><svg class="icon-sm"><use href="#i-plus"/></svg> קבוצה חדשה</button>
+    </div>
+    <div class="page-sub">כל קבוצה כוללת סדרות שבועיות קבועות, תוכן ברירת מחדל לפי יום ורשימת חברים מתויגת-עונה.</div>
+
+    <div class="ggrid">
+      <!-- card in edit mode -->
+      <div class="gcard editmode">
+        <div class="ghead">
+          <span class="gdot" style="background:var(--accent)"></span>
+          <span class="gname">דגיגונים</span>
+          <span class="chip info" style="margin-inline-start:auto"><svg class="icon-xs"><use href="#i-pencil"/></svg> בעריכה</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div><span class="elabel">שם הקבוצה</span><input class="inp" value="דגיגונים"></div>
+          <div><span class="elabel">מאמנת אחראית</span><input class="inp" value="עדי פלד"></div>
+        </div>
+        <div><span class="elabel">צבע</span><div class="colors"><span class="cval sel" style="background:#2563EB"></span><span class="cval" style="background:#0D9488"></span><span class="cval" style="background:#D97706"></span><span class="cval" style="background:#DC2626"></span><span class="cval" style="background:#7C3AED"></span></div></div>
+        <div><span class="elabel">סדרות שבועיות</span>
+          <div class="srow"><span class="sd"><span class="chip dim">ראשון</span></span><span class="st">18:00–19:00</span><span class="chip info">ריקי לוין</span><svg class="icon-xs x-ico"><use href="#i-x"/></svg></div>
+          <div class="srow"><span class="sd"><span class="chip dim">שני</span></span><span class="st">18:00–19:00</span><span class="chip info">ריקי לוין</span><svg class="icon-xs x-ico"><use href="#i-x"/></svg></div>
+          <div class="srow"><span class="sd"><span class="chip dim">חמישי</span></span><span class="st">18:00–19:00</span><span class="chip warn">חסר מדריך</span><svg class="icon-xs x-ico"><use href="#i-x"/></svg></div>
+          <button class="addrow"><svg class="icon-xs"><use href="#i-plus"/></svg> הוספת סדרה (יום + שעות)</button>
+        </div>
+        <div><span class="elabel">תוכן ברירת מחדל לפי יום</span>
+          <div class="mrow first" style="gap:8px"><span class="chip teal">שני</span> יום טכניקה — תוכנית מספריית האימונים</div>
+          <div class="mrow" style="gap:8px"><span class="chip teal">חמישי</span> יום סטים — אינטנסיבי</div>
+        </div>
+        <div><span class="elabel">חברים — מתויגים לעונה 26/27</span>
+          <div class="mrow first" style="align-items:flex-start">
+            <div class="avs"><span>מ</span><span>נ</span><span>א</span><span>+15</span></div>
+            <span style="color:var(--text-muted)">18/24 מתאמנים</span>
+            <span class="chip warn" style="margin-inline-start:auto">2 בניסיון</span>
+          </div>
+          <div class="mrow">
+            <button class="btn"><svg class="icon-sm"><use href="#i-repeat"/></svg> העברת מתאמן לקבוצה אחרת</button>
+            <span class="chip info">שומר היסטוריית נוכחות ותאריכי חברות</span>
+          </div>
+          <div class="mrow"><span class="demo-note">ההעברה לא מאבדת נוכחות ישנה — כל חברות מתויגת לעונה משלה</span></div>
+        </div>
+        <div class="gacts">
+          <button class="btn primary"><svg class="icon-sm"><use href="#i-check"/></svg> שמירת שינויים</button>
+          <button class="btn">ביטול</button>
+        </div>
+      </div>
+
+      <!-- regular cards -->
+      <div class="gcard">
+        <div class="ghead"><span class="gdot" style="background:var(--teal)"></span><span class="gname">ראשנים</span></div>
+        <div class="gtop"><span class="chip teal">רמה: כסף +</span><span class="chip dim">אימון בריכה</span></div>
+        <div class="gmeta"><svg class="icon-sm"><use href="#i-user"/></svg> עדי פלד · <svg class="icon-sm"><use href="#i-home"/></svg> מרכז</div>
+        <div class="gmeta"><svg class="icon-sm"><use href="#i-users"/></svg> 21/28 מתאמנים</div>
+        <div class="gdays"><span class="dchip">א</span><span class="dchip">ד</span><span class="dchip">ה</span></div>
+        <div class="gacts"><button class="btn"><svg class="icon-sm"><use href="#i-calendar"/></svg> יומן קבוצה</button><button class="btn"><svg class="icon-sm"><use href="#i-pencil"/></svg></button></div>
+      </div>
+
+      <div class="gcard">
+        <div class="ghead"><span class="gdot" style="background:var(--warning)"></span><span class="gname">צעירים א' — יבשה</span></div>
+        <div class="gtop"><span class="chip teal">רמה: ברונזה</span><span class="chip dim">אימון יבשה</span></div>
+        <div class="gmeta"><svg class="icon-sm"><use href="#i-user"/></svg> דניאל סער · <svg class="icon-sm"><use href="#i-home"/></svg> מרכז</div>
+        <div class="gmeta"><svg class="icon-sm"><use href="#i-users"/></svg> 14/18 מתאמנים</div>
+        <div class="gdays"><span class="dchip">ב</span></div>
+        <div class="gacts"><button class="btn"><svg class="icon-sm"><use href="#i-calendar"/></svg> יומן קבוצה</button><button class="btn"><svg class="icon-sm"><use href="#i-pencil"/></svg></button></div>
+      </div>
+
+      <div class="gcard">
+        <div class="ghead"><span class="gdot" style="background:#7C3AED"></span><span class="gname">צעירים ב' — יבשה</span></div>
+        <div class="gtop"><span class="chip teal">רמה: ברונזה +</span><span class="chip dim">אימון יבשה</span></div>
+        <div class="gmeta"><svg class="icon-sm"><use href="#i-user"/></svg> ריקי לוין · <svg class="icon-sm"><use href="#i-home"/></svg> מרכז</div>
+        <div class="gmeta"><svg class="icon-sm"><use href="#i-users"/></svg> 12/20 מתאמנים</div>
+        <div class="gdays"><span class="dchip">ג</span></div>
+        <div class="gacts"><button class="btn"><svg class="icon-sm"><use href="#i-calendar"/></svg> יומן קבוצה</button><button class="btn"><svg class="icon-sm"><use href="#i-pencil"/></svg></button></div>
+      </div>
+
+      <div class="gcard">
+        <div class="ghead"><span class="gdot" style="background:#DC2626"></span><span class="gname">נוער תחרותי</span></div>
+        <div class="gtop"><span class="chip teal">רמה: זהב</span><span class="chip dim">אימון בריכה</span></div>
+        <div class="gmeta"><svg class="icon-sm"><use href="#i-user"/></svg> עדי פלד · <svg class="icon-sm"><use href="#i-home"/></svg> מרכז</div>
+        <div class="gmeta"><svg class="icon-sm"><use href="#i-users"/></svg> 9/10 מתאמנים</div>
+        <div class="gdays"><span class="dchip">א</span><span class="dchip">ב</span><span class="dchip">ד</span><span class="dchip">ה</span><span class="dchip">ו</span></div>
+        <div class="gacts"><button class="btn"><svg class="icon-sm"><use href="#i-calendar"/></svg> יומן קבוצה</button><button class="btn"><svg class="icon-sm"><use href="#i-pencil"/></svg></button></div>
+      </div>
+
+      <div class="gcard" style="opacity:.8">
+        <div class="ghead"><span class="gdot" style="background:var(--text-faint)"></span><span class="gname" style="color:var(--text-faint)">בוקר מבוגרים (ארכיון)</span></div>
+        <div class="gtop"><span class="chip dim">סגורה — עונה 25/26</span></div>
+        <div class="gmeta"><svg class="icon-sm"><use href="#i-note"/></svg> נשמרת עם היסטוריית נוכחות מלאה לצורך דוחות</div>
+        <div class="gacts"><button class="btn">פתיחה לעיון בלבד</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wf">WIREFRAME v1 — BLUE FITNESS · Groups &amp; Series · F1.4 · DOM-7 · SES-1</div>
+<script>
+  function toggleTheme(){
+    const h=document.documentElement;
+    const d=h.dataset.theme==='dark';
+    h.dataset.theme=d?'':'dark';
+    document.getElementById('themeBtn').innerHTML=d
+      ?'<svg class="icon icon-sm"><use href="#i-moon"/></svg> Dark'
+      :'<svg class="icon icon-sm"><use href="#i-sun"/></svg> Light';
+  }
+</script>
+</body>
+</html>
